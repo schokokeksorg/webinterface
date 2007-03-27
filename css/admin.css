@@ -1,0 +1,146 @@
+body {
+        font-family: Verdana, Arial, Helvetica;
+        font-size: 12px;
+        color: #000000;
+        background-color: #EFEFEF;
+}
+
+
+div.error {
+        color: #FF0000;
+        border: 2px solid #000000;
+        background-color: #FFFFFF;
+        margin: 10px;
+        padding: 10px;
+}
+
+div.success {
+        color: #282;
+        border: 2px solid #282;
+        background-color: #FFFFFF;
+        margin: 5px;
+        padding: 5px;
+        font-weight: bold;
+}
+
+p.warning {
+        padding: 4px;
+        color: #000000;
+        border: 1px solid #FF0000;
+        background-color: #FFFFFF;
+}
+
+
+span.login_label {
+        display: block;
+        float: left;
+        width: 130px;
+}
+
+input[type=text],input[type=password],textarea,select {
+        border: 1px solid black;
+        padding: 3px;
+        }
+
+input[type=text]:focus,input[type=password]:focus,textarea:focus {
+        border: 1px solid red;
+        background-color: #FFFFFF;
+        }
+
+
+
+
+
+div.menu {
+        width: 190px;
+        float: left;
+
+}
+
+
+a.menuitem {
+        display: block;
+        padding: 4px;
+        margin: 3px;
+        text-decoration: none;
+        color: #000000;
+}
+
+a.active {
+        padding: 3px;
+        border: 1px solid #000000;
+}
+
+a.menuitem:hover {
+        padding: 3px;
+        border: 1px dotted #000000;
+        text-decoration: none;
+        color: #000000;
+}
+
+
+div#beta {
+  clear: both;
+        padding: 4px;
+        color: #000000;
+        border: 1px solid #FF0000;
+        background-color: #FFFFFF;
+        margin-bottom: 1em;
+}
+
+div#beta p {
+  padding: 0;
+  margin: 0;
+  margin-top: 0.3em;
+}
+
+div#beta h3 {
+  padding: 0;
+  margin: 0;
+}
+
+
+div.content {
+        margin-left: 200px;
+        padding-left: 10px;
+        border-left: 1px solid #000000;
+}
+
+
+div.foot {
+        border-top: 2px dotted #000000;
+        font-size: 90%;
+}
+
+
+h3 {
+        border-bottom: 2px dotted #000000;
+}
+
+
+ul {
+        margin-bottom: 10px;
+}
+
+table {
+        border-collapse: collapse;
+}
+
+td {
+        border: 1px solid black;
+        padding: 0.5em;
+}
+
+th {
+  padding: 0px 1em;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+
+}
+
+a:hover {
+  text-decoration: underline;
+}
