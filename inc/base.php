@@ -21,7 +21,8 @@ function are_you_sure($query_string, $question)
   output("<form action=\"?{$query_string}\" method=\"post\">\n");
   output("<p class=\"confirmation\">{$question}<br />\n");
   output("<input type=\"hidden\" name=\"random_token\" value=\"{$token}\" />\n");
-  output("<input type=\"submit\" name=\"really\" value=\"Ja\" />\n<input type=\"submit\" name=\"not_really\" value=\"Nein\" /></p>");
+  output("<input type=\"submit\" name=\"really\" value=\"Ja\" />\n<input type=\"submit\" name=\"not_really\" value=\"Nein\" /></p>\n");
+  output("</form>\n");
 }
 
 
