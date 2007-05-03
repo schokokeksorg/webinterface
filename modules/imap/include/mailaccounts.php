@@ -31,23 +31,13 @@ function get_mailaccount($id)
   return $ret;
 }
 
-/*
-  FIXME: Hier auch die crypt-Funktion nehmen wie beim systemuser-Passwort
-*/
 function encrypt_mail_password($pw)
 {
   DEBUG("unencrypted PW: ".$pw);
-  $descriptorspec = array(
-    0 => array("pipe", "r"),
-    1 => array("pipe", "w")
-    );
-  $process = proc_open("/usr/local/bin/exec/userdbpw -md5", $descriptorspec, $pipes);
-  fwrite($pipes[0], $pw);
-  fclose($pipes[0]);
-  $encpw = fgets($pipes[1]);
+  require_once('inc/base.php');
+  $salt = random_string(8);
+  $encpw = crypt($pw, "\$1\${$salt}\$");
   DEBUG("encrypted PW: ".$encpw);
-  fclose($pipes[1]);
-  proc_close($process);
   return chop($encpw);
 
 }
