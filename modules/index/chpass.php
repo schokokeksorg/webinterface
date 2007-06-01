@@ -9,6 +9,7 @@ require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
 if ($_POST['password1'] != '')
 {
+  check_form_token('index_chpass');
   $result = NULL;
   switch ($_SESSION['role'])
   {
@@ -51,6 +52,7 @@ if ($_SESSION['role'] == ROLE_SYSTEMUSER)
 output('<h3>Passwort &auml;ndern</h3>
 <p>Hier k&ouml;nnen Sie Ihr Passwort &auml;ndern.</p>
 <form method="post" action="'.($debugmode ? '?debug' : '').'">
+'.generate_form_token('index_chpass').'
 <table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>

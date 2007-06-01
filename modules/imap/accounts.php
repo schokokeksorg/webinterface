@@ -21,6 +21,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
 {
   if (isset($_GET['id']))
   {
+    check_form_token('imap_accounts_edit');
     $account = $_POST['user'].'@'.$_POST['domain'];
     if (isset($_POST['enabled']) && $_POST['enabled'] == 'true')
       $enabled = 'Y';
@@ -47,6 +48,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
   }
   elseif (isset($_POST['create']))
   {
+    check_form_token('imap_accounts_create');
     $account = $_POST['user'].'@'.$_POST['domain'];
     if (isset($_POST['enabled']) && $_POST['enabled'] == 'true')
       $enabled = 'Y';
@@ -75,6 +77,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
   output('<h3>E-Mail-Account anlegen</h3>
 <p>Hier k&ouml;nnen Sie ein neues POP3/IMAP-Konto anlegen.</p>
   <form action="accounts.php?action=save&'.$param.'" method="post">
+  '.generate_form_token('imap_accounts_create').'
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>Wert:</th><th>&nbsp;</th></tr>
   <tr>
@@ -112,6 +115,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
 {
   if ($_POST['confirm'] == 'yes')
   {
+    check_form_token('imap_accounts_delete');
     delete_mailaccount($_GET['account']);
     if (! $debugmode)
       header('Location: accounts.php');
@@ -126,6 +130,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
     $account = get_mailaccount($_GET['account']);
     $enabled = ($account['enabled'] ? 'Ja' : 'Nein');
     output('<form action="accounts.php?action=delete&amp;account='.$_GET['account'].'&amp;'.$param.'" method="post">
+    '.generate_form_token('imap_accounts_delete').'
     <table style="margin-bottom: 1em;">
     <tr><td>Benutzername:</td>
       <td>'.$account['account'].'</td>
@@ -153,6 +158,7 @@ elseif (isset($_GET['edit']))
   list($username, $domain) = explode('@', $account['account'], 2);
   $enabled = ($account['enabled'] ? ' checked="checked"' : '');
   output('<form action="accounts.php?action=save&amp;id='.$_GET['edit'].'&amp;'.$param.'" method="post">
+  '.generate_form_token('imap_accounts_edit').'
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>alter Wert:</th><th>neuer Wert:</th><th>&nbsp;</th></tr>
   <tr><td>Benutzername:</td><td><input type="text" id="old_account" name="old_account" value="'.$account['account'].'" readonly="readonly" style="background-color: #C0C0C0;" /></td>

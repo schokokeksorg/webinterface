@@ -35,6 +35,25 @@ function get_domain_names($customerno, $uid = NULL)
 }
 
 
+
+function get_domain_name($domid)
+{
+  if ($domid === NULL)
+    return 'schokokeks.org';
+  $domid = (int) $domid;
+  static $domainlist = array();
+
+  $query = "SELECT CONCAT_WS('.', domainname, tld) AS domainname FROM kundendaten.domains WHERE id=$domid;";
+  DEBUG($query);
+  $result = mysql_query($query);
+  if (@mysql_num_rows($result) > 0)
+    return mysql_fetch_object($result)->domainname;
+  else
+    return NULL;
+
+}
+
+
 /*
 function get_mail_virtualdomain($domain)
 {

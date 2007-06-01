@@ -52,6 +52,7 @@ if (isset($_GET['action']))
       }
       break;
     case 'change_pw':
+      check_form_token('mysql_databases_change_pw');
       set_mysql_password($_POST['mysql_username'], $_POST['mysql_password']);
       header("Location: ?");
       $output_something = false;
@@ -66,6 +67,7 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
 if (isset($_POST['access']))
 {
+  check_form_token('mysql_databases_access');
   /* Eine neue Datenbank */
   if ($_POST['new_db'] != '')
   {
@@ -114,6 +116,7 @@ if ($output_something)
   In die leeren Eingabefelder können Sie den Namen eines neuen Benutzers bzw. einer neuen Datenbank eintragen. Sofern Sie noch keine Datenbank(en) oder Benutzer eingerichtet haben, erscheinen nur die Eingabefelder. Vergessen Sie nicht, nach der Erstellung eines neuen Benutzerkontos dem betreffenden Benutzer ein Passwort zu setzen (s. unten auf dieser Seite). Der Name von Datenbanken und Benutzern muss mit dem Namen des System-Benutzeraccounts übereinstimmen oder mit diesem und einem Nachfolgenden Unterstrich beginnen. Z.B. kann der System-Benutzer <em>bernd</em> die MySQL-Accounts <em>bernd</em> und <em>bernd_2</em> erzeugen.</p>');
 
   output('<form action="'.($debugmode ? '?debug': '').'" method="post">
+  '.generate_form_token('mysql_databases_access').'
   <table>
   <tr><th>&nbsp;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users)+1).'">Benutzerkonten</th></tr>
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>');
@@ -151,6 +154,7 @@ if ($output_something)
 
   <p>
   <form action="?action=change_pw'.($debugmode ? '&amp;debug': '').'" method="post">
+  '.generate_form_token('mysql_databases_change_pw').'
   <label for="username">Benutzername:</label>&nbsp;<select name="mysql_username" id="username" height="1">
   ');
   foreach ($users as $user)
