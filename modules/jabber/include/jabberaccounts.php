@@ -68,6 +68,21 @@ function create_jabber_account($local, $domain, $password)
 }
 
 
+
+function change_jabber_password($id, $newpass)
+{
+  require_role(ROLE_CUSTOMER);
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $id = (int) $id;
+  $newpass = mysql_real_escape_string($newpass);
+  
+  $query = "UPDATE jabber.accounts SET password='{$newpass}' WHERE customerno={$customerno} AND id={$id} LIMIT 1";
+  DEBUG($query);
+  mysql_query($query);
+}
+
+
+
 function delete_jabber_account($id)
 {
   require_role(ROLE_CUSTOMER);
