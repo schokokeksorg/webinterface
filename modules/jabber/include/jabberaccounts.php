@@ -1,0 +1,83 @@
+<?php
+
+require_once("inc/debug.php");
+require_once("inc/db_connect.php");
+
+
+
+function get_jabber_accounts() {
+  require_role(ROLE_CUSTOMER);
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $query = "SELECT id, created, local, domain FROM jabber.accounts WHERE customerno='$customerno' AND `delete`=0;";
+  DEBUG($query);
+  $result = mysql_query($query);
+  $accounts = array();
+  if (@mysql_num_rows($result) > 0)
+    while ($acc = @mysql_fetch_object($result))
+      array_push($accounts, array('id'=> $acc->id, 'created' => $acc->created, 'local' => $acc->local, 'domain' => $acc->domain));
+  return $accounts;
+}
+
+
+
+function get_jabberaccount_details($id)
+{
+  require_role(ROLE_CUSTOMER);
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+
+  $id = (int) $id;
+
+  $query = "SELECT id, local, domain FROM jabber.accounts WHERE customerno={$customerno} AND id={$id} LIMIT 1";
+  DEBUG($query);
+  $result = mysql_query($query);
+  if (mysql_num_rows($result) != 1)
+    system_failure("Invalid account");
+  $data = mysql_fetch_assoc($result);
+  $data['domain'] = get_domain_name($data['domain']);
+  return $data;
+}
+
+
+
+function create_jabber_account($local, $domain, $password)
+{
+  require_role(ROLE_CUSTOMER);
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+
+  $local = mysql_real_escape_string($local);
+  $domain = (int) $domain;
+  $password = mysql_real_escape_string($password);
+  
+  if ($domain > 0)
+  {
+    $query = "SELECT id FROM kundendaten.domains WHERE kunde={$customerno} AND jabber=1 AND id={$domain};";
+    DEBUG($query);
+    $result = mysql_query($query);
+    if (mysql_num_rows($result) == 0)
+    {
+      system_failure("Invalid domain!");
+    }
+  }
+
+  if ($domain == 0)
+    $domain = 'NULL';
+
+  $query = "INSERT INTO jabber.accounts (customerno,local,domain,password) VALUES ({$customerno}, '{$local}', {$domain}, '{$password}');";
+  DEBUG($query);
+  mysql_query($query);
+}
+
+
+function delete_jabber_account($id)
+{
+  require_role(ROLE_CUSTOMER);
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+
+  $id = (int) $id;
+
+  $query = "UPDATE jabber.accounts SET `delete`=1 WHERE customerno={$customerno} AND id={$id} LIMIT 1";
+  DEBUG($query);
+  mysql_query($query);
+}
+
+?>

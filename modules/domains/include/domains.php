@@ -54,6 +54,26 @@ function get_domain_name($domid)
 }
 
 
+function get_jabberable_domains()
+{
+  require_role(ROLE_CUSTOMER);
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $query = "SELECT id, CONCAT_WS('.', domainname, tld) AS name FROM kundendaten.domains WHERE jabber=1 AND kunde={$customerno}";
+  DEBUG($query);
+  $result = mysql_query($query);
+  
+  $domains = array(array('id' => 0, 'name' => 'schokokeks.org'));
+  if (mysql_num_rows($result) > 0)
+    while ($domain = mysql_fetch_object($result))
+      array_push($domains, array('id' => $domain->id,
+                                'name' => $domain->name));
+
+  return $domains;
+
+}
+
+
+
 /*
 function get_mail_virtualdomain($domain)
 {
