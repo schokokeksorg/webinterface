@@ -59,8 +59,17 @@ function create_jabber_account($local, $domain, $password)
     }
   }
 
+  $domainquery = "domain={$domain}";
   if ($domain == 0)
     $domain = 'NULL';
+    $domainquery = 'domain IS NULL'; 
+  $query = "SELECT id FROM jabber.accounts WHERE local='{$local}' AND {$domainquery}";
+  DEBUG($query);
+  $result = mysql_query($query);
+  if (mysql_num_rows($result) > 0)
+  {
+    system_failure("Diesen Account gibt es bereits!");
+  }
 
   $query = "INSERT INTO jabber.accounts (customerno,local,domain,password) VALUES ({$customerno}, '{$local}', {$domain}, '{$password}');";
   DEBUG($query);
