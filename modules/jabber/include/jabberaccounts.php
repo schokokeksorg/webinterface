@@ -61,8 +61,10 @@ function create_jabber_account($local, $domain, $password)
 
   $domainquery = "domain={$domain}";
   if ($domain == 0)
+  {
     $domain = 'NULL';
     $domainquery = 'domain IS NULL'; 
+  }
   $query = "SELECT id FROM jabber.accounts WHERE local='{$local}' AND {$domainquery}";
   DEBUG($query);
   $result = mysql_query($query);
