@@ -13,7 +13,7 @@ if (!session_start())
         system_failure('Die Sitzung konnte nicht gestartet werden, bitte benachrichtigen Sie den Administrator!');
 
 
-DEBUG("<pre>POST-DATA: ".htmlentities(print_r($_POST, true))."\nSESSION_DATA: ".htmlentities(print_r($_SESSION, true))."</pre>");
+DEBUG("<pre>POST-DATA: ".htmlspecialchars(print_r($_POST, true))."\nSESSION_DATA: ".htmlentities(print_r($_SESSION, true))."</pre>");
 
 if (isset($_POST['username']) && isset($_POST['password']))
 {
