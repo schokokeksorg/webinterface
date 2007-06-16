@@ -19,7 +19,7 @@ function filter_quotes( $input )
 
 function filter_shell( $input )
 {
-        return ereg_replace('["\'` \t\r\n]', '', $input );
+        return ereg_replace('[^-[:alnum:]\_\.\+ßäöüÄÖÜ/%§=]', '', $input );
 }
 
 
