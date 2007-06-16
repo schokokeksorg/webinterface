@@ -5,6 +5,9 @@ require_once('session/start.php');
 require_once('domains.php');
 require_once('jabberaccounts.php');
 
+require_once('inc/security.php');
+
+
 require_role(ROLE_CUSTOMER);
 
 require_once("inc/debug.php");
@@ -47,7 +50,7 @@ elseif ($_GET['action'] == 'chpass')
 elseif ($_GET['action'] == 'delete')
 {
   $account = get_jabberaccount_details($_GET['account']);
-  $account_string = $account['local'].'@'.$account['domain'];
+  $account_string = filter_input_general( $account['local'].'@'.$account['domain'] );
   $sure = user_is_sure();
   if ($sure === NULL)
   {
