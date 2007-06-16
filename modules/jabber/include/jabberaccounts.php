@@ -2,7 +2,7 @@
 
 require_once("inc/debug.php");
 require_once("inc/db_connect.php");
-
+require_once("inc/security.php");
 
 
 function get_jabber_accounts() {
@@ -44,7 +44,7 @@ function create_jabber_account($local, $domain, $password)
   require_role(ROLE_CUSTOMER);
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
 
-  $local = mysql_real_escape_string($local);
+  $local = mysql_real_escape_string( filter_input_username($local) );
   $domain = (int) $domain;
   $password = mysql_real_escape_string($password);
   
