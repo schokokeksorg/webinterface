@@ -17,6 +17,10 @@ function filter_quotes( $input )
         return ereg_replace('["\'`]', '', $input );
 }
 
+function filter_shell( $input )
+{
+        return ereg_replace('["\'` \t\r\n]', '', $input );
+}
 
 
 ?>
