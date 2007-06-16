@@ -17,9 +17,9 @@ DEBUG("GET: ".htmlentities(print_r($_GET, true))." / POST: ".htmlentities(print_
 if ($_GET['action'] == 'new')
 {
   check_form_token('jabber_new_account');
-  if ($_POST['local'] == '' ||
+  if (filter_input_username($_POST['local']) == '' ||
       $_POST['domain'] == '' ||
-      $_POST['password'] == '')
+      filter_shell($_POST['password']) == '')
   {
     input_error('Sie müssen alle Felder ausfüllen!');
   }
