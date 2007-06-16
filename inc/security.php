@@ -12,6 +12,11 @@ function filter_input_username( $input )
         return ereg_replace("[^[:alnum:]\_\.\+\-]", "", $input );
 }
 
+function filter_quotes( $input )
+{
+        return ereg_replace('["\'`]', '', $input );
+}
+
 
 
 ?>
