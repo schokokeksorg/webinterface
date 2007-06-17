@@ -2,6 +2,7 @@
 
 require_once('inc/debug.php');
 require_once('inc/db_connect.php');
+require_once('inc/base.php');
 
 function mailaccounts($uid)
 {
@@ -87,6 +88,7 @@ function change_mailaccount($id, $arr)
   mysql_query($query);
   if (mysql_error())
     system_failure('Beim &Auml;ndern der Account-Daten ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  logger("modules/imap/include/mailaccounts.php", "imap", "updated account »{$arr['account']}«");
 
 }
 
@@ -128,6 +130,7 @@ function create_mailaccount($arr)
   mysql_query($query);
   if (mysql_error())
     system_failure('Beim Anlegen des Kontos ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  logger("modules/imap/include/mailaccounts.php", "imap", "created account »{$arr['account']}«");
 
 }
 
@@ -139,6 +142,7 @@ function delete_mailaccount($id)
   mysql_query($query);
   if (mysql_error())
     system_failure('Beim L&ouml;schen des Kontos ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  logger("modules/imap/include/mailaccounts.php", "imap", "deleted account »{$id}«");
 }
 
 

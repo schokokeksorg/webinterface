@@ -1,5 +1,6 @@
 <?php
 
+require_once('inc/base.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
 
@@ -111,8 +112,11 @@ function set_customer_password($customerno, $newpass)
   $query = "UPDATE kundendaten.kunden SET passwort='$newpass' WHERE id='".$customerno."' LIMIT 1";
   @mysql_query($query);
   if (mysql_error())
+  {
+    logger("session/checkuser.php", "dberror", "error while changing customer's password. Query was: »$query«");
     system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
-
+  }
+  logger("session/checkuser.php", "pwchange", "changed customer's password.");
 }
 
 
@@ -125,7 +129,11 @@ function set_systemuser_password($uid, $newpass)
   $query = "UPDATE system.passwoerter SET passwort='$newpass' WHERE uid='".$uid."' LIMIT 1";
   @mysql_query($query);
   if (mysql_error())
+  {
+    logger("session/checkuser.php", "dberror", "error while changing user's password. Query was: »$query«");
     system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  }
+  logger("session/checkuser.php", "pwchange", "changed user's password.");
 }
 
 

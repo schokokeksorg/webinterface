@@ -9,9 +9,13 @@ require_once('session/checkuser.php');
 require_once('inc/error.php');
 require_once('inc/debug.php');
 
-if (!session_start())
-        system_failure('Die Sitzung konnte nicht gestartet werden, bitte benachrichtigen Sie den Administrator!');
+require_once('inc/base.php');
 
+if (!session_start())
+{
+        logger("session/start.php", "session", "Die session konnte nicht gestartet werden!");
+        system_failure('Die Sitzung konnte nicht gestartet werden, bitte benachrichtigen Sie den Administrator!');
+}
 
 DEBUG("<pre>POST-DATA: ".htmlspecialchars(print_r($_POST, true))."\nSESSION_DATA: ".htmlspecialchars(print_r($_SESSION, true))."</pre>");
 
@@ -21,6 +25,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
   if ($role === NULL)
   {
     $_SESSION['role'] = ROLE_ANONYMOUS;
+    logger("session/start.php", "login", "wrong user data");
     login_screen('Ihre Anmeldung konnte nicht durchgeführt werden. Vermutlich haben Sie falsche Zugangsdaten eingegeben.');
   }
   else
@@ -33,10 +38,12 @@ if (isset($_POST['username']) && isset($_POST['password']))
     case ROLE_SYSTEMUSER:
       $info = get_user_info($_POST['username']);
       $_SESSION['userinfo'] = $info;
+      logger("session/start.php", "login", "logged in user »{$info['username']}«");
       break;
     case ROLE_CUSTOMER:
       $info = get_customer_info($_POST['username']);
       $_SESSION['customerinfo'] = $info;
+      logger("session/start.php", "login", "logged in customer no »{$info['customerno']}«");
       break;
     }
   }

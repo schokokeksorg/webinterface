@@ -28,7 +28,7 @@ $prefix = $prefix.str_repeat("../", $count);
 require_once('session/start.php');
 
 $output = "";
-include("inc/base.php");
+require_once("inc/base.php");
 /* setup module include path */
 ini_set('include_path',ini_get('include_path').':./modules/'.dirname($go).'/include:');
 
