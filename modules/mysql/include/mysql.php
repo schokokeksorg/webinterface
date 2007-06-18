@@ -3,7 +3,7 @@
 function get_mysql_accounts($UID)
 {
   $UID = (int) $UID;
-  $result = mysql_query("SELECT username FROM misc.mysql_accounts WHERE useraccount=$UID");
+  $result = db_query("SELECT username FROM misc.mysql_accounts WHERE useraccount=$UID");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
@@ -17,7 +17,7 @@ function get_mysql_accounts($UID)
 function get_mysql_databases($UID)
 {
   $UID = (int) $UID;
-  $result = mysql_query("SELECT name FROM misc.mysql_database WHERE useraccount=$UID");
+  $result = db_query("SELECT name FROM misc.mysql_database WHERE useraccount=$UID");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
@@ -36,7 +36,7 @@ function get_mysql_access($db, $account)
   if (!is_array($mysql_access))
   {
     $mysql_access = array();
-    $result = mysql_query("SELECT db.name AS db, acc.username AS user FROM misc.mysql_access AS access LEFT JOIN misc.mysql_database AS db ON (db.id=access.database) LEFT JOIN misc.mysql_accounts AS acc ON (acc.id = access.user) WHERE acc.useraccount={$uid} OR db.useraccount={$uid};");
+    $result = db_query("SELECT db.name AS db, acc.username AS user FROM misc.mysql_access AS access LEFT JOIN misc.mysql_database AS db ON (db.id=access.database) LEFT JOIN misc.mysql_accounts AS acc ON (acc.id = access.user) WHERE acc.useraccount={$uid} OR db.useraccount={$uid};");
     if (mysql_num_rows($result) == 0)
       return false;
     while ($line = mysql_fetch_object($result))
@@ -66,10 +66,7 @@ function set_mysql_access($db, $account, $status)
     $query = "DELETE FROM misc.mysql_access WHERE `database`=(SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1) AND user=(SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid});";
     logger("modules/mysql/include/mysql.php", "mysql", "revoking access on »{$db}« from »{$account}«");
   }
-  DEBUG($query);
-  mysql_query($query);
-  if (mysql_error())
-    system_failure(mysql_error());
+  db_query($query);
 }
 
 
@@ -84,9 +81,7 @@ function create_mysql_account($username)
   $uid = $_SESSION['userinfo']['uid'];
   $username = mysql_real_escape_string($username);
   logger("modules/mysql/include/mysql.php", "mysql", "creating user »{$username}«");
-  mysql_query("INSERT INTO misc.mysql_accounts (username, password, useraccount) VALUES ('$username', '!', $uid);");
-  if (mysql_error())
-    system_failure(mysql_error());
+  db_query("INSERT INTO misc.mysql_accounts (username, password, useraccount) VALUES ('$username', '!', $uid);");
 }
 
 
@@ -95,9 +90,7 @@ function delete_mysql_account($username)
   $username = mysql_real_escape_string($username);
   $uid = $_SESSION['userinfo']['uid'];
   logger("modules/mysql/include/mysql.php", "mysql", "deleting user »{$username}«");
-  mysql_query("DELETE FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
-  if (mysql_error())
-    system_failure(mysql_error());
+  db_query("DELETE FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
 }
 
 
@@ -112,9 +105,7 @@ function create_mysql_database($dbname)
   $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
   logger("modules/mysql/include/mysql.php", "mysql", "creating database »{$dbname}«");
-  mysql_query("INSERT INTO misc.mysql_database (name, useraccount) VALUES ('$dbname', $uid);");
-  if (mysql_error())
-    system_failure(mysql_error());
+  db_query("INSERT INTO misc.mysql_database (name, useraccount) VALUES ('$dbname', $uid);");
 }
 
 
@@ -123,9 +114,7 @@ function delete_mysql_database($dbname)
   $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
   logger("modules/mysql/include/mysql.php", "mysql", "removing database »{$dbname}«");
-  mysql_query("DELETE FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
-  if (mysql_error())
-    system_failure(mysql_error());
+  db_query("DELETE FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
 }
 
 
@@ -150,12 +139,7 @@ function set_mysql_password($username, $password)
   $password = mysql_real_escape_string($password);
   $uid = $_SESSION['userinfo']['uid'];
   logger("modules/mysql/include/mysql.php", "mysql", "updating password for »{$username}«");
-  $query = "UPDATE misc.mysql_accounts SET password=PASSWORD('$password') WHERE username='$username' AND useraccount=$uid;";
-  DEBUG($query);
-  mysql_query($query);
-  if (mysql_error())
-    system_failure(mysql_error());
-  
+  db_query("UPDATE misc.mysql_accounts SET password=PASSWORD('$password') WHERE username='$username' AND useraccount=$uid;");
 }
 
 

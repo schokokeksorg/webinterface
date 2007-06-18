@@ -23,9 +23,7 @@ function find_role($login, $password)
   $uid = (int) $login;
   if ($uid == 0)
     $uid = 'NULL';
-  $result = @mysql_query("SELECT passwort AS password FROM system.v_useraccounts LEFT JOIN system.passwoerter USING (uid) WHERE uid={$uid} OR username='{$login}' LIMIT 1;");
-  if (mysql_error())
-    system_failure(mysql_error());
+  $result = db_query("SELECT passwort AS password FROM system.v_useraccounts LEFT JOIN system.passwoerter USING (uid) WHERE uid={$uid} OR username='{$login}' LIMIT 1;");
   if (@mysql_num_rows($result) > 0)
   {
     $db_password = mysql_fetch_object($result)->password;
@@ -37,9 +35,7 @@ function find_role($login, $password)
   // Customer?
   $customerno = (int) $login;
   $pass = sha1($password);
-  $result = @mysql_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id={$customerno} AND passwort='{$pass}';");
-  if (mysql_error())
-    system_failure(mysql_error());
+  $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id={$customerno} AND passwort='{$pass}';");
   if (@mysql_num_rows($result) > 0)
   {
     return ROLE_CUSTOMER;
@@ -54,10 +50,7 @@ function get_customer_info($customerno)
 {
   $ret = array();
   $customerno = (int) $customerno;
-  $query = "SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden WHERE id={$customerno} LIMIT 1;";
-  $result = @mysql_query($query);
-  if (mysql_error())
-    system_failure(mysql_error());
+  $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden WHERE id={$customerno} LIMIT 1;");
   if (@mysql_num_rows($result) == 0)
     system_failure("Konnte Kundendaten nicht auslesen!");
   $data = mysql_fetch_object($result);
@@ -74,10 +67,7 @@ function get_customer_info($customerno)
 function get_customer_email($customerno)
 {
   $customerno = (int) $customerno;
-  $query = "SELECT wert FROM kundendaten.kundenkontakt WHERE kundennr={$customerno} AND typ='email' LIMIT 1;";
-  $result = @mysql_query($query);
-  if (mysql_error())
-    system_failure(mysql_error());
+  $result = db_query("SELECT wert FROM kundendaten.kundenkontakt WHERE kundennr={$customerno} AND typ='email' LIMIT 1;");
   if (@mysql_num_rows($result) == 0)
     system_failure("Konnte keine E-Mail-Adresse finden!");
   return mysql_fetch_object($result)->wert;
@@ -88,11 +78,8 @@ function get_customer_email($customerno)
 function get_user_info($username)
 {
   $username = mysql_real_escape_string($username);
-  $query = "SELECT kunde AS customerno, username, uid, homedir, name
-            FROM system.v_useraccounts WHERE username='{$username}' OR uid='{$username}' LIMIT 1";
-  $result = @mysql_query($query);
-  if (mysql_error())
-    system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  $result = db_query("SELECT kunde AS customerno, username, uid, homedir, name
+                      FROM system.v_useraccounts WHERE username='{$username}' OR uid='{$username}' LIMIT 1");
   if (mysql_num_rows($result) < 1)
     system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
   $val = @mysql_fetch_object($result);
@@ -109,13 +96,7 @@ function set_customer_password($customerno, $newpass)
 {
   $customerno = (int) $customerno;
   $newpass = sha1($newpass);
-  $query = "UPDATE kundendaten.kunden SET passwort='$newpass' WHERE id='".$customerno."' LIMIT 1";
-  @mysql_query($query);
-  if (mysql_error())
-  {
-    logger("session/checkuser.php", "dberror", "error while changing customer's password. Query was: »$query«");
-    system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
-  }
+  db_query("UPDATE kundendaten.kunden SET passwort='$newpass' WHERE id='".$customerno."' LIMIT 1");
   logger("session/checkuser.php", "pwchange", "changed customer's password.");
 }
 
@@ -126,50 +107,8 @@ function set_systemuser_password($uid, $newpass)
   require_once('inc/base.php');
   $salt = random_string(8);
   $newpass = crypt($newpass, "\$1\${$salt}\$");
-  $query = "UPDATE system.passwoerter SET passwort='$newpass' WHERE uid='".$uid."' LIMIT 1";
-  @mysql_query($query);
-  if (mysql_error())
-  {
-    logger("session/checkuser.php", "dberror", "error while changing user's password. Query was: »$query«");
-    system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
-  }
+  db_query("UPDATE system.passwoerter SET passwort='$newpass' WHERE uid='".$uid."' LIMIT 1");
   logger("session/checkuser.php", "pwchange", "changed user's password.");
 }
-
-
-/*
-function save_userdata($arr)
-{
-  global $user;
-
-  $rules = array();
-
-  if (isset($arr['email'])) {
-    if (!preg_match('/[a-zA-Z0-9=+._%@-]+@[a-zA-Z0-9.-]+\.[a-z]{2,6}/', $arr['email'])) {
-      input_error('Ihre eMail-Adresse enth&auml;lt Syntax-Fehler!');
-      return false;
-    }
-    array_push($rules, "`email`='".$arr['email']."'");
-  }
-
-  if (isset($arr['emergency_email'])) {
-    if ($arr['emergency_email'] == '') {
-      warning("Sie k&ouml;nnen zwar Ihre Notfall-eMail-Adresse l&ouml;schen, allerdings werden Sie dann bei St&ouml;rungen <strong>nicht</strong> mehr benachrichtigt!");
-    }
-    elseif (!preg_match('/[a-zA-Z0-9=+._%@-]+@[a-zA-Z0-9.-]+\.[a-z]{2,6}/', $arr['emergency_email'])) {
-      input_error('Ihre eMail-Adresse enth&auml;lt Syntax-Fehler!');
-      return false;
-    }
-    array_push($rules, "`emergency_email`='".$arr['emergency_email']."'");
-  }
-
-  $query = "UPDATE customers SET ".implode(',', $rules)." WHERE id='".$user['customerno']."'";
-  mysql_query($query);
-  if (mysql_error())
-    system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
-  return true;
-}
-
-*/
 
 ?>

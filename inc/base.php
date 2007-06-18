@@ -2,6 +2,21 @@
 
 require_once('inc/db_connect.php');
 
+
+function db_query($query)
+{
+  DEBUG($query);
+  $result = @mysql_query($query);
+  if (mysql_error())
+  {
+    $error = mysql_error();
+    logger("inc/base.php", "dberror", "mysql error: {$error}");
+    system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.$error.') an einen Administrator.');
+  }
+  return $result; 
+}
+
+
 function logger($scriptname, $scope, $message)
 {
   $user = 'NULL';
@@ -16,12 +31,7 @@ function logger($scriptname, $scope, $message)
   $scope = mysql_real_escape_string($scope);
   $message = mysql_real_escape_string($message);
 
-  $query = "INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');";
-  DEBUG($query);
-  @mysql_query($query);
-  if (mysql_error())
-    system_failure(mysql_error());
-
+  db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');");
 }
 
 

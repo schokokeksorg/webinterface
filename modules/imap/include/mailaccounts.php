@@ -7,11 +7,7 @@ require_once('inc/base.php');
 function mailaccounts($uid)
 {
   $uid = (int) $uid;
-  $query = "SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),_utf8'schokokeks.org',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid";
-  DEBUG("SQL-Query: {$query}");
-  $result = @mysql_query($query);
-  if (mysql_error())
-    system_failure(mysql_error());
+  $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),_utf8'schokokeks.org',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid");
   DEBUG("Found ".@mysql_num_rows($result)." rows!");
   $accounts = array();
   if (@mysql_num_rows($result) > 0)
@@ -23,8 +19,7 @@ function mailaccounts($uid)
 function get_mailaccount($id)
 {
   $uid = (int) $uid;
-  $query = "SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),_utf8'schokokeks.org',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id";
-  $result = mysql_query($query);
+  $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),_utf8'schokokeks.org',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id");
   DEBUG("Found ".mysql_num_rows($result)." rows!");
   $acc = mysql_fetch_object($result);
   $ret = array('account' => $acc->account, 'mailbox' => $acc->maildir,  'enabled' => ($acc->aktiv == 1));
@@ -46,7 +41,7 @@ function encrypt_mail_password($pw)
 function get_domain_id($domain) 
 {
   $domain = mysql_real_escape_string($domain);
-  $result = mysql_query("SELECT id FROM mail.v_domains WHERE domainname = '{$domain}';");
+  $result = db_query("SELECT id FROM mail.v_domains WHERE domainname = '{$domain}';");
   if (mysql_num_rows($result) == 0)
     return NULL;
   return mysql_fetch_object($result)->id;
@@ -82,12 +77,7 @@ function change_mailaccount($id, $arr)
     array_push($conditions, "`aktiv`=".($arr['enabled'] == 'Y' ? "1" : "0"));
 
 
-  $query = "UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id='$id' LIMIT 1";
-  DEBUG("Query: ".$query);
-
-  mysql_query($query);
-  if (mysql_error())
-    system_failure('Beim &Auml;ndern der Account-Daten ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  db_query("UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id='$id' LIMIT 1");
   logger("modules/imap/include/mailaccounts.php", "imap", "updated account »{$arr['account']}«");
 
 }
@@ -124,12 +114,7 @@ function create_mailaccount($arr)
     $values['aktiv'] = ($arr['enabled'] == 'Y' ? "1" : "0" );
 
 
-  $query = "INSERT INTO mail.mailaccounts (".implode(',', array_keys($values)).") VALUES (".implode(",", array_values($values)).")";
-  DEBUG("Query: ".$query);
-
-  mysql_query($query);
-  if (mysql_error())
-    system_failure('Beim Anlegen des Kontos ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  db_query("INSERT INTO mail.mailaccounts (".implode(',', array_keys($values)).") VALUES (".implode(",", array_values($values)).")");
   logger("modules/imap/include/mailaccounts.php", "imap", "created account »{$arr['account']}«");
 
 }
@@ -138,10 +123,7 @@ function create_mailaccount($arr)
 function delete_mailaccount($id)
 {
   $id = (int) $id;
-  $query = "DELETE FROM mail.mailaccounts WHERE id=".$id." LIMIT 1";
-  mysql_query($query);
-  if (mysql_error())
-    system_failure('Beim L&ouml;schen des Kontos ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.mysql_error().') an einen Administrator.');
+  db_query("DELETE FROM mail.mailaccounts WHERE id=".$id." LIMIT 1");
   logger("modules/imap/include/mailaccounts.php", "imap", "deleted account »{$id}«");
 }
 
