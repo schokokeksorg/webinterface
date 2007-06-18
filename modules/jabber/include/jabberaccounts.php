@@ -55,6 +55,7 @@ function create_jabber_account($local, $domain, $password)
     $result = mysql_query($query);
     if (mysql_num_rows($result) == 0)
     {
+      logger("modules/jabber/include/jabberaccounts.php", "jabber", "attempt to create account for invalid domain »{$domain}«");
       system_failure("Invalid domain!");
     }
   }
@@ -70,12 +71,14 @@ function create_jabber_account($local, $domain, $password)
   $result = mysql_query($query);
   if (mysql_num_rows($result) > 0)
   {
+    logger("modules/jabber/include/jabberaccounts.php", "jabber", "attempt to create already existing account »{$local}@{$domain}«");
     system_failure("Diesen Account gibt es bereits!");
   }
 
   $query = "INSERT INTO jabber.accounts (customerno,local,domain,password) VALUES ({$customerno}, '{$local}', {$domain}, '{$password}');";
   DEBUG($query);
   mysql_query($query);
+  logger("modules/jabber/include/jabberaccounts.php", "jabber", "created account »{$local}@{$domain}«");
 }
 
 
@@ -90,6 +93,7 @@ function change_jabber_password($id, $newpass)
   $query = "UPDATE jabber.accounts SET password='{$newpass}' WHERE customerno={$customerno} AND id={$id} LIMIT 1";
   DEBUG($query);
   mysql_query($query);
+  logger("modules/jabber/include/jabberaccounts.php", "jabber", "changed password for account  »{$id}«");
 }
 
 
@@ -104,6 +108,7 @@ function delete_jabber_account($id)
   $query = "UPDATE jabber.accounts SET `delete`=1 WHERE customerno={$customerno} AND id={$id} LIMIT 1";
   DEBUG($query);
   mysql_query($query);
+  logger("modules/jabber/include/jabberaccounts.php", "jabber", "deleted account »{$id}«");
 }
 
 ?>
