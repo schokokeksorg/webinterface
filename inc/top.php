@@ -23,7 +23,7 @@ foreach ($config['modules'] as $module)
     $menu[$key]["file"] = $prefix."go/".$module."/".$menu[$key]["file"];
     $weight = $menu[$key]["weight"];
     if (array_key_exists($weight, $weighted_menuitem))
-      array_merge($weighted_menuitem[$weight], array($key => $menu[$key]));
+      $weighted_menuitem[$weight] = array_merge($weighted_menuitem[$weight], array($key => $menu[$key]));
     else
       $weighted_menuitem[$weight] = array($key => $menu[$key]);
   }
@@ -58,9 +58,7 @@ $menuitem["logout"]["file"] = "logout.php";
 
 
 ?>
-
-
-<?php echo '<?xml version="1.0" encoding="utf-8"?>'; ?>
+<?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 

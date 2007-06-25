@@ -17,6 +17,17 @@ function db_query($query)
 }
 
 
+
+function maybe_null($value)
+{
+  if (strlen( (string) $value ) > 0)
+    return "'{$value}'";
+  else
+    return 'NULL';
+}
+
+
+
 function logger($scriptname, $scope, $message)
 {
   $user = 'NULL';
@@ -142,6 +153,23 @@ function html_form($form_id, $scriptname, $querystring, $content)
   return $ret;  
 }
 
+
+function html_select($name, $options, $default)
+{
+  require_once('inc/security.php');
+  $ret = "<select name=\"{$name}\" size=\"1\">\n";
+  foreach ($options as $key => $value)
+  {
+    $selected = '';
+    if ($default == $key)
+      $selected = ' selected="selected" ';
+    $key = filter_input_general($key);
+    $value = filter_input_general($value);
+    $ret .= "  <option value=\"{$key}\"{$selected}>{$value}</option>\n";
+  }
+  $ret .= '</select>';
+  return $ret;
+}
 
 
 
