@@ -25,7 +25,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
   if ($role === NULL)
   {
     $_SESSION['role'] = ROLE_ANONYMOUS;
-    logger("session/start.php", "login", "wrong user data");
+    logger("session/start.php", "login", "wrong user data (username: »{$_POST['username']}«");
     login_screen('Ihre Anmeldung konnte nicht durchgeführt werden. Vermutlich haben Sie falsche Zugangsdaten eingegeben.');
   }
   else
