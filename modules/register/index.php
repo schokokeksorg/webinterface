@@ -39,10 +39,9 @@ if (count($_POST) > 0)
     }
     elseif (create_token($customerno))
     {
-      require_once('mail.php');
       require_once('inc/base.php');
-      send_customer_token($customerno);
-      logger("modules/index/new_password.php", "pwrecovery", "token sent for customer »{$_POST['customerno']}«");
+      send_initial_customer_token($customerno);
+      logger("modules/register/index.php", "register", "token sent for customer »{$customerno}«");
       $success = true;
       #success_msg('Die angegebenen Daten wurden gespeichert, Sie sollten umgehend eine E-Mail erhalten.');
     }
@@ -56,7 +55,7 @@ if ($success)
   <p>Wir bestätigen hiermit die Einrichtung eines Kundenkontos und bedanken uns für Ihr Vertrauen.</p>
 
   <h4>Was jetzt?</h4>
-  <p>Sie erhalten jetzt von uns eine E-Mail an die soeben eingegebene E-Mail-Adresse (»'.$_POST['email'].'«). Beachten Sie bitte, dass manche E-Mail-Spamfilter die Zustellung um einegewisse Zeit verzögern können. Sofern Sie nach ca. einer Stunde noch keine E-Mail erhalten haben, schreiben Sie bitte <a href="mailto:root@schokokeks.org">an die Administratoren.</a></p>
+  <p>Sie erhalten jetzt von uns eine E-Mail an die soeben eingegebene E-Mail-Adresse (»'.$_POST['email'].'«). Beachten Sie bitte, dass manche E-Mail-Spamfilter die Zustellung um eine gewisse Zeit verzögern können. Sofern Sie nach ca. einer Stunde noch keine E-Mail erhalten haben, schreiben Sie bitte <a href="mailto:root@schokokeks.org">an die Administratoren.</a></p>
 
   <p>In der E-Mail finden Sie einen Link. Wenn Sie diesen aufrufen, dann erhalten Sie die Möglichkeit, ein Passwort zu setzen. Mit diesem Passwort und der Kundennummer <strong>'.(string) $customerno.'</strong> können Sie sich daraufhin an unserem Web-Interface anmelden.');
 }
