@@ -34,7 +34,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
   }
   else
   {
-    input_error("Das eingegebene Token war nicht korrekt. Bitte benutzen Sie die Kopieren &amp; Einfügen-Operation!");
+    input_error("Der eingegebene Code war nicht korrekt. Bitte benutzen Sie die Kopieren &amp; Einfügen-Operation!");
   }
 }
 
@@ -53,10 +53,10 @@ if ($show == 'password')
 elseif ($show == 'token')
 {
   output('<h3>Neues Passwort setzen</h3>
-  <p>Bitte geben Sie Ihre Kundennummer und das per E-Mail zugeschickte Token ein. Alternativ können sie den Link aus der E-Mail direkt aufrufen.</p>
+  <p>Bitte geben Sie Ihre Kundennummer und den per E-Mail zugeschickten Code ein. Alternativ können sie den Link aus der E-Mail direkt aufrufen.</p>
   <form action="" method="post">
   <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>
-  <p><span class="login_label">Token:</span> <input type="text" name="token" size="30" /></p>
+  <p><span class="login_label">Code:</span> <input type="text" name="token" size="30" /></p>
   <p><span class="login_label">&nbsp;</span> <input type="submit" value="Überprüfen" />
   </form>');
 }
