@@ -5,8 +5,7 @@ if (! defined("TOP_INCLUDED"))
 
 define("TOP_INCLUDED", true);
 
-require_once("config.php");
-global $config; 
+include("config.php");
 require_once("inc/error.php");
 global $prefix;
 
@@ -15,8 +14,14 @@ $weighted_menuitem = array();
 
 foreach ($config['modules'] as $module)
 {
-  $menu = array();
-  include("modules/$module/menu.php");
+  include("modules/{$module}/menu.php");
+  if ($menu === false)
+  {
+    DEBUG("Modul {$module} hat keine Menüeinträge");
+    continue;
+  }
+  DEBUG("<h4>$module</h4>");
+  DEBUG($menu);
   // $menu["foo"]["file"] enthält den Link
   foreach (array_keys($menu) as $key)
   {

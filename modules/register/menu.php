@@ -1,5 +1,6 @@
 <?php
-global $menu;
+
+$menu = array();
 $role = $_SESSION['role'];
 
 switch ($role)
@@ -9,5 +10,8 @@ switch ($role)
     break;
     
 }
+
+if (empty($menu))
+  $menu = false;
 
 ?>

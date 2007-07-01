@@ -1,5 +1,7 @@
 <?php
 
+$menu = array();
+
 $role = $_SESSION['role'];
 
 switch ($role)
@@ -13,5 +15,9 @@ switch ($role)
     $menu["index_index"] = array("label" => "Übersicht", "file" => "index.php", "weight" => 0);
     
 }
+
+if (empty($menu))
+  $menu = false;
+
 
 ?>

@@ -1,5 +1,7 @@
 <?php
 
+$menu = array();
+
 $role = $_SESSION['role'];
 
 switch ($role)
@@ -10,5 +12,8 @@ switch ($role)
     $menu["domains_domains"] = array("label" => "Domains", "file" => "domains.php", "weight" => 1);
     
 }
+
+if (empty($menu))
+  $menu = false;
 
 ?>

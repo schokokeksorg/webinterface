@@ -62,4 +62,7 @@ else
 }
 // Wenn wir hier sind, ist der Benutzer eingeloggt. Möglicherweise nur als ANONYMOUS
 
+
+DEBUG("Role: ".$_SESSION['role']);
+
 ?>

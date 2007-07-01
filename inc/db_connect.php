@@ -2,9 +2,7 @@
 
 require_once('inc/error.php');
 
-$config = array();
-
-require_once('config.php');
+include('config.php');
 
 
 if (!@mysql_connect($config['db_host'], $config['db_user'], $config['db_pass']))

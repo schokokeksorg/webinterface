@@ -1,14 +1,22 @@
 <?php
 
-$debugmode = false;
-if (isset($_GET['debug']))
-	$debugmode = true;
+require_once('config.php');
+global $config;
+$debugmode = (isset($_GET['debug']) && $config['enable_debug']);
+
 
 function DEBUG($str)
 {
 	global $debugmode;
 	if ($debugmode)
-		echo $str."<br />\n";
+    if (is_array($str))
+    {
+      echo "<pre>".print_r($str, true)."</pre>\n";
+    }
+    else
+    {
+	  	echo $str."<br />\n";
+    }
 }
 
 ?>

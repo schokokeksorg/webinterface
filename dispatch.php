@@ -1,5 +1,6 @@
 <?php
 
+require_once('config.php');
 require_once('inc/debug.php');
 $go = $_GET['go'];
 
