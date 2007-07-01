@@ -64,7 +64,7 @@ else
   output('<h3>Bei schokokeks.org registrieren</h3>
   <p>Hier können Sie sich bei schokokeks.org anmelden. Eine Anmeldung ist kostenlos und unverbindlich, erlaubt Ihnen aber, kostenpflichtige Dienste von schokokeks.org in Anspruch zu nehmen.</p>
   <p><strong>Gehen Sie daher sorgfältig mit den Anmeldedaten um!</strong></p>
-  <p>Um Sie als Kunden identifizieren zu können, benötigen wir den Namen und die E-Mail-Adresse. Die eingegebenen Daten werden manuell bearbeitet und bei Spass-Eintragungen wird der Zugang gesperrt. Je nach dem, welche späteren Dienste Sie bei uns in Anspruch nehmen, kann es notwendig sein, dass Sie weitere Daten eingeben (z.B. Domainregistrierung).</p>
+  <p>Um Sie als Kunden identifizieren zu können, benötigen wir den Namen und die E-Mail-Adresse. Die eingegebenen Daten werden manuell bearbeitet und bei Spass-Eintragungen wird der Zugang gesperrt. Je nach dem, welche späteren Dienste Sie bei uns in Anspruch nehmen, kann es notwendig sein, dass Sie weitere Daten eingeben (z.B. Adresse bei Domainregistrierung).</p>
   
   <h4>Anmeldung</h4>
   <p>Um sich jetzt bei schokokeks.org anzumelden, müssen Sie hier zuerst Ihren Namen und Ihre E-Mail-Adresse eingeben.</p>');
