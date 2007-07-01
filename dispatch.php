@@ -8,7 +8,7 @@ $go = $_GET['go'];
  sanitize $go
 */
 
-if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go")))
+if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go")) or (! is_file("modules/$go")))
 {
   die("illegal command");
 }
