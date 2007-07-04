@@ -28,6 +28,8 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
         logger("modules/index/validate_token.php", "pwrecovery", "customer »{$customerno}« set a new password");
         set_customer_password($customerno, $_POST['password']);
         success_msg('Das Passwort wurde gesetzt!');
+        set_customer_verified($customerno);
+        set_customer_lastlogin($customerno);
         invalidate_customer_token($customerno);
         $_SESSION['role'] = ROLE_CUSTOMER;
         $_SESSION['customerinfo'] = get_customer_info($customerno);

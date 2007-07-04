@@ -40,7 +40,7 @@ function create_customer($data)
   $nachname = maybe_null($nachname);
 
   db_query("BEGIN");
-  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, erstellungsdatum) VALUES ({$firma}, {$nachname}, {$vorname}, {$anrede}, CURDATE())");
+  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, erstellungsdatum,status) VALUES ({$firma}, {$nachname}, {$vorname}, {$anrede}, CURDATE(), 3)");
   $customerno = mysql_insert_id();
   db_query("INSERT INTO kundendaten.kundenkontakt (typ, comment, wert, name, kundennr) VALUES ('email', 'extern', '{$email}', {$realname}, {$customerno})");
   db_query("COMMIT");

@@ -81,7 +81,10 @@ function get_user_info($username)
   $result = db_query("SELECT kunde AS customerno, username, uid, homedir, name
                       FROM system.v_useraccounts WHERE username='{$username}' OR uid='{$username}' LIMIT 1");
   if (mysql_num_rows($result) < 1)
+  {
+    logger("session/checkuser.php", "login", "error reading user's data: »{$username}«");
     system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
+  }
   $val = @mysql_fetch_object($result);
   return array(
           'username'      => $val->username,
@@ -90,6 +93,19 @@ function get_user_info($username)
           'homedir'       => $val->homedir,
           'name'          => $val->name,
           );
+}
+
+function set_customer_verified($customerno)
+{
+  $customerno = (int) $customerno;
+  db_query("UPDATE kundendaten.kunden SET status=0 WHERE id={$customerno};");
+  logger("session/checkuser.php", "register", "set customer's status to 0.");
+}
+
+function set_customer_lastlogin($customerno)
+{
+  $customerno = (int) $customerno;
+  db_query("UPDATE kundendaten.kunden SET lastlogin=NOW() WHERE id={$customerno};");
 }
 
 function set_customer_password($customerno, $newpass)

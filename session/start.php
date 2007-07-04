@@ -43,6 +43,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
     case ROLE_CUSTOMER:
       $info = get_customer_info($_POST['username']);
       $_SESSION['customerinfo'] = $info;
+      set_customer_lastlogin($info['customerno']);
       logger("session/start.php", "login", "logged in customer no »{$info['customerno']}«");
       break;
     }
