@@ -26,8 +26,10 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
         set_customer_password($customerno, $_POST['password']);
         success_msg('Das Passwort wurde gesetzt!');
         invalidate_customer_token($customerno);
+        $_SESSION['role'] = ROLE_CUSTOMER;
+        $_SESSION['customerinfo'] = get_customer_info($customerno);
         output('<h3>Passwort gesetzt</h3>
-        <p>Ihr neues Passwort wurde gesetzt, bitte melden Sie sich jetzt <a href="index.php">auf der Startseite</a> an.</p>');
+        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt <a href="index.php">die Web-Oberfläche sofort benutzen</a>.</p>');
         $show = NULL;
       }
     }
