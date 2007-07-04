@@ -1,6 +1,34 @@
 <?php
 
 
+function strong_password($password)
+{
+  include("config.php");
+  DEBUG("Öffne Wörterbuch: {$config['cracklib_dict']}");
+  if (! ($dict = crack_opendict($config['cracklib_dict'])))
+  {
+    logger("inc/security.php", "cracklib", "could not open cracklib-dictionary »{$config['cracklib_dict']}«");
+    system_failure("Kann Crack-Lib-Wörterbuch nicht öffnen: {$config['cracklib_dict']}");
+  }
+  // Führe eine Überprüfung des Passworts durch
+  $check = crack_check($dict, $password);
+
+  $message = crack_getlastmessage();
+  crack_closedict($dict);
+
+  if ($check === True)
+  {
+    DEBUG("Passwort ok");
+    return true;
+  }
+  else
+  {
+    DEBUG("Passwort nicht ok: {$message}");
+    return $message;
+  }
+}
+
+
 function filter_input_general( $input )
 {
         return htmlspecialchars(iconv('UTF-8', 'UTF-8', $input), ENT_QUOTES, 'UTF-8');

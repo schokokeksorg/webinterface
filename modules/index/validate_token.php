@@ -9,6 +9,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
   $token = $_REQUEST['token'];
   
   require_once('newpass.php');
+  require_once('inc/security.php');
   if (validate_token($customerno, $token))
   {
     $show = 'password';
@@ -18,6 +19,8 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
         input_error("Die beiden Passwort-Eingaben stimmen nicht überein.");
       elseif ($_POST['password'] == '')
         input_error("Es kann kein leeres Passwort gesetzt werden");
+      elseif (($result = strong_password($_POST['password'])) !== true)
+        input_error("Das Passwort ist zu einfach (cracklib sagt: {$result})!");
       else
       {
         require_once('session/checkuser.php');
