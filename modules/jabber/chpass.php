@@ -2,7 +2,6 @@
 
 require_once('session/start.php');
 
-require_once('domains.php');
 require_once('jabberaccounts.php');
 
 require_role(ROLE_CUSTOMER);

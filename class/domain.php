@@ -30,6 +30,8 @@ class Domain extends KeksData
   {
     $name = mysql_real_escape_string($name);
     $res = $this->getData("*", "CONCAT_WS('.', domainname, tld)='{$name}' LIMIT 1");
+    if (count($res) < 1)
+      return false;
     $this->parse($res[0]);
   }
 

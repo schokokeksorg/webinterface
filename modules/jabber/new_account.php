@@ -2,7 +2,7 @@
 
 require_once('session/start.php');
 
-require_once('domains.php');
+require_once('class/domain.php');
 require_once('jabberaccounts.php');
 
 require_role(ROLE_CUSTOMER);
@@ -16,7 +16,7 @@ $jabberdomains = get_jabberable_domains();
 $options = '';
 foreach ($jabberdomains as $dom)
 {
-  $options .= '<option value="'.$dom['id'].'">'.$dom['name'].'</option>'."\n";
+  $options .= '<option value="'.$dom->id.'">'.$dom->fqdn.'</option>'."\n";
 }
 
 

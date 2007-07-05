@@ -2,7 +2,7 @@
 
 require_once('session/start.php');
 
-require_once('domains.php');
+require_once('class/domain.php');
 require_once('mailaccounts.php');
 
 require_role(ROLE_SYSTEMUSER);
@@ -85,12 +85,11 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
     <td><input type="text" id="user" name="user" />@<select name="domain" size="1">
     <option value="schokokeks.org">schokokeks.org</option>
     ');
-    require_once('domains.php');
-    $domains = get_domain_names($user['customerno'], $user['uid']);
+    $domains = get_domain_list($user['customerno'], $user['uid']);
     if (count($domains) > 0)
       output('<option>----------------------------</option>');
     foreach ($domains as $dom)
-      output('<option value="'.$dom['domainname'].'">'.$dom['domainname'].'</option>');
+      output('<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>');
     output('</select></td>
 
   </tr>
@@ -165,15 +164,14 @@ elseif (isset($_GET['edit']))
           <td><input type="text" id="user" name="user" value="'.$username.'" />@<select name="domain" id="domain" size="1">
     <option value="schokokeks.org">schokokeks.org</option>
     ');
-    require_once('domains.php');
-    $domains = get_domain_names($user['customerno'], $user['uid']);
+    $domains = get_domain_list($user['customerno'], $user['uid']);
     if (count($domains) > 0)
       output('<option>----------------------------</option>');
     foreach ($domains as $dom)
-      if ($domain == $dom['domainname'])
-        output('<option value="'.$dom['domainname'].'" selected="selected">'.$dom['domainname'].'</option>');
+      if ($domain == $dom->fqdn)
+        output('<option value="'.$dom->fqdn.'" selected="selected">'.$dom->fqdn.'</option>');
       else
-        output('<option value="'.$dom['domainname'].'">'.$dom['domainname'].'</option>');
+        output('<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>');
 
     output('</select></td>
           <td><input type="button" onclick="document.getElementById(\'user\').value = \''.$username.'\' ; document.getElementById(\'domain\').value = \''.$domain.'\'" value="Zeile zur&uuml;cksetzen" /></td></tr>

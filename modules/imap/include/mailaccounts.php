@@ -4,6 +4,8 @@ require_once('inc/debug.php');
 require_once('inc/db_connect.php');
 require_once('inc/base.php');
 
+require_once('class/domain.php');
+
 function mailaccounts($uid)
 {
   $uid = (int) $uid;
@@ -38,16 +40,6 @@ function encrypt_mail_password($pw)
 
 }
 
-function get_domain_id($domain) 
-{
-  $domain = mysql_real_escape_string($domain);
-  $result = db_query("SELECT id FROM mail.v_domains WHERE domainname = '{$domain}';");
-  if (mysql_num_rows($result) == 0)
-    return NULL;
-  return mysql_fetch_object($result)->id;
-}
-
-
 function change_mailaccount($id, $arr)
 {
   $id = (int) $id;
@@ -56,10 +48,13 @@ function change_mailaccount($id, $arr)
   if (isset($arr['account']))
   {
     list($local, $domain) = explode('@', $arr['account'], 2);
-    $domainid = get_domain_id($domain);
-    if ($domainid == NULL)
-      $domainid='NULL';
-    array_push($conditions, "local='".mysql_real_escape_string($local)."', domain=$domainid");
+    $domain = new Domain( (string) $domain);
+    if ($domain->id == NULL)
+      array_push($conditions, "domain=NULL");
+    else
+      array_push($conditions, "domain={$domain->id}");
+
+    array_push($conditions, "local='".mysql_real_escape_string($local)."'");
   }
   if (isset($arr['mailbox']))
     if ($arr['mailbox'] == '')
@@ -92,11 +87,13 @@ function create_mailaccount($arr)
   $values['uid'] = (int) $_SESSION['userinfo']['uid'];
 
   list($local, $domain) = explode('@', $arr['account'], 2);
-  $domainid = get_domain_id($domain);
-  if ($domainid == NULL)
-    $domainid='NULL';
+  $domain = new Domain( (string) $domain);
+  if ($domain->id == NULL)
+    $values['domain'] = "NULL";
+  else
+    $values['domain'] = $domain->id;
+
   $values['local'] = "'".mysql_real_escape_string($local)."'";
-  $values['domain'] = $domainid;
 
   if (isset($arr['mailbox']))
     if ($arr['mailbox'] == '')
@@ -147,11 +144,10 @@ function check_valid($acc)
     return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen m&uuml;ssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie &quot;@schokokeks.org&quot;.";
 
   list($local, $domain) = explode('@', $acc['account'], 2);
-  require_once('domains.php');
-  $tmpdomains = get_domain_names($user['customerno'], $user['uid']);
+  $tmpdomains = get_domain_list($user['customerno'], $user['uid']);
   $domains = array();
   foreach ($tmpdomains as $dom)
-    array_push($domains, $dom['domainname']);
+    $domains[] = $dom->fqdn;
 
   if (array_search($domain, $domains) === false)
   {

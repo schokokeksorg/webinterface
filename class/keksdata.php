@@ -39,6 +39,7 @@ abstract class KeksData
       $fields[$f->Field] = $f->Default;
     }
     $this->data = $fields;
+    $this->data['id'] = NULL;
   }
 
 
@@ -64,6 +65,8 @@ abstract class KeksData
   {
     $id = (int) $id;
     $res = $this->getData('*', "id={$id} LIMIT 1");
+    if (count($res) < 1)
+      return false;
     $this->parse($res[0]);
   }
 
