@@ -11,6 +11,8 @@ require_once('inc/debug.php');
 
 require_once('inc/base.php');
 
+session_name('CONFIG_SCHOKOKEKS_ORG');
+
 if (!session_start())
 {
         logger("session/start.php", "session", "Die session konnte nicht gestartet werden!");

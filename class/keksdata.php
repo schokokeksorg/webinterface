@@ -9,7 +9,9 @@ abstract class KeksData
 {
   protected $default_table;
   
+  protected $raw_data = array();
   protected $data = array();
+  protected $changes = array();
 
   function __get($key)
   {
@@ -22,8 +24,14 @@ abstract class KeksData
 
   function __set($key, $value)
   {
-    if (array_key_exists($key, $this->data))
-      $this->data[$key] = $value;
+    if (array_key_exists($key, $this->raw_data))
+    {
+      $this->raw_data[$key] = $value;
+      $this->changes[$key] = $value;
+      $this->parse($this->raw_data);
+    }
+    elseif (array_key_exists($key, $this->data))
+      return false;
     elseif (isset($this->$key))
       $this->$key = $value;
     else
@@ -64,12 +72,24 @@ abstract class KeksData
   function loadByID($id)
   {
     $id = (int) $id;
+    DEBUG("requested to load ID »{$id}«");
     $res = $this->getData('*', "id={$id} LIMIT 1");
     if (count($res) < 1)
       return false;
     $this->parse($res[0]);
   }
 
+
+  function save()
+  {
+    $upd = array();
+    foreach ($this->changes as $key => $value)
+    {
+      $value = mysql_real_escape_string($value);
+      array_push($upd, "`{$key}`='{$value}'");
+    }
+    db_query("UPDATE {$this->default_table} SET ".implode(', ', $upd)." WHERE id={$this->data['id']};");
+  }
 
   abstract function parse($data);
 
