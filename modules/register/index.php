@@ -25,6 +25,10 @@ if (count($_POST) > 0)
   {
     array_push($fail, 'Sie müssen mindestens die Felder »Nachname« oder »Firma« sowie »E-Mail« ausfüllen!');
   }
+  elseif (! $_POST['agb_gelesen'] == 1)
+  {
+    array_push($fail, 'Sie müssen die AGB lesen und diesen zustimmen');
+  }
   elseif (! check_emailaddr($_POST['email']))
   {
     array_push($fail, 'Die E-Mail-Adresse scheint nicht korrekt zu sein!');
@@ -41,6 +45,7 @@ if (count($_POST) > 0)
     {
       require_once('inc/base.php');
       send_initial_customer_token($customerno);
+      notify_admins_about_new_customer($customerno);
       logger("modules/register/index.php", "register", "token sent for customer »{$customerno}«");
       $success = true;
       #success_msg('Die angegebenen Daten wurden gespeichert, Sie sollten umgehend eine E-Mail erhalten.');
@@ -82,6 +87,7 @@ else
   <p><span class="login_label">Vorname:</span> <input type="text" name="vorname" size="30" value="'.$_POST['vorname'].'" /></p>
   <p><span class="login_label">Nachname:</span> <input type="text" name="nachname" size="30" value="'.$_POST['nachname'].'" /></p>
   <p><span class="login_label">E-Mail-Adresse:</span> <input type="text" name="email" size="30" value="'.$_POST['email'].'" /></p>
+  <p><span class="login_label">AGB:</span> <input type="checkbox" name="agb_gelesen" value="1"'.($_POST['agb_gelesen'] == 1 ? ' checked="checked"' : '').'" /> Ja, ich habe <a href="http://schokokeks.org/agb">die Allgemeinen Geschäftsbedingungen von schokokeks.org Webhosting</a> gelesen und erkläre mich damit einverstanden.</p>
   <p><span class="login_label">&nbsp;</span> <input type="submit" value="Zugang erstellen" />'));
   
 }

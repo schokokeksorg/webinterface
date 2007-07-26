@@ -65,12 +65,12 @@ function send_initial_customer_token($customerno)
 wir freuen uns, Sie bei schokokeks.org begrüßen zu dürfen.
 
 
-Sie haben sich unter https://config.schokokeks.org/ als Kunde von 
-schokokeks.org angemeldet. Diese E-Mail ist ein Zwischenschritt um 
-Ihre E-Mail-Adresse zu überprüfen.
+Sie haben sich als Kunde von schokokeks.org Webhosting 
+angemeldet. Diese E-Mail ist ein Zwischenschritt um die Gültigkeit 
+Ihrer E-Mail-Adresse zu überprüfen.
 
-Um ein neues Passwort für Ihren Kunden-Zugang festzulegen, rufen 
-Sie bitte die folgende Adresse auf:
+Um ein Passwort für Ihren Kunden-Zugang festzulegen, rufen Sie 
+bitte die folgende Adresse auf:
  https://config.schokokeks.org/go/index/validate_token.php?customerno={$customer['customerno']}&token={$token}
 
 Sollte Ihr E-Mail-Programm diesen Link nicht korrekt an den Browser
@@ -82,14 +82,32 @@ auf und geben Sie die folgenden Daten ein:
 
 Diese Prozedur müssen Sie bis spätestens 24 Stunden nach Erhalt
 dieser Nachricht durchführen, sonst verliert der Code seine
-Gültigkeit.
+Gültigkeit und der Zugang wird wieder gelöscht.
 
 Sofern Sie keinen Account bei schokokeks.org angemeldet haben, 
-können Sie diese Nachricht ignorieren. 
+können Sie diese Nachricht ignorieren.
 ";
-  send_mail($email, "Willkommen bei schokokeks.org", $msg);
+  send_mail($email, "Willkommen bei schokokeks.org Webhosting", $msg);
 }
 
+
+function notify_admins_about_new_customer($customerno)
+{
+  $customerno = (int) $customerno;
+  $customer = get_customer_info($customerno);
+  $email = get_customer_email($customerno);
+  $msg = "Folgender Kunde hat sich gerade über's Webinterface neu angemeldet:
+
+Kundennummer: {$customerno}
+Name: {$customer['name']}
+E-mail: {$email}
+
+Registriert von IP-Adresse {$_SERVER['REMOTE_ADDR']}.
+";
+  send_mail("root@schokokeks.org", "[Webinterface] Neuer Kunde", $msg);
+  
+  
+}
 
 function welcome_customer($customerno)
 {
