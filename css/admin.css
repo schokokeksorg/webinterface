@@ -1,3 +1,11 @@
+html {
+        font-family: Verdana, Arial, Helvetica;
+        font-size: 12px;
+        color: #000000;
+        background-color: #EFEFEF;
+}
+
+
 body {
         font-family: Verdana, Arial, Helvetica;
         font-size: 12px;
