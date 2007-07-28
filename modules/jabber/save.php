@@ -2,7 +2,6 @@
 
 require_once('session/start.php');
 
-require_once('domains.php');
 require_once('jabberaccounts.php');
 
 require_once('inc/security.php');
@@ -12,7 +11,6 @@ require_role(ROLE_CUSTOMER);
 
 require_once("inc/debug.php");
 global $debugmode;
-DEBUG("GET: ".htmlentities(print_r($_GET, true))." / POST: ".htmlentities(print_r($_POST, true)));
 
 if ($_GET['action'] == 'new')
 {
@@ -33,6 +31,7 @@ if ($_GET['action'] == 'new')
 elseif ($_GET['action'] == 'chpass')
 {
   check_form_token('jabber_chpass');
+  get_jabberaccount_details($_POST['accountid']);
   if ($_POST['newpass'] == '' ||
       $_POST['newpass2'] == '' ||
       $_POST['newpass'] != $_POST['newpass2'] ||

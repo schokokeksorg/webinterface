@@ -4,6 +4,7 @@ require_once("inc/debug.php");
 require_once("inc/db_connect.php");
 require_once("inc/security.php");
 
+require_once('class/domain.php');
 
 function get_jabber_accounts() {
   require_role(ROLE_CUSTOMER);
@@ -29,7 +30,13 @@ function get_jabberaccount_details($id)
   if (mysql_num_rows($result) != 1)
     system_failure("Invalid account");
   $data = mysql_fetch_assoc($result);
-  $data['domain'] = get_domain_name($data['domain']);
+  if ($data['domain'] == NULL)
+    $data['domain'] = 'schokokeks.org';
+  else
+  {
+    $dom = new Domain((int) $data['domain']);
+    $data['domain'] = $dom->fqdn;
+  }
   return $data;
 }
 

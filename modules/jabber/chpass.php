@@ -8,8 +8,6 @@ require_role(ROLE_CUSTOMER);
 
 $title = "Neues Jabber-Konto erstellen";
 
-DEBUG("GET: ".htmlentities(print_r($_GET, true))." / POST: ".htmlentities(print_r($_POST, true)));
-
 $account = get_jabberaccount_details($_GET['account']);
 $account_string = $account['local'].'@'.$account['domain'];
 
