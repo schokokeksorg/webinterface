@@ -16,7 +16,6 @@ if ($debugmode)
 $title = "E-Mail-Accounts";
 
 
-DEBUG("GET: ".htmlentities(print_r($_GET, true))." / POST: ".htmlentities(print_r($_POST, true)));
 if (isset($_GET['action']) && $_GET['action'] == 'save')
 {
   if (isset($_GET['id']))

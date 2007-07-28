@@ -4,7 +4,6 @@ require_once('config.php');
 global $config;
 $debugmode = (isset($_GET['debug']) && $config['enable_debug']);
 
-
 function DEBUG($str)
 {
 	global $debugmode;
@@ -18,5 +17,8 @@ function DEBUG($str)
 	  	echo $str."<br />\n";
     }
 }
+
+
+DEBUG("GET: ".htmlentities(print_r($_GET, true))." / POST: ".htmlentities(print_r($_POST, true)));
 
 ?>
