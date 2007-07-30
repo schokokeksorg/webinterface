@@ -38,7 +38,7 @@ output(html_form('su_su', 'su.php', '', '<select name="destination" size="1">
 </select>
 <input type="submit" name="submit" value="zum Benutzer wechseln" />
 '));
-output('<p>Kunde auswählen: ');
+output('</p><p>Kunde auswählen: ');
 
 $customers = list_customers();
 $options = '';
@@ -52,7 +52,7 @@ output(html_form('su_su', 'su.php', '', '<select name="destination" size="1">
 </select>
 <input type="submit" name="submit" value="zum Kunden wechseln" />
 '));
-output("<br />");
+output("</p><br />");
 
 
 
