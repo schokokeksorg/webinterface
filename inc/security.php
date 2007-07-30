@@ -52,9 +52,12 @@ function filter_shell( $input )
 
 function check_path( $input )
 {
-  if ($input != filter_input_general($input))
-    return False;
   DEBUG("checking {$input} for valid path name");
+  if ($input != filter_input_general($input))
+  {
+    DEBUG("HTML-Krams im Pfad");
+    return False;
+  }
   $components = explode("/", $input);
   foreach ($components AS $item)
   {
@@ -63,7 +66,7 @@ function check_path( $input )
       return False;
     }
   }
-  return (preg_match('/^[a-z0-9.\/_-]*$/',$input) == 1);
+  return (preg_match('/^[a-z0-9.@\/_-]*$/',$input) == 1);
 }
 
 
