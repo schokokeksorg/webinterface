@@ -4,10 +4,9 @@ $menu = array();
 
 $role = $_SESSION['role'];
 
-switch ($role)
+if ($role & ROLE_CUSTOMER)
 {
-  case ROLE_CUSTOMER:
-    $menu["jabber_accounts"] = array("label" => "Jabber", "file" => "accounts.php", "weight" => 10);
+  $menu["jabber_accounts"] = array("label" => "Jabber", "file" => "accounts.php", "weight" => 10);
     
 }
 
