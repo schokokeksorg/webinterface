@@ -89,10 +89,13 @@ function require_role($roles)
     $roles = array($roles);
   $allow = false;
   foreach ($roles as $role)
-    if ($role == $_SESSION['role'])
+    if ($role & $_SESSION['role'])
       $allow = true;
   if (! $allow)
-    login_screen("Diese Seite können Sie mit Ihren aktuellen Zugriffsrechten nicht benutzen, bitte melden Sie sich mit den benötigten Zugriffsrechten an!");
+    if ($_SESSION['role'] == ROLE_ANONYMOUS)
+      login_screen("Diese Seite können Sie erst benutzen, wenn Sie sich mit Ihren Zugangsdaten anmelden.");
+    else
+      login_screen("Diese Seite können Sie mit Ihren aktuellen Zugriffsrechten nicht benutzen, bitte melden Sie sich mit den benötigten Zugriffsrechten an!");
 }
 
 
