@@ -208,7 +208,7 @@ else
             <td>'.$account['account'].'</td>
             <td>'.$mailbox.'</td>
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
-            <td><a href="accounts.php?edit='.$account['id'].'">bearbeiten</a></td><td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">l&ouml;schen</a></td>');
+            <td><a href="accounts.php?edit='.$account['id'].'">bearbeiten</a></td><td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">l&ouml;schen</a></td></tr>');
         }
         output('</table>
 <p><a href="accounts.php?action=create">Neuen Account anlegen</a></p>
