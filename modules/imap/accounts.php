@@ -138,6 +138,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
     </tr>
     <tr><td>Konto aktiv:</td>
       <td>'.$enabled.'</td>
+    </tr>
   </table>
   <p><input type="hidden" name="confirm" value="yes" />
     <input type="submit" value="Wirklich l&ouml;schen" />
