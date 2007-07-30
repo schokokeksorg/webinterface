@@ -57,7 +57,7 @@ function set_systemuser_details($uid, $fullname, $quota)
 {
   $uid = (int) $uid;
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $fullname = maybe_null(mysql_real_escape_string($fullname));
+  $fullname = maybe_null(mysql_real_escape_string(filter_input_general($fullname)));
   $quota = (int) $quota;
 
   db_query("UPDATE system.useraccounts SET name={$fullname} WHERE kunde={$customerno} AND uid={$uid} LIMIT 1");
