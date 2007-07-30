@@ -24,6 +24,14 @@ case ROLE_SYSTEMUSER:
 case ROLE_CUSTOMER:
   $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde";
   break;
+case ROLE_CUSTOMER | ROLE_SYSTEMUSER:
+  $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde und Benutzer";
+  break;
+case ROLE_CUSTOMER | ROLE_SYSTEMUSER | ROLE_SYSADMIN:
+  $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde, Benutzer und Administrator";
+  break;
+default:
+  system_failure('Interner Fehler (»Unbekannte Rolle: '.$_SESSION['role'].'«)');
 }
 
 

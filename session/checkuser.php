@@ -9,13 +9,13 @@ require_once('inc/db_connect.php');
 define('ROLE_ANONYMOUS', 0);
 define('ROLE_DOMAINADMIN', 1);
 define('ROLE_SYSTEMUSER', 2);
-define('ROLE_CUSTOMER', 3);
-define('ROLE_SYSADMIN', 4);
+define('ROLE_CUSTOMER', 4);
+define('ROLE_SYSADMIN', 8);
 
 
 // Gibt die Rolle aus, wenn das Passwort stimmt
 
-function find_role($login, $password)
+function find_role($login, $password, $i_am_admin = False)
 {
   $login = mysql_real_escape_string($login);
   // Domain-Admin?  <not implemented>
@@ -23,19 +23,29 @@ function find_role($login, $password)
   $uid = (int) $login;
   if ($uid == 0)
     $uid = 'NULL';
-  $result = db_query("SELECT passwort AS password FROM system.v_useraccounts LEFT JOIN system.passwoerter USING (uid) WHERE uid={$uid} OR username='{$login}' LIMIT 1;");
+  $result = db_query("SELECT passwort AS password, (u.uid = (SELECT min(uid) FROM system.v_useraccounts AS acc WHERE acc.kunde=u.kunde)) AS  `primary`, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid={$uid} OR username='{$login}' LIMIT 1;");
   if (@mysql_num_rows($result) > 0)
   {
-    $db_password = mysql_fetch_object($result)->password;
+    $entry = mysql_fetch_object($result);
+    $db_password = $entry->password;
     $hash = crypt($password, $db_password);
-    if ($hash == $db_password)
-      return ROLE_SYSTEMUSER;
+    if ($hash == $db_password || $i_am_admin)
+    {
+      $role = ROLE_SYSTEMUSER;
+      if ($entry->primary)
+        $role = $role | ROLE_CUSTOMER;
+      if ($entry->admin)
+        $role = $role | ROLE_SYSADMIN;
+      return $role;
+    }
   }
 
   // Customer?
   $customerno = (int) $login;
   $pass = sha1($password);
   $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id={$customerno} AND passwort='{$pass}';");
+  if ($i_am_admin)
+    $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id={$customerno}");
   if (@mysql_num_rows($result) > 0)
   {
     return ROLE_CUSTOMER;
@@ -46,11 +56,23 @@ function find_role($login, $password)
 }
 
 
-function get_customer_info($customerno)
+function get_customer_info($customer)
 {
+  if (! $_SESSION['role'] & ROLE_CUSTOMER)
+    return array();
   $ret = array();
-  $customerno = (int) $customerno;
-  $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden WHERE id={$customerno} LIMIT 1;");
+  $customerno = (int) $customer;
+  if ($customerno != 0)
+  {
+    DEBUG('Looking up customerinfo for customer no. '.$customerno);
+    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden WHERE id={$customerno} LIMIT 1;");
+  }
+  else
+  {
+    $username = mysql_real_escape_string($customer);
+    DEBUG('looking up customer info for username '.$username);
+    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
+  }
   if (@mysql_num_rows($result) == 0)
     system_failure("Konnte Kundendaten nicht auslesen!");
   $data = mysql_fetch_object($result);
@@ -125,6 +147,28 @@ function set_systemuser_password($uid, $newpass)
   $newpass = crypt($newpass, "\$1\${$salt}\$");
   db_query("UPDATE system.passwoerter SET passwort='$newpass' WHERE uid='".$uid."' LIMIT 1");
   logger("session/checkuser.php", "pwchange", "changed user's password.");
+}
+
+
+function setup_session($role, $useridentity)
+{
+  session_regenerate_id();
+  $_SESSION['role'] = $role;
+  if ($role & ROLE_SYSTEMUSER)
+  {
+    DEBUG("We are system user");
+    $info = get_user_info($useridentity);
+    $_SESSION['userinfo'] = $info;
+    logger("session/start.php", "login", "logged in user »{$info['username']}«");
+    $useridentity = $info['customerno'];
+  }
+  if ($role & ROLE_CUSTOMER)
+  {
+    $info = get_customer_info($useridentity);
+    $_SESSION['customerinfo'] = $info;
+    set_customer_lastlogin($info['customerno']);
+    logger("session/start.php", "login", "logged in customer no »{$info['customerno']}«");
+  }
 }
 
 ?>

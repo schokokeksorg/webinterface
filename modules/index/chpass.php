@@ -12,15 +12,11 @@ if ($_POST['password1'] != '')
 {
   check_form_token('index_chpass');
   $result = NULL;
-  switch ($_SESSION['role'])
-  {
-    case ROLE_SYSTEMUSER:
-      $result = find_role($_SESSION['userinfo']['uid'], $_POST['old_password']);
-      break;
-    case ROLE_CUSTOMER:
-      $result = find_role($_SESSION['customerinfo']['customerno'], $_POST['old_password']);
-      break;
-  }
+  if ($_SESSION['role'] & ROLE_SYSTEMUSER)
+    $result = find_role($_SESSION['userinfo']['uid'], $_POST['old_password']);
+  else
+    $result = find_role($_SESSION['customerinfo']['customerno'], $_POST['old_password']);
+
   if ($result == NULL)
     input_error('Das bisherige Passwort ist nicht korrekt!');
   elseif ($_POST['password2'] != $_POST['password1'])
@@ -38,7 +34,7 @@ if ($_POST['password1'] != '')
     elseif ($result === ROLE_CUSTOMER)
       set_customer_password($_SESSION['customerinfo']['customerno'], $_POST['password1']);
     else
-      system_failure("WTF?!");
+      system_failure("WTF?! (\$result={$result})");
     
     if (! $debugmode)
       header('Location: index.php');
@@ -49,7 +45,7 @@ if ($_POST['password1'] != '')
 
 
 
-if ($_SESSION['role'] == ROLE_SYSTEMUSER)
+if ($_SESSION['role'] & ROLE_SYSTEMUSER)
   warning('Beachten Sie: Wenn Sie hier Ihr Passwort ändern, betrifft dies auch Ihr Anmelde-Passwort am Server (SSH).');
 
 output('<h3>Passwort &auml;ndern</h3>

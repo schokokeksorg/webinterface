@@ -32,23 +32,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
   }
   else
   {
-    session_regenerate_id();
-    $_SESSION['role'] = $role;
-
-    switch ($role)
-    {
-    case ROLE_SYSTEMUSER:
-      $info = get_user_info($_POST['username']);
-      $_SESSION['userinfo'] = $info;
-      logger("session/start.php", "login", "logged in user »{$info['username']}«");
-      break;
-    case ROLE_CUSTOMER:
-      $info = get_customer_info($_POST['username']);
-      $_SESSION['customerinfo'] = $info;
-      set_customer_lastlogin($info['customerno']);
-      logger("session/start.php", "login", "logged in customer no »{$info['customerno']}«");
-      break;
-    }
+    setup_session($role, $_POST['username']);
   }
   unset($_POST['username']);
   unset($_POST['password']);

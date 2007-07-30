@@ -4,13 +4,10 @@ $menu = array();
 
 $role = $_SESSION['role'];
 
-switch ($role)
+
+if (($role & ROLE_CUSTOMER) || ($role & ROLE_SYSTEMUSER))
 {
-  case ROLE_ANONYMOUS:
-    break;
-  default:
-    $menu["domains_domains"] = array("label" => "Domains", "file" => "domains.php", "weight" => 1);
-    
+  $menu["domains_domains"] = array("label" => "Domains", "file" => "domains.php", "weight" => 1);
 }
 
 if (empty($menu))

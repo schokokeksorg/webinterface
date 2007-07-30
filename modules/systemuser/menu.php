@@ -4,11 +4,9 @@ $menu = array();
 
 $role = $_SESSION['role'];
 
-switch ($role)
+if ($role & ROLE_CUSTOMER)
 {
-  case ROLE_CUSTOMER:
-    $menu["systemuser"] = array("label" => "Benutzeraccounts", "file" => "accounts.php", "weight" => 30);
-    
+  $menu["systemuser"] = array("label" => "Benutzeraccounts", "file" => "accounts.php", "weight" => 30);
 }
 
 if (empty($menu))
