@@ -9,10 +9,13 @@ require_role(ROLE_CUSTOMER);
 
 $title = "System-Benutzeraccounts";
 
-
 $account = get_account_details($_GET['uid']);
 
 output("<h3>Bearbeiten von Benutzer »{$account['username']}«</h3>");
+
+if ($account['uid'] == primary_useraccount())
+  system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
+
 
 output(html_form('systemuser_edit', 'save.php', 'action=edit', '
 <table>

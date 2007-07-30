@@ -14,6 +14,18 @@ function customer_may_have_useraccounts()
 }
 
 
+function primary_useraccount()
+{
+  if (! ($_SESSION['role'] & ROLE_SYSTEMUSER))
+    return NULL;
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $result = db_query("SELECT MIN(uid) AS uid FROM system.useraccounts WHERE kunde={$customerno}");
+  $uid = mysql_fetch_object($result)->uid;
+  DEBUG("primary useraccount: {$uid}");
+  return $uid;
+}
+
+
 
 function list_useraccounts()
 {
