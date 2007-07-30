@@ -50,6 +50,23 @@ function filter_shell( $input )
         return ereg_replace('[^-[:alnum:]\_\.\+ßäöüÄÖÜ/%§=]', '', $input );
 }
 
+function check_path( $input )
+{
+  if ($input != filter_input_general($input))
+    return False;
+  DEBUG("checking {$input} for valid path name");
+  $components = explode("/", $input);
+  foreach ($components AS $item)
+  {
+    if ($item == '..')
+    {
+      return False;
+    }
+  }
+  return (preg_match('/^[a-z0-9.\/_-]*$/',$input) == 1);
+}
+
+
 function check_emailaddr( $input )
 {
         return (preg_match("/^[a-z]+[a-z0-9]*[\.|\-|_]?[a-z0-9]+@([a-z0-9]*[\.|\-]?[a-z0-9]+){1,4}\.[a-z]{2,4}$/i", $input ) == 1);

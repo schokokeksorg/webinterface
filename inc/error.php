@@ -1,11 +1,13 @@
 <?php
 
+require_once("inc/security.php");
+
 function system_failure($reason)
 {
         include('inc/top.php');
         echo '<div class="error">
         <h3>Fehler</h3>
-        <p>Es ist ein Fehler aufgetreten: '.$reason.'</p>
+        <p>Es ist ein Fehler aufgetreten: '.filter_input_general($reason).'</p>
         </div>';
         include('inc/bottom.php');
         die();
@@ -51,7 +53,7 @@ function show_messages()
     ';
     foreach ($input_error as $error)
     {
-      echo '<li>'.$error."</li>\n";
+      echo '<li>'.filter_input_general($error)."</li>\n";
     }
     echo '</ul>
     </div>';
@@ -63,7 +65,7 @@ function show_messages()
     ';
     foreach ($warning as $msg)
     {
-      echo '<li>'.$msg."</li>\n";
+      echo '<li>'.filter_input_general($msg)."</li>\n";
     }
     echo '</ul>
     </div>';
@@ -75,7 +77,7 @@ function show_messages()
     ';
     foreach ($success_msg as $msg)
     {
-      echo '<li>'.$msg."</li>\n";
+      echo '<li>'.filter_input_general($msg)."</li>\n";
     }
     echo '</ul>
     </div>';

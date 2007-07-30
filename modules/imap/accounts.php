@@ -73,24 +73,24 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'create')
 {
+  $options = '';
+  $domains = get_domain_list($user['customerno'], $user['uid']);
+  if (count($domains) > 0)
+    $options .= '<option>----------------------------</option>';
+  foreach ($domains as $dom)
+    $options .= '<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>';
+
   output('<h3>E-Mail-Account anlegen</h3>
 <p>Hier k&ouml;nnen Sie ein neues POP3/IMAP-Konto anlegen.</p>
-  <form action="accounts.php?action=save&'.$param.'" method="post">
-  '.generate_form_token('imap_accounts_create').'
+  '.html_form('imap_accounts_create', 'accounts.php', 'action=save', '
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>Wert:</th><th>&nbsp;</th></tr>
   <tr>
     <td>Benutzername:</td>
     <td><input type="text" id="user" name="user" />@<select name="domain" size="1">
     <option value="schokokeks.org">schokokeks.org</option>
-    ');
-    $domains = get_domain_list($user['customerno'], $user['uid']);
-    if (count($domains) > 0)
-      output('<option>----------------------------</option>');
-    foreach ($domains as $dom)
-      output('<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>');
-    output('</select></td>
-
+  '.$options.'
+    </select></td>
   </tr>
   <tr>
     <td>Mailbox:</td>
@@ -106,8 +106,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
   </tr>
   </table>
   <p><input type="submit" name="create" value="Anlegen" /><br />
-  </form>
-  ');
+  '));
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'] != '')
 {
@@ -127,14 +126,13 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
     $_GET['account'] = (int) $_GET['account'];
     $account = get_mailaccount($_GET['account']);
     $enabled = ($account['enabled'] ? 'Ja' : 'Nein');
-    output('<form action="accounts.php?action=delete&amp;account='.$_GET['account'].'&amp;'.$param.'" method="post">
-    '.generate_form_token('imap_accounts_delete').'
-    <table style="margin-bottom: 1em;">
+    output(html_form('imap_accounts_delete', "accounts.php", "action=delete&account=".$_GET['account'], 
+    '<table style="margin-bottom: 1em;">
     <tr><td>Benutzername:</td>
-      <td>'.$account['account'].'</td>
+      <td>'.filter_input_general($account['account']).'</td>
     </tr>
     <tr><td>Mailbox:</td>
-      <td>'.$account['mailbox'].'</td>
+      <td>'.filter_input_general($account['mailbox']).'</td>
     </tr>
     <tr><td>Konto aktiv:</td>
       <td>'.$enabled.'</td>
@@ -143,8 +141,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
   <p><input type="hidden" name="confirm" value="yes" />
     <input type="submit" value="Wirklich l&ouml;schen" />
   </p>
-  </form>
-  ');
+  '));
   }
 }
 elseif (isset($_GET['edit']))

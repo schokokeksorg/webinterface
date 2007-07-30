@@ -3,6 +3,7 @@
 require_once('inc/debug.php');
 require_once('inc/db_connect.php');
 require_once('inc/base.php');
+require_once('inc/security.php');
 
 require_once('class/domain.php');
 
@@ -133,17 +134,19 @@ function check_valid($acc)
   if ($acc['mailbox'] != '')
   {
     if (substr($acc['mailbox'], 0, strlen($user['homedir'])+1) != $user['homedir'].'/')
-      return "Die Mailbox muss innerhalb des Home-Verzeichnisses liegen. Sie haben \"".$acc['mailbox']."\" als Mailbox angegeben, Ihre Home-Verzeichnis ist \"".$user['homedir']."/\".";
-    if (strstr($acc['mailbox'], '..') or ! preg_match('/^[a-z0-9.\/_-]*$/', $acc['mailbox']))
+      return "Die Mailbox muss innerhalb des Home-Verzeichnisses liegen. Sie haben »".$acc['mailbox']."« als Mailbox angegeben, Ihr Home-Verzeichnis ist »".$user['homedir']."/«.";
+    if (! check_path($acc['mailbox']))
       return "Sie verwenden ungültige Zeichen in Ihrem Mailbox-Pfad.";
   }
 
   if ($acc['account'] == '' || strpos($acc['account'], '@') == 0)
     return "Es wurde kein Benutzername angegeben!";
   if (strpos($acc['account'], '@') === false)
-    return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen m&uuml;ssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie &quot;@schokokeks.org&quot;.";
+    return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen müssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie »@schokokeks.org«.";
 
   list($local, $domain) = explode('@', $acc['account'], 2);
+  if ($local != filter_input_username($local))
+    return "Sie haben ungültige Zeichen im Accountname benutzt!";
   $tmpdomains = get_domain_list($user['customerno'], $user['uid']);
   $domains = array();
   foreach ($tmpdomains as $dom)
@@ -155,11 +158,11 @@ function check_valid($acc)
     {
       if (substr($local, 0, strlen($user['username'])) != $user['username'] || ($acc['account'][strlen($user['username'])] != '-' && $acc['account'][strlen($user['username'])] != '@'))
       {
-        return "Sie haben &quot;@schokokeks.org&quot; als Domain-Teil angegeben, aber der Benutzer-Teil beginnt nicht mit Ihrem Benutzername!";
+        return "Sie haben »@schokokeks.org« als Domain-Teil angegeben, aber der Benutzer-Teil beginnt nicht mit Ihrem Benutzername!";
       }
     }
     else
-      return "Der angegebene Domain-Teil (".htmlentities($domain, ENT_QUOTES, "UTF-8").") ist nicht f&uuml;r Ihren Account eingetragen. Sollte dies ein Fehler sein, wenden sie sich bitte an einen Administrator!";
+      return "Der angegebene Domain-Teil (»".htmlentities($domain, ENT_QUOTES, "UTF-8")."«) ist nicht für Ihren Account eingetragen. Sollte dies ein Fehler sein, wenden sie sich bitte an einen Administrator!";
   }
 
   return '';
