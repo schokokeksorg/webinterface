@@ -122,7 +122,7 @@ if ($output_something)
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>');
 
   foreach ($users as $user)
-    output("<th>{$user}<br /><a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_user&user={$user}\"><img src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" /></a></th>");
+    output("<th>{$user}<br /><a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_user&amp;user={$user}\"><img border=\"0\" src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" /></a></th>");
   output('<th><input type="text" name="new_user" size="10" value="" /></th>');
   output("</tr>\n");
 
@@ -130,7 +130,7 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
-    output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&nbsp;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&db={$db}\"><img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>");
+    output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&nbsp;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&amp;db={$db}\"><img border=\"0\" src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>");
     foreach ($users as $user)
       output('<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>");
     output("</tr>\n");
