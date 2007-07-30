@@ -82,13 +82,13 @@ else
    */
 
   output(html_form("register_index", "", "", '<p><span class="login_label">Anrede:</span>
-  '.html_select('anrede', array('Herr' => 'Herr', 'Frau' => 'Frau', 'Firma' => 'Firma'), $_POST['anrede']).'
+  '.html_select('anrede', array('Herr' => 'Herr', 'Frau' => 'Frau', 'Firma' => 'Firma'), $_POST['anrede']).'</p>
   <p><span class="login_label">Firma:</span> <input type="text" name="firma" size="30" value="'.$_POST['firma'].'" /></p>
   <p><span class="login_label">Vorname:</span> <input type="text" name="vorname" size="30" value="'.$_POST['vorname'].'" /></p>
   <p><span class="login_label">Nachname:</span> <input type="text" name="nachname" size="30" value="'.$_POST['nachname'].'" /></p>
   <p><span class="login_label">E-Mail-Adresse:</span> <input type="text" name="email" size="30" value="'.$_POST['email'].'" /></p>
-  <p><span class="login_label">AGB:</span> <input type="checkbox" name="agb_gelesen" value="1"'.($_POST['agb_gelesen'] == 1 ? ' checked="checked"' : '').'" /> Ja, ich habe <a href="http://schokokeks.org/agb">die Allgemeinen Geschäftsbedingungen von schokokeks.org Webhosting</a> gelesen und erkläre mich damit einverstanden.</p>
-  <p><span class="login_label">&nbsp;</span> <input type="submit" value="Zugang erstellen" />'));
+  <p><span class="login_label">AGB:</span> <input type="checkbox" name="agb_gelesen" value="1"'.($_POST['agb_gelesen'] == 1 ? ' checked="checked"' : '').' /> Ja, ich habe <a href="http://schokokeks.org/agb">die Allgemeinen Geschäftsbedingungen von schokokeks.org Webhosting</a> gelesen und erkläre mich damit einverstanden.</p>
+  <p><span class="login_label">&nbsp;</span> <input type="submit" value="Zugang erstellen" /></p>'));
   
 }
 

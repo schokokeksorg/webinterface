@@ -105,7 +105,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
     <td><input type="checkbox" id="enabled" name="enabled" value="true" /></td>
   </tr>
   </table>
-  <p><input type="submit" name="create" value="Anlegen" /><br />
+  <p><input type="submit" name="create" value="Anlegen" /></p>
   '));
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'] != '')
