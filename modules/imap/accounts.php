@@ -194,7 +194,7 @@ else
   output('<h3>E-Mail-Accounts</h3>
 <p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
 <table style="margin-bottom: 1em;">
-<tr><th>Benutzername:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&nbsp;</th></tr>
+<tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&nbsp;</th></tr>
 ');
 
         foreach (mailaccounts($user['uid']) as $account)
@@ -203,10 +203,10 @@ else
                 if (empty($mailbox))
                         $mailbox = '<i>nicht festgelegt</i>';
                 output('<tr>
-            <td>'.$account['account'].'</td>
+            <td>'.internal_link('accounts.php', $account['account'], 'edit='.$account['id']).'</td>
             <td>'.$mailbox.'</td>
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
-            <td><a href="accounts.php?edit='.$account['id'].'">bearbeiten</a></td><td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">l&ouml;schen</a></td></tr>');
+            <td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">l&ouml;schen</a></td></tr>');
         }
         output('</table>
 <p><a href="accounts.php?action=create">Neuen Account anlegen</a></p>
