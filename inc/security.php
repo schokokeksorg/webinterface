@@ -40,6 +40,12 @@ function filter_input_username( $input )
         return ereg_replace("[^[:alnum:]\_\.\+\-]", "", $input );
 }
 
+function filter_input_hostname( $input )
+{
+        $input = strtolower($input);
+        return ereg_replace("[^[:alnum:]äöü\.\-]", "", $input );
+}
+
 function filter_quotes( $input )
 {
         return ereg_replace('["\'`]', '', $input );
@@ -63,6 +69,7 @@ function check_path( $input )
   {
     if ($item == '..')
     {
+      DEBUG("»..« im Pfad");
       return False;
     }
   }
