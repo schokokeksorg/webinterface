@@ -89,6 +89,7 @@ function delete_vhost($id)
   if ($id == 0)
     system_failure("id == 0");
   $vhost = get_vhost_details($id);
+  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Removing vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
   db_query("DELETE FROM vhosts.vhost WHERE id={$vhost['id']} LIMIT 1");
 }
 
@@ -106,11 +107,14 @@ function save_vhost($vhost)
   $logtype = maybe_null($vhost['logtype']);
   $options = mysql_real_escape_string( $vhost['options'] );
 
-  if ($id != 0)
+  if ($id != 0) {
+    logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
     db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, logtype={$logtype}, options='{$options}' WHERE id={$id} LIMIT 1");
-  else
+  }
+  else {
+    logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
     db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, logtype, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$logtype}, '{$options}')");
-  
+  }
 }
 
 
