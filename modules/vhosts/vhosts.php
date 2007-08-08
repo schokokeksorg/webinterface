@@ -22,12 +22,10 @@ if (count($vhosts) > 0)
   foreach ($vhosts as $vhost)
   {
     $fqdn = $vhost['fqdn'];
-    if (strstr($vhost['options'], 'aliaswww'))
-      $fqdn = 'www.'.$vhost['fqdn'];
     output("<tr><td>".internal_link('edit.php', $fqdn, "vhost={$vhost['id']}")."</td><td>");
     $aliases = get_aliases($vhost['id']);
     if (strstr($vhost['options'], 'aliaswww'))
-      output($vhost['fqdn'].'<br />');
+      output('www.'.$vhost['fqdn'].'<br />');
     foreach ($aliases as $alias)
     {
       if (strstr($alias['options'], 'aliaswww'))
@@ -36,7 +34,7 @@ if (count($vhosts) > 0)
     }
     output('</td>');
     if ($vhost['docroot_is_default'] == 1)
-      output("<td>{$vhost['docroot']}</td>");
+      output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
     else
       output("<td><strong>{$vhost['docroot']}</strong></td>");
     $php = $vhost['php'];
@@ -52,9 +50,13 @@ if (count($vhosts) > 0)
         $php = 'FastCGI';
         break;
     }
-    output("<td>{$php}</td></tr>");
+    output("<td>{$php}</td>
+    <td>".internal_link('save.php', 'Subdomain löschen', 'action=delete&vhost='.$vhost['id'] )."</td>
+    </tr>");
   }
-  output('</table><br />');
+  output('</table>
+<p><a href="edit.php">Neue Subdomain anlegen</a></p>
+  <br />');
 }
 
 
