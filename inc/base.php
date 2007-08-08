@@ -31,9 +31,9 @@ function maybe_null($value)
 function logger($scriptname, $scope, $message)
 {
   $user = 'NULL';
-  if ($_SESSION['role'] == ROLE_SYSTEMUSER)
+  if ($_SESSION['role'] & ROLE_SYSTEMUSER)
     $user = "'{$_SESSION['userinfo']['username']}'";
-  elseif ($_SESSION['role'] == ROLE_CUSTOMER)
+  elseif ($_SESSION['role'] & ROLE_CUSTOMER)
     $user = "'{$_SESSION['customerinfo']['customerno']}'";
   
   $remote = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
