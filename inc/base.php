@@ -104,7 +104,7 @@ function generate_form_token($form_id)
   if (! isset($_SESSION['session_token']))
     $_SESSION['session_token'] = random_string(10);
   $formtoken = hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
-  return '<input type="hidden" name="formtoken" value="'.$formtoken.'" />'."\n";
+  return '<p style="display: none;"><input type="hidden" name="formtoken" value="'.$formtoken.'" /></p>'."\n";
 }
 
 
