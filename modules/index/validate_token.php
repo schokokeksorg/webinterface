@@ -50,8 +50,8 @@ if ($show == 'password')
   output('<h3>Neues Passwort setzen</h3>
   <p>Bitte legen Sie jetzt Ihr neues Kunden-Passwort fest.</p>
   <form action="" method="post">
-  <input type="hidden" name="customerno" value="'.$customerno.'" />
-  <input type="hidden" name="token" value="'.$token.'" />
+  <p style="display: none"><input type="hidden" name="customerno" value="'.$customerno.'" />
+  <input type="hidden" name="token" value="'.$token.'" /></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
   <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" /></p>
   <p><span class="login_label">&nbsp;</span> <input type="submit" value="Passwort setzen" /></p>
