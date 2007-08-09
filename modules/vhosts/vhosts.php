@@ -4,34 +4,31 @@ require_once('inc/security.php');
 
 require_once('vhosts.php');
 
-$title = "Webserver VHosts";
+$title = "Subdomains";
 $error = '';
 
 require_role(ROLE_SYSTEMUSER);
 
 
-output("<h3>Webserver (VHosts)</h3>
-<p>Mit dieser Funtkion legen Sie fest, welche Domains und Subdomains verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>");
+output("<h3>Subdomains</h3>
+<p>Mit dieser Funtkion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>");
 
 $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
 {
-  output("<table><tr><th>(Sub-)Domain</th><th>Zusätzliche Alias-Namen</th><th>Lokaler Pfad</th><th>PHP</th></tr>");
-  
+  output("<table><tr><th>(Sub-)Domain</th><th>Zusätzliche Alias-Namen</th><th>Lokaler Pfad<sup>*</sup></th><th>PHP</th></tr>");
+
   foreach ($vhosts as $vhost)
   {
     $fqdn = $vhost['fqdn'];
     output("<tr><td>".internal_link('edit.php', $fqdn, "vhost={$vhost['id']}")."</td><td>");
-    $aliases = get_aliases($vhost['id']);
-    if (strstr($vhost['options'], 'aliaswww'))
-      output('www.'.$vhost['fqdn'].'<br />');
+    $aliases = get_all_aliases($vhost['id']);
     foreach ($aliases as $alias)
     {
-      if (strstr($alias['options'], 'aliaswww'))
-        output('www.'.$alias['fqdn'].'<br />');
       output($alias['fqdn'].'<br />');
     }
+    output(internal_link('aliases.php', 'Aliase verwalten', 'vhost='.$vhost['id']));
     output('</td>');
     if ($vhost['docroot_is_default'] == 1)
       output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
@@ -56,6 +53,7 @@ if (count($vhosts) > 0)
   }
   output('</table>
 <p><a href="edit.php">Neue Subdomain anlegen</a></p>
+<p><sup>*</sup>)&nbsp;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>
   <br />');
 }
 

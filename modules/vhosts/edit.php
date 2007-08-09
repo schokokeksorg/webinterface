@@ -5,7 +5,7 @@ require_once('inc/security.php');
 
 require_once('vhosts.php');
 
-$title = "VHost bearbeiten";
+$title = "Subdomain bearbeiten";
 $section = 'vhosts_vhosts';
 
 require_role(ROLE_SYSTEMUSER);
@@ -17,7 +17,13 @@ if ($id != 0)
   $vhost = get_vhost_details($id);
 
 DEBUG($vhost);
-output("<h3>VHost bearbeiten</h3>");
+if ($id == 0) {
+  output("<h3>Neue Subdomain anlegen</h3>");
+  $title = "Subdomain anlegen";
+}
+else {
+  output("<h3>Subdomain bearbeiten</h3>");
+}
 
 output("<script type=\"text/javascript\">
   
@@ -93,7 +99,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
     ";
 
 $form .= '</table>
-  <p><input type="submit" value="Änderungen speichern" />&nbsp;&nbsp;&nbsp;&nbsp;'.internal_link('vhosts.php', 'Ohne Speichern zurück').'</p>
+  <p><input type="submit" value="Speichern" />&nbsp;&nbsp;&nbsp;&nbsp;'.internal_link('vhosts.php', 'Abbrechen').'</p>
 ';
 output(html_form('vhosts_edit_vhost', 'save.php', 'action=edit&vhost='.$vhost['id'], $form));
 

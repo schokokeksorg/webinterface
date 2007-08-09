@@ -97,8 +97,82 @@ if ($_GET['action'] == 'edit')
     header('Location: vhosts.php');
 
 }
+elseif ($_GET['action'] == 'addalias')
+{
+  check_form_token('vhosts_add_alias');
+  $id = (int) $_GET['vhost'];
+  $vhost = get_vhost_details( $id );
+  DEBUG($vhost);
+
+  $alias = empty_alias();
+  $alias['vhost'] = $vhost['id'];
+
+  
+  $hostname = filter_input_hostname($_POST['hostname']);
+  $domain = new Domain( (int) $_POST['domain'] );
+  if ($domain->useraccount != $_SESSION['userinfo']['uid'])
+    system_failure('Ungültige Domain');
+
+  if (! is_array($_POST['options']))
+    $_POST['options'] = array();
+  $aliaswww = in_array('aliaswww', $_POST['options']);
+  $forward = in_array('forward', $_POST['options']);
+
+  $new_options = array();
+  if ($aliaswww)
+    array_push($new_options, 'aliaswww');
+  if ($forward)
+    array_push($new_options, 'forward');
+  DEBUG($new_options);
+  $options = implode(',', $new_options);
+  DEBUG('New options: '.$options);
+
+  $alias['hostname'] = $hostname;
+  $alias['domainid'] = $domain->id;
+    
+  $alias ['options'] = $options;
+    
+  save_alias($alias);
+
+  if (! $debugmode)
+    header('Location: aliases.php?vhost='.$vhost['id']);
+
+}
+elseif ($_GET['action'] == 'deletealias')
+{
+  $title = "Subdomain löschen";
+  $section = 'vhosts_vhosts';
+  
+  $alias = get_alias_details( (int) $_GET['alias'] );
+  DEBUG($alias);
+  $alias_string = ((strlen($alias['hostname']) > 0) ? $alias['hostname'].'.' : '').$alias['domain'];
+  
+  $vhost = get_vhost_details( $alias['vhost'] );
+  DEBUG($vhost);
+  $vhost_string = ((strlen($vhost['hostname']) > 0) ? $vhost['hostname'].'.' : '').$vhost['domain'];
+  
+  $sure = user_is_sure();
+  if ($sure === NULL)
+  {
+    are_you_sure("action=deletealias&amp;alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Subdomain »{$vhost_string}« wirklich löschen?");
+  }
+  elseif ($sure === true)
+  {
+    delete_alias($alias['id']);
+    if (! $debugmode)
+      header('Location: aliases.php?vhost='.$vhost['id']);
+  }
+  elseif ($sure === false)
+  {
+    if (! $debugmode)
+      header('Location: aliases.php?vhost='.$vhost['id']);
+  }
+}
 elseif ($_GET['action'] == 'delete')
 {
+  $title = "Subdomain löschen";
+  $section = 'vhosts_vhosts';
+  
   $vhost = get_vhost_details( (int) $_GET['vhost'] );
   $vhost_string = ((strlen($vhost['hostname']) > 0) ? $vhost['hostname'].'.' : '').$vhost['domain'];
   
@@ -118,8 +192,6 @@ elseif ($_GET['action'] == 'delete')
     if (! $debugmode)
       header("Location: vhosts.php");
   }
-
-  /* TODO */
 }
 else
   system_failure("Unimplemented action");
