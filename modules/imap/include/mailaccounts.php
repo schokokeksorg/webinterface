@@ -145,8 +145,7 @@ function check_valid($acc)
     return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen müssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie »@schokokeks.org«.";
 
   list($local, $domain) = explode('@', $acc['account'], 2);
-  if ($local != filter_input_username($local))
-    return "Sie haben ungültige Zeichen im Accountname benutzt!";
+  verify_input_username($local);
   $tmpdomains = get_domain_list($user['customerno'], $user['uid']);
   $domains = array();
   foreach ($tmpdomains as $dom)

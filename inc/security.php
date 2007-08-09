@@ -44,10 +44,14 @@ function verify_input_general( $input )
 }
 
 
-
 function filter_input_username( $input )
 {
-  if (ereg_replace("[^[:alnum:]\_\.\+\-]", "", $input ) != $input)
+  return ereg_replace("[^[:alnum:]\_\.\+\-]", "", $input );
+}
+
+function verify_input_username( $input )
+{
+  if (filter_input_username( $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
 }
 
