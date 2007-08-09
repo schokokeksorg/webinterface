@@ -180,7 +180,6 @@ elseif (isset($_GET['edit']))
   </table>
   <p><input type="submit" value="&Auml;nderungen speichern" /><br />
   Hinweis: Das Passwort wird nur ge&auml;ndert, wenn Sie auf dieser Seite eines eingeben. Geben Sie keines an, wird das bisherige beibehalten!</p>
-  </form>
   ';
   output(html_form('imap_accounts_edit', 'accounts.php', 'action=save&id='.$_GET['edit'], $form));
 }
