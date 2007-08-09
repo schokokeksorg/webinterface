@@ -20,18 +20,18 @@ if ($_POST['password1'] != '')
   if ($result == NULL)
     input_error('Das bisherige Passwort ist nicht korrekt!');
   elseif ($_POST['password2'] != $_POST['password1'])
-    input_error('Die Best&auml;tigung ist nicht identisch mit dem neuen Passwort!');
+    input_error('Die Bestätigung ist nicht identisch mit dem neuen Passwort!');
   elseif ($_POST['password2'] == '')
-    input_error('Sie m&uuml;ssen das neue Passwort zweimal eingeben!');
+    input_error('Sie müssen das neue Passwort zweimal eingeben!');
   elseif ($_POST['old_password'] == '')
     input_error('Altes Passwort nicht angegeben!');
   elseif (($check = strong_password($_POST['password1'])) !== true)
     input_error("Das Passwort ist zu einfach (cracklib sagt: {$check})!");
   else
   {
-    if ($result === ROLE_SYSTEMUSER)
+    if ($result & ROLE_SYSTEMUSER)
       set_systemuser_password($_SESSION['userinfo']['uid'], $_POST['password1']);
-    elseif ($result === ROLE_CUSTOMER)
+    elseif ($result & ROLE_CUSTOMER)
       set_customer_password($_SESSION['customerinfo']['customerno'], $_POST['password1']);
     else
       system_failure("WTF?! (\$result={$result})");
@@ -50,9 +50,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER)
 
 output('<h3>Passwort &auml;ndern</h3>
 <p>Hier k&ouml;nnen Sie Ihr Passwort &auml;ndern.</p>
-<form method="post" action="'.($debugmode ? '?debug' : '').'">
-'.generate_form_token('index_chpass').'
-<table>
+'.html_form('index_chpass', 'chpass.php', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
   </tr>
@@ -66,9 +64,9 @@ output('<h3>Passwort &auml;ndern</h3>
   <tr>
     <td>&nbsp;</td><td><input type="submit" value="Speichern" /></td>
   </tr>
-</table>
-</form>
+</table>'));
 
-');
+
+
 
 ?>

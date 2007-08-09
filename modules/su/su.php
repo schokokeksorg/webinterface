@@ -24,7 +24,7 @@ $title = "Benutzer wechseln";
 
 output('<h3>Benutzer wechseln</h3>
 <p>Hiermit können Sie (als Admin) das Webinterface mit den Rechten eines beliebigen anderen Benutzers benutzen.</p>
-<p>Benutzer auswählen: ');
+');
 
 $users = list_system_users();
 $options = '';
@@ -33,12 +33,13 @@ foreach ($users as $user)
   $options .= "  <option value=\"{$user->uid}\">{$user->username} ({$user->uid})</option>\n";
 }
 
-output(html_form('su_su', 'su.php', '', '<select name="destination" size="1">
+output(html_form('su_su', 'su.php', '', '<p>Benutzer auswählen:
+<select name="destination" size="1">
 '.$options.'
 </select>
 <input type="submit" name="submit" value="zum Benutzer wechseln" />
+</p>
 '));
-output('</p><p>Kunde auswählen: ');
 
 $customers = list_customers();
 $options = '';
@@ -47,12 +48,13 @@ foreach ($customers as $customer)
   $options .= "  <option value=\"{$customer->id}\">{$customer->id} - {$customer->name}</option>\n";
 }
 
-output(html_form('su_su', 'su.php', '', '<select name="destination" size="1">
+output(html_form('su_su', 'su.php', '', '<p>Kunde auswählen:
+<select name="destination" size="1">
 '.$options.'
 </select>
 <input type="submit" name="submit" value="zum Kunden wechseln" />
+</p>
 '));
-output("</p><br />");
 
 
 

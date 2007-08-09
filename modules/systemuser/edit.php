@@ -8,6 +8,7 @@ require_role(ROLE_CUSTOMER);
 
 
 $title = "System-Benutzeraccounts";
+$section = "systemuser_accounts";
 
 $account = get_account_details($_GET['uid']);
 
@@ -24,9 +25,10 @@ output(html_form('systemuser_edit', 'save.php', 'action=edit', '
 <tr><td>Passwort:</td><td><input type="password" name="newpass" value="" /><br /><span style="font-size:85%;">(Bitte leer lassen um das Passwort nicht zu ändern!)</span></td></tr>
 <tr><td>Wiederholung:</td><td><input type="password" name="newpass2" value="" /></td></tr>
 </table>
-<br />
+<p>
 <input type="hidden" name="uid" value="'.$account['uid'].'" />
 <input type="submit" name="submit" value="Speichern" />
+</p>
 '));
 
 
