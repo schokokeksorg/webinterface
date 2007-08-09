@@ -115,52 +115,53 @@ if ($output_something)
   <p><strong>Hinweis:</strong> In dieser Matrix sehen Sie links die Datenbanken und oben die Benutzer, die Sie eingerichtet haben.
   In die leeren Eingabefelder können Sie den Namen eines neuen Benutzers bzw. einer neuen Datenbank eintragen. Sofern Sie noch keine Datenbank(en) oder Benutzer eingerichtet haben, erscheinen nur die Eingabefelder. Vergessen Sie nicht, nach der Erstellung eines neuen Benutzerkontos dem betreffenden Benutzer ein Passwort zu setzen (s. unten auf dieser Seite). Der Name von Datenbanken und Datenbank-Benutzern muss mit dem Namen des System-Benutzeraccounts übereinstimmen oder mit diesem und einem nachfolgenden Unterstrich beginnen. Z.B. kann der System-Benutzer <em>bernd</em> die MySQL-Accounts <em>bernd</em> und <em>bernd_2</em> erzeugen. Aufgrund einer Beschränkung des MySQL-Servers dürfen Benutzernamen allerdings zur Zeit nur 16 Zeichen lang sein.</p>');
 
-  output('<form action="'.($debugmode ? '?debug': '').'" method="post">
-  '.generate_form_token('mysql_databases_access').'
+  $form = '
   <table>
   <tr><th>&nbsp;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users)+1).'">Benutzerkonten</th></tr>
-  <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>');
+  <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>';
 
   foreach ($users as $user)
-    output("<th>{$user}<br /><a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_user&amp;user={$user}\"><img border=\"0\" src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" /></a></th>");
-  output('<th><input type="text" name="new_user" size="10" value="" /></th>');
-  output("</tr>\n");
+    $form .= "<th>{$user}<br /><a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_user&amp;user={$user}\"><img border=\"0\" src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" /></a></th>";
+  $form .= '<th><input type="text" name="new_user" size="10" value="" /></th></tr>
+';
 
   array_push($users, "new");
 
   foreach($dbs as $db)
   {
-    output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&nbsp;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&amp;db={$db}\"><img border=\"0\" src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>");
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&nbsp;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&amp;db={$db}\"><img border=\"0\" src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>";
     foreach ($users as $user)
-      output('<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>");
-    output("</tr>\n");
+      $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>";
+    $form .= "</tr>\n";
   }
 
-  output('
-  <tr><td style="border: 0px; font-weight: bold; text-align: right;"><input type="text" name="new_db" size="15" value="" /></td>');
+  $form .= '
+  <tr><td style="border: 0px; font-weight: bold; text-align: right;"><input type="text" name="new_db" size="15" value="" /></td>';
   foreach ($users as $user)
-    output('<td style="text-align: center;"><input type="checkbox" id="new_'.$user.'" name="access[new][]" value="'.$user.'" /></td>');
-  output('</tr>');
-  output('</table>
+    $form .= '<td style="text-align: center;"><input type="checkbox" id="new_'.$user.'" name="access[new][]" value="'.$user.'" /></td>';
+  $form .= '</tr>
+  </table>
   <br />
-  <input type="submit" value="Speichern" />
-  </form>
-  <br />');
+  <input type="submit" value="Speichern" /><br />';
+
+  
+  output(html_form('mysql_databases', 'databases.php', '', $form));
 
   $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
+
+
+  $form = '
+  <label for="username">Benutzername:</label>&nbsp;<select name="mysql_username" id="username" height="1">
+';
+  foreach ($users as $user)
+    $form .= "<option value=\"{$user}\">{$user}</option>\n";
+  $form .= '</select>&nbsp;&nbsp;&nbsp;
+  <label for="password">Passwort:</label>&nbsp;<input type="password" name="mysql_password" id="password" />&nbsp;&nbsp;<input type="submit" value="Setzen" />';
 
   output('<h4>Passwort ändern</h4>
   <p>Hier können Sie das Passwort eines MySQL-Benutzeraccounts ändern bzw. neu setzen</p>
 
-  <p>
-  <form action="?action=change_pw'.($debugmode ? '&amp;debug': '').'" method="post">
-  '.generate_form_token('mysql_databases_change_pw').'
-  <label for="username">Benutzername:</label>&nbsp;<select name="mysql_username" id="username" height="1">
-  ');
-  foreach ($users as $user)
-    output("<option value=\"{$user}\">{$user}</option>\n");
-  output('</select>&nbsp;&nbsp;&nbsp;
-  <label for="password">Passwort:</label>&nbsp;<input type="password" name="mysql_password" id="password" />&nbsp;&nbsp;<input type="submit" value="Setzen" /></form></p>');
+  <p>'.html_form('mysql_databases', 'databases.php', 'action=change_pw', $form).'</p>');
 
 }
 
