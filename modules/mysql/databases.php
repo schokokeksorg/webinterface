@@ -52,7 +52,7 @@ if (isset($_GET['action']))
       }
       break;
     case 'change_pw':
-      check_form_token('mysql_databases_change_pw');
+      check_form_token('mysql_databases');
       set_mysql_password($_POST['mysql_username'], $_POST['mysql_password']);
       header("Location: ?");
       $output_something = false;
@@ -67,7 +67,7 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
 if (isset($_POST['access']))
 {
-  check_form_token('mysql_databases_access');
+  check_form_token('mysql_databases');
   /* Eine neue Datenbank */
   if ($_POST['new_db'] != '')
   {
