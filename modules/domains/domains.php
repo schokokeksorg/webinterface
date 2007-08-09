@@ -18,11 +18,11 @@ $title = "Domainüberblick";
 output('<h3>Domains</h3>
 <p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
 <table>
-<tr><th>Domainname</th><th>Reg-Datum</th><th>Kündigungsdatum</th></tr>
+<tr><th>Domainname</th><th>Reg-Datum</th><th>Kündigungsdatum</th><th>&nbsp;</th></tr>
 ');
 foreach ($user_domains as $domain)
 {
-  output("  <tr><td><a href=\"http://www.{$domain->fqdn}\">{$domain->fqdn}</a></td><td>{$domain->reg_date}</td><td>{$domain->cancel_date}</td></tr>\n");
+  output("  <tr><td>{$domain->fqdn}</td><td>{$domain->reg_date}</td><td>{$domain->cancel_date}</td><td><a href=\"http://www.{$domain->fqdn}\">WWW-Seite aufrufen</a></td></tr>\n");
 }
 output('</table>');
 output("<br />");

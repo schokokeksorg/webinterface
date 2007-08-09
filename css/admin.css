@@ -39,6 +39,23 @@ p.warning {
 }
 
 
+div.confirmation {
+}
+
+div.confirmation div.question {
+        padding: 10px;
+        color: #000000;
+        border: 1px solid #FF0000;
+        background-color: #FFFFFF;
+        font-weight: bold;
+        margin-bottom: 1em;
+}
+
+div.confirmation p.buttons input {
+        width: 10em;
+}
+
+
 span.login_label {
         display: block;
         float: left;

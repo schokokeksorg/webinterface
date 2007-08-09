@@ -67,10 +67,17 @@ function are_you_sure($query_string, $question)
     $query_string = 'debug&amp;'.$query_string;
   $token = random_string(20);
   $_SESSION['are_you_sure_token'] = $token;
-  output("<form action=\"?{$query_string}\" method=\"post\">\n");
-  output("<p class=\"confirmation\">{$question}<br />\n");
-  output("<input type=\"hidden\" name=\"random_token\" value=\"{$token}\" />\n");
-  output("<input type=\"submit\" name=\"really\" value=\"Ja\" />\n<input type=\"submit\" name=\"not_really\" value=\"Nein\" /></p>\n");
+  output("<h3>Sicherheitsabfrage</h3>
+    <form action=\"?{$query_string}\" method=\"post\">
+    <div class=\"confirmation\">
+      <div class=\"question\">{$question}</div>
+      <p class=\"buttons\">
+        <input type=\"hidden\" name=\"random_token\" value=\"{$token}\" />
+        <input type=\"submit\" name=\"really\" value=\"Ja\" />
+        &nbsp; &nbsp;
+        <input type=\"submit\" name=\"not_really\" value=\"Nein\" />
+      </p>
+    </div>");
   output("</form>\n");
 }
 
@@ -103,19 +110,19 @@ function generate_form_token($form_id)
   }
   if (! isset($_SESSION['session_token']))
     $_SESSION['session_token'] = random_string(10);
-  $formtoken = hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
-  return '<p style="display: none;"><input type="hidden" name="formtoken" value="'.$formtoken.'" /></p>'."\n";
+  return hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
 }
 
 
-function check_form_token($form_id)
+function check_form_token($form_id, $formtoken = NULL)
 {
-  $formtoken = $_POST['formtoken'];
+  if ($formtoken == NULL)
+    $formtoken = $_POST['formtoken'];
   $sessid = session_id();
   if ($sessid == "") 
   {
     DEBUG("Uh? Session not running? Wtf?");
-    system_failure("Internal error!");
+    system_failure("Internal error! (Session not running)");
   }
 
   $correct_formtoken = hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
@@ -147,7 +154,7 @@ function html_form($form_id, $scriptname, $querystring, $content)
   $querystring = str_replace('&', '&amp;', $querystring);
   $ret = '';
   $ret .= '<form action="'.$scriptname.'?'.$debugstr.$querystring.'" method="post">'."\n";
-  $ret .= generate_form_token($form_id);
+  $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="'.generate_form_token($form_id).'" /></p>'."\n";
   $ret .= $content;
   $ret .= '</form>';
   return $ret;  

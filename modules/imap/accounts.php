@@ -9,10 +9,6 @@ require_role(ROLE_SYSTEMUSER);
 
 $user = $_SESSION['userinfo'];
 
-$param = '';
-if ($debugmode)
-        $param="debug";
-
 $title = "E-Mail-Accounts";
 
 
@@ -33,7 +29,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
     if ($error != "")
     {
       input_error($error);
-      $section = "mail";
       $title = "E-Mail-Accounts";
       output("");
     }
@@ -110,38 +105,39 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'] != '')
 {
-  if ($_POST['confirm'] == 'yes')
+  $sure = user_is_sure();
+  if ($sure === NULL)
   {
-    check_form_token('imap_accounts_delete');
+    $_GET['account'] = (int) $_GET['account'];
+    $account = get_mailaccount($_GET['account']);
+    $enabled = ($account['enabled'] ? 'Ja' : 'Nein');
+    are_you_sure("action=delete&amp;account={$_GET['account']}", '
+    <p>Soll der folgende Account wirklich gel&ouml;scht werden?</p>
+    <table style="margin-bottom: 1em;">
+      <tr><td>Benutzername:</td>
+        <td>'.filter_input_general($account['account']).'</td>
+      </tr>
+      <tr><td>Mailbox:</td>
+        <td>'.filter_input_general($account['mailbox']).'</td>
+      </tr>
+      <tr><td>Konto aktiv:</td>
+        <td>'.$enabled.'</td>
+      </tr>
+    </table>
+');
+  }
+  elseif ($sure === true)
+  {
     delete_mailaccount($_GET['account']);
     if (! $debugmode)
       header('Location: accounts.php');
     die();
   }
-  else
+  elseif ($sure === false)
   {
-    output('<h3>E-Mail-Account l&ouml;schen</h3>
-    <p>Soll der folgende Account wirklich gel&ouml;scht werden?</p>
-    ');
-    $_GET['account'] = (int) $_GET['account'];
-    $account = get_mailaccount($_GET['account']);
-    $enabled = ($account['enabled'] ? 'Ja' : 'Nein');
-    output(html_form('imap_accounts_delete', "accounts.php", "action=delete&account=".$_GET['account'], 
-    '<table style="margin-bottom: 1em;">
-    <tr><td>Benutzername:</td>
-      <td>'.filter_input_general($account['account']).'</td>
-    </tr>
-    <tr><td>Mailbox:</td>
-      <td>'.filter_input_general($account['mailbox']).'</td>
-    </tr>
-    <tr><td>Konto aktiv:</td>
-      <td>'.$enabled.'</td>
-    </tr>
-  </table>
-  <p><input type="hidden" name="confirm" value="yes" />
-    <input type="submit" value="Wirklich l&ouml;schen" />
-  </p>
-  '));
+    if (! $debugmode)
+      header("Location: accounts.php");
+    die();
   }
 }
 elseif (isset($_GET['edit']))
@@ -153,24 +149,23 @@ elseif (isset($_GET['edit']))
   $account = get_mailaccount($_GET['edit']);
   list($username, $domain) = explode('@', $account['account'], 2);
   $enabled = ($account['enabled'] ? ' checked="checked"' : '');
-  output('<form action="accounts.php?action=save&amp;id='.$_GET['edit'].'&amp;'.$param.'" method="post">
-  '.generate_form_token('imap_accounts_edit').'
+  $form = '
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>alter Wert:</th><th>neuer Wert:</th><th>&nbsp;</th></tr>
   <tr><td>Benutzername:</td><td><input type="text" id="old_account" name="old_account" value="'.$account['account'].'" readonly="readonly" style="background-color: #C0C0C0;" /></td>
           <td><input type="text" id="user" name="user" value="'.$username.'" />@<select name="domain" id="domain" size="1">
     <option value="schokokeks.org">schokokeks.org</option>
-    ');
+    ';
     $domains = get_domain_list($user['customerno'], $user['uid']);
     if (count($domains) > 0)
-      output('<option>----------------------------</option>');
+      $form .= '<option>----------------------------</option>';
     foreach ($domains as $dom)
       if ($domain == $dom->fqdn)
-        output('<option value="'.$dom->fqdn.'" selected="selected">'.$dom->fqdn.'</option>');
+        $form .= '<option value="'.$dom->fqdn.'" selected="selected">'.$dom->fqdn.'</option>';
       else
-        output('<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>');
+        $form .= '<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>';
 
-    output('</select></td>
+    $form .= '</select></td>
           <td><input type="button" onclick="document.getElementById(\'user\').value = \''.$username.'\' ; document.getElementById(\'domain\').value = \''.$domain.'\'" value="Zeile zur&uuml;cksetzen" /></td></tr>
   <tr><td>Mailbox:</td><td><input type="text" id="old_mailbox" name="old_mailbox" value="'.$account['mailbox'].'" readonly="readonly" style="background-color: #C0C0C0;" /></td>
           <td><input type="text" id="mailbox" name="mailbox" value="'.$account['mailbox'].'" /></td>
@@ -186,8 +181,8 @@ elseif (isset($_GET['edit']))
   <p><input type="submit" value="&Auml;nderungen speichern" /><br />
   Hinweis: Das Passwort wird nur ge&auml;ndert, wenn Sie auf dieser Seite eines eingeben. Geben Sie keines an, wird das bisherige beibehalten!</p>
   </form>
-  ');
-
+  ';
+  output(html_form('imap_accounts_edit', 'accounts.php', 'action=save&id='.$_GET['edit'], $form));
 }
 else
 {
