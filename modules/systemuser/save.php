@@ -34,7 +34,7 @@ elseif ($_GET['action'] == 'edit')
 {
   $error = false;
   check_form_token('systemuser_edit');
-  if ($_POST['uid'] == primary_useraccount())
+  if (customer_useraccount($_POST['uid']))
     system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
 
   if ($_POST['newpass'] != '')

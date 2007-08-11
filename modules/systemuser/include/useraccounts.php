@@ -13,6 +13,12 @@ function customer_may_have_useraccounts()
   return (mysql_num_rows($result) > 0);
 }
 
+function customer_useraccount($uid) {
+  $uid = (int) $uid;
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $result = db_query("SELECT 1 FROM system.useraccounts WHERE kunde={$customerno} AND uid={$uid} AND kundenaccount=1");
+  return mysql_num_rows($result) > 0;
+}
 
 function primary_useraccount()
 {

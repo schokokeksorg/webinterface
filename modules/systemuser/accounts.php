@@ -17,7 +17,6 @@ if (! customer_may_have_useraccounts())
 }
 else
 {
-  $primary = primary_useraccount();
   $accounts = list_useraccounts();
   output("<p>Folgende Benutzeraccounts haben Sie bisher:</p>");
   output("<table><tr><th>Benutzername</th><th>Name</th><th>Erstellt am</th><th>Speicherplatz</th></tr>");
@@ -25,7 +24,7 @@ else
   {
 
     output("<tr><td>");
-    if ($acc->uid == $primary)
+    if (customer_useraccount($acc->uid))
       output($acc->username);
     else
       output(internal_link('edit.php', $acc->username, "uid={$acc->uid}"));

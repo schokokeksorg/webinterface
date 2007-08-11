@@ -23,7 +23,7 @@ function find_role($login, $password, $i_am_admin = False)
   $uid = (int) $login;
   if ($uid == 0)
     $uid = 'NULL';
-  $result = db_query("SELECT passwort AS password, (u.uid = (SELECT min(uid) FROM system.v_useraccounts AS acc WHERE acc.kunde=u.kunde)) AS  `primary`, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid={$uid} OR username='{$login}' LIMIT 1;");
+  $result = db_query("SELECT passwort AS password, kundenaccount AS `primary`, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid={$uid} OR username='{$login}' LIMIT 1;");
   if (@mysql_num_rows($result) > 0)
   {
     $entry = mysql_fetch_object($result);

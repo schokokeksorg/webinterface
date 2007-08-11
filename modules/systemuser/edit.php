@@ -14,7 +14,7 @@ $account = get_account_details($_GET['uid']);
 
 output("<h3>Bearbeiten von Benutzer »{$account['username']}«</h3>");
 
-if ($account['uid'] == primary_useraccount())
+if (customer_useraccount($account['uid']))
   system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
 
 
