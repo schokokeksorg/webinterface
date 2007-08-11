@@ -110,7 +110,7 @@ function check_path( $input )
       return False;
     }
   }
-  return (preg_match('/^[a-z0-9.@\/_-]*$/',$input) == 1);
+  return (preg_match('/^[A-Za-z0-9.@\/_-]*$/',$input) == 1);
 }
 
 
