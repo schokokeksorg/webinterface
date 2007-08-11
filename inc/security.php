@@ -39,8 +39,10 @@ function filter_input_general( $input )
 
 function verify_input_general( $input )
 {
-  if (filter_input_general($input) != $input)
+  if (filter_input_general($input) != $input) {
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
+    logger('inc/security.php', 'verify_input_general', 'Ungültige Daten: '.$input);
+  }
 }
 
 
@@ -51,8 +53,10 @@ function filter_input_username( $input )
 
 function verify_input_username( $input )
 {
-  if (filter_input_username( $input ) != $input)
+  if (filter_input_username( $input ) != $input) {
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
+    logger('inc/security.php', 'verify_input_username', 'Ungültige Daten: '.$input);
+  }
 }
 
 
@@ -92,6 +96,7 @@ function check_path( $input )
   DEBUG("checking {$input} for valid path name");
   if ($input != filter_input_general($input))
   {
+    logger('inc/security.php', 'check_path', 'HTML-Krams im Pfad: '.$input);
     DEBUG("HTML-Krams im Pfad");
     return False;
   }
@@ -100,6 +105,7 @@ function check_path( $input )
   {
     if ($item == '..')
     {
+      Alogger('inc/security.php', 'check_path', '»..« im Pfad: '.$input);
       DEBUG("»..« im Pfad");
       return False;
     }
