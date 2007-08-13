@@ -5,9 +5,10 @@ require_once("inc/security.php");
 function system_failure($reason)
 {
         include('inc/top.php');
-        echo '<div class="error">
+        echo '
         <h3>Fehler</h3>
-        <p>Es ist ein Fehler aufgetreten: '.filter_input_general($reason).'</p>
+        <div class="error">
+          <p>Es ist ein Fehler aufgetreten:<br /> '.filter_input_general($reason).'</p>
         </div>';
         include('inc/bottom.php');
         die();
