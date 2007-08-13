@@ -6,6 +6,10 @@ require_once('inc/error.php');
 function strong_password($password)
 {
   include("config.php");
+  if (isset($config['use_cracklib']) and $config['use_cracklib'] == false) {
+    DEBUG('Cracklib deaktiviert');
+    return true;
+  }
   DEBUG("Öffne Wörterbuch: {$config['cracklib_dict']}");
   if (! ($dict = crack_opendict($config['cracklib_dict'])))
   {

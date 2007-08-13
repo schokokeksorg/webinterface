@@ -10,6 +10,7 @@ $config['db_pass'] = 'password';
 
 $config['modules'] = array("index", "domains", "imap", "mysql", "jabber", "vhosts", "register", "systemuser", "su");
 
+$config['use_cracklib'] = true;
 $config['cracklib_dict'] = 'inc/cracklib_dict';
 
 $config['enable_debug'] = true;
