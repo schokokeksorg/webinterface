@@ -11,7 +11,7 @@ function db_query($query)
   {
     $error = mysql_error();
     logger("inc/base.php", "dberror", "mysql error: {$error}");
-    system_failure('Beim Datenbankzugriff ist ein Fehler aufgetreten. Sollte dies wiederholt vorkommen, senden Sie bitte die Fehlermeldung ('.$error.') an einen Administrator.');
+    system_failure('Interner Datenbankfehler: »'.$error.'«.');
   }
   return $result; 
 }
