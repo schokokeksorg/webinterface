@@ -117,6 +117,23 @@ function create_mailaccount($arr)
 
 }
 
+    
+function get_mailaccount_id($accountname)
+{
+  list($local, $domain) = explode('@', $accountname, 2);
+  if ($domain == 'schokokeks.org')
+    $domain = '';
+
+  $local = mysql_real_escape_string($local);
+  $domain = maybe_null($domain);
+
+  $result = db_query("SELECT acc.id FROM mail.mailaccounts AS acc LEFT JOIN mail.v_domains AS dom ON (dom.id=acc.domain) WHERE local='{$local}' AND dom.domainname={$domain}");
+  if (mysql_num_rows($result) != 1)
+    system_failure('account nicht eindeutig');
+  $acc = mysql_fetch_assoc($result);
+  return $acc['id'];
+}
+    
 
 function delete_mailaccount($id)
 {

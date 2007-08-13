@@ -7,7 +7,7 @@ require_once('inc/error.php');
 require_once('inc/db_connect.php');
 
 define('ROLE_ANONYMOUS', 0);
-define('ROLE_DOMAINADMIN', 1);
+define('ROLE_MAILACCOUNT', 1);
 define('ROLE_SYSTEMUSER', 2);
 define('ROLE_CUSTOMER', 4);
 define('ROLE_SYSADMIN', 8);
@@ -50,6 +50,25 @@ function find_role($login, $password, $i_am_admin = False)
   {
     return ROLE_CUSTOMER;
   }
+
+  // Mail-Account
+  $account = $login;
+  if (! strstr($account, '@')) {
+    $account .= '@schokokeks.org';
+  }
+  $result = db_query("SELECT cryptpass FROM mail.courier_mailaccounts WHERE account='{$account}' LIMIT 1;");
+  if (@mysql_num_rows($result) > 0)
+  {
+    $entry = mysql_fetch_object($result);
+    $db_password = $entry->cryptpass;
+    $hash = crypt($password, $db_password);
+    if ($hash == $db_password || $i_am_admin)
+    {
+      return ROLE_MAILACCOUNT;
+    }
+  }
+  
+
 
   // Nothing?
   return NULL;
@@ -169,6 +188,15 @@ function setup_session($role, $useridentity)
     set_customer_lastlogin($info['customerno']);
     logger("session/start.php", "login", "logged in customer no »{$info['customerno']}«");
   }
+  if ($role & ROLE_MAILACCOUNT)
+  {
+    $id = $useridentity;
+    if (! strstr($id, '@'))
+      $id .= '@schokokeks.org';
+    $_SESSION['mailaccount'] = $id;
+    DEBUG("We are mailaccount: {$_SESSION['mailaccount']}");
+  }
+
 }
 
 ?>

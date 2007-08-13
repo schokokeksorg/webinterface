@@ -18,6 +18,9 @@ switch ($_SESSION['role'])
 case ROLE_ANONYMOUS:
   login_screen('');
   break;
+case ROLE_MAILACCOUNT:
+  $role = "{$_SESSION['mailaccount']}, angemeldet als IMAP/POP3-Account";
+  break;
 case ROLE_SYSTEMUSER:
   $role = "{$_SESSION['userinfo']['name']}, angemeldet als Benutzer";
   break;
