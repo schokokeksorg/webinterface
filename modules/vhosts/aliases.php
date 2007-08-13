@@ -22,11 +22,11 @@ output("<h3>Aliasnamen für Subdomain bearbeiten</h3>");
 
 $mainalias = (strstr($vhost['options'], 'aliaswww') ? '<br /><strong>www.'.$vhost['fqdn'].'</strong>' : '');
 
-output("
+$form = "
   <table>
     <tr><th>Adresse</th><th>Verhalten</th><th>&nbsp;</th></tr>
     <tr><td><strong>{$vhost['fqdn']}</strong>{$mainalias}</td><td>Haupt-Adresse</td><td>&nbsp;</td></tr>
-");
+";
 
 foreach ($aliases AS $alias) {
   $aliastype = 'Zusätzliche Adresse';
@@ -43,33 +43,39 @@ foreach ($aliases AS $alias) {
   $typetoggle = (strstr($alias['options'], 'forward') ? $remove_forward : $to_forward);
 
     
-  output("<tr>
+  $form .= "<tr>
     <td>{$alias['fqdn']}{$wwwalias}</td>
     <td>{$aliastype}<br />{$typetoggle}</td>
     <td>".internal_link('save.php', 'Aliasname löschen', "action=deletealias&alias={$alias['id']}")."</td></tr>
-  ");
+  ";
 }
 
-output('</table>');
+$form .= "
+<tr>
+  <td>
+    <strong>Neuen Aliasnamen hinzufügen</strong><br />
+    <input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"\" />
+      <strong>.</strong>".domainselect()."<br />
+    <input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" />
+      <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label>
+  </td>
+  <td>
+    <select name=\"options[]\">
+      <option value=\"\">zusätzliche Adresse</option>
+      <option value=\"forward\">Umleitung auf Haupt-Adresse</option>
+    </select>
+  </td>
+  <td>
+    <input type=\"submit\" value=\"Hinzufügen\" />
+  </td>
+</tr>
+</table>";
 
-
-output(html_form('vhosts_add_alias', 'save.php', 'action=addalias&vhost='.$vhost['id'], "
-<div style=\"margin-top: 1em; padding: 1em;\">
-<h4>Neuen Aliasnamen hinzufügen</h4>
-<p>
-  <input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"\" />
-    <strong>.</strong>".domainselect()."<br />
-  <input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" />
-    <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label><br />
-  Modus: <select name=\"options[]\">
-    <option value=\"\">zusätzliche Adresse</option>
-    <option value=\"forward\">Umleitung auf Haupt-Adresse</option>
-  </select>
-</p>
-<p>
-  <input type=\"submit\" value=\"Hinzufügen\" /></p>
-</div>
-"));
+output(html_form('vhosts_add_alias', 'save.php', 'action=addalias&vhost='.$vhost['id'], $form));
+    
+output("<p>
+  <a href=\"vhosts.php\">Zurück zur Übersicht</a>
+</p>");
 
 
 ?>
