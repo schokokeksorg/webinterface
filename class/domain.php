@@ -60,12 +60,13 @@ function get_domain_list($customerno, $uid = NULL)
   if ($uid !== NULL)
   {
     $uid = (int) $uid;
-    $query .= " useraccount={$uid};";
+    $query .= " useraccount={$uid}";
   }
   else
   {
-    $query .= " kunde={$customerno};";
+    $query .= " kunde={$customerno}";
   }
+  $query .= " ORDER BY domainname,tld";
   $result = db_query($query);
   $domains = array();
   DEBUG('Result set is '.mysql_num_rows($result)." rows.<br />\n");
