@@ -31,7 +31,8 @@ abstract class KeksData
       $this->parse($this->raw_data);
     }
     elseif (array_key_exists($key, $this->data))
-      return false;
+      $this->data[$key] = $value;
+      // return false;
     elseif (isset($this->$key))
       $this->$key = $value;
     else
@@ -46,6 +47,8 @@ abstract class KeksData
     {
       $fields[$f->Field] = $f->Default;
     }
+    $this->raw_data = $fields;
+    $this->raw_data['id'] = NULL;
     $this->data = $fields;
     $this->data['id'] = NULL;
   }

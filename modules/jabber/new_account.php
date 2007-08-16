@@ -11,6 +11,8 @@ $title = "Neues Jabber-Konto erstellen";
 
 $jabberdomains = get_jabberable_domains();
 
+DEBUG($jabberdomains);
+
 $options = '';
 foreach ($jabberdomains as $dom)
 {
