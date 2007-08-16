@@ -96,7 +96,7 @@ if ($role != ROLE_ANONYMOUS) {
   if ($role & ROLE_SYSTEMUSER) {
     echo '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
     echo '<br />'.$_SESSION['userinfo']['name'];
-    echo '<br />(Benutzer'.(($role & ROLE_SYSTEMUSER) ? ', Kunde' : '').')';
+    echo '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';
   }
   elseif ($role & ROLE_CUSTOMER) {
     echo '<strong>'.$_SESSION['customerinfo']['customerno'].'</strong>';
