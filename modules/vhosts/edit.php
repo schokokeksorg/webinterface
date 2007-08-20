@@ -54,6 +54,8 @@ output("<script type=\"text/javascript\">
   </script>");
 
 $defaultdocroot = $vhost['domain'];
+if (! $vhost['domain'])
+  $defaultdocroot = $_SESSION['userinfo']['username'].'.schokokeks.org';
 if ($vhost['hostname'])
   $defaultdocroot = $vhost['hostname'].'.'.$defaultdocroot;
 

@@ -22,12 +22,8 @@ function empty_vhost()
 {
   $vhost['hostname'] = '';
   
-  $domainlist = get_domain_list($_SESSION['customerinfo']['customerno'],
-                                $_SESSION['userinfo']['uid']);
-  $dom = $domainlist[0];
-
-  $vhost['domain_id'] = $dom->id;
-  $vhost['domain'] = $dom->fqdn;
+  $vhost['domain_id'] = -1;
+  $vhost['domain'] = $_SESSION['userinfo']['username'].'.schokokeks.org';
   
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
@@ -43,12 +39,8 @@ function empty_alias()
 {
   $alias['hostname'] = '';
   
-  $domainlist = get_domain_list($_SESSION['customerinfo']['customerno'],
-                                $_SESSION['userinfo']['uid']);
-  $dom = $domainlist[0];
-
-  $alias['domain_id'] = $dom->id;
-  $alias['domain'] = $dom->fqdn;
+  $alias['domain_id'] = -1;
+  $alias['domain'] = $_SESSION['userinfo']['username'].'.schokokeks.org';
   
   $alias['options'] = '';
   return $alias;
@@ -64,6 +56,8 @@ function domainselect($selected = NULL, $selectattribute = '')
   $selected = (int) $selected;
 
   $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
+  $ret .= ' <option value="-1">'.$_SESSION['userinfo']['username'].'.schokokeks.org</option>';
+  $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
   foreach ($domainlist as $dom)
   {
     $s = ($selected == $dom->id) ? ' selected="selected" ': '';
@@ -137,6 +131,8 @@ function save_vhost($vhost)
   $domain = (int) $vhost['domainid'];
   if ($domain == 0)
     system_failure('$domain == 0');
+  if ($vhost['domainid'] == -1)
+    $domain = 'NULL';
   $docroot = maybe_null($vhost['docroot']);
   $php = maybe_null($vhost['php']);
   $logtype = maybe_null($vhost['logtype']);
@@ -163,6 +159,9 @@ function get_alias_details($id)
     system_failure('Interner Fehler beim Auslesen der Alias-Daten');
   
   $alias = mysql_fetch_assoc($result);
+  
+  if ($alias['domain_id'] == NULL)
+    $alias['domain_id'] = -1;
 
   /* Das bewirkt, dass nur die eigenen Aliase gesehen werden können */
   get_vhost_details( (int) $alias['vhost'] );
@@ -189,6 +188,8 @@ function save_alias($alias)
   $domain = (int) $alias['domainid'];
   if ($domain == 0)
     system_failure('$domain == 0');
+  if ($alias['domainid'] == -1)
+    $domain = 'NULL';
   $vhost = get_vhost_details( (int) $alias['vhost']);
   $options = mysql_real_escape_string( $alias['options'] );
   if ($id == 0) {

@@ -23,10 +23,14 @@ if ($_GET['action'] == 'edit')
   DEBUG($vhost);
 
   $hostname = filter_input_hostname($_POST['hostname']);
-  $domain = new Domain( (int) $_POST['domain'] );
-  if ($domain->useraccount != $_SESSION['userinfo']['uid'])
-    system_failure('Ungültige Domain');
 
+  $domainid = (int) $_POST['domain'];
+  if ($domainid != -1) {
+    $domain = new Domain( (int) $_POST['domain'] );
+    if ($domain->useraccount != $_SESSION['userinfo']['uid'])
+      system_failure('Ungültige Domain');
+    $domainid = $domain->id;
+  }
 
   if (! is_array($_POST['options']))
     $_POST['options'] = array();
@@ -84,7 +88,7 @@ if ($_GET['action'] == 'edit')
   DEBUG('New options: '.$options);
 
   $vhost['hostname'] = $hostname;
-  $vhost['domainid'] = $domain->id;
+  $vhost['domainid'] = $domainid;
   $vhost['docroot'] = $docroot;
   $vhost['php'] = $php;
   $vhost['logtype'] = $logtype;
@@ -145,11 +149,11 @@ elseif ($_GET['action'] == 'deletealias')
   
   $alias = get_alias_details( (int) $_GET['alias'] );
   DEBUG($alias);
-  $alias_string = ((strlen($alias['hostname']) > 0) ? $alias['hostname'].'.' : '').$alias['domain'];
+  $alias_string = $alias['fqdn'];
   
   $vhost = get_vhost_details( $alias['vhost'] );
   DEBUG($vhost);
-  $vhost_string = ((strlen($vhost['hostname']) > 0) ? $vhost['hostname'].'.' : '').$vhost['domain'];
+  $vhost_string = $vhost['fqdn'];
   
   $sure = user_is_sure();
   if ($sure === NULL)
@@ -174,7 +178,7 @@ elseif ($_GET['action'] == 'delete')
   $section = 'vhosts_vhosts';
   
   $vhost = get_vhost_details( (int) $_GET['vhost'] );
-  $vhost_string = ((strlen($vhost['hostname']) > 0) ? $vhost['hostname'].'.' : '').$vhost['domain'];
+  $vhost_string = $vhost['fqdn'];
   
   $sure = user_is_sure();
   if ($sure === NULL)
