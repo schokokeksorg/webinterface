@@ -11,7 +11,13 @@ require_role(ROLE_SYSTEMUSER);
 
 
 output("<h3>Subdomains</h3>
-<p>Mit dieser Funtkion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>");
+<p>Mit dieser Funtkion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>
+<p class=\"warning\">
+  <strong>Testbetrieb</strong><br />
+  Dieser Abschnitt unseres Webinterface befindet sich momentan im Testbetrieb. Wir bitten Sie, hier besonders auf eventuelle Fehler zu achten und uns diese ggf. mitzuteilen. Auch Vorschläge, wie diese Funktionen vielleicht besser gestaltet werden können, nehmen wir gerne an.
+</p>
+<p>Änderungen an Ihren Einstellungen werden im 5-Minuten-Takt auf dem Server übernommen.</p>
+");
 
 $vhosts = list_vhosts();
 
