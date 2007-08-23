@@ -91,23 +91,6 @@ echo '
 
 <?php
 $role = $_SESSION['role'];
-if ($role != ROLE_ANONYMOUS) {
-  echo '<p class="userinfo">';
-  if ($role & ROLE_SYSTEMUSER) {
-    echo '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
-    echo '<br />'.$_SESSION['userinfo']['name'];
-    echo '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';
-  }
-  elseif ($role & ROLE_CUSTOMER) {
-    echo '<strong>'.$_SESSION['customerinfo']['customerno'].'</strong>';
-    echo '<br />'.$_SESSION['customerinfo']['name'];
-    echo '<br />(Kunde)';
-  }
-  elseif ($role & ROLE_MAILACCOUNT) {
-    echo '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
-  }
-  echo '</p>';
-}
 
 
   foreach ($weighted_menuitem as $key => $menuitem)
@@ -134,6 +117,23 @@ if ($role != ROLE_ANONYMOUS) {
 
         }
 
+if ($role != ROLE_ANONYMOUS) {
+echo '<p class="userinfo">Angemeldet als:<br />';
+  if ($role & ROLE_SYSTEMUSER) {
+    echo '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
+    echo '<br />'.$_SESSION['userinfo']['name'];
+    echo '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';
+  }
+  elseif ($role & ROLE_CUSTOMER) {
+    echo '<strong>'.$_SESSION['customerinfo']['customerno'].'</strong>';
+    echo '<br />'.$_SESSION['customerinfo']['name'];
+    echo '<br />(Kunde)';
+  }
+  elseif ($role & ROLE_MAILACCOUNT) {
+    echo '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
+  }
+  echo '</p>';
+}
 ?>
 
 </div>
