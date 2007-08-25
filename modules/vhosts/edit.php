@@ -89,6 +89,15 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
     </select>
     </td>
     <td id=\"defaultphp\">als Apache-Modul</td></tr>
+    <tr><td>SSL-Verschlüsselung</td>
+    <td><select name=\"ssl\" id=\"ssl\">
+      <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >SSL optional anbieten</option>
+      <option value=\"http\" ".($vhost['ssl'] == 'http' ? 'selected="selected"' : '')." >kein SSL</option>
+      <option value=\"https\" ".($vhost['ssl'] == 'https' ? 'selected="selected"' : '')." >nur SSL</option>
+      <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Immer auf SSL umleiten</option>
+    </select>
+    </td>
+    <td id=\"defaultssl\">SSL optional anbieten</td></tr>
     <tr>
       <td>Logfiles</td>
       <td><select name=\"logtype\" id=\"logtype\">

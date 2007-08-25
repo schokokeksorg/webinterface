@@ -59,6 +59,20 @@ if ($_GET['action'] == 'edit')
     /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
   }
 
+  $ssl = '';
+  switch ($_POST['ssl']) {
+    case 'http':
+      $ssl = 'http';
+      break;
+    case 'https':
+      $ssl = 'https';
+      break;
+    case 'forward':
+      $ssl = 'forward';
+      break;
+    /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
+  }
+
   $logtype = '';
   switch ($_POST['logtype']) {
     case 'anonymous':
@@ -91,6 +105,7 @@ if ($_GET['action'] == 'edit')
   $vhost['domainid'] = $domainid;
   $vhost['docroot'] = $docroot;
   $vhost['php'] = $php;
+  $vhost['ssl'] = $ssl;
   $vhost['logtype'] = $logtype;
     
   $vhost['options'] = $options;
