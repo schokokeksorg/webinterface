@@ -128,9 +128,13 @@ elseif ($_GET['action'] == 'addalias')
 
   
   $hostname = filter_input_hostname($_POST['hostname']);
-  $domain = new Domain( (int) $_POST['domain'] );
-  if ($domain->useraccount != $_SESSION['userinfo']['uid'])
-    system_failure('Ungültige Domain');
+  $domainid = (int) $_POST['domain'];
+  if ($domainid != -1) {
+    $domain = new Domain( (int) $_POST['domain'] );
+    if ($domain->useraccount != $_SESSION['userinfo']['uid'])
+      system_failure('Ungültige Domain');
+    $domainid = $domain->id;
+  }
 
   if (! is_array($_POST['options']))
     $_POST['options'] = array();
@@ -147,7 +151,7 @@ elseif ($_GET['action'] == 'addalias')
   DEBUG('New options: '.$options);
 
   $alias['hostname'] = $hostname;
-  $alias['domainid'] = $domain->id;
+  $alias['domainid'] = $domainid;
     
   $alias ['options'] = $options;
     

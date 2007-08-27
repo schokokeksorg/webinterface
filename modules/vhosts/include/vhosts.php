@@ -162,8 +162,9 @@ function get_alias_details($id)
   
   $alias = mysql_fetch_assoc($result);
   
-  if ($alias['domain_id'] == NULL)
+  if ($alias['domain_id'] == NULL) {
     $alias['domain_id'] = -1;
+  }
 
   /* Das bewirkt, dass nur die eigenen Aliase gesehen werden können */
   get_vhost_details( (int) $alias['vhost'] );
