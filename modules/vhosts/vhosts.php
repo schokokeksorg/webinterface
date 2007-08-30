@@ -57,11 +57,12 @@ if (count($vhosts) > 0)
     <td>".internal_link('save.php', 'Subdomain löschen', 'action=delete&vhost='.$vhost['id'] )."</td>
     </tr>");
   }
-  output('</table>
-<p><a href="edit.php">Neue Subdomain anlegen</a></p>
-<p><sup>*</sup>)&nbsp;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>
-  <br />');
+  output('</table>');
+  output('<p><sup>*</sup>)&nbsp;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
+  output('  <br />');
 }
+output('<p><a href="edit.php">Neue Subdomain anlegen</a></p>');
+output('  <br />');
 
 
 
