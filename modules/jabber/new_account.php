@@ -22,7 +22,7 @@ foreach ($jabberdomains as $dom)
 
 output("<h3>Neuen Jabber-Account erstellen</h3>");
 
-output('<p>Erstellen Sie hier ein neues Jabber-Konto.</p>
+output('<p>Erstellen Sie hier ein neues Jabber-Konto. Ihre Änderungen werden nach ca. 10 Minuten automatisch in das System übertragen. Accounts funktionieren also nicht unmittelbar nach dem Anlegen.</p>
 
 '.html_form('jabber_new_account', 'save.php', 'action=new', '
 <table>
