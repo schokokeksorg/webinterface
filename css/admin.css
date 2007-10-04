@@ -38,6 +38,10 @@ p.warning {
         background-color: #FFFFFF;
 }
 
+span.warning {
+	color:#FF0000;
+}
+
 a img {
   border: 0px;
 }
