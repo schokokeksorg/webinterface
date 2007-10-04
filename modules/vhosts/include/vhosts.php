@@ -138,15 +138,16 @@ function save_vhost($vhost)
   $php = maybe_null($vhost['php']);
   $ssl = maybe_null($vhost['ssl']);
   $logtype = maybe_null($vhost['logtype']);
+  $errorlog = (int) $vhost['errorlog'];
   $options = mysql_real_escape_string( $vhost['options'] );
 
   if ($id != 0) {
     logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, options='{$options}' WHERE id={$id} LIMIT 1");
+    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, options='{$options}' WHERE id={$id} LIMIT 1");
   }
   else {
     logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, '{$options}')");
+    db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, '{$options}')");
   }
 }
 

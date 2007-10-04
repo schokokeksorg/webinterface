@@ -84,6 +84,10 @@ if ($_GET['action'] == 'edit')
     /* Wenn etwas anderes kommt, ist das "kein Logging". So einfach ist das. */
   }
 
+  $errorlog = 0;
+  if (isset($_POST['errorlog']) and ($_POST['errorlog'] == 1))
+    $errorlog = 1;
+
   DEBUG("PHP: {$php} / Logging: {$logtype}");
 
   $old_options = explode(',', $vhost['options']);
@@ -107,7 +111,7 @@ if ($_GET['action'] == 'edit')
   $vhost['php'] = $php;
   $vhost['ssl'] = $ssl;
   $vhost['logtype'] = $logtype;
-    
+  $vhost['errorlog'] = $errorlog; 
   $vhost['options'] = $options;
     
   save_vhost($vhost);

@@ -70,6 +70,7 @@ else
   $docroot = substr($vhost['docroot'], strlen($vhost['homedir'])+1);
 
 $s = (strstr($vhost['options'], 'aliaswww') ? ' checked="checked" ' : '');
+$errorlog = (strstr($vhost['errorlog'], 'on') ? ' checked="checked" ' : '');
 $form = "
   <table>
     <tr><th>Einstellung</th><th>aktueller Wert</th><th>System-Standard</th></tr>
@@ -104,7 +105,8 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
       <option value=\"none\" ".($vhost['logtype'] == NULL ? 'selected="selected"' : '')." >keine Logfiles</option>
       <option value=\"anonymous\" ".($vhost['logtype'] == 'anonymous' ? 'selected="selected"' : '')." >anonymisiert</option>
       <option value=\"default\" ".($vhost['logtype'] == 'default' ? 'selected="selected"' : '')." >vollständige Logfile</option>
-    </select>
+    </select><br />
+    <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&nbsp;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label>
     </td>
     <td id=\"defaultlogtype\">keine Logfiles</td></tr>
     ";
