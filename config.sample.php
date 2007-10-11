@@ -16,6 +16,9 @@ $config['cracklib_dict'] = 'inc/cracklib_dict';
 $config['enable_debug'] = true;
 
 
+$config['mime_type'] = 'application/xhtml+xml';
+
+
 ini_set('error_reporting','On');
 
 ?>
