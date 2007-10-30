@@ -30,6 +30,10 @@ function maybe_null($value)
 
 function logger($scriptname, $scope, $message)
 {
+  global $config;
+  if ($config['logging'] == false)
+    return;
+
   $user = 'NULL';
   if ($_SESSION['role'] & ROLE_SYSTEMUSER)
     $user = "'{$_SESSION['userinfo']['username']}'";
