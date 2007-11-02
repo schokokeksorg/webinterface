@@ -65,7 +65,7 @@ if (isset($_GET['action']))
 $dbs = get_mysql_databases($_SESSION['userinfo']['uid']);
 $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
-if (isset($_POST['access']))
+if (isset($_POST['accesseditor']))
 {
   check_form_token('mysql_databases');
   /* Eine neue Datenbank */
@@ -141,7 +141,7 @@ if ($output_something)
     $form .= '<td style="text-align: center;"><input type="checkbox" id="new_'.$user.'" name="access[new][]" value="'.$user.'" /></td>';
   $form .= '</tr>
   </table>
-  <p><input type="submit" value="Speichern" /></p>';
+  <p><input type="submit" name="accesseditor" value="Speichern" /></p>';
 
   
   output(html_form('mysql_databases', 'databases.php', '', $form));
