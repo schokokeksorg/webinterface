@@ -113,7 +113,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 
 $form .= '</table>
   <p><input type="submit" value="Speichern" />&nbsp;&nbsp;&nbsp;&nbsp;'.internal_link('vhosts.php', 'Abbrechen').'</p>
-  <p class="warning"><span class="warning">*</span>Es ist im Moment Gegenstand gerichtlicher außeinandersetzungen, ob die Speicherung von Logfiles auf Webservern
+  <p class="warning"><span class="warning">*</span>Es ist im Moment Gegenstand gerichtlicher Außeinandersetzungen, ob die Speicherung von Logfiles auf Webservern
   zulässig ist. Wir weisen alle Nutzer darauf hin, dass sie selbst dafür verantwortlich sind, bei geloggten Nutzerdaten die
   Seitenbesucher darauf hinzuweisen. Wir empfehlen, wenn möglich, Logfiles abzuschalten oder anonymes Logging einzusetzen.</p>
 ';
