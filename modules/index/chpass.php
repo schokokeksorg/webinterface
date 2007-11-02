@@ -2,7 +2,7 @@
 require_once('inc/debug.php');
 require_once('inc/security.php');
 
-$title = "Passwort &auml;ndern";
+$title = "Passwort ändern";
 $error = '';
 
 require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
@@ -48,8 +48,8 @@ if ($_POST['password1'] != '')
 if ($_SESSION['role'] & ROLE_SYSTEMUSER)
   warning('Beachten Sie: Wenn Sie hier Ihr Passwort ändern, betrifft dies auch Ihr Anmelde-Passwort am Server (SSH).');
 
-output('<h3>Passwort &auml;ndern</h3>
-<p>Hier k&ouml;nnen Sie Ihr Passwort &auml;ndern.</p>
+output('<h3>Passwort ändern</h3>
+<p>Hier können Sie Ihr Passwort ändern.</p>
 '.html_form('index_chpass', 'chpass.php', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
@@ -58,7 +58,7 @@ output('<h3>Passwort &auml;ndern</h3>
     <td>neues Passwort:</td>       <td><input type="password" name="password1" value="" /></td>
   </tr>
   <tr>
-    <td>Best&auml;tigung:<br /><span style="font-size: 80%;">(nochmal neues Passwort)</span></td>
+    <td>Bestätigung:<br /><span style="font-size: 80%;">(nochmal neues Passwort)</span></td>
                                    <td><input type="password" name="password2" value="" /></td>
   </tr>
 </table>

@@ -54,7 +54,7 @@ if ($show == 'password')
   <input type="hidden" name="token" value="'.$token.'" /></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
   <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" /></p>
-  <p><span class="login_label">&nbsp;</span> <input type="submit" value="Passwort setzen" /></p>
+  <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort setzen" /></p>
   </form>');
 }
 elseif ($show == 'token')
@@ -64,7 +64,7 @@ elseif ($show == 'token')
   <form action="" method="post">
   <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>
   <p><span class="login_label">Code:</span> <input type="text" name="token" size="30" /></p>
-  <p><span class="login_label">&nbsp;</span> <input type="submit" value="Überprüfen" /></p>
+  <p><span class="login_label">&#160;</span> <input type="submit" value="Überprüfen" /></p>
   </form>');
 }
 

@@ -78,8 +78,8 @@ $form = "
     <td><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onchange=\"defaultDocumentRoot()\" /><strong>.</strong>".domainselect($vhost['domain_id'], 'onchange="defaultDocumentRoot()"');
 $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></td><td><em>keiner</em></td></tr>
     <tr><td>Lokaler Pfad</td>
-    <td><input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"useDefaultDocroot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&nbsp;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
-    <strong>".$vhost['homedir']."/</strong>&nbsp;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
+    <td><input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"useDefaultDocroot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
+    <strong>".$vhost['homedir']."/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
     </td>
     <td id=\"defaultdocroot\">{$defaultdocroot}</td></tr>
     <tr><td>PHP</td>
@@ -106,13 +106,13 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
       <option value=\"anonymous\" ".($vhost['logtype'] == 'anonymous' ? 'selected="selected"' : '')." >anonymisiert</option>
       <option value=\"default\" ".($vhost['logtype'] == 'default' ? 'selected="selected"' : '')." >vollständige Logfile</option>
     </select><br />
-    <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&nbsp;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label>
+    <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label>
     </td>
     <td id=\"defaultlogtype\">keine Logfiles</td></tr>
     ";
 
 $form .= '</table>
-  <p><input type="submit" value="Speichern" />&nbsp;&nbsp;&nbsp;&nbsp;'.internal_link('vhosts.php', 'Abbrechen').'</p>
+  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts.php', 'Abbrechen').'</p>
   <p class="warning"><span class="warning">*</span>Es ist im Moment Gegenstand gerichtlicher Außeinandersetzungen, ob die Speicherung von Logfiles auf Webservern
   zulässig ist. Wir weisen alle Nutzer darauf hin, dass sie selbst dafür verantwortlich sind, bei geloggten Nutzerdaten die
   Seitenbesucher darauf hinzuweisen. Wir empfehlen, wenn möglich, Logfiles abzuschalten oder anonymes Logging einzusetzen.</p>

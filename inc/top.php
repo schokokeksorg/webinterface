@@ -41,7 +41,7 @@ DEBUG(print_r($weighted_menuitem, true));
 
 
 /*
-$menuitem["index"]["label"] = "&Uuml;bersicht";
+$menuitem["index"]["label"] = "Übersicht";
 $menuitem["index"]["file"] = "index.php";
 
 
@@ -52,7 +52,7 @@ $menuitem["domains"]["file"] = "domains.php";
 $menuitem["mail"]["label"] = "E-Mail";
 $menuitem["mail"]["file"] = "mail.php";
 
-$menuitem["chpass"]["label"] = "Passwort &auml;ndern";
+$menuitem["chpass"]["label"] = "Passwort ändern";
 $menuitem["chpass"]["file"] = "chpass.php";
 
 

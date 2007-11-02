@@ -76,10 +76,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
     $options .= '<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>';
 
   output('<h3>E-Mail-Account anlegen</h3>
-<p>Hier k&ouml;nnen Sie ein neues POP3/IMAP-Konto anlegen.</p>
+<p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
   '.html_form('imap_accounts_create', 'accounts.php', 'action=save', '
   <table style="margin-bottom: 1em;">
-  <tr><th>Einstellung:</th><th>Wert:</th><th>&nbsp;</th></tr>
+  <tr><th>Einstellung:</th><th>Wert:</th><th>&#160;</th></tr>
   <tr>
     <td>Benutzername:</td>
     <td><input type="text" id="user" name="user" />@<select name="domain" size="1">
@@ -112,7 +112,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
     $account = get_mailaccount($_GET['account']);
     $enabled = ($account['enabled'] ? 'Ja' : 'Nein');
     are_you_sure("action=delete&amp;account={$_GET['account']}", '
-    <p>Soll der folgende Account wirklich gel&ouml;scht werden?</p>
+    <p>Soll der folgende Account wirklich gelöscht werden?</p>
     <table style="margin-bottom: 1em;">
       <tr><td>Benutzername:</td>
         <td>'.filter_input_general($account['account']).'</td>
@@ -143,7 +143,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
 elseif (isset($_GET['edit']))
 {
   output('<h3>E-Mail-Account bearbeiten</h3>
-<p>Hier k&ouml;nnen Sie die Einstellungen des IMAP-Kontos bearbeiten.</p>
+<p>Hier können Sie die Einstellungen des IMAP-Kontos bearbeiten.</p>
 ');
   $_GET['edit'] = (int) $_GET['edit'];
   $account = get_mailaccount($_GET['edit']);
@@ -151,7 +151,7 @@ elseif (isset($_GET['edit']))
   $enabled = ($account['enabled'] ? ' checked="checked"' : '');
   $form = '
   <table style="margin-bottom: 1em;">
-  <tr><th>Einstellung:</th><th>alter Wert:</th><th>neuer Wert:</th><th>&nbsp;</th></tr>
+  <tr><th>Einstellung:</th><th>alter Wert:</th><th>neuer Wert:</th><th>&#160;</th></tr>
   <tr><td>Benutzername:</td><td><input type="text" id="old_account" name="old_account" value="'.$account['account'].'" readonly="readonly" style="background-color: #C0C0C0;" /></td>
           <td><input type="text" id="user" name="user" value="'.$username.'" />@<select name="domain" id="domain" size="1">
     <option value="schokokeks.org">schokokeks.org</option>
@@ -166,20 +166,20 @@ elseif (isset($_GET['edit']))
         $form .= '<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>';
 
     $form .= '</select></td>
-          <td><input type="button" onclick="document.getElementById(\'user\').value = \''.$username.'\' ; document.getElementById(\'domain\').value = \''.$domain.'\'" value="Zeile zur&uuml;cksetzen" /></td></tr>
+          <td><input type="button" onclick="document.getElementById(\'user\').value = \''.$username.'\' ; document.getElementById(\'domain\').value = \''.$domain.'\'" value="Zeile zurücksetzen" /></td></tr>
   <tr><td>Mailbox:</td><td><input type="text" id="old_mailbox" name="old_mailbox" value="'.$account['mailbox'].'" readonly="readonly" style="background-color: #C0C0C0;" /></td>
           <td><input type="text" id="mailbox" name="mailbox" value="'.$account['mailbox'].'" /></td>
-          <td><input type="button" onclick="document.getElementById(\'mailbox\').value = document.getElementById(\'old_mailbox\').value" value="Zeile zur&uuml;cksetzen" /></td></tr>
+          <td><input type="button" onclick="document.getElementById(\'mailbox\').value = document.getElementById(\'old_mailbox\').value" value="Zeile zurücksetzen" /></td></tr>
   <tr><td>Passwort:</td><td><i>nicht angezeigt</i></td>
           <td><input type="password" id="password" name="password" value="" /></td>
-          <td><input type="button" onclick="document.getElementById(\'password\').value = \'\'" value="Zeile zur&uuml;cksetzen" /></td></tr>
+          <td><input type="button" onclick="document.getElementById(\'password\').value = \'\'" value="Zeile zurücksetzen" /></td></tr>
   <tr><td>Konto aktiv:</td>
-    <td>&nbsp;</td>
+    <td>&#160;</td>
     <td><input type="checkbox" id="enabled" name="enabled" value="true"'.$enabled.' /></td>
-    <td>&nbsp;</td></tr>
+    <td>&#160;</td></tr>
   </table>
-  <p><input type="submit" value="&Auml;nderungen speichern" /><br />
-  Hinweis: Das Passwort wird nur ge&auml;ndert, wenn Sie auf dieser Seite eines eingeben. Geben Sie keines an, wird das bisherige beibehalten!</p>
+  <p><input type="submit" value="Änderungen speichern" /><br />
+  Hinweis: Das Passwort wird nur geändert, wenn Sie auf dieser Seite eines eingeben. Geben Sie keines an, wird das bisherige beibehalten!</p>
   ';
   output(html_form('imap_accounts_edit', 'accounts.php', 'action=save&id='.$_GET['edit'], $form));
 }
@@ -188,7 +188,7 @@ else
   output('<h3>E-Mail-Accounts</h3>
 <p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
 <table style="margin-bottom: 1em;">
-<tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&nbsp;</th></tr>
+<tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&#160;</th></tr>
 ');
 
         foreach (mailaccounts($user['uid']) as $account)
@@ -200,7 +200,7 @@ else
             <td>'.internal_link('accounts.php', $account['account'], 'edit='.$account['id']).'</td>
             <td>'.$mailbox.'</td>
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
-            <td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">l&ouml;schen</a></td></tr>');
+            <td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">löschen</a></td></tr>');
         }
         output('</table>
 <p><a href="accounts.php?action=create">Neuen Account anlegen</a></p>

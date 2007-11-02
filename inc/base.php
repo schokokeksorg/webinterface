@@ -78,7 +78,7 @@ function are_you_sure($query_string, $question)
       <p class=\"buttons\">
         <input type=\"hidden\" name=\"random_token\" value=\"{$token}\" />
         <input type=\"submit\" name=\"really\" value=\"Ja\" />
-        &nbsp; &nbsp;
+        &#160; &#160;
         <input type=\"submit\" name=\"not_really\" value=\"Nein\" />
       </p>
     </div>");

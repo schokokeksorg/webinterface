@@ -24,8 +24,8 @@ $mainalias = (strstr($vhost['options'], 'aliaswww') ? '<br /><strong>www.'.$vhos
 
 $form = "
   <table>
-    <tr><th>Adresse</th><th>Verhalten</th><th>&nbsp;</th></tr>
-    <tr><td><strong>{$vhost['fqdn']}</strong>{$mainalias}</td><td>Haupt-Adresse</td><td>&nbsp;</td></tr>
+    <tr><th>Adresse</th><th>Verhalten</th><th>&#160;</th></tr>
+    <tr><td><strong>{$vhost['fqdn']}</strong>{$mainalias}</td><td>Haupt-Adresse</td><td>&#160;</td></tr>
 ";
 
 foreach ($aliases AS $alias) {
@@ -34,7 +34,7 @@ foreach ($aliases AS $alias) {
     $aliastype = 'Umleitung auf Haupt-Adresse';
   }
   $formtoken = generate_form_token('aliases_toggle');
-  $havewww = '<br />www.'.$alias['fqdn'].' &nbsp; ('.internal_link('aliasoptions.php', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
+  $havewww = '<br />www.'.$alias['fqdn'].' &#160; ('.internal_link('aliasoptions.php', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
   $nowww = '<br />'.internal_link('aliasoptions.php', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
   $wwwalias = (strstr($alias['options'], 'aliaswww') ? $havewww : $nowww);
 

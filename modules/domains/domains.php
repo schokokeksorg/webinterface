@@ -18,7 +18,7 @@ $title = "Domainüberblick";
 output('<h3>Domains</h3>
 <p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
 <table>
-<tr><th>Domainname</th><th>Reg-Datum</th><th>Kündigungsdatum</th><th>&nbsp;</th></tr>
+<tr><th>Domainname</th><th>Reg-Datum</th><th>Kündigungsdatum</th><th>&#160;</th></tr>
 ');
 foreach ($user_domains as $domain)
 {

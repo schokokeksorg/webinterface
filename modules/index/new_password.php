@@ -30,7 +30,7 @@ output('<h3>Neues Passwort beantragen</h3>
 <form action="" method="post">
 <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>
 <p><span class="login_label">E-Mail-Adresse:</span> <input type="text" name="email" size="30" /></p>
-<p><span class="login_label">&nbsp;</span> <input type="submit" value="Passwort anfordern" /></p>
+<p><span class="login_label">&#160;</span> <input type="submit" value="Passwort anfordern" /></p>
 </form>');
 
 

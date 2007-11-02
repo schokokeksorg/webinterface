@@ -114,7 +114,7 @@ function login_screen($why)
         echo '<form action="" method="post">
         <p><span class="login_label">Benutzer<sup>*</sup>:</span> <input type="text" name="username" size="30" /></p>
         <p><span class="login_label">Passwort:</span> <input type="password" name="password" size="30" /></p>
-        <p><span class="login_label">&nbsp;</span> <input type="submit" value="Anmelden" /></p>
+        <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
         </form>
         <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrer System-User-ID oder Ihrer Kundennummer anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
         <p>Sofern Sie für Ihren Kundenaccount noch kein Passwort festgelegt haben oder Ihres vergessen haben, klicken Sie bitte <a href="new_password.php">hier</a></p>

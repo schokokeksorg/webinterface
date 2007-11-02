@@ -88,7 +88,7 @@ else
   <p><span class="login_label">Nachname:</span> <input type="text" name="nachname" size="30" value="'.$_POST['nachname'].'" /></p>
   <p><span class="login_label">E-Mail-Adresse:</span> <input type="text" name="email" size="30" value="'.$_POST['email'].'" /></p>
   <p><span class="login_label">AGB:</span> <input type="checkbox" name="agb_gelesen" value="1"'.($_POST['agb_gelesen'] == 1 ? ' checked="checked"' : '').' /> Ja, ich habe <a href="http://schokokeks.org/agb">die Allgemeinen Geschäftsbedingungen von schokokeks.org Webhosting</a> gelesen und erkläre mich damit einverstanden.</p>
-  <p><span class="login_label">&nbsp;</span> <input type="submit" value="Zugang erstellen" /></p>'));
+  <p><span class="login_label">&#160;</span> <input type="submit" value="Zugang erstellen" /></p>'));
   
 }
 

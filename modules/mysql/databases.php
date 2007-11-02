@@ -117,7 +117,7 @@ if ($output_something)
 
   $form = '
   <table>
-  <tr><th>&nbsp;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users)+1).'">Benutzerkonten</th></tr>
+  <tr><th>&#160;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users)+1).'">Benutzerkonten</th></tr>
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>';
 
   foreach ($users as $user)
@@ -129,7 +129,7 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&nbsp;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&amp;db={$db}\"><img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>";
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&#160;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&amp;db={$db}\"><img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>";
     foreach ($users as $user)
       $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>";
     $form .= "</tr>\n";
@@ -150,12 +150,12 @@ if ($output_something)
 
 
   $form = '<div>
-  <label for="username">Benutzername:</label>&nbsp;<select name="mysql_username" id="username">
+  <label for="username">Benutzername:</label>&#160;<select name="mysql_username" id="username">
 ';
   foreach ($users as $user)
     $form .= "<option value=\"{$user}\">{$user}</option>\n";
-  $form .= '</select>&nbsp;&nbsp;&nbsp;
-  <label for="password">Passwort:</label>&nbsp;<input type="password" name="mysql_password" id="password" />&nbsp;&nbsp;<input type="submit" value="Setzen" />
+  $form .= '</select>&#160;&#160;&#160;
+  <label for="password">Passwort:</label>&#160;<input type="password" name="mysql_password" id="password" />&#160;&#160;<input type="submit" value="Setzen" />
 </div>
 ';
 
