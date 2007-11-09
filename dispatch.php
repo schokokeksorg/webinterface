@@ -12,6 +12,12 @@ if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists
 {
   die("illegal command");
 }
+$tmp = explode('/', $go, 2);
+$module = $tmp[0];
+if (! in_array($module, $config['modules']))
+{
+  die("illegal command");
+}
 
 
 /*
