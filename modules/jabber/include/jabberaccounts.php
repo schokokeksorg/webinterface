@@ -41,6 +41,12 @@ function get_jabberaccount_details($id)
 }
 
 
+function valid_jabber_password($pass)
+{
+  $new = filter_input_general($pass);
+  return ($new == $pass);
+}
+
 
 function create_jabber_account($local, $domain, $password)
 {
@@ -49,7 +55,9 @@ function create_jabber_account($local, $domain, $password)
 
   $local = mysql_real_escape_string( filter_input_username($local) );
   $domain = (int) $domain;
-  $password = mysql_real_escape_string( filter_shell( $password ) );
+  if (! valid_jabber_password($password))
+    input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
+  $password = mysql_real_escape_string( filter_input_general( $password ) );
   
   if ($domain > 0)
   {
@@ -80,14 +88,16 @@ function create_jabber_account($local, $domain, $password)
 
 
 
-function change_jabber_password($id, $newpass)
+function change_jabber_password($id, $password)
 {
   require_role(ROLE_CUSTOMER);
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
-  $newpass = mysql_real_escape_string( filter_shell( $newpass ) );
+  if (! valid_jabber_password($password))
+    input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
+  $password = mysql_real_escape_string( filter_input_general( $password ) );
   
-  db_query("UPDATE jabber.accounts SET password='{$newpass}' WHERE customerno={$customerno} AND id={$id} LIMIT 1");
+  db_query("UPDATE jabber.accounts SET password='{$password}' WHERE customerno={$customerno} AND id={$id} LIMIT 1");
   logger("modules/jabber/include/jabberaccounts.php", "jabber", "changed password for account  »{$id}«");
 }
 
