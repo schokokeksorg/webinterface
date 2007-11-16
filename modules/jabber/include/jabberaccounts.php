@@ -44,9 +44,11 @@ function get_jabberaccount_details($id)
 function valid_jabber_password($pass)
 {
   // Hier könnten erweiterte Checks stehen wenn nötig.
-  $foo = ereg_replace('["\']', '', $pass);
+  /*$foo = ereg_replace('["\']', '', $pass);
   DEBUG("\$foo = {$foo} / \$pass = {$pass}");
   return ($foo == $pass);
+  */
+  return true;
 }
 
 

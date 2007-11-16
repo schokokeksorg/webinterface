@@ -23,7 +23,7 @@ if ($_GET['action'] == 'new')
   }
   else
   {
-    create_jabber_account($_POST['local'], $_POST['domain'], $_POST['password']);
+    create_jabber_account($_POST['local'], $_POST['domain'], stripslashes($_POST['password']));
     if (! $debugmode)
       header('Location: accounts.php');
   }
@@ -41,7 +41,7 @@ elseif ($_GET['action'] == 'chpass')
   }
   else
   {
-    change_jabber_password($_POST['accountid'], $_POST['newpass']);
+    change_jabber_password($_POST['accountid'], stripslashes($_POST['newpass']));
     if (! $debugmode)
       header('Location: accounts.php');
   }
