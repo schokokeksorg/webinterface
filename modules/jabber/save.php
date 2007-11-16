@@ -17,7 +17,7 @@ if ($_GET['action'] == 'new')
   check_form_token('jabber_new_account');
   if (filter_input_username($_POST['local']) == '' ||
       $_POST['domain'] == '' ||
-      filter_shell($_POST['password']) == '')
+      $_POST['password'] == '')
   {
     input_error('Sie müssen alle Felder ausfüllen!');
   }
