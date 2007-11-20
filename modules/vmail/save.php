@@ -39,6 +39,39 @@ if ($_GET['action'] == 'edit')
 
   if (! ($debugmode || we_have_an_error()))
     header('Location: accounts.php');
+}
+elseif ($_GET['action'] == 'delete')
+{
+  $title = "E-mail-Adresse löschen";
+  $section = 'vmail_vmail';
+
+  $account = get_account_details( (int) $_GET['id'] );
+
+  $domain = NULL;
+  $domains = get_vmail_domains();
+  foreach ($domains as $dom)
+    if ($dom->id == $account['domain'])
+    {
+      $domain = $dom->domainname;
+      break;
+    }
+  $account_string = $account['local'] . "@" . $domain;
+  $sure = user_is_sure();
+  if ($sure === NULL)
+  {
+    are_you_sure("action=delete&amp;id={$account['id']}", "Möchten Sie die E-Mail-Adresse »{$account_string}« wirklich löschen?");
+  }
+  elseif ($sure === true)
+  {
+    delete_account($account['id']);
+    if (! $debugmode)
+      header("Location: accounts.php");
+  }
+  elseif ($sure === false)
+  {
+    if (! $debugmode)
+      header("Location: accounts.php");
+  }
 
 }
 else

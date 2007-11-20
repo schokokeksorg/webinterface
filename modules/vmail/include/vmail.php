@@ -229,11 +229,15 @@ function save_vmail_account($account)
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
-
-
 }
 
 
+
+function delete_account($id)
+{
+  $account = get_account_details($id);
+  db_query("DELETE FROM mail.virtual_mail WHERE id={$account['id']};");
+}
 
 
 ?>
