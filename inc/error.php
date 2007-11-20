@@ -40,6 +40,16 @@ function success_msg($msg)
 }
 
 
+function we_have_an_error()
+{
+  global $input_error;
+  global $warning;
+
+  return ((count($input_error) + count($warning)) > 0);
+
+}
+
+
 function show_messages()
 {
   global $input_error;
@@ -54,7 +64,7 @@ function show_messages()
     ';
     foreach ($input_error as $error)
     {
-      echo '<li>'.filter_input_general($error)."</li>\n";
+      echo '<li>'.nl2br(filter_input_general($error))."</li>\n";
     }
     echo '</ul>
     </div>';
@@ -66,7 +76,7 @@ function show_messages()
     ';
     foreach ($warning as $msg)
     {
-      echo '<li>'.filter_input_general($msg)."</li>\n";
+      echo '<li>'.nl2br(filter_input_general($msg))."</li>\n";
     }
     echo '</ul>
     </div>';
@@ -78,7 +88,7 @@ function show_messages()
     ';
     foreach ($success_msg as $msg)
     {
-      echo '<li>'.filter_input_general($msg)."</li>\n";
+      echo '<li>'.nl2br(filter_input_general($msg))."</li>\n";
     }
     echo '</ul>
     </div>';
