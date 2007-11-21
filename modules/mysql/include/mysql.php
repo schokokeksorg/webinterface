@@ -78,6 +78,10 @@ function create_mysql_account($username)
     input_error("Der eingegebene Benutzername entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
+  if (strlen($username) > 16)
+  {
+    warning('Der eingegebene MySQL-Benutzername wurde abgeschnitten. Systemseitig begrenzt MySQL einen Benutzernamen auf 16 Zeichen.');
+  }
   $uid = $_SESSION['userinfo']['uid'];
   $username = mysql_real_escape_string($username);
   logger("modules/mysql/include/mysql.php", "mysql", "creating user »{$username}«");
