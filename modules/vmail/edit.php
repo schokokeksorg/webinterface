@@ -25,7 +25,7 @@ else {
 }
 
 
-$is_forward = ($mailbox['type'] == 'forward');
+$is_forward = ($account['type'] == 'forward');
 $is_mailbox = ( ! $is_forward);
 
 output("<script type=\"text/javascript\">
@@ -95,7 +95,7 @@ if ($is_mailbox and ($account['data'] != ''))
 
 $form .= "<p>
     <input type=\"radio\" id=\"forward\" name=\"type\" value=\"forward\" ".($is_forward ? 'checked="checked" ' : '')." onclick=\"selectForwarding()\" /><label for=\"forward\">&#160;Weiterleitung an andere E-Mail-Adresse</label></p>
-    <p style=\"margin-left: 2em; ".($is_mailbox ? 'display: none' : '')."\" id=\"forward_options\">Weiterleitung an:&#160;<input type=\"text\" id=\"forward_to\" name=\"forward_to\" value=\"".($is_forward ? $account['data'] : '')."\" /></p>
+    <p style=\"margin-left: 2em; ".($is_mailbox ? 'display: none' : '')."\" id=\"forward_options\">Weiterleitung an:&#160;<textarea id=\"forward_to\" name=\"forward_to\">".($is_forward ? str_replace(' ', "\n", $account['data']) : '')."</textarea><br />Sie können mehrere Adressen eingeben. trennen Sie diese bitte mit Zeilenumbrüchen oder Leerzeichen.</p>
     <p><input type=\"radio\" id=\"mailbox\" name=\"type\" value=\"mailbox\" ".($is_mailbox ? 'checked="checked" ' : '')." onclick=\"selectMailbox()\" /><label for=\"mailbox\">&#160;In Mailbox speichern</label></p>
     <p style=\"margin-left: 2em; ".($is_forward ? 'display: none' : '')."\" id=\"mailbox_options\">Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"\" />{$password_message}</p>";
     

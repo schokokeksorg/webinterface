@@ -144,9 +144,14 @@ function save_vmail_account($account)
   switch ($account['type'])
   {
     case 'forward':
-                     $account['data'] = filter_input_general($account['data']);
-                     if (! check_emailaddr($account['data']))
-		       system_failure('Das Weiterleitungs-Ziel ist keine E-Mail-Adresse!');
+                     $forward_to = preg_split("/[\s,]+/", $account['data']);
+		     foreach ($forward_to as $addr)
+		     {
+                       $addr = filter_input_general($addr);
+                       if (! check_emailaddr($addr))
+                         system_failure('Das Weiterleitungs-Ziel ist keine E-Mail-Adresse!');
+		     }
+		     $account['data'] = implode(' ', $forward_to);
 		     $type = 'forward';
                      break;
     case 'mailbox':
