@@ -10,7 +10,7 @@ $section = 'vmail_accounts';
 require_role(ROLE_SYSTEMUSER);
 
 $id = (int) $_GET['id'];
-$vhost = empty_account();
+$account = empty_account();
 
 if ($id != 0)
   $account = get_account_details($id);
