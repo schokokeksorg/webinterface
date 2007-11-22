@@ -26,7 +26,7 @@ function empty_account()
 		'domain' => NULL,
 		'type' => 'mailbox',
 		'data' => NULL,
-		'spamfilter' => NULL,
+		'spamfilter' => 'folder',
 		'virusfilter' => NULL,
 		'spamexpire' => 7,
 		'virusexpire' => 7

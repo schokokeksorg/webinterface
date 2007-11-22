@@ -69,26 +69,27 @@ output("<script type=\"text/javascript\">
 $form = "
     <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"{$account['local']}\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($account['domainid'])."</p>";
 
-$form .= "<p><input type=\"checkbox\" id=\"spamfilter\" name=\"spamfilter\" value=\"1\" ".($account['spamfilter'] != NULL ? 'checked="checked" ' : '')." /><label for=\"spamfilter\">&#160;Spam-Filter</label></p>";
+$form .= "<p><input type=\"checkbox\" id=\"spamfilter\" name=\"spamfilter\" value=\"1\" ".($account['spamfilter'] != NULL ? 'checked="checked" ' : '')." /><label for=\"spamfilter\">&#160;Spam- und Viren-Filter</label></p>";
 
 $form .= "<p style=\"margin-left: 2em;\" id=\"spamfilter_options\">
-  <em>Was soll mit E-Mails geschehen, die als Spam eingestuft wurden?</em><br />
+  <em>Was soll mit E-Mails geschehen, die als Spam bzw. Virus eingestuft wurden?</em><br />
   <input type=\"radio\" id=\"spamfilter_folder\" name=\"spamfilter_action\" value=\"folder\" ".($account['spamfilter'] == 'folder' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_folder\">&#160;In IMAP-Unterordner »Spam« ablegen</label><br />
   <input type=\"radio\" id=\"spamfilter_tag\" name=\"spamfilter_action\" value=\"tag\" ".($account['spamfilter'] == 'tag' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_tag\">&#160;Markieren und ganz normal zustellen</label><br />
 <input type=\"radio\" id=\"spamfilter_delete\" name=\"spamfilter_action\" value=\"delete\" ".($account['spamfilter'] == 'delete' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_delete\">&#160;Löschen</label>
   </p>
   ";
 
-  
+/*  
 $form .= "<p><input type=\"checkbox\" id=\"virusfilter\" name=\"virusfilter\" value=\"1\" ".($account['virusfilter'] != NULL ? 'checked="checked" ' : '')." /><label for=\"virusfilter\">&#160;Viren-Scanner</label></p>";
 
 $form .= "<p style=\"margin-left: 2em;\" id=\"virusfilter_options\">
   <em>Was soll mit E-Mails geschehen, in denen ein Virus erkannt wurde?</em><br />
-  <input type=\"radio\" id=\"virusfilter_folder\" name=\"virusfilter_action\" value=\"folder\" ".($account['virusfilter'] == 'folder' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_folder\">&#160;In IMAP-Unterordner »Viren« ablegen</label><br />
+  <input type=\"radio\" id=\"virusfilter_folder\" name=\"virusfilter_action\" value=\"folder\" ".($account['virusfilter'] == 'folder' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_folder\">&#160;In IMAP-Unterordner »Spam« ablegen</label><br />
   <input type=\"radio\" id=\"virusfilter_tag\" name=\"virusfilter_action\" value=\"tag\" ".($account['virusfilter'] == 'tag' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_tag\">&#160;Markieren und ganz normal zustellen</label><br />
 <input type=\"radio\" id=\"virusfilter_delete\" name=\"virusfilter_action\" value=\"delete\" ".($account['virusfilter'] == 'delete' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_delete\">&#160;Löschen</label>
   </p>
   ";
+*/
 
 $password_message = '';
 if ($is_mailbox and ($account['data'] != ''))
