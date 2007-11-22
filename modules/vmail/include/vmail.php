@@ -149,7 +149,7 @@ function save_vmail_account($account)
 		     {
                        $addr = filter_input_general($addr);
                        if (! check_emailaddr($addr))
-                         system_failure('Das Weiterleitungs-Ziel ist keine E-Mail-Adresse!');
+                         system_failure('Das Weiterleitungs-Ziel »'.$addr.'« ist keine E-Mail-Adresse!');
 		     }
 		     $account['data'] = implode(' ', $forward_to);
 		     $type = 'forward';
