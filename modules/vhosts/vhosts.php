@@ -15,6 +15,7 @@ output("<h3>Subdomains</h3>
 <p>Änderungen an Ihren Einstellungen werden im 5-Minuten-Takt auf dem Server übernommen.</p>
 ");
 
+
 $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
@@ -59,7 +60,6 @@ if (count($vhosts) > 0)
 }
 output('<p><a href="edit.php">Neue Subdomain anlegen</a></p>');
 output('  <br />');
-
 
 
 ?>

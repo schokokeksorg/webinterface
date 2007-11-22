@@ -93,7 +93,7 @@ $form .= "<p style=\"margin-left: 2em;\" id=\"virusfilter_options\">
 
 $password_message = '';
 if ($is_mailbox and ($account['data'] != ''))
-  $password_message = '<spam style="font-size: 80%"><br /><em>Sie haben bereits ein Passwort gesetzt. Wenn Sie dieses Feld leer lassen, wird das bisherige Passwort beibehalten.</em></span>';
+  $password_message = '<span style="font-size: 80%"><br /><em>Sie haben bereits ein Passwort gesetzt. Wenn Sie dieses Feld leer lassen, wird das bisherige Passwort beibehalten.</em></span>';
   
 
 $form .= "<p>

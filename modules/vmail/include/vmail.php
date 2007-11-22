@@ -2,21 +2,7 @@
 require_once('inc/base.php');
 require_once('inc/debug.php');
 
-
-function user_has_vmail_domain() 
-{
-	$role = $_SESSION['role'];
-	if (! ($role & ROLE_SYSTEMUSER)) {
-		return false;
-	}
-	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT COUNT(*) FROM mail.v_vmail_domains WHERE useraccount='{$uid}'");
-	$row = mysql_fetch_array($result);
-	$count = $row[0];
-	DEBUG("User has {$count} vmail-domains");
-	return ( (int) $count > 0 );
-}
-
+require_once('hasdomain.php');
 
 function empty_account()
 {
@@ -77,9 +63,7 @@ function get_vmail_domains()
 
 function domainselect($selected = NULL, $selectattribute = '')
 {
-  global $domainlist;
-  if ($domainlist == NULL)
-    $domainlist = get_vmail_domains();
+  $domainlist = get_vmail_domains();
   $selected = (int) $selected;
 
   $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
