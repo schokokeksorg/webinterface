@@ -70,6 +70,8 @@ function filter_input_hostname( $input )
   $input = str_replace(array('Ä', 'Ö', 'Ü'), array('ä', 'ö', 'ü'), strtolower($input));
   if (ereg_replace("[^[:alnum:]äöü\.\-]", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
+  if (strstr($input, '..'))
+    system_failure("Ungültiger Hostname");
   return $input;
 }
 
