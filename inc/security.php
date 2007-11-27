@@ -68,6 +68,8 @@ function verify_input_username( $input )
 function filter_input_hostname( $input )
 {
   $input = str_replace(array('Ä', 'Ö', 'Ü'), array('ä', 'ö', 'ü'), strtolower($input));
+  $input = rtrim($input, "\t\n\r\x00 .");
+  $input = ltrim($input, "\t\n\r\x00 .");
   if (ereg_replace("[^[:alnum:]äöü\.\-]", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
   if (strstr($input, '..'))
