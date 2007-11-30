@@ -36,7 +36,7 @@ function primary_useraccount()
 function list_useraccounts()
 {
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT uid,username,name,erstellungsdatum,softquota FROM system.useraccounts WHERE kunde={$customerno}");
+  $result = db_query("SELECT uid,username,name,erstellungsdatum,quota FROM system.useraccounts WHERE kunde={$customerno}");
   $ret = array();
   while ($item = mysql_fetch_object($result))
   {
@@ -51,7 +51,7 @@ function get_account_details($uid)
 {
   $uid = (int) $uid;
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT uid,username,name,softquota FROM system.useraccounts WHERE kunde={$customerno} AND uid={$uid}");
+  $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde={$customerno} AND uid={$uid}");
   if (mysql_num_rows($result) == 0)
     system_failure("Cannot find the requestes useraccount (for this customer).");
   return mysql_fetch_array($result);
