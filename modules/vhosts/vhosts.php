@@ -9,6 +9,7 @@ $error = '';
 
 require_role(ROLE_SYSTEMUSER);
 
+global $prefix;
 
 output("<h3>Subdomains</h3>
 <p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>
@@ -20,12 +21,12 @@ $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
 {
-  output("<table><tr><th>(Sub-)Domain</th><th>Zusätzliche Alias-Namen</th><th>Lokaler Pfad<sup>*</sup></th><th>PHP</th></tr>");
+  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Lokaler Pfad<sup>*</sup></th><th>PHP</th></tr>");
 
   foreach ($vhosts as $vhost)
   {
     $fqdn = $vhost['fqdn'];
-    output("<tr><td>".internal_link('edit.php', $fqdn, "vhost={$vhost['id']}")."</td><td>");
+    output("<tr><td>".internal_link('edit.php', $fqdn, "vhost={$vhost['id']}")."</td><td>".internal_link('save.php', "<img src=\"{$prefix}images/delete.png\" title=\"»{$vhost['fqdn']}« löschen\" alt=\"löschen\" />", 'action=delete&vhost='.$vhost['id'] )."</td><td>");
     $aliases = get_all_aliases($vhost['id']);
     foreach ($aliases as $alias)
     {
@@ -51,7 +52,6 @@ if (count($vhosts) > 0)
         break;
     }
     output("<td>{$php}</td>
-    <td>".internal_link('save.php', 'Subdomain löschen', 'action=delete&vhost='.$vhost['id'] )."</td>
     </tr>");
   }
   output('</table>');
