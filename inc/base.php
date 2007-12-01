@@ -156,8 +156,11 @@ function html_form($form_id, $scriptname, $querystring, $content)
   if ($debugmode)
     $debugstr = 'debug&amp;';
   $querystring = str_replace('&', '&amp;', $querystring);
+  $qmark = '?';
+  if ($debugstr == '' && $querystring == '')
+    $qmark = '';
   $ret = '';
-  $ret .= '<form action="'.$scriptname.'?'.$debugstr.$querystring.'" method="post">'."\n";
+  $ret .= '<form action="'.$scriptname.$qmark.$debugstr.$querystring.'" method="post">'."\n";
   $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="'.generate_form_token($form_id).'" /></p>'."\n";
   $ret .= $content;
   $ret .= '</form>';
