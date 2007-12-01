@@ -116,17 +116,24 @@ function login_screen($why)
 {
         $title = 'Login';
         include('inc/top.php');
-        echo '<h3>Sie sind nicht am System angemeldet!</h3>';
         if ($why != "")
         {
+		// Der User hat einen deeplink benutzt (-> weiß was er tut)
+        	echo '<h3>Sie sind nicht am System angemeldet!</h3>';
                 echo '<p class="warning"><b>Fehler:</b> '.$why.'</p>';
         }
+	else
+	{
+		// der User hat die Startseite aufgerufen
+	        echo '<h3>schokokeks.org Webinterface</h3>';
+		echo '<p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org festlegen. Sofern Sie noch kein Kunde von schokokeks.org sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="http://www.schokokeks.org/">öffentliche Seite</a>.</p>';
+	}
         echo '<form action="" method="post">
         <p><span class="login_label">Benutzer<sup>*</sup>:</span> <input type="text" name="username" size="30" /></p>
         <p><span class="login_label">Passwort:</span> <input type="password" name="password" size="30" /></p>
         <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
         </form>
-        <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrer System-User-ID, Ihrem IMAP-Account oder Ihrer Kundennummer anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
+        <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrem IMAP-Account oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
         <p>Sofern Sie für Ihren Kundenaccount noch kein Passwort festgelegt haben oder Ihres vergessen haben, klicken Sie bitte <a href="new_password.php">hier</a></p>
         <p>Sollten Sie als Benutzer Ihr Passwort vergessen haben, wenden Sie sich bitte an den Inhaber des Kundenaccounts.</p>';
         include('inc/bottom.php');
