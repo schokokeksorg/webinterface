@@ -21,7 +21,7 @@ $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
 {
-  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Lokaler Pfad<sup>*</sup></th><th>PHP</th></tr>");
+  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>PHP</th><th>Logfiles</th><th>Lokaler Pfad<sup>*</sup></th></tr>");
 
   foreach ($vhosts as $vhost)
   {
@@ -34,10 +34,6 @@ if (count($vhosts) > 0)
     }
     output(internal_link('aliases.php', 'Aliase verwalten', 'vhost='.$vhost['id']));
     output('</td>');
-    if ($vhost['docroot_is_default'] == 1)
-      output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
-    else
-      output("<td><strong>{$vhost['docroot']}</strong></td>");
     $php = $vhost['php'];
     switch ($php)
     {
@@ -51,8 +47,25 @@ if (count($vhosts) > 0)
         $php = 'FastCGI';
         break;
     }
-    output("<td>{$php}</td>
-    </tr>");
+    output("<td>{$php}</td>");
+    $logfiles = 'keine';
+    if ($vhost['logtype'] == 'default')
+      $logfiles = 'normal';
+    elseif ($vhost['logtype'] == 'anonymous')
+      $logfiles = 'anonym';
+    if ($vhost['errorlog'] == 1)
+    {
+      if ($logfiles == 'keine')
+        $logfiles = 'nur Fehler';
+      else
+        $logfiles .= ', Fehler';
+    }
+    output("<td>{$logfiles}</td>");
+    if ($vhost['docroot_is_default'] == 1)
+      output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
+    else
+      output("<td><strong>{$vhost['docroot']}</strong></td>");
+    output("</tr>");
   }
   output('</table>');
   output('<p><sup>*</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');

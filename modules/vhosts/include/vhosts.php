@@ -10,7 +10,7 @@ require_once('class/domain.php');
 function list_vhosts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id,fqdn,docroot,docroot_is_default,php,options FROM vhosts.v_vhost WHERE uid={$uid} ORDER BY domain,hostname");
+  $result = db_query("SELECT id,fqdn,docroot,docroot_is_default,php,options,logtype,errorlog FROM vhosts.v_vhost WHERE uid={$uid} ORDER BY domain,hostname");
   $ret = array();
   while ($item = mysql_fetch_assoc($result))
     array_push($ret, $item);
