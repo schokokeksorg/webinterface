@@ -111,10 +111,12 @@ function save_vmail_account($account)
   $account['domain'] = (int) $account['domain'];
   $domainlist = get_vmail_domains();
   $valid_domain = false;
+  $domainname = NULL;
   foreach ($domainlist as $dom)
   {
     if ($dom->id == $account['domain'])
     {
+      $domainname = $dom->domainname;
       $valid_domain = true;
       break;
     }
@@ -218,6 +220,12 @@ function save_vmail_account($account)
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
+
+  if ($type == 'mailbox')
+  {
+    # notify the vmail subsystem of this new account
+    mail('vmail@schokokeks.org', 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
+  }
 }
 
 
