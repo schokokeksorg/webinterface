@@ -54,20 +54,17 @@ output("<script type=\"text/javascript\">
   
   function showAppropriateLines() {
     if (document.getElementById('vhost_type_regular').checked == true) {
-      document.getElementById('block_webapp').style.display = 'none';
-      document.getElementById('block_localpath').style.display = '';
-      document.getElementById('block_php').style.display = '';
+      document.getElementById('options_regular').style.display = 'block';
+      document.getElementById('options_webapp').style.display = 'none';
     }
     else if ((document.getElementById('vhost_type_dav').checked == true) || 
          (document.getElementById('vhost_type_svn').checked == true)) {
-      document.getElementById('block_webapp').style.display = 'none';
-      document.getElementById('block_localpath').style.display = 'none';
-      document.getElementById('block_php').style.display = 'none';
+      document.getElementById('options_regular').style.display = 'none';
+      document.getElementById('options_webapp').style.display = 'none';
     }
     else if (document.getElementById('vhost_type_webapp').checked == true) {
-      document.getElementById('block_webapp').style.display = '';
-      document.getElementById('block_localpath').style.display = 'none';
-      document.getElementById('block_php').style.display = 'none';
+      document.getElementById('options_regular').style.display = 'none';
+      document.getElementById('options_webapp').style.display = 'block';
     }
   }
   </script>");
@@ -90,62 +87,76 @@ else
 
 $s = (strstr($vhost['options'], 'aliaswww') ? ' checked="checked" ' : '');
 $errorlog = (strstr($vhost['errorlog'], 'on') ? ' checked="checked" ' : '');
+
+$vhost_type = 'regular';
+if ($vhost['is_dav'])
+  $vhost_type = 'dav';
+elseif ($vhost['is_svn'])
+  $vhost_type = 'svn';
+elseif ($vhost['is_webapp'])
+  $vhost_type = 'webapp';
+
 $form = "
-  <table>
-    <tr><th>Einstellung</th><th>aktueller Wert</th><th>System-Standard</th></tr>
-    <tr><td>Name</td>
-    <td><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onchange=\"defaultDocumentRoot()\" /><strong>.</strong>".domainselect($vhost['domain_id'], 'onchange="defaultDocumentRoot()"');
-$form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></td><td><em>keiner</em></td></tr>
-    <tr><td>Verwendung</td>
-        <td>
-	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" /><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
-	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" /><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
-	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" /><label for=\"vhost_type_svn\">&#160;Subversion-Server</label><br />
-	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" /><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label>
-	</td>
-	<td>&#160;</td>
-    </tr>
-    <tr id=\"block_webapp\">
-      <td>Vorgefertigte Applikation</td>
-      <td><select name=\"webapp\" size=\"1\"><option value=\"drupal-5\">Drupal 5.x</option></select>
-      </td>
-	<td>&#160;</td>
-    </tr>
-    <tr id=\"block_localpath\"><td>Lokaler Pfad</td>
-    <td><input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"useDefaultDocroot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
+<h4 style=\"margin-top: 2em;\">Name des VHost</h4>
+    <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onchange=\"defaultDocumentRoot()\" /><strong>.</strong>".domainselect($vhost['domain_id'], 'onchange="defaultDocumentRoot()"');
+$form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>
+
+<div id=\"options_regular\" style=\"margin-left: 2em; position: absolute; left: 45em; ".($vhost_type=='regular' ? '' : 'display: none;')."\">
+  <h4>Optionen</h4>
+  <h5>Speicherort für Dateien (»Document Root«)</h5>
+  <div style=\"margin-left: 2em;\">
+    <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"useDefaultDocroot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
     <strong>".$vhost['homedir']."/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
-    </td>
-    <td id=\"defaultdocroot\">{$defaultdocroot}</td></tr>
-    <tr id=\"block_php\"><td>PHP</td>
-    <td><select name=\"php\" id=\"php\">
-      <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >kein PHP</option>
-      <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >als Apache-Modul</option>
-      <option value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'selected="selected"' : '')." >FastCGI</option>
+  </div>
+  <h5>Script-Sprache</h5>
+  <div style=\"margin-left: 2em;\">
+    <select name=\"php\" id=\"php\">
+      <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >keine Scriptsprache</option>
+      <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >PHP als Apache-Modul</option>
+      <option value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'selected="selected"' : '')." >PHP als FastCGI</option>
+      <option value=\"rubyonrails\" ".($vhost['php'] == 'rubyonrails' ? 'selected="selected"' : '')." >Ruby-on-Rails</option>
     </select>
-    </td>
-    <td id=\"defaultphp\">als Apache-Modul</td></tr>
-    <tr><td>SSL-Verschlüsselung</td>
-    <td><select name=\"ssl\" id=\"ssl\">
+  </div>
+</div>
+
+<div id=\"options_webapp\" style=\"margin-left: 2em; position: absolute; left: 45em; ".($vhost_type=='webapp' ? '' : 'display: none;')."\">
+  <h4>Optionen</h4>
+  <h5>Anwendung</h5>
+  <select name=\"webapp\" id=\"webapp\" size=\"1\"><option value=\"drupal-5\">Drupal 5.x</option></select>
+</div>
+
+<h4>Verwendung</h4>
+        <div style=\"margin-left: 2em;\">
+	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type=='regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
+	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
+	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label><br />
+	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label>
+	</div>
+
+<h4 style=\"margin-top: 3em;\">Allgemeine Optionen</h4>
+<div style=\"margin-left: 2em;\">
+    <h5>SSL-Verschlüsselung</h5>
+    <div style=\"margin-left: 2em;\">
+    <select name=\"ssl\" id=\"ssl\">
       <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >SSL optional anbieten</option>
       <option value=\"http\" ".($vhost['ssl'] == 'http' ? 'selected="selected"' : '')." >kein SSL</option>
       <option value=\"https\" ".($vhost['ssl'] == 'https' ? 'selected="selected"' : '')." >nur SSL</option>
       <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Immer auf SSL umleiten</option>
     </select>
-    </td>
-    <td id=\"defaultssl\">SSL optional anbieten</td></tr>
-    <tr>
-      <td>Logfiles <span class=\"warning\">*</span></td>
-      <td><select name=\"logtype\" id=\"logtype\">
-      <option value=\"none\" ".($vhost['logtype'] == NULL ? 'selected="selected"' : '')." >keine Logfiles</option>
-      <option value=\"anonymous\" ".($vhost['logtype'] == 'anonymous' ? 'selected="selected"' : '')." >anonymisiert</option>
-      <option value=\"default\" ".($vhost['logtype'] == 'default' ? 'selected="selected"' : '')." >vollständige Logfile</option>
-    </select><br />
-    <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label>
-    </td>
-    <td id=\"defaultlogtype\">keine Logfiles</td></tr>
+    </div>
+    <h5>Logfiles <span class=\"warning\">*</span></h5>
+    <div style=\"margin-left: 2em;\">
+      <select name=\"logtype\" id=\"logtype\">
+        <option value=\"none\" ".($vhost['logtype'] == NULL ? 'selected="selected"' : '')." >keine Logfiles</option>
+        <option value=\"anonymous\" ".($vhost['logtype'] == 'anonymous' ? 'selected="selected"' : '')." >anonymisiert</option>
+        <option value=\"default\" ".($vhost['logtype'] == 'default' ? 'selected="selected"' : '')." >vollständige Logfile</option>
+      </select><br />
+      <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label>
+    </div>
+</div>
     ";
 
-$form .= '</table>
+$form .= '
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts.php', 'Abbrechen').'</p>
   <p class="warning"><span class="warning">*</span>Es ist im Moment Gegenstand gerichtlicher Außeinandersetzungen, ob die Speicherung von Logfiles auf Webservern
   zulässig ist. Wir weisen alle Nutzer darauf hin, dass sie selbst dafür verantwortlich sind, bei geloggten Nutzerdaten die

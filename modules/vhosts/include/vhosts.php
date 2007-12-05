@@ -10,7 +10,7 @@ require_once('class/domain.php');
 function list_vhosts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id,fqdn,docroot,docroot_is_default,php,options,logtype,errorlog FROM vhosts.v_vhost WHERE uid={$uid} ORDER BY domain,hostname");
+  $result = db_query("SELECT vh.id,fqdn,docroot,docroot_is_default,php,vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
   $ret = array();
   while ($item = mysql_fetch_assoc($result))
     array_push($ret, $item);
@@ -74,7 +74,7 @@ function get_vhost_details($id)
 {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT * FROM vhosts.v_vhost WHERE uid={$uid} AND id={$id}");
+  $result = db_query("SELECT vh.*,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} AND vh.id={$id}");
   if (mysql_num_rows($result) != 1)
     system_failure('Interner Fehler beim Auslesen der Daten');
 

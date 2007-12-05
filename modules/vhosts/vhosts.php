@@ -21,7 +21,7 @@ $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
 {
-  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>PHP</th><th>Logfiles</th><th>Lokaler Pfad<sup>*</sup></th></tr>");
+  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Logfiles</th><th>PHP</th><th>Lokaler Pfad<sup>*</sup></th></tr>");
 
   foreach ($vhosts as $vhost)
   {
@@ -34,20 +34,6 @@ if (count($vhosts) > 0)
     }
     output(internal_link('aliases.php', 'Aliase verwalten', 'vhost='.$vhost['id']));
     output('</td>');
-    $php = $vhost['php'];
-    switch ($php)
-    {
-      case NULL:
-        $php = 'kein PHP';
-        break;
-      case 'mod_php':
-        $php = 'Apache-Modul';
-        break;
-      case 'fastcgi':
-        $php = 'FastCGI';
-        break;
-    }
-    output("<td>{$php}</td>");
     $logfiles = 'keine';
     if ($vhost['logtype'] == 'default')
       $logfiles = 'normal';
@@ -61,10 +47,35 @@ if (count($vhosts) > 0)
         $logfiles .= ', Fehler';
     }
     output("<td>{$logfiles}</td>");
-    if ($vhost['docroot_is_default'] == 1)
-      output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
-    else
-      output("<td><strong>{$vhost['docroot']}</strong></td>");
+    if ($vhost['is_webapp'] == 1) {
+      output('<td colspan="2"><em>globale Webanwendung</em></td>');
+    }
+    elseif ($vhost['is_dav'] == 1) {
+      output('<td colspan="2"><em>WebDAV</em></td>');
+    }
+    elseif ($vhost['is_svn'] == 1) {
+      output('<td colspan="2"><em>Subversion-Server</em></td>');
+    }
+    else {
+      $php = $vhost['php'];
+      switch ($php)
+      {
+        case NULL:
+          $php = 'kein PHP';
+          break;
+        case 'mod_php':
+          $php = 'Apache-Modul';
+          break;
+        case 'fastcgi':
+          $php = 'FastCGI';
+          break;
+      }
+      output("<td>{$php}</td>");
+      if ($vhost['docroot_is_default'] == 1)
+        output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
+      else
+        output("<td><strong>{$vhost['docroot']}</strong></td>");
+    }
     output("</tr>");
   }
   output('</table>');

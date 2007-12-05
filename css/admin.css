@@ -61,6 +61,9 @@ p.userinfo {
   min-height: 36px;
 }
 
+input.usageoption {
+	margin-top: 1em;
+}
 
 div.confirmation {
 }
