@@ -51,6 +51,25 @@ output("<script type=\"text/javascript\">
       document.getElementById('docroot').value = document.getElementById('defaultdocroot').firstChild.nodeValue;
     }
   }
+  
+  function showAppropriateLines() {
+    if (document.getElementById('vhost_type_regular').checked == true) {
+      document.getElementById('block_webapp').style.display = 'none';
+      document.getElementById('block_localpath').style.display = '';
+      document.getElementById('block_php').style.display = '';
+    }
+    else if ((document.getElementById('vhost_type_dav').checked == true) || 
+         (document.getElementById('vhost_type_svn').checked == true)) {
+      document.getElementById('block_webapp').style.display = 'none';
+      document.getElementById('block_localpath').style.display = 'none';
+      document.getElementById('block_php').style.display = 'none';
+    }
+    else if (document.getElementById('vhost_type_webapp').checked == true) {
+      document.getElementById('block_webapp').style.display = '';
+      document.getElementById('block_localpath').style.display = 'none';
+      document.getElementById('block_php').style.display = 'none';
+    }
+  }
   </script>");
 
 $defaultdocroot = $vhost['domain'];
@@ -77,12 +96,27 @@ $form = "
     <tr><td>Name</td>
     <td><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onchange=\"defaultDocumentRoot()\" /><strong>.</strong>".domainselect($vhost['domain_id'], 'onchange="defaultDocumentRoot()"');
 $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></td><td><em>keiner</em></td></tr>
-    <tr><td>Lokaler Pfad</td>
+    <tr><td>Verwendung</td>
+        <td>
+	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" /><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
+	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" /><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
+	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" /><label for=\"vhost_type_svn\">&#160;Subversion-Server</label><br />
+	  <input onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" /><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label>
+	</td>
+	<td>&#160;</td>
+    </tr>
+    <tr id=\"block_webapp\">
+      <td>Vorgefertigte Applikation</td>
+      <td><select name=\"webapp\" size=\"1\"><option value=\"drupal-5\">Drupal 5.x</option></select>
+      </td>
+	<td>&#160;</td>
+    </tr>
+    <tr id=\"block_localpath\"><td>Lokaler Pfad</td>
     <td><input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"useDefaultDocroot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
     <strong>".$vhost['homedir']."/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
     </td>
     <td id=\"defaultdocroot\">{$defaultdocroot}</td></tr>
-    <tr><td>PHP</td>
+    <tr id=\"block_php\"><td>PHP</td>
     <td><select name=\"php\" id=\"php\">
       <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >kein PHP</option>
       <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >als Apache-Modul</option>
