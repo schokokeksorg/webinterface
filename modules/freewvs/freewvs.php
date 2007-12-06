@@ -11,19 +11,21 @@ if (in_array($_POST['freq'],array("day","week","month"))) {
 	die();
 }
 
-output('<h3>Web vulnerability scanner</h3>');
+output('<h3>Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken</h3>');
 
 $result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid={$uid};");
 $result=mysql_fetch_assoc($result);
 $freq=$result['freq'];
 
-output('<p>Diese Option ermöglicht Ihnen, regelmäßige Checks ihrer Webanwendungen mit Hilfe von freewvs durchzuführen.</p>');
+output('<p>Mit dem Programm FreeWVS kann automatisiert geprüft werden, ob Ihre Web-Anwendungen (z.B. Blog-Software, Content-Management-Systeme, ...) noch aktuell sind oder ob es in den von Ihnen verwendeten Versionen Sicherheitslücken gibt.</p>
+<p>Diese Option ermöglicht Ihnen, vollautomatisch regelmäßige Prüfungen Ihrer Webanwendungen mit Hilfe von FreeWVS durchzuführen. Sollten Probleme festgestellt werden, erhalten Sie Informationen darüber per E-Mail.</p>');
 $form='
-<table>
-<tr><td><input type="radio" name="freq" value="day" '.($freq=="day"?'checked="checked" ':"").'/></td><td>täglich</td></tr>
-<tr><td><input type="radio" name="freq" value="week" '.($freq=="week"?'checked="checked" ':"").'/></td><td>wöchentlich</td></tr>
-<tr><td><input type="radio" name="freq" value="month" '.($freq=="month"?'checked="checked" ':"").'/></td><td>monatlich</td></tr>
-</table><br/>
-<input type="submit" value="Speichern"/>';
+<div style="margin-left: 2em;">
+  <p><input id="day" type="radio" name="freq" value="day" '.($freq=="day"?'checked="checked" ':"").'/><label for="day">täglich</label></p>
+  <p><input id="week" type="radio" name="freq" value="week" '.($freq=="week"?'checked="checked" ':"").'/><label for="week">wöchentlich</label></p>
+  <p><input id="month" type="radio" name="freq" value="month" '.($freq=="month"?'checked="checked" ':"").'/><label for="month">monatlich</label></p>
+</div>
+<input type="submit" value="Speichern"/>
+<br />';
 
 output(html_form('freewvs_freq','','',$form));
