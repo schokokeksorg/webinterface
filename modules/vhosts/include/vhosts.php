@@ -30,6 +30,9 @@ function empty_vhost()
   $vhost['php'] = 'mod_php';
   $vhost['ssl'] = NULL;
   $vhost['logtype'] = NULL;
+  $vhost['is_dav'] = 0;
+  $vhost['is_svn'] = 0;
+  $vhost['is_webapp'] = 0;
     
   $vhost['options'] = '';
   return $vhost;
@@ -123,6 +126,49 @@ function delete_vhost($id)
 }
 
 
+
+function make_svn_vhost($id) 
+{
+  $id = (int) $id;
+  if ($id == 0)
+    system_failure("id == 0");
+  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to SVN');
+  db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'svn')");
+}
+
+function make_dav_vhost($id) 
+{
+  $id = (int) $id;
+  if ($id == 0)
+    system_failure("id == 0");
+  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
+  db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'dav')");
+}
+
+function no_dav_or_svn($id)
+{
+  $id = (int) $id;
+  if ($id == 0)
+    system_failure("id == 0");
+  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to regular');
+  db_query("DELETE FROM vhosts.dav WHERE vhost={$id}");
+}
+
+
+/*
+function make_webapp_vhost($id, $webapp) 
+{
+  $id = (int) $id;
+  $webapp = (int) $webapp;
+  if ($id == 0)
+    system_failure("id == 0");
+  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Setting up webapp # '.$webapp.' on vhost #'.$id);
+  db_query("INSERT INTO vhosts.webapps (vhost, webapp) VALUES ({$id}, {$webapp})");
+
+}
+*/
+
+
 function save_vhost($vhost)
 {
   if (! is_array($vhost))
@@ -147,8 +193,15 @@ function save_vhost($vhost)
   }
   else {
     logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, '{$options}')");
+    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, '{$options}')");
+    $id = mysql_insert_id();
   }
+  if ($vhost['is_dav'] == 1)
+      make_dav_vhost($id);
+  elseif ($vhost['is_svn'] == 1)
+      make_svn_vhost($id);
+  else
+      no_dav_or_svn($id);
 }
 
 

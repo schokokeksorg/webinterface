@@ -99,6 +99,18 @@ input[type=text]:focus,input[type=password]:focus,textarea:focus {
         }
 
 
+div.vhostsidebyside {
+  max-width: 55em;
+}
+
+div.vhostoptions {
+  margin: 0;
+  padding: 0;
+  margin-left: 1em;
+  float: right;
+  width: 30em;
+  /*margin-left: 2em; position: absolute; left: 45em; */
+}
 
 
 

@@ -36,29 +36,52 @@ if ($_GET['action'] == 'edit')
     $_POST['options'] = array();
   $aliaswww = in_array('aliaswww', $_POST['options']);
 
-  $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain->fqdn).'/htdocs';
-
-  if (! check_path( $_POST['docroot'] ))
-    system_failure("Eingegebener Pfad enthält ungültige Angaben");
-  $docroot = $vhost['homedir'].'/'.$_POST['docroot'];
-
-  if (($_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
-    $docroot = '';
-  }
-
-  DEBUG("Document-Root: ".$docroot);
-
+  $docroot = '';
   $php = '';
-  switch ($_POST['php']) {
-    case 'mod_php':
-      $php = 'mod_php';
-      break;
-    case 'fastcgi':
-      $php = 'fastcgi';
-      break;
-    /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
+  if ($_POST['vhost_type'] == 'regular')
+  {
+    $vhost['is_dav'] = 0;
+    $vhost['is_svn'] = 0;
+    $vhost['is_webapp'] = 0;
+    $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain->fqdn).'/htdocs';
+  
+    if (! check_path( $_POST['docroot'] ))
+      system_failure("Eingegebener Pfad enthält ungültige Angaben");
+    $docroot = $vhost['homedir'].'/'.$_POST['docroot'];
+  
+    if (($_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
+      $docroot = '';
+    }
+  
+    DEBUG("Document-Root: ".$docroot);
+  
+    switch ($_POST['php']) {
+      case 'mod_php':
+        $php = 'mod_php';
+        break;
+      case 'fastcgi':
+        $php = 'fastcgi';
+        break;
+      /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
+    }
+  }
+  elseif ($_POST['vhost_type'] == 'dav') {
+    $vhost['is_dav'] = 1;
+    $vhost['is_svn'] = 0;
+    $vhost['is_webapp'] = 0;
+  }
+  elseif ($_POST['vhost_type'] == 'svn') {
+    $vhost['is_dav'] = 0;
+    $vhost['is_svn'] = 1;
+    $vhost['is_webapp'] = 0;
+  }
+  elseif ($_POST['vhost_type'] == 'webapp') {
+    $vhost['is_dav'] = 0;
+    $vhost['is_svn'] = 0;
+    $vhost['is_webapp'] = 1;
   }
 
+  
   $ssl = '';
   switch ($_POST['ssl']) {
     case 'http':
@@ -114,6 +137,7 @@ if ($_GET['action'] == 'edit')
   $vhost['errorlog'] = $errorlog; 
   $vhost['options'] = $options;
     
+  DEBUG($vhost);
   save_vhost($vhost);
 
   if (! $debugmode)

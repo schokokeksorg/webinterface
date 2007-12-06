@@ -26,7 +26,8 @@ else {
 }
 
 output("<script type=\"text/javascript\">
-  
+  var default_docroot;
+ 
   function selectedDomain() {
     var selected;
     selected=document.getElementById('domain').options.selectedIndex;
@@ -39,7 +40,7 @@ output("<script type=\"text/javascript\">
       hostname = selectedDomain();
     else
       hostname = document.getElementById('hostname').value + '.' + selectedDomain();
-    document.getElementById('defaultdocroot').firstChild.nodeValue = 'websites/' + hostname + '/htdocs';
+    default_docroot = 'websites/' + hostname + '/htdocs';
     useDefaultDocroot();
   }
   
@@ -48,7 +49,7 @@ output("<script type=\"text/javascript\">
     var inputfield = document.getElementById('docroot');
     inputfield.disabled = do_it;
     if (do_it) {
-      document.getElementById('docroot').value = document.getElementById('defaultdocroot').firstChild.nodeValue;
+      document.getElementById('docroot').value = default_docroot;
     }
   }
   
@@ -101,7 +102,8 @@ $form = "
     <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onchange=\"defaultDocumentRoot()\" /><strong>.</strong>".domainselect($vhost['domain_id'], 'onchange="defaultDocumentRoot()"');
 $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>
 
-<div id=\"options_regular\" style=\"margin-left: 2em; position: absolute; left: 45em; ".($vhost_type=='regular' ? '' : 'display: none;')."\">
+<div class=\"vhostsidebyside\">
+<div class=\"vhostoptions\" id=\"options_regular\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>
   <h5>Speicherort für Dateien (»Document Root«)</h5>
   <div style=\"margin-left: 2em;\">
@@ -114,15 +116,17 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
       <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >keine Scriptsprache</option>
       <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >PHP als Apache-Modul</option>
       <option value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'selected="selected"' : '')." >PHP als FastCGI</option>
-      <option value=\"rubyonrails\" ".($vhost['php'] == 'rubyonrails' ? 'selected="selected"' : '')." >Ruby-on-Rails</option>
+      <!--  <option value=\"rubyonrails\" ".($vhost['php'] == 'rubyonrails' ? 'selected="selected"' : '')." >Ruby-on-Rails</option> -->
     </select>
   </div>
 </div>
 
-<div id=\"options_webapp\" style=\"margin-left: 2em; position: absolute; left: 45em; ".($vhost_type=='webapp' ? '' : 'display: none;')."\">
+<div class=\"vhostoptions\" id=\"options_webapp\" ".($vhost_type=='webapp' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>
   <h5>Anwendung</h5>
-  <select name=\"webapp\" id=\"webapp\" size=\"1\"><option value=\"drupal-5\">Drupal 5.x</option></select>
+  <select name=\"webapp\" id=\"webapp\" size=\"1\">
+    <option value=\"1\">Drupal 5.x</option>
+  </select>
 </div>
 
 <h4>Verwendung</h4>
@@ -130,8 +134,12 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type=='regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label><br />
-	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label>
+	  <div style=\"display: none\">
+	    <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label>
+	  </div>
 	</div>
+<br />
+</div>
 
 <h4 style=\"margin-top: 3em;\">Allgemeine Optionen</h4>
 <div style=\"margin-left: 2em;\">
