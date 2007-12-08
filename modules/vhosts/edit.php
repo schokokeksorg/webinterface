@@ -133,6 +133,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
   <select name=\"webapp\" id=\"webapp\" size=\"1\">
     {$webapp_options}
   </select>
+  <p>Wenn Sie diese Option wählen, wird die Anwendung automatisch eingerichtet. Sie erhalten dann ihre Zugangsdaten per E-Mail.</p>
 </div>
 
 <h4>Verwendung</h4>
