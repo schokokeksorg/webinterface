@@ -113,7 +113,7 @@ function check_path( $input )
   {
     if ($item == '..')
     {
-      Alogger('inc/security.php', 'check_path', '»..« im Pfad: '.$input);
+      logger('inc/security.php', 'check_path', '»..« im Pfad: '.$input);
       DEBUG("»..« im Pfad");
       return False;
     }
