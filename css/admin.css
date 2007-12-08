@@ -132,6 +132,10 @@ a.menuitem {
         color: #000000;
 }
 
+a.submenuitem {
+  margin-left: 2em;
+}
+
 a.active {
         padding: 3px;
         border: 1px solid #000000;

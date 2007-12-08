@@ -12,9 +12,13 @@ global $prefix;
 $menuitem = array();
 $weighted_menuitem = array();
 
+$submenu = array();
+
 foreach ($config['modules'] as $module)
 {
-  include("modules/{$module}/menu.php");
+  $menu = false;
+  if (file_exists("modules/{$module}/menu.php"))
+    include("modules/{$module}/menu.php");
   if ($menu === false)
   {
     DEBUG("Modul {$module} hat keine Menüeinträge");
@@ -27,16 +31,27 @@ foreach ($config['modules'] as $module)
   {
     $menu[$key]["file"] = $prefix."go/".$module."/".$menu[$key]["file"];
     $weight = $menu[$key]["weight"];
-    if (array_key_exists($weight, $weighted_menuitem))
-      $weighted_menuitem[$weight] = array_merge($weighted_menuitem[$weight], array($key => $menu[$key]));
+    if (isset($menu[$key]['submenu']))
+    {
+      if (isset($submenu[$menu[$key]['submenu']]))
+        array_merge($submenu[$menu[$key]['submenu']], array($key => $menu[$key]));
+      else
+        $submenu[$menu[$key]['submenu']] = array($key => $menu[$key]);
+    }
     else
-      $weighted_menuitem[$weight] = array($key => $menu[$key]);
+    {
+      if (array_key_exists($weight, $weighted_menuitem))
+        $weighted_menuitem[$weight] = array_merge($weighted_menuitem[$weight], array($key => $menu[$key]));
+      else
+        $weighted_menuitem[$weight] = array($key => $menu[$key]);
+    }
   }
   $menuitem = array_merge($menuitem, $menu);
 }
 
 ksort($weighted_menuitem);
-DEBUG(print_r($weighted_menuitem, true));
+DEBUG($weighted_menuitem);
+DEBUG($submenu);
 
 
 
@@ -97,23 +112,24 @@ $role = $_SESSION['role'];
         foreach ($menuitem as $key => $item)
         {
                 if ($key == $section)
-                {
                         echo '<a href="'.$item['file'].'" class="menuitem active">'.$item['label'].'</a>'."\n";
+                else
+                        echo '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
+                if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists($section, $submenu[$key])))
+                {
                         if (isset($submenu[$key]))
                         {
                                 echo "\n";
-                                foreach ($submenu[$key] as $item)
+                                foreach ($submenu[$key] as $sec => $item)
                                 {
-                                        if (basename($_SERVER['PHP_SELF']) == basename($item['file']))
-                                                echo '<a href="'.$item['file'].'" class="submenuitem subactive">'.$item['label'].'</a>'."\n";
+                                        if ($sec == $section)
+                                                echo '<a href="'.$item['file'].'" class="submenuitem menuitem active">'.$item['label'].'</a>'."\n";
                                         else
-                                                echo '<a href="'.$item['file'].'" class="submenuitem">'.$item['label'].'</a>'."\n";
+                                                echo '<a href="'.$item['file'].'" class="submenuitem menuitem">'.$item['label'].'</a>'."\n";
                                 }
                                 echo "\n";
                         }
-                }
-                else
-                        echo '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
+		}
 
         }
 
