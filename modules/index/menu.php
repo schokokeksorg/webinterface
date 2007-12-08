@@ -1,7 +1,5 @@
 <?php
 
-$menu = array();
-
 $role = $_SESSION['role'];
 
 if ($role == ROLE_ANONYMOUS) {
@@ -14,9 +12,6 @@ if ($role == ROLE_ANONYMOUS) {
   $menu["index_logout"] = array("label" => "Logout", "file" => "logout.php", "weight" => 99);
   $menu["index_index"] = array("label" => "Übersicht", "file" => "index.php", "weight" => 0);
 }
-
-if (empty($menu))
-  $menu = false;
 
 
 ?>
