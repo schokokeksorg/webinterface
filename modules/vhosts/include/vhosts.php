@@ -33,6 +33,7 @@ function empty_vhost()
   $vhost['is_dav'] = 0;
   $vhost['is_svn'] = 0;
   $vhost['is_webapp'] = 0;
+  $vhsot['webapp_id'] = NULL;
     
   $vhost['options'] = '';
   return $vhost;
@@ -115,6 +116,16 @@ function get_all_aliases($vhost)
 }
 
 
+function list_available_webapps()
+{
+  $result = db_query("SELECT id,displayname FROM vhosts.global_webapps");
+  $ret = array();
+  while ($item = mysql_fetch_assoc($result))
+    array_push($ret, $item);
+  return $ret;
+}
+
+
 function delete_vhost($id)
 {
   $id = (int) $id;
@@ -134,6 +145,7 @@ function make_svn_vhost($id)
     system_failure("id == 0");
   logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to SVN');
   db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'svn')");
+  db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
 
 function make_dav_vhost($id) 
@@ -143,30 +155,34 @@ function make_dav_vhost($id)
     system_failure("id == 0");
   logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
   db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'dav')");
+  db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
 
-function no_dav_or_svn($id)
+function make_regular_vhost($id)
 {
   $id = (int) $id;
   if ($id == 0)
     system_failure("id == 0");
   logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to regular');
   db_query("DELETE FROM vhosts.dav WHERE vhost={$id}");
+  db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
 
 
-/*
 function make_webapp_vhost($id, $webapp) 
 {
   $id = (int) $id;
   $webapp = (int) $webapp;
   if ($id == 0)
     system_failure("id == 0");
-  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Setting up webapp # '.$webapp.' on vhost #'.$id);
-  db_query("INSERT INTO vhosts.webapps (vhost, webapp) VALUES ({$id}, {$webapp})");
-
+  $result = db_query("SELECT displayname FROM vhosts.global_webapps WHERE id={$webapp};");
+  if (mysql_num_rows($result) == 0)
+    system_failure("webapp-id invalid");
+  $webapp_name = mysql_fetch_object($result)->displayname;
+  logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
+  db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES ({$id}, {$webapp})");
+  mail('webapps-setup@schokokeks.org', 'setup', 'setup');
 }
-*/
 
 
 function save_vhost($vhost)
@@ -196,12 +212,19 @@ function save_vhost($vhost)
     $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, '{$options}')");
     $id = mysql_insert_id();
   }
-  if ($vhost['is_dav'] == 1)
+  $oldvhost = get_vhost_details($id);
+  /*
+    these vars may be 0 or 1.
+    So newval > oldval means that it has been switched on yet.
+  */
+  if ($vhost['is_dav'] > $oldvhost['is_dav'])
       make_dav_vhost($id);
-  elseif ($vhost['is_svn'] == 1)
+  elseif ($vhost['is_svn'] > $oldvhost['is_svn'])
       make_svn_vhost($id);
-  else
-      no_dav_or_svn($id);
+  elseif ($vhost['is_webapp'] > $oldvhost['is_webapp'])
+      make_webapp_vhost($id, $vhost['webapp_id']);
+  elseif ($vhost['is_dav'] == 0 && $vhost['is_svn'] == 0 && $vhost['is_webapp'] == 0)
+      make_regular_vhost($id);
 }
 
 

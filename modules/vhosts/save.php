@@ -79,6 +79,7 @@ if ($_GET['action'] == 'edit')
     $vhost['is_dav'] = 0;
     $vhost['is_svn'] = 0;
     $vhost['is_webapp'] = 1;
+    $vhost['webapp_id'] = (int) $_POST['webapp'];
   }
 
   
