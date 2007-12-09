@@ -24,8 +24,7 @@ $form='
   <p><input id="day" type="radio" name="freq" value="day" '.($freq=="day"?'checked="checked" ':"").'/><label for="day">täglich</label></p>
   <p><input id="week" type="radio" name="freq" value="week" '.($freq=="week"?'checked="checked" ':"").'/><label for="week">wöchentlich</label></p>
   <p><input id="month" type="radio" name="freq" value="month" '.($freq=="month"?'checked="checked" ':"").'/><label for="month">monatlich</label></p>
-</div>
-<input type="submit" value="Speichern"/>
-<br />';
+  <p><input type="submit" value="Speichern"/></p>
+</div>';
 
 output(html_form('freewvs_freq','','',$form));
