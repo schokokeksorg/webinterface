@@ -38,11 +38,8 @@ if ($_GET['action'] == 'edit')
 
   $docroot = '';
   $php = '';
-  if ($_POST['vhost_type'] == 'regular')
+  if ($_POST['vhost_type'] == 'regular' || $_POST['vhost_type'] == 'dav')
   {
-    $vhost['is_dav'] = 0;
-    $vhost['is_svn'] = 0;
-    $vhost['is_webapp'] = 0;
     $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain->fqdn).'/htdocs';
   
     if (! check_path( $_POST['docroot'] ))
@@ -54,7 +51,10 @@ if ($_GET['action'] == 'edit')
     }
   
     DEBUG("Document-Root: ".$docroot);
-  
+  }
+  $php = '';
+  if ($_POST['vhost_type'] == 'regular')
+  {
     switch ($_POST['php']) {
       case 'mod_php':
         $php = 'mod_php';
@@ -64,6 +64,11 @@ if ($_GET['action'] == 'edit')
         break;
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }
+  }
+  if ($_POST['vhost_type'] == 'regular') {
+    $vhost['is_dav'] = 0;
+    $vhost['is_svn'] = 0;
+    $vhost['is_webapp'] = 0;
   }
   elseif ($_POST['vhost_type'] == 'dav') {
     $vhost['is_dav'] = 1;

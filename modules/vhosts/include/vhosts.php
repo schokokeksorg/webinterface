@@ -154,7 +154,7 @@ function make_dav_vhost($id)
   if ($id == 0)
     system_failure("id == 0");
   logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
-  db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'dav')");
+  db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES ({$id}, 'dav', 'nouserfile')");
   db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
 

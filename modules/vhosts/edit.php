@@ -55,16 +55,23 @@ output("<script type=\"text/javascript\">
   
   function showAppropriateLines() {
     if (document.getElementById('vhost_type_regular').checked == true) {
-      document.getElementById('options_regular').style.display = 'block';
+      document.getElementById('options_docroot').style.display = 'block';
+      document.getElementById('options_scriptlang').style.display = 'block';
       document.getElementById('options_webapp').style.display = 'none';
     }
-    else if ((document.getElementById('vhost_type_dav').checked == true) || 
-         (document.getElementById('vhost_type_svn').checked == true)) {
-      document.getElementById('options_regular').style.display = 'none';
+    else if (document.getElementById('vhost_type_dav').checked == true) { 
+      document.getElementById('options_docroot').style.display = 'block';
+      document.getElementById('options_scriptlang').style.display = 'none';
+      document.getElementById('options_webapp').style.display = 'none';
+    }
+    else if (document.getElementById('vhost_type_svn').checked == true) {
+      document.getElementById('options_docroot').style.display = 'none';
+      document.getElementById('options_scriptlang').style.display = 'none';
       document.getElementById('options_webapp').style.display = 'none';
     }
     else if (document.getElementById('vhost_type_webapp').checked == true) {
-      document.getElementById('options_regular').style.display = 'none';
+      document.getElementById('options_docroot').style.display = 'none';
+      document.getElementById('options_scriptlang').style.display = 'none';
       document.getElementById('options_webapp').style.display = 'block';
     }
   }
@@ -109,13 +116,16 @@ $form = "
 $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>
 
 <div class=\"vhostsidebyside\">
-<div class=\"vhostoptions\" id=\"options_regular\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
+<div class=\"vhostoptions\" id=\"options_docroot\" ".($vhost_type=='regular' || $vhost_type=='dav' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>
   <h5>Speicherort für Dateien (»Document Root«)</h5>
   <div style=\"margin-left: 2em;\">
     <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"useDefaultDocroot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
     <strong>".$vhost['homedir']."/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
   </div>
+</div>
+
+<div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
   <h5>Script-Sprache</h5>
   <div style=\"margin-left: 2em;\">
     <select name=\"php\" id=\"php\">
