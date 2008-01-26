@@ -27,7 +27,7 @@ function empty_vhost()
   
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
-  $vhost['php'] = 'mod_php';
+  $vhost['php'] = 'fastcgi';
   $vhost['ssl'] = NULL;
   $vhost['logtype'] = NULL;
   $vhost['is_dav'] = 0;
