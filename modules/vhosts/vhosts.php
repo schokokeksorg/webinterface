@@ -61,7 +61,7 @@ if (count($vhosts) > 0)
       switch ($php)
       {
         case NULL:
-          $php = 'kein PHP';
+          $php = 'kein&#160;PHP';
           break;
         case 'mod_php':
           $php = 'Apache-Modul';
