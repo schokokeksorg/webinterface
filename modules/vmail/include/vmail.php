@@ -10,12 +10,10 @@ function empty_account()
 		'id' => NULL,
 		'local' => '',
 		'domain' => NULL,
-		'type' => 'mailbox',
-		'data' => NULL,
+		'password' => NULL,
 		'spamfilter' => 'folder',
-		'virusfilter' => NULL,
 		'spamexpire' => 7,
-		'virusexpire' => 7
+		'forwards' => array();
 		);
 	return $account;
 
