@@ -13,7 +13,7 @@ function empty_account()
 		'password' => NULL,
 		'spamfilter' => 'folder',
 		'spamexpire' => 7,
-		'forwards' => array();
+		'forwards' => array()
 		);
 	return $account;
 
@@ -23,11 +23,23 @@ function get_account_details($id)
 {
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT id, local, domainid as domain, type, data, spamfilter, virusfilter from mail.v_virtual_mail WHERE useraccount='{$uid}' AND id={$id} LIMIT 1");
+	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards from mail.v_vmail_accounts WHERE useraccount='{$uid}' AND id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
-	return mysql_fetch_assoc($result);;
-	
+	$acc = empty_account();
+	$res = mysql_fetch_assoc($result);
+	foreach ($res AS $key => $value) {
+	  if ($key == 'forwards')
+	    continue;
+	  $acc[$key] = $value;
+	}
+	if ($acc['forwards'] > 0) {
+	  $result = db_query("SELECT id, spamfilter, destination FROM mail.vmail_forward WHERE account={$acc['id']};");
+	  while ($item = mysql_fetch_assoc($result)){
+	    array_push($acc['forwards'], array("id" => $item['id'], 'spamfilter' => $item['spamfilter'], 'destination' => $item['destination']));
+	  }
+	}
+	return $acc;
 }
 
 function get_vmail_accounts()
@@ -124,50 +136,40 @@ function save_vmail_account($account)
     input_error('Bitte wählen Sie eine Ihrer Domains aus!');
     return false;
   }
-  $type = NULL;
-  switch ($account['type'])
+  
+  $forwards = array();
+  if (count($account['forwards']) > 0) 
   {
-    case 'forward':
-                     $forward_to = preg_split("/[\s,]+/", $account['data']);
-		     foreach ($forward_to as $addr)
-		     {
-                       $addr = filter_input_general($addr);
-                       if (! check_emailaddr($addr))
-                         system_failure('Das Weiterleitungs-Ziel »'.$addr.'« ist keine E-Mail-Adresse!');
-		     }
-		     $account['data'] = implode(' ', $forward_to);
-		     $type = 'forward';
-                     break;
-    case 'mailbox':
-                     $account['data'] = stripslashes($account['data']);
-                     if ($account['data'] != '')
-                     {
-                       $crack = strong_password($account['data']);
-                       if ($crack !== true)
-                       {
-                         input_error('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
-                         return false;
-                       }
-                       $account['data'] = encrypt_mail_password($account['data']);
-                     }
-                     $type = 'mailbox';
-                     break;
+    for ($i=0;$i < count($account['forwards']); $i++)
+    {
+      if ($account['forwards'][$i]['spamfilter'] != 'tag' && $account['forwards'][$i]['spamfilter'] != 'delete')
+        $account['forwards'][$i]['spamfilter'] = '';
+      $account['forwards'][$i]['destination'] = filter_input_general($account['forwards'][$i]['destination']);
+      if (! check_emailaddr($account['forwards'][$i]['destination']))
+        system_failure('Das Weiterleitungs-Ziel »'.$account['forwards'][$i]['destination'].'« ist keine E-Mail-Adresse!');
+    }
   }
-  if ($type == NULL)
+    
+  $password='NULL';
+  if ($account['password'] != '')
   {
-    input_error('Problem mit der »type«-Variable!');
-    return false;
+    $account['password'] = stripslashes($account['password']);
+    $crack = strong_password($account['password']);
+    if ($crack !== true)
+    {
+      input_error('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
+      return false;
+    }
+    $password = "'".encrypt_mail_password($account['password'])."'";
   }
+  $set_password = ($id == NULL || $password != 'NULL');
+  if ($account['password'] === NULL)
+    $set_password=true;
 
   $spam = 'NULL';
   switch ($account['spamfilter'])
   {
     case 'folder':
-      if ($type == 'forward')
-      {
-        input_error('Sie können nicht in einen IMAP-Unterordner zustellen lassen, wenn Sie gar kein IMAP-Konto anlegen!');
-	return false;
-      }
       $spam = "'folder'";
       break;
     case 'tag':
@@ -178,48 +180,43 @@ function save_vmail_account($account)
       break;
   }
 
-  $virus = 'NULL';
-  switch ($account['virusfilter'])
-  {
-    case 'folder':
-      if ($type == 'forward')
-      {
-        input_error('Sie können nicht in einen IMAP-Unterordner zustellen lassen, wenn Sie gar kein IMAP-Konto anlegen!');
-	return false;
-      }
-      $virus = "'folder'";
-      break;
-    case 'tag':
-      $virus = "'tag'";
-      break;
-    case 'delete':
-      $virus = "'delete'";
-      break;
-  }
-
   $account['local'] = mysql_real_escape_string($account['local']);
-  $account['data'] = mysql_real_escape_string($account['data']);
+  $account['password'] = mysql_real_escape_string($account['password']);
   $account['spamexpire'] = (int) $account['spamexpire'];
-  $account['virusexpire'] = (int) $account['virusexpire'];
 
   $query = '';
   if ($id == NULL)
   {
-    $query = "INSERT INTO mail.virtual_mail (local, domain, type, data, spamfilter, virusfilter, spamexpire, virusexpire) VALUES ";
-    $query .= "('{$account['local']}', {$account['domain']}, '{$type}', '{$account['data']}', {$spam}, {$virus}, {$account['spamexpire']}, {$account['virusexpire']});";
+    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password) VALUES ";
+    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$account['password']});";
   }
   else
   {
-    $password = ", data='{$account['data']}'";
-    if ($account['data'] == '')
-      $password = '';
-    $query = "UPDATE mail.virtual_mail SET local='{$account['local']}', domain={$account['domain']}, type='{$type}'{$password}, ";
-    $query .= "spamfilter={$spam}, virusfilter={$virus}, spamexpire={$account['spamexpire']}, virusexpire={$account['virusexpire']} ";
+    if ($set_password)
+      $password=", password={$password}";
+    else
+      $password='';
+    $query = "UPDATE mail.vmail_accounts SET local='{$account['local']}', domain={$account['domain']}{$password}, ";
+    $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']} ";
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
-
-  if ($type == 'mailbox')
+  db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
+  if (count($account['forwards']) > 0)
+  {
+    $forward_query = "INSERT INTO mail.vmail_forward (account,spamfilter,destination) VALUES ";
+    $first = true;
+    for ($i=0;$i < count($account['forwards']); $i++)
+    { 
+      if ($first)
+        $first = false;
+      else
+        $forward_query .= ', ';
+      $forward_query .= "({$id}, ".maybe_null($account['forwards'][$i]['spamfilter']).", '{$account['forwards'][$i]['destination']}')";
+    }
+    db_query($forward_query);
+  }
+  if ($account['password'] != 'NULL')
   {
     # notify the vmail subsystem of this new account
     mail('vmail@schokokeks.org', 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
@@ -231,7 +228,7 @@ function save_vmail_account($account)
 function delete_account($id)
 {
   $account = get_account_details($id);
-  db_query("DELETE FROM mail.virtual_mail WHERE id={$account['id']};");
+  db_query("DELETE FROM mail.vmail_accounts WHERE id={$account['id']};");
 }
 
 

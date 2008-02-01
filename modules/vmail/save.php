@@ -21,17 +21,23 @@ if ($_GET['action'] == 'edit')
     $account['id'] = $id;
   $account['local'] = $_POST['local'];
   $account['domain'] = (int) $_POST['domain'];
-  $account['type'] = $_POST['type'];
-  if ($_POST['type'] == 'mailbox')
-    $account['data'] = $_POST['password'];
-  else
-    $account['data'] = $_POST['forward_to'];
   $account['spamfilter'] = $_POST['spamfilter_action'];
-  if ($_POST['spamfilter'] != '1')
-    $account['spamfilter'] = NULL;
-  $account['virusfilter'] = $_POST['virusfilter_action'];
-  if ($_POST['virusfilter'] != '1')
-    $account['virusfilter'] = NULL;
+  $account['password'] = $_POST['password'];
+  if ($_POST['mailbox'] != 'yes')
+    $account['password'] = NULL;
+
+  if ($_POST['forward'] == 'yes')
+  {
+    $num = 1;
+    while (true)
+    {
+      if (! isset($_POST['forward_to_'.$num]))
+        break;
+      $fwd = array("spamfilter" => $_POST['spamfilter_action_'.$num], "destination" => $_POST['forward_to_'.$num]);
+      array_push($account['forwards'], $fwd);
+      $num++;
+    }
+  }
 
   DEBUG($account);
 

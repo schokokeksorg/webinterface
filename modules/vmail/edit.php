@@ -25,12 +25,13 @@ else {
 }
 
 
-$is_forward = ($account['type'] == 'forward');
-$is_mailbox = ( ! $is_forward);
+$is_forward = (count($account['forwards']) > 0);
+$is_mailbox = ($account['password'] != NULL  ||  $id == 0);
+$numforwards = max(count($account['forwards']), 1);
 
 output("<script type=\"text/javascript\">
   
-  var numForwards = 1;
+  var numForwards = {$numforwards};
 
   function moreForward()
   {
@@ -117,12 +118,12 @@ $form .= "<p style=\"margin-left: 2em;\" id=\"virusfilter_options\">
 */
 
 $password_message = '';
-if ($is_mailbox and ($account['data'] != ''))
+if ($is_mailbox and ($account['password'] != ''))
   $password_message = '<span style="font-size: 80%"><br /><em>Sie haben bereits ein Passwort gesetzt. Wenn Sie dieses Feld leer lassen, wird das bisherige Passwort beibehalten.</em></span>';
   
 
 $form .= "
-    <p><input type=\"checkbox\" id=\"mailbox\" name=\"type\" value=\"mailbox\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;In Mailbox speichern</label></p>
+    <p><input type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;In Mailbox speichern</label></p>
     <p style=\"margin-left: 2em;\" id=\"mailbox_options\">Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"\" />{$password_message}</p>";
 
 
@@ -136,25 +137,39 @@ $form .= "
 </p>
   ";
 
-$form .= "<p><input type=\"checkbox\" id=\"forward\" name=\"type\" value=\"forward\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;Weiterleitung an andere E-Mail-Adressen</label></p>";
+$form .= "<p><input type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;Weiterleitung an andere E-Mail-Adressen</label></p>";
 
 $form .= "<table style=\"margin-left: 2em;\" id=\"forward_table\">
 <tr><th>Ziel-Adresse</th><th>Unerwünschte E-Mails</th></tr>
 ";
 
-$form .= "
+if ($is_forward)
+{
+  for ($i = 0 ; $i < $numforwards ; $i++)
+  {
+  $num = $i+1;
+  $form .= "
+<tr>
+  <td><input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></td>
+  <td>
+  ".html_select('spamfilter_action_'.$num, array("none" => 'kein Filter', "tag" => 'markieren und zustellen', "delete" => 'löschen'), $account['forwards'][$i]['spamfilter'])."
+  </td>
+</tr>
+";
+  }
+}
+else
+{
+  $form .= "
 <tr>
   <td><input type=\"text\" id=\"forward_to_1\" name=\"forward_to_1\" value=\"\" /></td>
   <td>
-  <select id=\"spamfilter_action_1\" name=\"spamfilter_action_1\">
-    <option value=\"none\">kein Filter</option>
-    <option value=\"tag\">markieren und zustellen</option>
-    <option value=\"delete\">löschen</option>
-  </select>
+  ".html_select('spamfilter_action_1', array("none" => 'kein Filter', "tag" => 'markieren und zustellen', "delete" => 'löschen'), "none")."
   </td>
 </tr>
   ";
-    
+}
+
 $form .= '</table>
   <p style="margin-left: 2em;">[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('accounts.php', 'Abbrechen').'</p>';
