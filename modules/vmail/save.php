@@ -23,6 +23,8 @@ if ($_GET['action'] == 'edit')
   $account['domain'] = (int) $_POST['domain'];
   $account['spamfilter'] = $_POST['spamfilter_action'];
   $account['password'] = $_POST['password'];
+  if (($account['password'] == '') && ($_POST['mailbox'] == 'yes'))
+    system_failure("Sie haben ein leeres Passwort eingegeben!");
   if ($_POST['password'] == '**********')
     $account['password'] = '';
   if ($_POST['mailbox'] != 'yes')
@@ -41,7 +43,11 @@ if ($_GET['action'] == 'edit')
       array_push($account['forwards'], $fwd);
       $num++;
     }
+    if ($num == 1) system_failure("Bitte mindestens eine Weiterleitungsadresse angeben.");
   }
+
+  if (($_POST['forward']!='yes') && ($_POST['mailbox']!='yes'))
+    system_failure("Entweder eine Mailbox oder eine Weiterleitung muss angegeben werden!");
 
   DEBUG($account);
 
