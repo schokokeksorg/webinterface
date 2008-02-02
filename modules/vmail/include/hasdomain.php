@@ -1,7 +1,9 @@
 <?php
 
-function user_has_vmail_domain() 
+if (! function_exists("user_has_vmail_domain"))
 {
+  function user_has_vmail_domain() 
+  {
 	$role = $_SESSION['role'];
 	if (! ($role & ROLE_SYSTEMUSER)) {
 		return false;
@@ -12,7 +14,7 @@ function user_has_vmail_domain()
 	$count = $row[0];
 	DEBUG("User has {$count} vmail-domains");
 	return ( (int) $count > 0 );
+  }  
 }
-
 
 ?>
