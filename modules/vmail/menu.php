@@ -6,7 +6,7 @@ require_once('include/hasdomain.php');
 
 if (($role & ROLE_SYSTEMUSER) && user_has_vmail_domain())
 {
-  $menu["vmail_accounts"] = array("label" => "E-Mail", "file" => "accounts.php", "weight" => 10);
+  $menu["vmail_accounts"] = array("label" => "E-Mail", "file" => "accounts.php", "weight" => 3);
 }
 if ($role & ROLE_VMAIL_ACCOUNT)
 {

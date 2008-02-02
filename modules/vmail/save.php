@@ -23,6 +23,8 @@ if ($_GET['action'] == 'edit')
   $account['domain'] = (int) $_POST['domain'];
   $account['spamfilter'] = $_POST['spamfilter_action'];
   $account['password'] = $_POST['password'];
+  if ($_POST['password'] == '**********')
+    $account['password'] = '';
   if ($_POST['mailbox'] != 'yes')
     $account['password'] = NULL;
 

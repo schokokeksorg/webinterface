@@ -49,8 +49,8 @@ output("<script type=\"text/javascript\">
     SELECT = document.createElement('select');
     SELECT.name = 'spamfilter_action_' + numForwards;
 
-    SELECT.options[0] = new Option('kein Filter', 'none', 1);
-    SELECT.options[1] = new Option('markieren und zustellen', 'tag', 0);
+    SELECT.options[0] = new Option('kein Filter', 'none', 0);
+    SELECT.options[1] = new Option('markieren und zustellen', 'tag', 1);
     SELECT.options[2] = new Option('nicht zustellen', 'delete', 0);
 
     TD1.appendChild(INPUT);
@@ -64,58 +64,9 @@ output("<script type=\"text/javascript\">
   }
 </script>
 ");
-/*
-output("<script type=\"text/javascript\">
-  
-  function selectForwarding() {
-    // document.getElementById('forward_options').style.visibility = 'visible';
-    // document.getElementById('mailbox_options').style.visibility = 'hidden';
-    document.getElementById('forward_options').style.display = 'block';
-    document.getElementById('mailbox_options').style.display = 'none';
-    document.getElementById('spamfilter_folder').disabled = true;
-    document.getElementById('virusfilter_folder').disabled = true;
-    }
-  
-  function selectMailbox() {
-    // document.getElementById('mailbox_options').style.visibility = 'visible';
-    // document.getElementById('forward_options').style.visibility = 'hidden';
-    document.getElementById('mailbox_options').style.display = 'block';
-    document.getElementById('forward_options').style.display = 'none';
-    document.getElementById('spamfilter_folder').disabled = false;
-    document.getElementById('virusfilter_folder').disabled = false;
-    }
-  
-  function toggleSpamfilterOptions() {
-    if (document.getElementById('spamfilter').checked)
-      document.getElementById('spamfilter_options').style.display = 'block';
-    else
-      document.getElementById('spamfilter_options').style.display = 'none';
-    }
-  
-  function toggleVirusfilterOptions() {
-    if (document.getElementById('virusfilter').checked)
-      document.getElementById('virusfilter_options').style.display = 'block';
-    else
-      document.getElementById('virusfilter_options').style.display = 'none';
-    }
-
-  </script>");
-*/
 
 $form = "
     <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"{$account['local']}\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($account['domainid'])."</p>";
-
-/*  
-$form .= "<p><input type=\"checkbox\" id=\"virusfilter\" name=\"virusfilter\" value=\"1\" ".($account['virusfilter'] != NULL ? 'checked="checked" ' : '')." /><label for=\"virusfilter\">&#160;Viren-Scanner</label></p>";
-
-$form .= "<p style=\"margin-left: 2em;\" id=\"virusfilter_options\">
-  <em>Was soll mit E-Mails geschehen, in denen ein Virus erkannt wurde?</em><br />
-  <input type=\"radio\" id=\"virusfilter_folder\" name=\"virusfilter_action\" value=\"folder\" ".($account['virusfilter'] == 'folder' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_folder\">&#160;In IMAP-Unterordner »Spam« ablegen</label><br />
-  <input type=\"radio\" id=\"virusfilter_tag\" name=\"virusfilter_action\" value=\"tag\" ".($account['virusfilter'] == 'tag' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_tag\">&#160;Markieren und ganz normal zustellen</label><br />
-<input type=\"radio\" id=\"virusfilter_delete\" name=\"virusfilter_action\" value=\"delete\" ".($account['virusfilter'] == 'delete' ? 'checked="checked" ' : '')."/><label for=\"virusfilter_delete\">&#160;Löschen</label>
-  </p>
-  ";
-*/
 
 $password_message = '';
 if ($is_mailbox and ($account['password'] != ''))
@@ -124,7 +75,7 @@ if ($is_mailbox and ($account['password'] != ''))
 
 $form .= "
     <p><input type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;In Mailbox speichern</label></p>
-    <p style=\"margin-left: 2em;\" id=\"mailbox_options\">Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"\" />{$password_message}</p>";
+    <p style=\"margin-left: 2em;\" id=\"mailbox_options\">Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"**********\" />{$password_message}</p>";
 
 
 $form .= "
@@ -164,7 +115,7 @@ else
 <tr>
   <td><input type=\"text\" id=\"forward_to_1\" name=\"forward_to_1\" value=\"\" /></td>
   <td>
-  ".html_select('spamfilter_action_1', array("none" => 'kein Filter', "tag" => 'markieren und zustellen', "delete" => 'löschen'), "none")."
+  ".html_select('spamfilter_action_1', array("none" => 'kein Filter', "tag" => 'markieren und zustellen', "delete" => 'löschen'), "tag")."
   </td>
 </tr>
   ";
