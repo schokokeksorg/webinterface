@@ -19,11 +19,12 @@ function empty_account()
 
 }
 
-function get_account_details($id)
+function get_account_details($id, $checkuid = true)
 {
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards from mail.v_vmail_accounts WHERE useraccount='{$uid}' AND id={$id} LIMIT 1");
+	$uid_check = ($checkuid ? "useraccount='{$uid}' AND " : "");
+	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -69,6 +70,31 @@ function get_vmail_domains()
 	return $ret;
 }
 
+
+function find_account_id($accname)
+{
+  $accname = mysql_real_escape_string($accname);
+  DEBUG($accname);
+  $tmp = explode('@', $accname, 2);
+  DEBUG($tmp);
+  if (count($tmp) != 2)
+    system_failure("Der Account hat nicht die korrekte Syntax");
+  list( $local, $domainname) = $tmp;
+
+  $result = db_query("SELECT id FROM mail.v_vmail_accounts WHERE local='{$local}' AND domainname='{$domainname}' LIMIT 1");
+  if (mysql_num_rows($result) == 0)
+    system_failure("Der Account konnte nicht gefunden werden");
+  $tmp = mysql_fetch_array($result);
+  return $tmp[0];
+}
+
+
+function change_vmail_password($accname, $newpass)
+{
+  $accid = find_account_id($accname);
+  $encpw = mysql_real_escape_string(encrypt_mail_password($newpass));
+  db_query("UPDATE mail.vmail_accounts SET password='{$encpw}' WHERE id={$accid} LIMIT 1;");
+}
 
 
 function domainselect($selected = NULL, $selectattribute = '')
@@ -203,6 +229,9 @@ function save_vmail_account($account)
   db_query($query); 
   if ($id)
     db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
+  else
+    $id = mysql_insert_id();
+
   if (count($account['forwards']) > 0)
   {
     $forward_query = "INSERT INTO mail.vmail_forward (account,spamfilter,destination) VALUES ";

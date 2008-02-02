@@ -8,9 +8,10 @@ require_once('inc/db_connect.php');
 
 define('ROLE_ANONYMOUS', 0);
 define('ROLE_MAILACCOUNT', 1);
-define('ROLE_SYSTEMUSER', 2);
-define('ROLE_CUSTOMER', 4);
-define('ROLE_SYSADMIN', 8);
+define('ROLE_VMAIL_ACCOUNT', 2);
+define('ROLE_SYSTEMUSER', 4);
+define('ROLE_CUSTOMER', 8);
+define('ROLE_SYSADMIN', 16);
 
 
 // Gibt die Rolle aus, wenn das Passwort stimmt
@@ -65,6 +66,20 @@ function find_role($login, $password, $i_am_admin = False)
     if ($hash == $db_password || $i_am_admin)
     {
       return ROLE_MAILACCOUNT;
+    }
+  }
+  
+  // virtueller Mail-Account
+  $account = $login;
+  $result = db_query("SELECT cryptpass FROM mail.courier_virtual_accounts WHERE account='{$account}' LIMIT 1;");
+  if (@mysql_num_rows($result) > 0)
+  {
+    $entry = mysql_fetch_object($result);
+    $db_password = $entry->cryptpass;
+    $hash = crypt($password, $db_password);
+    if ($hash == $db_password || $i_am_admin)
+    {
+      return ROLE_VMAIL_ACCOUNT;
     }
   }
   
@@ -195,6 +210,12 @@ function setup_session($role, $useridentity)
       $id .= '@schokokeks.org';
     $_SESSION['mailaccount'] = $id;
     DEBUG("We are mailaccount: {$_SESSION['mailaccount']}");
+  }
+  if ($role & ROLE_VMAIL_ACCOUNT)
+  {
+    $id = $useridentity;
+    $_SESSION['mailaccount'] = $id;
+    DEBUG("We are virtual mailaccount: {$_SESSION['mailaccount']}");
   }
 
 }

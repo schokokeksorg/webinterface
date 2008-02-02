@@ -145,7 +145,7 @@ echo '<p class="userinfo">Angemeldet als:<br />';
     echo '<br />'.$_SESSION['customerinfo']['name'];
     echo '<br />(Kunde)';
   }
-  elseif ($role & ROLE_MAILACCOUNT) {
+  elseif ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
     echo '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
   }
   echo '</p>';
