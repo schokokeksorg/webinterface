@@ -45,7 +45,7 @@ function get_account_details($id)
 function get_vmail_accounts()
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT * from mail.v_virtual_mail WHERE useraccount='{$uid}'");
+	$result = db_query("SELECT * from mail.v_vmail_accounts WHERE useraccount='{$uid}'");
 	$ret = array();
 	while ($line = mysql_fetch_assoc($result))
 	{
@@ -201,7 +201,8 @@ function save_vmail_account($account)
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
-  db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
+  if ($id)
+    db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
   if (count($account['forwards']) > 0)
   {
     $forward_query = "INSERT INTO mail.vmail_forward (account,spamfilter,destination) VALUES ";

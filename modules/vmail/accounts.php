@@ -17,7 +17,7 @@ output('<h3>E-Mail-Accounts</h3>
         foreach ($accounts as $account)
         {
             output('<tr>
-            <td>'.internal_link('edit.php', $account['local'].'@'.$account['domain'], 'id='.$account['id']).'</td>
+            <td>'.internal_link('edit.php', $account['local'].'@'.$account['domainname'], 'id='.$account['id']).'</td>
             <td><a href="save.php?action=delete&amp;id='.$account['id'].'">löschen</a></td></tr>');
         }
         output('</table>
