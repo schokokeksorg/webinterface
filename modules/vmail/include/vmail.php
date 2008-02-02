@@ -188,7 +188,7 @@ function save_vmail_account($account)
   if ($id == NULL)
   {
     $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password) VALUES ";
-    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$account['password']});";
+    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password});";
   }
   else
   {
