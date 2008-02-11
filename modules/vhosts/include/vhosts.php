@@ -144,7 +144,7 @@ function make_svn_vhost($id)
   if ($id == 0)
     system_failure("id == 0");
   logger('modules/vhosts/include/vhosts.php', 'vhosts', 'Converting vhost #'.$id.' to SVN');
-  db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES ({$id}, 'svn', 'nodocroot')");
+  db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'svn')");
   db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
 
