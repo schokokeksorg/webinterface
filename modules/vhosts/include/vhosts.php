@@ -201,7 +201,7 @@ function save_vhost($vhost)
   $ssl = maybe_null($vhost['ssl']);
   $logtype = maybe_null($vhost['logtype']);
   $errorlog = (int) $vhost['errorlog'];
-  if (is_svn) {
+  if ($vhost['is_svn']) {
     if (! $vhost['options']) $vhost['options']='nodocroot';
     else $vhost['options']+=",nodocroot";
   }
