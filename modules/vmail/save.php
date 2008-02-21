@@ -28,7 +28,10 @@ if ($_GET['action'] == 'edit')
   if ($_POST['password'] == '**********')
     $account['password'] = '';
   if ($_POST['mailbox'] != 'yes')
+  {
     $account['password'] = NULL;
+    $account['spamfilter'] = 'none';
+  }
 
   if ($_POST['forward'] == 'yes')
   {
