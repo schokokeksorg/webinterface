@@ -67,7 +67,7 @@ output('<h3>E-Mail-Accounts</h3>
 		$dest .= '</ul>';
 	      }
               output('
-              <div style="margin-left: 2em;"><p>'.internal_link('edit.php', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' <a href="save.php?action=delete&amp;id='.$acc['id'].'"><img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/></a></p>
+              <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;"><p>'.internal_link('edit.php', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' <a href="save.php?action=delete&amp;id='.$acc['id'].'"><img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/></a></p>
 	      <p>'.$dest.'</p></div>');
 	    }
 
