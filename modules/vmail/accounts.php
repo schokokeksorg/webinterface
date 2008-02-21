@@ -48,7 +48,7 @@ output('<h3>E-Mail-Accounts</h3>
 	      foreach ($acc['forwards'] AS $fwd)
 	      {
 	      	$spam = 'ohne Spamfilter';
-	        switch ($acc['spamfilter'])
+	        switch ($fwd['spamfilter'])
 	  	{
 			case 'tag':	$spam = 'Spam markieren';
 					break;
