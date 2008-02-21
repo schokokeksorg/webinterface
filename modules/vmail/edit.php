@@ -83,13 +83,16 @@ $form .= "
 
 $form .= "
 <p style=\"margin-left: 2em;\" class=\"spamfilter_options\">
-  <em>Wählen Sie, was mit unerwünschten E-Mails (Spam, Viren) passieren soll</em><br />
-  <input type=\"radio\" id=\"spamfilter_none\" name=\"spamfilter_action\" value=\"none\" ".($account['spamfilter'] == NULL ? 'checked="checked" ' : '')."/><label for=\"spamfilter_none\">&#160;Keine Überprüfung durchführen (alle E-Mails zustellen)</label><br />
+  <em>Wählen Sie, was mit unerwünschten E-Mails (Spam, Viren) passieren soll</em><br />";
+
+$form.= "".html_select('spamfilter_action', array("none" => 'kein Filter', "folder" => 'In Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'löschen'), $account['spamfilter'])."</p>";
+
+/*  <input type=\"radio\" id=\"spamfilter_none\" name=\"spamfilter_action\" value=\"none\" ".($account['spamfilter'] == NULL ? 'checked="checked" ' : '')."/><label for=\"spamfilter_none\">&#160;Keine Überprüfung durchführen (alle E-Mails zustellen)</label><br />
   <input type=\"radio\" id=\"spamfilter_folder\" name=\"spamfilter_action\" value=\"folder\" ".($account['spamfilter'] == 'folder' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_folder\">&#160;In IMAP-Unterordner »Spam« ablegen</label><br />
   <input type=\"radio\" id=\"spamfilter_tag\" name=\"spamfilter_action\" value=\"tag\" ".($account['spamfilter'] == 'tag' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_tag\">&#160;Markieren und ganz normal zustellen</label><br />
   <input type=\"radio\" id=\"spamfilter_delete\" name=\"spamfilter_action\" value=\"delete\" ".($account['spamfilter'] == 'delete' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_delete\">&#160;Nicht zustellen (Löschen)</label>
 </p>
-  ";
+  ";*/
 
 $form .= "<p><input type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;Weiterleitung an andere E-Mail-Adressen</label></p>";
 
