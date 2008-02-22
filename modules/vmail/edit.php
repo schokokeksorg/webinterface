@@ -56,7 +56,7 @@ output("<script type=\"text/javascript\">
     SELECT = document.createElement('select');
     SELECT.name = 'spamfilter_action_' + numForwards;
 
-    SELECT.options[0] = new Option('kein Filter', 'none', 1);
+    SELECT.options[0] = new Option('nicht filtern', 'none', 1);
     SELECT.options[1] = new Option('markieren und zustellen', 'tag', 0);
     SELECT.options[2] = new Option('nicht zustellen', 'delete', 0);
 
