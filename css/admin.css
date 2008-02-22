@@ -182,6 +182,10 @@ div.vmail-forward p {
   padding: 0;
 }
 
+div.vmail-forward input {
+  width: 20em;
+}
+
 div.content {
         margin-left: 200px;
         padding-left: 10px;
