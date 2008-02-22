@@ -37,14 +37,21 @@ output("<script type=\"text/javascript\">
   {
     numForwards += 1;
 
-    TR = document.createElement('tr');
-    TD1 = document.createElement('td');
-    TD2 = document.createElement('td');
+    P1 = document.createElement('p');
+
+    TXT1 = document.createTextNode('Weiterleiten an ');
 
     INPUT = document.createElement('input');
     INPUT.type = 'text';
     INPUT.name = 'forward_to_' + numForwards;
     INPUT.value = '';
+
+    P1.appendChild(TXT1);
+    P1.appendChild(INPUT);
+
+    P2 = document.createElement('p');
+
+    TXT2 = document.createTextNode('Spam-Mails an diese Adresse ');
 
     SELECT = document.createElement('select');
     SELECT.name = 'spamfilter_action_' + numForwards;
@@ -53,14 +60,17 @@ output("<script type=\"text/javascript\">
     SELECT.options[1] = new Option('markieren und zustellen', 'tag', 1);
     SELECT.options[2] = new Option('nicht zustellen', 'delete', 0);
 
-    TD1.appendChild(INPUT);
-    TD2.appendChild(SELECT);
+    P2.appendChild(TXT2);
+    P2.appendChild(SELECT);
 
-    TR.appendChild(TD1);
-    TR.appendChild(TD2);
+    DIV = document.createElement('div');
+    DIV.className = 'vmail-forward';
 
-    table = document.getElementById('forward_table');
-    table.appendChild(TR);
+    DIV.appendChild(P1);
+    DIV.appendChild(P2);
+
+    parent = document.getElementById('forward_config');
+    parent.appendChild(DIV);
   }
 </script>
 ");
@@ -85,50 +95,40 @@ $form .= "
 <p style=\"margin-left: 2em;\" class=\"spamfilter_options\">
   <em>Wählen Sie, was mit unerwünschten E-Mails (Spam, Viren) passieren soll</em><br />";
 
-$form.= "".html_select('spamfilter_action', array("none" => 'kein Filter', "folder" => 'In Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'löschen'), $account['spamfilter'])."</p>";
-
-/*  <input type=\"radio\" id=\"spamfilter_none\" name=\"spamfilter_action\" value=\"none\" ".($account['spamfilter'] == NULL ? 'checked="checked" ' : '')."/><label for=\"spamfilter_none\">&#160;Keine Überprüfung durchführen (alle E-Mails zustellen)</label><br />
+$form .=  "<input type=\"radio\" id=\"spamfilter_none\" name=\"spamfilter_action\" value=\"none\" ".($account['spamfilter'] == NULL ? 'checked="checked" ' : '')."/><label for=\"spamfilter_none\">&#160;Keine Überprüfung durchführen (alle E-Mails zustellen)</label><br />
   <input type=\"radio\" id=\"spamfilter_folder\" name=\"spamfilter_action\" value=\"folder\" ".($account['spamfilter'] == 'folder' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_folder\">&#160;In IMAP-Unterordner »Spam« ablegen</label><br />
   <input type=\"radio\" id=\"spamfilter_tag\" name=\"spamfilter_action\" value=\"tag\" ".($account['spamfilter'] == 'tag' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_tag\">&#160;Markieren und ganz normal zustellen</label><br />
   <input type=\"radio\" id=\"spamfilter_delete\" name=\"spamfilter_action\" value=\"delete\" ".($account['spamfilter'] == 'delete' ? 'checked="checked" ' : '')."/><label for=\"spamfilter_delete\">&#160;Nicht zustellen (Löschen)</label>
 </p>
-  ";*/
+  ";
 
 $form .= "<p><input type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;Weiterleitung an andere E-Mail-Adressen</label></p>";
 
-$form .= "<table style=\"margin-left: 2em;\" id=\"forward_table\">
-<tr><th>Ziel-Adresse</th><th>Unerwünschte E-Mails</th></tr>
-";
+
+$form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\">";
 
 if ($is_forward)
 {
   for ($i = 0 ; $i < $numforwards ; $i++)
   {
-  $num = $i+1;
-  $form .= "
-<tr>
-  <td><input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></td>
-  <td>
-  ".html_select('spamfilter_action_'.$num, array("none" => 'kein Filter', "tag" => 'markieren und zustellen', "delete" => 'löschen'), $account['forwards'][$i]['spamfilter'])."
-  </td>
-</tr>
-";
+    $num = $i+1;
+    $form .= "<div class=\"vmail-forward\">
+    <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
+    <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_'.$num, array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), $account['forwards'][$i]['spamfilter'])."</p>
+    </div>\n";
   }
 }
 else
 {
-  $form .= "
-<tr>
-  <td><input type=\"text\" id=\"forward_to_1\" name=\"forward_to_1\" value=\"\" /></td>
-  <td>
-  ".html_select('spamfilter_action_1', array("none" => 'kein Filter', "tag" => 'markieren und zustellen', "delete" => 'löschen'), "tag")."
-  </td>
-</tr>
-  ";
+    $form .= "<div class=\"vmail-forward\">
+    <p>Weiterleiten an <input type=\"text\" id=\"forward_to_1\" name=\"forward_to_1\" value=\"\" /></p>
+    <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_1', array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), "none")."</p>
+    </div>\n";
 }
 
-$form .= '</table>
-  <p style="margin-left: 2em;">[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
+$form .= '</div>';
+
+$form .= '<p style="margin-left: 2em;">[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('accounts.php', 'Abbrechen').'</p>';
 
 output(html_form('vmail_edit_mailbox', 'save.php', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
