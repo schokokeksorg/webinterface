@@ -124,7 +124,12 @@ function check_path( $input )
 
 function check_emailaddr( $input )
 {
-  return (preg_match("/^[a-z]+[a-z0-9]*[\.|\-|_]?[a-z0-9]+@([a-z0-9]*[\.|\-]?[a-z0-9]+){1,4}\.[a-z]{2,4}$/i", $input ) == 1);
+  return (bool) preg_match('/^[a-z0-9][a-z0-9%\[\]\.\-\_+]*@[a-z0-9\.\-]+\.[a-z]{2,4}/i', $input);
+}
+
+function check_domain( $input )
+{
+  return (bool) preg_match("/[a-z0-9\.\-]+\.[a-z]{2,4}$/i", $input );
 }
 
 
