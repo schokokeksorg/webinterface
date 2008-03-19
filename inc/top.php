@@ -34,7 +34,7 @@ foreach ($config['modules'] as $module)
     if (isset($menu[$key]['submenu']))
     {
       if (isset($submenu[$menu[$key]['submenu']]))
-        array_merge($submenu[$menu[$key]['submenu']], array($key => $menu[$key]));
+        $submenu[$menu[$key]['submenu']] = array_merge($submenu[$menu[$key]['submenu']], array($key => $menu[$key]));
       else
         $submenu[$menu[$key]['submenu']] = array($key => $menu[$key]);
     }
