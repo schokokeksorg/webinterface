@@ -101,7 +101,7 @@ echo '
 
 
 <div class="menu">
-<img src="<?php echo $prefix; ?>images/schokokeks.png" width="190" height="140" alt="schokokeks.org" />
+<img src="<?php echo $prefix; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org" />
 
 
 <?php
