@@ -124,7 +124,7 @@ function check_path( $input )
 
 function check_emailaddr( $input )
 {
-  return (bool) filter_var($input, FILTER_VALIDATE_EMAIL) == $input);
+  return (bool) filter_var($input, FILTER_VALIDATE_EMAIL) == $input;
 }
 
 function check_domain( $input )
