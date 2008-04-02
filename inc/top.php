@@ -99,6 +99,7 @@ echo '
 </head>
 <body>
 
+<a href="#content" style="display: none;">Zum Inhalt</a>
 
 <div class="menu">
 <img src="<?php echo $prefix; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org" />
@@ -155,7 +156,7 @@ echo '<p class="userinfo">Angemeldet als:<br />';
 </div>
 
 <div class="content">
-
+<a name="content" style="display: none"> </a>
 <?php
 show_messages();
 
