@@ -33,10 +33,10 @@ foreach ($config['modules'] as $module)
     $weight = $menu[$key]["weight"];
     if (isset($menu[$key]['submenu']))
     {
-      if (isset($submenu[$menu[$key]['submenu']]))
-        $submenu[$menu[$key]['submenu']] = array_merge($submenu[$menu[$key]['submenu']], array($key => $menu[$key]));
+      if (isset($submenu[$menu[$key]['submenu']][$weight]))
+        $submenu[$menu[$key]['submenu']][$weight] = array_merge($submenu[$menu[$key]['submenu']][$weight], array($key => $menu[$key]));
       else
-        $submenu[$menu[$key]['submenu']] = array($key => $menu[$key]);
+        $submenu[$menu[$key]['submenu']][$weight] = array($key => $menu[$key]);
     }
     else
     {
@@ -51,6 +51,11 @@ foreach ($config['modules'] as $module)
 
 ksort($weighted_menuitem);
 DEBUG($weighted_menuitem);
+
+foreach ($submenu AS $weight => $data) {
+  ksort($submenu[$weight]);
+}
+
 DEBUG($submenu);
 
 
@@ -121,13 +126,16 @@ $role = $_SESSION['role'];
                         if (isset($submenu[$key]))
                         {
                                 echo "\n";
-                                foreach ($submenu[$key] as $sec => $item)
-                                {
-                                        if ($sec == $section)
-                                                echo '<a href="'.$item['file'].'" class="submenuitem menuitem active">'.$item['label'].'</a>'."\n";
-                                        else
-                                                echo '<a href="'.$item['file'].'" class="submenuitem menuitem">'.$item['label'].'</a>'."\n";
-                                }
+				foreach ($submenu[$key] as $weight => $mysub) 
+				{
+                                  foreach ($mysub as $sec => $item)
+                                  {
+                                          if ($sec == $section)
+                                                  echo '<a href="'.$item['file'].'" class="submenuitem menuitem active">'.$item['label'].'</a>'."\n";
+                                          else
+                                                  echo '<a href="'.$item['file'].'" class="submenuitem menuitem">'.$item['label'].'</a>'."\n";
+                                  }
+				}
                                 echo "\n";
                         }
 		}
