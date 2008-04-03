@@ -262,4 +262,117 @@ function delete_account($id)
 }
 
 
-?>
+
+function domainsettings($only_domain=NULL) {
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  if ($domain)
+    $only_domain = (int) $only_domain;
+  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id, IF(ISNULL(v.hostname),m.subdomain,v.hostname) AS hostname FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain) WHERE d.useraccount={$uid} OR m.uid={$uid};");
+  $domains = array();
+  $subdomains = array();
+  while ($mydom = mysql_fetch_assoc($result)) {
+    if (! array_key_exists($mydom['id'], $domains)) {
+      if ($mydom['v_id'] && ! $mydom['hostname'])
+        $mydom['mail'] = 'virtual';
+      $domains[$mydom['id']] = array(
+        "name" => $mydom['name'],
+        "type" => $mydom['mail']
+        );
+      if ($only_domain && $only_domain == $mydom['id'])
+        return $domains[$only_domain];
+    }
+    if ($mydom['hostname']) {
+      if (! array_key_exists($mydom['id'], $subdomains))
+        $subdomains[$mydom['id']] = array();
+        
+      $type = 'auto';
+      if ($mydom['v_id'])
+        $type = 'virtual';
+      $subdomains[$mydom['id']][] = array(
+        "name" => $mydom['hostname'],
+        "type" => $type
+        );
+    }
+  }
+  return array("domains" => $domains, "subdomains" => $subdomains);
+}
+
+
+function domain_has_vmail_accounts($domid)
+{
+  $domid = (int) $domid;
+  $result = db_query("SELECT dom.id FROM mail.vmail_accounts AS acc LEFT JOIN mail.virtual_mail_domains AS dom ON (dom.id=acc.domain) WHERE dom.domain={$domid}");
+  return (mysql_num_rows($result) > 0);
+}
+
+
+function change_domain($id, $type)
+{
+  $id = (int) $id;
+  $type = mysql_real_escape_string($type);
+  if (domain_has_vmail_accounts($id))
+    system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
+  
+  if (! in_array($type, array('none','auto','virtual')))
+    system_failure("Ungültige Aktion");
+  
+  $old = domainsettings($id);
+  if ($old['type'] == $type)
+    system_failure('Domain ist bereits so konfiguriert');
+
+  if ($type == 'none') {
+    db_query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
+    db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='none' WHERE id={$id} LIMIT 1;");
+  }
+  elseif ($type == 'virtual') {
+    db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='auto' WHERE id={$id} LIMIT 1;");    db_query("INSERT INTO mail.virtual_mail_domains (domain) VALUES ({$id});");
+  }
+  elseif ($type == 'auto') {
+    db_query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
+    db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='auto' WHERE id={$id} LIMIT 1;");
+  }
+}
+
+
+/*
+function maildomain_type($type) {
+  switch ($type) {
+    case 'none':
+      $type = 'Diese Domain empfängt keine E-Mails';
+      break;
+    case 'auto':
+      $type = 'E-Mail-Adressen werden manuell über .courier-Dateien verwaltet';
+      break;
+    case 'virtual':
+      $type = 'E-Mail-Adressen werden über Webinterface verwaltet';
+      break;
+    case 'manual':
+      $type = 'Manuelle Konfiguration, kann nur von den Admins geändert werden';
+      break;
+  }
+  return $type;
+}
+*/
+
+function maildomain_type($type) {
+  switch ($type) {
+    case 'none':
+      $type = 'Deaktiviert';
+      break;
+    case 'auto':
+      $type = '.courier-Dateien';
+      break;
+    case 'virtual':
+      $type = 'Webinterface';
+      break;
+    case 'manual':
+      $type = 'Manuell';
+      break;
+  }
+  return $type;
+}
+
+

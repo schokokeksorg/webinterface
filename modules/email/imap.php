@@ -77,7 +77,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
 
   output('<h3>E-Mail-Account anlegen</h3>
 <p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
-<p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt manuell pro Domain und kann bei den Admins angefordert werden.</p>
+<p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt <a href="../vmail/domains.php">unter Domains</a>.</p>
   '.html_form('imap_accounts_create', 'accounts.php', 'action=save', '
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>Wert:</th><th>&#160;</th></tr>
