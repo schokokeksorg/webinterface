@@ -113,6 +113,20 @@ echo '
 <?php
 $role = $_SESSION['role'];
 
+function array_key_exists_r($needle, $haystack)
+{
+    $result = array_key_exists($needle, $haystack);
+    if ($result) return $result;
+    foreach ($haystack as $v) {
+        if (is_array($v)) {
+            $result = array_key_exists_r($needle, $v);
+        }
+        if ($result) return $result;
+    }
+    return $result;
+}
+
+
 
   foreach ($weighted_menuitem as $key => $menuitem)
         foreach ($menuitem as $key => $item)
@@ -121,7 +135,7 @@ $role = $_SESSION['role'];
                         echo '<a href="'.$item['file'].'" class="menuitem active">'.$item['label'].'</a>'."\n";
                 else
                         echo '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
-                if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists($section, $submenu[$key])))
+                if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists_r($section, $submenu[$key])))
                 {
                         if (isset($submenu[$key]))
                         {
