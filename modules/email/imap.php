@@ -16,7 +16,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
 {
   if (isset($_GET['id']))
   {
-    check_form_token('imap_accounts_edit');
+    check_form_token('email_imap_edit');
     $account = $_POST['user'].'@'.$_POST['domain'];
     if (isset($_POST['enabled']) && $_POST['enabled'] == 'true')
       $enabled = 'Y';
@@ -36,13 +36,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
     {
       change_mailaccount($_GET['id'], $acc);
       if (! $debugmode)
-        header('Location: accounts.php');
+        header('Location: imap.php');
       die();
     }
   }
   elseif (isset($_POST['create']))
   {
-    check_form_token('imap_accounts_create');
+    check_form_token('email_imap_create');
     $account = $_POST['user'].'@'.$_POST['domain'];
     if (isset($_POST['enabled']) && $_POST['enabled'] == 'true')
       $enabled = 'Y';
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
     {
       create_mailaccount($acc);
       if (! $debugmode)
-        header('Location: accounts.php');
+        header('Location: imap.php');
       die(); 
     }
   }
@@ -78,7 +78,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
   output('<h3>E-Mail-Account anlegen</h3>
 <p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
 <p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt <a href="../vmail/domains.php">unter Domains</a>.</p>
-  '.html_form('imap_accounts_create', 'accounts.php', 'action=save', '
+  '.html_form('email_imap_create', 'imap.php', 'action=save', '
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>Wert:</th><th>&#160;</th></tr>
   <tr>
@@ -131,13 +131,13 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
   {
     delete_mailaccount($_GET['account']);
     if (! $debugmode)
-      header('Location: accounts.php');
+      header('Location: imap.php');
     die();
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: accounts.php");
+      header("Location: imap.php");
     die();
   }
 }
@@ -182,7 +182,7 @@ elseif (isset($_GET['edit']))
   <p><input type="submit" value="Änderungen speichern" /><br />
   Hinweis: Das Passwort wird nur geändert, wenn Sie auf dieser Seite eines eingeben. Geben Sie keines an, wird das bisherige beibehalten!</p>
   ';
-  output(html_form('imap_accounts_edit', 'accounts.php', 'action=save&id='.$_GET['edit'], $form));
+  output(html_form('email_imap_edit', 'imap.php', 'action=save&id='.$_GET['edit'], $form));
 }
 else
 {
@@ -198,13 +198,13 @@ else
                 if (empty($mailbox))
                         $mailbox = '<i>nicht festgelegt</i>';
                 output('<tr>
-            <td>'.internal_link('accounts.php', $account['account'], 'edit='.$account['id']).'</td>
+            <td>'.internal_link('imap.php', $account['account'], 'edit='.$account['id']).'</td>
             <td>'.$mailbox.'</td>
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
-            <td><a href="accounts.php?action=delete&amp;account='.$account['id'].'">löschen</a></td></tr>');
+            <td><a href="imap.php?action=delete&amp;account='.$account['id'].'">löschen</a></td></tr>');
         }
         output('</table>
-<p><a href="accounts.php?action=create">Neuen Account anlegen</a></p>
+<p><a href="imap.php?action=create">Neuen Account anlegen</a></p>
 
 ');
 }

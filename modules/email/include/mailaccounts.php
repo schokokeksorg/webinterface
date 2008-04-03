@@ -7,6 +7,8 @@ require_once('inc/security.php');
 
 require_once('class/domain.php');
 
+require_once('common.php');
+
 function mailaccounts($uid)
 {
   $uid = (int) $uid;
@@ -28,17 +30,6 @@ function get_mailaccount($id)
   $ret = array('account' => $acc->account, 'mailbox' => $acc->maildir,  'enabled' => ($acc->aktiv == 1));
   DEBUG(print_r($ret, true));
   return $ret;
-}
-
-function encrypt_mail_password($pw)
-{
-  DEBUG("unencrypted PW: ".$pw);
-  require_once('inc/base.php');
-  $salt = random_string(8);
-  $encpw = crypt($pw, "\$1\${$salt}\$");
-  DEBUG("encrypted PW: ".$encpw);
-  return chop($encpw);
-
 }
 
 function change_mailaccount($id, $arr)

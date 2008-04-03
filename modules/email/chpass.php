@@ -1,19 +1,30 @@
 <?php
 
 require_once('session/start.php');
-
 require_once('vmail.php');
+require_once('mailaccounts.php');
 
-require_role(ROLE_VMAIL_ACCOUNT);
+require_role(array(ROLE_VMAIL_ACCOUNT, ROLE_MAILACCOUNT));
 
-$accname = $_SESSION['mailaccount'];
+$role = $_SESSION['role'];
 
 $title = "Passwort ändern";
 
+
+
 if ($_POST['password1'] != '')
 {
-  check_form_token('vmail_chpass');
-  $result = find_role($_SESSION['mailaccount'], $_POST['old_password']);
+  $accname = '';
+  if ($role & ROLE_VMAIL_ACCOUNT)
+  {
+    $accname = $_SESSION['accountname'];
+  }
+  elseif ($role & ROLE_MAILACCOUNT)
+  {
+    $accname = $_SESSION['mailaccount'];
+  }
+  check_form_token('email_chpass');
+  $result = find_role($accname, $_POST['old_password']);
 
   if ($_POST['old_password'] == '')
     input_error('Altes Passwort nicht angegeben!');
@@ -26,7 +37,16 @@ if ($_POST['password1'] != '')
   elseif (($check = strong_password($_POST['password1'])) !== true)
     input_error("Das Passwort ist zu einfach (cracklib sagt: {$check})!");
   else {
-    change_vmail_password($accname, $_POST['password1']);
+    if ($role & ROLE_VMAIL_ACCOUNT)
+    {
+      DEBUG("Ändere VMail-Passwort");
+      change_vmail_password($accname, $_POST['password1']);
+    }
+    elseif ($role & ROLE_MAILACCOUNT)
+    {
+      DEBUG("Ändere IMAP-Passwort");
+      change_mailaccount(get_mailaccount_id($accname), array('password' => $_POST['password1']));
+    }
     if (! $debugmode)
       header('Location: chpass.php');
     else
@@ -38,7 +58,7 @@ if ($_POST['password1'] != '')
 
 output('<h3>Passwort ändern</h3>
 <p>Hier können Sie Ihr Passwort ändern.</p>
-'.html_form('vmail_chpass', 'chpass.php', '', '<table>
+'.html_form('email_chpass', 'chpass.php', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
   </tr>
@@ -54,6 +74,3 @@ output('<h3>Passwort ändern</h3>
 '));
 
 
-
-
-?>

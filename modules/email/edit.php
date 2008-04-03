@@ -6,7 +6,7 @@ require_once('inc/security.php');
 require_once('vmail.php');
 
 $title = "E-Mail-Adresse bearbeiten";
-$section = 'vmail_accounts';
+$section = 'email_vmail';
 require_role(ROLE_SYSTEMUSER);
 
 $id = (int) $_GET['id'];
