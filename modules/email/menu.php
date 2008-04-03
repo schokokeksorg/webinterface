@@ -17,7 +17,7 @@ if ($role & ROLE_SYSTEMUSER) {
 }
 if ($role & ROLE_SYSTEMUSER && (user_has_accounts() || ! user_has_vmail_domain() || user_has_regular_domain() ) )
 {
-  $menu["email_imap"] = array("label" => "IMAP/POP3", "file" => "imap.php", "weight" => 10, 'submenu' => "email_vmail");
+  $menu["email_imap"] = array("label" => "IMAP/POP3", "file" => "imap.php", "weight" => 20, 'submenu' => "email_vmail");
 }
 
 
