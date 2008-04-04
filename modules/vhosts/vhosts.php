@@ -82,7 +82,7 @@ if (count($vhosts) > 0)
   output('<p><sup>*</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
   output('  <br />');
 }
-output('<p><a href="edit.php">Neue Subdomain anlegen</a></p>');
+output('<p><a href="edit.php">Neue Domain bzw. Subdomain einrichten</a></p>');
 output('  <br />');
 
 
