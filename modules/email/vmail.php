@@ -97,7 +97,7 @@ output('<h3>E-Mail-Accounts</h3>
 	    }
 
         }
-output('<p><a href="edit.php">Neuen Account anlegen</a></p>');
+output('<p><a href="edit.php">Neue E-Mail-Adresse anlegen</a></p>');
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
 output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: schokokeks.org bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/><a href="imap.php?action=create">Neuen POP3/IMAP-Account anlegen</a></p>');
