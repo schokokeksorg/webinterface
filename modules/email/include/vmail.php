@@ -314,16 +314,17 @@ function change_domain($id, $type)
   if ($type == 'none') {
     db_query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
     db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
-    db_query("UPDATE kundendaten.domains SET mail='none' WHERE id={$id} LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='none', lastchange=NOW() WHERE id={$id} LIMIT 1;");
   }
   elseif ($type == 'virtual') {
     db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
-    db_query("UPDATE kundendaten.domains SET mail='auto' WHERE id={$id} LIMIT 1;");    db_query("INSERT INTO mail.virtual_mail_domains (domain) VALUES ({$id});");
+    db_query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
+    db_query("INSERT INTO mail.virtual_mail_domains (domain) VALUES ({$id});");
   }
   elseif ($type == 'auto') {
     db_query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
     db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
-    db_query("UPDATE kundendaten.domains SET mail='auto' WHERE id={$id} LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
   }
 }
 
