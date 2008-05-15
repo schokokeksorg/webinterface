@@ -18,7 +18,9 @@ output('<h3>E-Mail-Verwaltung</h3>
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>
 <li>Sie können die manuelle Verwaltung wählen, bei der Sie passende .courier-Dateien für den Empfang und
 manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>
-<p>Diese Wahlmöglichkeit haben Sie pro Domain bzw. Subdomain. Subdomains können grundsätzlich nur durch Administratoren eingerichtet und verändert werden.</p>
+<p>Diese Wahlmöglichkeit haben Sie pro Domain bzw. Subdomain. Eine parallel Nutzung beider Verfahren ist nicht möglich.
+Wenn Sie eine Domain auf Webinterface-Verwaltung einrichten, dann werden eventuell vorhandene .courier-Dateien nicht mehr 
+beachtet. Subdomains können grundsätzlich nur durch Administratoren eingerichtet und verändert werden.</p>
 
 <h4>Ihre Domains sind momentan wie folgt konfiguriert:</h4>
 

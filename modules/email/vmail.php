@@ -14,7 +14,8 @@ if (! user_has_vmail_domain()) {
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>
 <li>Sie können die manuelle Verwaltung wählen, bei der Sie passende .courier-Dateien für den Empfang und
 manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>
-<p>Diese Wahlmöglichkeit haben Sie pro Domain bzw. Subdomain. Subdomains können grundsätzlich nur durch Administratoren eingerichtet und verändert werden.</p>
+<p>Diese Wahlmöglichkeit haben Sie pro Domain bzw. Subdomain. eine Mischung beider Verfahren ist nicht möglich. 
+Subdomains können grundsätzlich nur durch Administratoren eingerichtet und verändert werden.</p>
 <p>Sie haben bisher keine Domains, die auf Web-basierte Verwaltung von E-Mail-Adressen eingerichtet sind.</p>
 
 <p> </p>
