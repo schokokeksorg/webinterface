@@ -22,16 +22,33 @@ function validate_token($customerno, $token)
 }
 
 
+function validate_uid_token($uid, $token)
+{
+  expire_tokens();
+  $uid = (int) $uid;
+  $token = mysql_real_escape_string($token);
+  $result = db_query("SELECT NULL FROM system.usertoken WHERE uid={$uid} AND token='{$token}';");
+  return (mysql_num_rows($result) > 0);
+}
+
+
 function expire_tokens()
 {
   $expire = "1 DAY";
   db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE token_create < NOW() - INTERVAL {$expire};");
+  db_query("DELETE FROM system.usertoken WHERE expire < NOW();");
 }
 
 function invalidate_customer_token($customerno)
 {
   $customerno = (int) $customerno;
   db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id={$customerno} LIMIT 1;");
+}
+ 
+function invalidate_systemuser_token($uid)
+{
+  $uid = (int) $uid;
+  db_query("DELETE FROM system.usertoken WHERE uid={$uid} LIMIT 1;");
 }
  
 function create_token($customerno)
