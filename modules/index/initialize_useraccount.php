@@ -1,6 +1,5 @@
 <?php
 $title = "Passwort setzen";
-
 $show = 'token';
 
 if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
@@ -12,7 +11,10 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
   require_once('inc/security.php');
   if (validate_uid_token($uid, $token))
   {
-    $show = 'password';
+    $show = 'agb';
+    if ($_POST['agb'] == '1') {
+      $show = 'password';
+    }
     if (isset($_POST['password']))
     {
       if ($_POST['password'] != $_POST['password2'])
@@ -48,10 +50,20 @@ if ($show == 'password')
   output('<h3>Neues Passwort setzen</h3>
   <p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>'.
   html_form('initialize_useraccount', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
-  <input type="hidden" name="token" value="'.$token.'" /></p>
+  <input type="hidden" name="token" value="'.$token.'" /><input type="hidden" name="agb" value="1" /></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
   <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" /></p>
   <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort setzen" /></p>
+  '));
+}
+elseif ($show == 'agb')
+{
+  output('<h3>Bestätigung unserer AGB</h3>
+  <p>Die Nutzung unseres Angebots ist an unsere <a href="http://www.schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>'.
+  html_form('initialize_useraccount_agb', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
+  <input type="hidden" name="token" value="'.$token.'" /></p>
+  <p><span class="login_label">&#160;</span><input type="checkbox" name="agb" value="1" /> Ja, ich akzeptiere die AGB.<p>
+  <p><span class="login_label">&#160;</span> <input type="submit" value="Weiter" /></p>
   '));
 }
 elseif ($show == 'token')
