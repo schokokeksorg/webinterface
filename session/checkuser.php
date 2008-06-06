@@ -37,12 +37,12 @@ function find_role($login, $password, $i_am_admin = False)
         $role = $role | ROLE_CUSTOMER;
       if ($entry->admin)
         $role = $role | ROLE_SYSADMIN;
-      logger("session/checkuser.php", "login", "logged in systemuser »{$username}«.");
+      logger("session/checkuser.php", "login", "logged in systemuser »{$login}«.");
       return $role;
     }
-    logger("session/checkuser.php", "login", "wrong password for existing useraccount »{$username}«.");
+    logger("session/checkuser.php", "login", "wrong password for existing useraccount »{$login}«.");
   } else {
-    logger("session/checkuser.php", "login", "did not find useraccount »{$username}«. trying other roles...");
+    logger("session/checkuser.php", "login", "did not find useraccount »{$login}«. trying other roles...");
   }
 
   // Customer?
