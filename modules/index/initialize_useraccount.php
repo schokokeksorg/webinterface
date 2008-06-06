@@ -12,7 +12,7 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
   if (validate_uid_token($uid, $token))
   {
     $show = 'agb';
-    if ($_POST['agb'] == '1') {
+    if ($_REQUEST['agb'] == '1') {
       $show = 'password';
     }
     if (isset($_POST['password']))
