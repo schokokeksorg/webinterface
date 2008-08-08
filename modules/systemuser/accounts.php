@@ -27,7 +27,7 @@ else
     if (customer_useraccount($acc->uid))
       output($acc->username);
     else
-      output(internal_link('edit.php', $acc->username, "uid={$acc->uid}"));
+      output(internal_link('edit', $acc->username, "uid={$acc->uid}"));
     output("</td><td>{$acc->name}</td><td>{$acc->erstellungsdatum}</td><td>{$acc->quota} MB</td></tr>");
   }
   output("</table><br />");

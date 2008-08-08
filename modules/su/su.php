@@ -14,7 +14,7 @@ if (isset($_POST['submit']))
   $role = find_role($id, '', True);
   setup_session($role, $id);
 
-  header('Location: ../../go/index/index.php');
+  header('Location: ../../go/index/index');
   die();
 }
 
@@ -33,7 +33,7 @@ foreach ($users as $user)
   $options .= "  <option value=\"{$user->uid}\">{$user->username} ({$user->uid})</option>\n";
 }
 
-output(html_form('su_su', 'su.php', '', '<p>Benutzer auswählen:
+output(html_form('su_su', 'su', '', '<p>Benutzer auswählen:
 <select name="destination" size="1">
 '.$options.'
 </select>
@@ -48,7 +48,7 @@ foreach ($customers as $customer)
   $options .= "  <option value=\"{$customer->id}\">{$customer->id} - {$customer->name}</option>\n";
 }
 
-output(html_form('su_su', 'su.php', '', '<p>Kunde auswählen:
+output(html_form('su_su', 'su', '', '<p>Kunde auswählen:
 <select name="destination" size="1">
 '.$options.'
 </select>

@@ -33,7 +33,7 @@ if (isset($_GET['aliaswww'])) {
   save_alias($alias);
 
   if (! $debugmode)
-    header('Location: aliases.php?vhost='.$alias['vhost']);
+    header('Location: aliases?vhost='.$alias['vhost']);
 }
 if (isset($_GET['forward'])) {
 
@@ -60,7 +60,7 @@ if (isset($_GET['forward'])) {
   save_alias($alias);
 
   if (! $debugmode)
-    header('Location: aliases.php?vhost='.$alias['vhost']);
+    header('Location: aliases?vhost='.$alias['vhost']);
 }
 
 

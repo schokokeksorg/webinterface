@@ -34,19 +34,19 @@ foreach ($aliases AS $alias) {
     $aliastype = 'Umleitung auf Haupt-Adresse';
   }
   $formtoken = generate_form_token('aliases_toggle');
-  $havewww = '<br />www.'.$alias['fqdn'].' &#160; ('.internal_link('aliasoptions.php', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
-  $nowww = '<br />'.internal_link('aliasoptions.php', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
+  $havewww = '<br />www.'.$alias['fqdn'].' &#160; ('.internal_link('aliasoptions', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
+  $nowww = '<br />'.internal_link('aliasoptions', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
   $wwwalias = (strstr($alias['options'], 'aliaswww') ? $havewww : $nowww);
 
-  $to_forward = internal_link('aliasoptions.php', 'In Umleitung umwandeln', "alias={$alias['id']}&forward=1&formtoken={$formtoken}");
-  $remove_forward = internal_link('aliasoptions.php', 'In zusätzliche Adresse umwandeln', "alias={$alias['id']}&forward=0&formtoken={$formtoken}");
+  $to_forward = internal_link('aliasoptions', 'In Umleitung umwandeln', "alias={$alias['id']}&forward=1&formtoken={$formtoken}");
+  $remove_forward = internal_link('aliasoptions', 'In zusätzliche Adresse umwandeln', "alias={$alias['id']}&forward=0&formtoken={$formtoken}");
   $typetoggle = (strstr($alias['options'], 'forward') ? $remove_forward : $to_forward);
 
     
   $form .= "<tr>
     <td>{$alias['fqdn']}{$wwwalias}</td>
     <td>{$aliastype}<br />{$typetoggle}</td>
-    <td>".internal_link('save.php', 'Aliasname löschen', "action=deletealias&alias={$alias['id']}")."</td></tr>
+    <td>".internal_link('save', 'Aliasname löschen', "action=deletealias&alias={$alias['id']}")."</td></tr>
   ";
 }
 
@@ -71,10 +71,10 @@ $form .= "
 </tr>
 </table>";
 
-output(html_form('vhosts_add_alias', 'save.php', 'action=addalias&vhost='.$vhost['id'], $form));
+output(html_form('vhosts_add_alias', 'save', 'action=addalias&vhost='.$vhost['id'], $form));
     
 output("<p>
-  <a href=\"vhosts.php\">Zurück zur Übersicht</a>
+  ".internal_link("vhosts", "Zurück zur Übersicht")."
 </p>");
 
 

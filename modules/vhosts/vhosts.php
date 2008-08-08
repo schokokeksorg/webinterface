@@ -26,13 +26,13 @@ if (count($vhosts) > 0)
   foreach ($vhosts as $vhost)
   {
     $fqdn = $vhost['fqdn'];
-    output("<tr><td>".internal_link('edit.php', $fqdn, "vhost={$vhost['id']}")."</td><td>".internal_link('save.php', "<img src=\"{$prefix}images/delete.png\" title=\"»{$vhost['fqdn']}« löschen\" alt=\"löschen\" />", 'action=delete&vhost='.$vhost['id'] )."</td><td>");
+    output("<tr><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}")."</td><td>".internal_link('save', "<img src=\"{$prefix}images/delete.png\" title=\"»{$vhost['fqdn']}« löschen\" alt=\"löschen\" />", 'action=delete&vhost='.$vhost['id'] )."</td><td>");
     $aliases = get_all_aliases($vhost['id']);
     foreach ($aliases as $alias)
     {
       output($alias['fqdn'].'<br />');
     }
-    output(internal_link('aliases.php', 'Aliase verwalten', 'vhost='.$vhost['id']));
+    output(internal_link('aliases', 'Aliase verwalten', 'vhost='.$vhost['id']));
     output('</td>');
     $logfiles = 'keine';
     if ($vhost['logtype'] == 'default')
@@ -82,7 +82,7 @@ if (count($vhosts) > 0)
   output('<p><sup>*</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
   output('  <br />');
 }
-output('<p><a href="edit.php">Neue Domain bzw. Subdomain einrichten</a></p>');
+output('<p>'.internal_link('edit', 'Neue Domain bzw. Subdomain einrichten').'</p>');
 output('  <br />');
 
 

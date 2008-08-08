@@ -17,12 +17,12 @@ if ($_GET['action'] == 'delete')
   {
     delete_from_whitelist($entry['id']);
     if (! $debugmode)
-      header("Location: whitelist.php");
+      header("Location: whitelist");
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: whitelist.php");
+      header("Location: whitelist");
   }
 }
 elseif ($_GET['action'] == 'add')
@@ -44,7 +44,7 @@ elseif ($_GET['action'] == 'add')
 	DEBUG("Whitelisting {$local}@{$domain} for {$_POST['expire']} minutes");
 	new_whitelist_entry($local, $domain, $_POST['expire']);
 	if (! $debugmode)	
-		header("Location: whitelist.php");
+		header("Location: whitelist");
 
 }
 

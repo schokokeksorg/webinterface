@@ -16,7 +16,7 @@ if (! $_POST['type'] || ! $_POST['id'])
 change_domain($_POST['id'], $_POST['type']);
 
 if (!$debugmode) {
-  header('Location: domains.php');
+  header('Location: domains');
   die();
 }
 

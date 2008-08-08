@@ -14,7 +14,7 @@ $account_string = $account['local'].'@'.$account['domain'];
 
 output("<h3>Passwort für Jabber-Account ändern</h3>");
 
-output(html_form('jabber_chpass', 'save.php', 'action=chpass', '
+output(html_form('jabber_chpass', 'save', 'action=chpass', '
 <table>
 <tr><td>Account-Name:</td><td>'.$account_string.'</td></tr>
 <tr><td>Passwort:</td><td><input type="password" name="newpass" value="" /></td></tr>

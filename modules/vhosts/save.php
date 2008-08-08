@@ -147,7 +147,7 @@ if ($_GET['action'] == 'edit')
   save_vhost($vhost);
 
   if (! $debugmode)
-    header('Location: vhosts.php');
+    header('Location: vhosts');
 
 }
 elseif ($_GET['action'] == 'addalias')
@@ -192,7 +192,7 @@ elseif ($_GET['action'] == 'addalias')
   save_alias($alias);
 
   if (! $debugmode)
-    header('Location: aliases.php?vhost='.$vhost['id']);
+    header('Location: aliases?vhost='.$vhost['id']);
 
 }
 elseif ($_GET['action'] == 'deletealias')
@@ -217,12 +217,12 @@ elseif ($_GET['action'] == 'deletealias')
   {
     delete_alias($alias['id']);
     if (! $debugmode)
-      header('Location: aliases.php?vhost='.$vhost['id']);
+      header('Location: aliases?vhost='.$vhost['id']);
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header('Location: aliases.php?vhost='.$vhost['id']);
+      header('Location: aliases?vhost='.$vhost['id']);
   }
 }
 elseif ($_GET['action'] == 'delete')
@@ -242,12 +242,12 @@ elseif ($_GET['action'] == 'delete')
   {
     delete_vhost($vhost['id']);
     if (! $debugmode)
-      header("Location: vhosts.php");
+      header("Location: vhosts");
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: vhosts.php");
+      header("Location: vhosts");
   }
 }
 else

@@ -20,9 +20,9 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
 
 <p> </p>
 
-<p>Besuchen Sie die <a href="domains.php">Domain-Einstellungen</a> um diese Auswahl für Ihre Domains zu ändern.</p>
+<p>Besuchen Sie die '.internal_link('domains', 'Domain-Einstellungen').' um diese Auswahl für Ihre Domains zu ändern.</p>
 
-<p>Wenn Sie die manuelle Einrichtung möchten oder keine eigene Domain nutzen, können Sie unter <a href="imap.php">POP3/IMAP</a> manuelle POP3-/IMAP-Konten erstellen.</p>
+<p>Wenn Sie die manuelle Einrichtung möchten oder keine eigene Domain nutzen, können Sie unter '.internal_link('imap', 'POP3/IMAP').' manuelle POP3-/IMAP-Konten erstellen.</p>
 
 ');
 }
@@ -93,15 +93,15 @@ output('<h3>E-Mail-Accounts</h3>
 		$dest .= '</ul>';
 	      }
               output('
-              <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;"><p>'.internal_link('edit.php', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' <a href="save.php?action=delete&amp;id='.$acc['id'].'"><img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/></a></p>
+              <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;"><p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>
 	      <p>'.$dest.'</p></div>');
 	    }
 
         }
-output('<p><a href="edit.php">Neue E-Mail-Adresse anlegen</a></p>');
+output('<p>'.internal_link("edit", "Neue E-Mail-Adresse anlegen").'</p>');
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
-output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: schokokeks.org bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/><a href="imap.php?action=create">Neuen POP3/IMAP-Account anlegen</a></p>');
+output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: schokokeks.org bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
 
 }
 

@@ -180,12 +180,12 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
     ";
 
 $form .= '
-  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts.php', 'Abbrechen').'</p>
+  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts', 'Abbrechen').'</p>
   <p class="warning"><span class="warning">*</span>Es ist im Moment Gegenstand gerichtlicher Außeinandersetzungen, ob die Speicherung von Logfiles auf Webservern
   zulässig ist. Wir weisen alle Nutzer darauf hin, dass sie selbst dafür verantwortlich sind, bei geloggten Nutzerdaten die
   Seitenbesucher darauf hinzuweisen. Wir empfehlen, wenn möglich, Logfiles abzuschalten oder anonymes Logging einzusetzen.</p>
 ';
-output(html_form('vhosts_edit_vhost', 'save.php', 'action=edit&vhost='.$vhost['id'], $form));
+output(html_form('vhosts_edit_vhost', 'save', 'action=edit&vhost='.$vhost['id'], $form));
 
 
 ?>

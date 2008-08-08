@@ -36,7 +36,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
     {
       change_mailaccount($_GET['id'], $acc);
       if (! $debugmode)
-        header('Location: imap.php');
+        header('Location: imap');
       die();
     }
   }
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
     {
       create_mailaccount($acc);
       if (! $debugmode)
-        header('Location: imap.php');
+        header('Location: imap');
       die(); 
     }
   }
@@ -75,10 +75,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
   foreach ($domains as $dom)
     $options .= '<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>';
 
-  output('<h3>E-Mail-Account anlegen</h3>
+  output('<h3>IMAP-Account anlegen</h3>
 <p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
-<p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt <a href="../email/domains.php">unter Domains</a>.</p>
-  '.html_form('email_imap_create', 'imap.php', 'action=save', '
+<p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt '.internal_link("../email/domains", "unter Domains").'.</p>
+  '.html_form('email_imap_create', 'imap', 'action=save', '
   <table style="margin-bottom: 1em;">
   <tr><th>Einstellung:</th><th>Wert:</th><th>&#160;</th></tr>
   <tr>
@@ -131,19 +131,19 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
   {
     delete_mailaccount($_GET['account']);
     if (! $debugmode)
-      header('Location: imap.php');
+      header('Location: imap');
     die();
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: imap.php");
+      header("Location: imap");
     die();
   }
 }
 elseif (isset($_GET['edit']))
 {
-  output('<h3>E-Mail-Account bearbeiten</h3>
+  output('<h3>IMAP-Account bearbeiten</h3>
 <p>Hier können Sie die Einstellungen des IMAP-Kontos bearbeiten.</p>
 ');
   $_GET['edit'] = (int) $_GET['edit'];
@@ -182,11 +182,11 @@ elseif (isset($_GET['edit']))
   <p><input type="submit" value="Änderungen speichern" /><br />
   Hinweis: Das Passwort wird nur geändert, wenn Sie auf dieser Seite eines eingeben. Geben Sie keines an, wird das bisherige beibehalten!</p>
   ';
-  output(html_form('email_imap_edit', 'imap.php', 'action=save&id='.$_GET['edit'], $form));
+  output(html_form('email_imap_edit', 'imap', 'action=save&id='.$_GET['edit'], $form));
 }
 else
 {
-  output('<h3>E-Mail-Accounts</h3>
+  output('<h3>IMAP-Accounts</h3>
 <p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
 <table style="margin-bottom: 1em;">
 <tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&#160;</th></tr>
@@ -198,13 +198,13 @@ else
                 if (empty($mailbox))
                         $mailbox = '<i>nicht festgelegt</i>';
                 output('<tr>
-            <td>'.internal_link('imap.php', $account['account'], 'edit='.$account['id']).'</td>
+            <td>'.internal_link('imap', $account['account'], 'edit='.$account['id']).'</td>
             <td>'.$mailbox.'</td>
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
-            <td><a href="imap.php?action=delete&amp;account='.$account['id'].'">löschen</a></td></tr>');
+            <td>'.internal_link("imap", "löschen", "action=delete&account=".$account['id']).'</td></tr>');
         }
         output('</table>
-<p><a href="imap.php?action=create">Neuen Account anlegen</a></p>
+<p>'.internal_link("imap", "Neuen Account anlegen", "action=create").'</p>
 
 ');
 }

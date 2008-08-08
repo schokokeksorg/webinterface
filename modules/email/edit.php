@@ -119,9 +119,9 @@ else
 $form .= '</div>';
 
 $form .= '<p style="margin-left: 2em;">[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
-  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('accounts.php', 'Abbrechen').'</p>';
+  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('accounts', 'Abbrechen').'</p>';
 
-output(html_form('vmail_edit_mailbox', 'save.php', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
+output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 
 
 ?>

@@ -7,7 +7,7 @@ $uid = (int) $_SESSION['userinfo']['uid'];
 
 if (in_array($_POST['freq'],array("day","week","month"))) {
 	db_query("REPLACE INTO qatools.freewvs (user,freq) VALUES ({$uid},'{$_POST['freq']}');");
-	header("Location: freewvs.php");
+	header("Location: freewvs");
 	die();
 }
 

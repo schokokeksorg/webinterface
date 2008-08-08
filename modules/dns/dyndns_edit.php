@@ -70,7 +70,7 @@ $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" nam
 ';
 
 
-$output .= html_form('dyndns_edit', 'save.php', 'type=dyndns&action=edit&id='.$_REQUEST['id'], $form);
+$output .= html_form('dyndns_edit', 'save', 'type=dyndns&action=edit&id='.$_REQUEST['id'], $form);
 
 $records = get_dyndns_records($_REQUEST['id']);
 

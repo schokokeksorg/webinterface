@@ -12,7 +12,7 @@ output('<h3>Rechnung</h3>
 
 $invoice_id = (int) filter_input_general($_GET['id']);
 
-output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe <a href=\"pdf.php?id={$invoice_id}\">als PDF-Datei</a>.</p>
+output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe ".internal_link("pdf", "als PDF-Datei", "id={$invoice_id}").".</p>
 <p>&#160;</p>");
 
 

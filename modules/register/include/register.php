@@ -20,7 +20,7 @@ function create_customer($data)
 
   if (customer_with_email($data['email']) !== NULL)
   {
-    logger('modules/register/include/register.php', 'register', "Attempt to create customer with duplicate email »{$data['email']}«");
+    logger('modules/register/include/register', 'register', "Attempt to create customer with duplicate email »{$data['email']}«");
     return NULL;
   }
 
@@ -30,7 +30,7 @@ function create_customer($data)
   $nachname = mysql_escape_string($data['nachname']);
   $email = mysql_escape_string($data['email']);
 
-  logger('modules/register/include/register.php', 'register', "Creating new account: {$anrede} / {$firma} / {$vorname} / {$nachname} / {$email}");
+  logger('modules/register/include/register', 'register', "Creating new account: {$anrede} / {$firma} / {$vorname} / {$nachname} / {$email}");
   
   $realname = maybe_null(chop($vorname.' '.$nachname));
 

@@ -48,7 +48,7 @@ if ($_POST['password1'] != '')
       change_mailaccount(get_mailaccount_id($accname), array('password' => $_POST['password1']));
     }
     if (! $debugmode)
-      header('Location: chpass.php');
+      header('Location: chpass');
     else
       output('');
   }
@@ -58,7 +58,7 @@ if ($_POST['password1'] != '')
 
 output('<h3>Passwort ändern</h3>
 <p>Hier können Sie Ihr Passwort ändern.</p>
-'.html_form('email_chpass', 'chpass.php', '', '<table>
+'.html_form('email_chpass', 'chpass', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
   </tr>

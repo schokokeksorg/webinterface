@@ -27,12 +27,12 @@ if ($_GET['type'] == 'dyndns') {
     {
       delete_dyndns_account($id);
       if (! $debugmode)
-        header("Location: dyndns.php");
+        header("Location: dyndns");
     }
     elseif ($sure === false)
     {
       if (! $debugmode)
-        header("Location: dyndns.php");
+        header("Location: dyndns");
     }
   }
   if ($_GET['action'] == 'edit') {
@@ -45,7 +45,7 @@ if ($_GET['type'] == 'dyndns') {
     }
   
     if (! ($debugmode || we_have_an_error()))
-      header('Location: dyndns.php');
+      header('Location: dyndns');
   }
 }
 

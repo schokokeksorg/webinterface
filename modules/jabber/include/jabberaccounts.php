@@ -71,7 +71,7 @@ function create_jabber_account($local, $domain, $password)
     $result = db_query("SELECT id FROM kundendaten.domains WHERE kunde={$customerno} AND jabber=1 AND id={$domain};");
     if (mysql_num_rows($result) == 0)
     {
-      logger("modules/jabber/include/jabberaccounts.php", "jabber", "attempt to create account for invalid domain »{$domain}«");
+      logger("modules/jabber/include/jabberaccounts", "jabber", "attempt to create account for invalid domain »{$domain}«");
       system_failure("Invalid domain!");
     }
   }
@@ -85,12 +85,12 @@ function create_jabber_account($local, $domain, $password)
   $result = db_query("SELECT id FROM jabber.accounts WHERE local='{$local}' AND {$domainquery}");
   if (mysql_num_rows($result) > 0)
   {
-    logger("modules/jabber/include/jabberaccounts.php", "jabber", "attempt to create already existing account »{$local}@{$domain}«");
+    logger("modules/jabber/include/jabberaccounts", "jabber", "attempt to create already existing account »{$local}@{$domain}«");
     system_failure("Diesen Account gibt es bereits!");
   }
 
   db_query("INSERT INTO jabber.accounts (customerno,local,domain,password) VALUES ({$customerno}, '{$local}', {$domain}, '{$password}');");
-  logger("modules/jabber/include/jabberaccounts.php", "jabber", "created account »{$local}@{$domain}«");
+  logger("modules/jabber/include/jabberaccounts", "jabber", "created account »{$local}@{$domain}«");
 }
 
 
@@ -108,7 +108,7 @@ function change_jabber_password($id, $password)
   $password = mysql_real_escape_string( $password );
   
   db_query("UPDATE jabber.accounts SET password='{$password}' WHERE customerno={$customerno} AND id={$id} LIMIT 1");
-  logger("modules/jabber/include/jabberaccounts.php", "jabber", "changed password for account  »{$id}«");
+  logger("modules/jabber/include/jabberaccounts", "jabber", "changed password for account  »{$id}«");
 }
 
 
@@ -121,7 +121,7 @@ function delete_jabber_account($id)
   $id = (int) $id;
 
   db_query("UPDATE jabber.accounts SET `delete`=1 WHERE customerno={$customerno} AND id={$id} LIMIT 1");
-  logger("modules/jabber/include/jabberaccounts.php", "jabber", "deleted account »{$id}«");
+  logger("modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");
 }
 
 ?>

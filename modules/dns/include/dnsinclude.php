@@ -27,7 +27,7 @@ function get_dyndns_account($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT * FROM dns.dyndns WHERE id={$id} AND uid={$uid}");
   if (mysql_num_rows($result) != 1) {
-    logger("modules/dns/include/dnsinclude.php", "dyndns", "account »{$id}« invalid for uid »{$uid}«.");
+    logger("modules/dns/include/dnsinclude", "dyndns", "account »{$id}« invalid for uid »{$uid}«.");
     system_failure("Account ungültig");
   }
   $item = mysql_fetch_assoc($result);
@@ -47,7 +47,7 @@ function create_dyndns_account($handle, $password_http, $sshkey)
     $pwhash = "'{SHA}".base64_encode(sha1($password_http, true))."'";
 
   db_query("INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ({$uid}, {$handle}, {$pwhash}, {$sshkey})");
-  logger("modules/dns/include/dnsinclude.php", "dyndns", "inserted account");
+  logger("modules/dns/include/dnsinclude", "dyndns", "inserted account");
 }
 
 
@@ -62,7 +62,7 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
     $pwhash = "'{SHA}".base64_encode(sha1($password_http, true))."'";
 
   db_query("UPDATE dns.dyndns SET handle={$handle}, password={$pwhash}, sshkey={$sshkey} WHERE id={$id} LIMIT 1");
-  logger("modules/dns/include/dnsinclude.php", "dyndns", "edited account »{$id}«");
+  logger("modules/dns/include/dnsinclude", "dyndns", "edited account »{$id}«");
 }
 
 
@@ -71,7 +71,7 @@ function delete_dyndns_account($id)
   $id = (int) $id;
 
   db_query("DELETE FROM dns.dyndns WHERE id={$id} LIMIT 1");
-  logger("modules/dns/include/dnsinclude.php", "dyndns", "deleted account »{$id}«");
+  logger("modules/dns/include/dnsinclude", "dyndns", "deleted account »{$id}«");
 }
 
 

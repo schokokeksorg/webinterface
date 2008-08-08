@@ -46,7 +46,7 @@ if (count($_POST) > 0)
       require_once('inc/base.php');
       send_initial_customer_token($customerno);
       notify_admins_about_new_customer($customerno);
-      logger("modules/register/index.php", "register", "token sent for customer »{$customerno}«");
+      logger("modules/register/index", "register", "token sent for customer »{$customerno}«");
       $success = true;
       #success_msg('Die angegebenen Daten wurden gespeichert, Sie sollten umgehend eine E-Mail erhalten.');
     }

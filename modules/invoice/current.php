@@ -18,7 +18,7 @@ foreach($invoices AS $invoice)
 	$bezahlt = 'Nein';
 	if ($invoice['bezahlt'] == 1)
 		$bezahlt = 'Ja';
-	output("<tr><td>{$invoice['id']}</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td><a href=\"pdf.php?id={$invoice['id']}\">PDF</a> &#160; <a href=\"html.php?id={$invoice['id']}\">HTML</a></td></tr>\n");
+	output("<tr><td>{$invoice['id']}</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "PDF", "id={$invoice['id']}").' &#160; '.internal_link("html", "HTML", "id={$invoice['id']}")."</td></tr>\n");
 }
 
 output('</table><br />');

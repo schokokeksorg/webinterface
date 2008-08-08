@@ -26,7 +26,7 @@ if ($_GET['action'] == 'new')
   {
     create_jabber_account($_POST['local'], $_POST['domain'], $_POST['password']);
     if (! $debugmode)
-      header('Location: accounts.php');
+      header('Location: accounts');
   }
   */
 }
@@ -58,7 +58,7 @@ elseif ($_GET['action'] == 'edit')
 
   set_systemuser_details($_POST['uid'], $_POST['fullname'], $_POST['quota']);
   if (! ($debugmode || $error))
-    header('Location: accounts.php');
+    header('Location: accounts');
   
 }
 elseif ($_GET['action'] == 'delete')
@@ -75,12 +75,12 @@ elseif ($_GET['action'] == 'delete')
   {
     delete_jabber_account($account['id']);
     if (! $debugmode)
-      header("Location: accounts.php");
+      header("Location: accounts");
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: accounts.php");
+      header("Location: accounts");
   }
   */
 }

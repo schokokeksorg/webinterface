@@ -27,14 +27,14 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
       {
         require_once('session/checkuser.php');
         require_once('inc/base.php');
-        logger("modules/index/initialize_useraccount.php", "initialize", "uid »{$uid}« set a new password");
+        logger("modules/index/initialize_useraccount", "initialize", "uid »{$uid}« set a new password");
         set_systemuser_password($uid, $_POST['password']);
         success_msg('Das Passwort wurde gesetzt!');
         invalidate_systemuser_token($uid);
         $_SESSION['role'] = find_role($uid, '', True);;
 	setup_session($_SESSION['role'], $uid);
         output('<h3>Passwort gesetzt</h3>
-        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt <a href="index.php">die Web-Oberfläche sofort benutzen</a>.</p>');
+        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link('index', 'die Web-Oberfläche sofort benutzen').'.</p>');
         $show = NULL;
       }
     }

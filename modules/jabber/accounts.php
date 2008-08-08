@@ -26,11 +26,11 @@ foreach ($jabberaccounts as $acc)
     $domain = new Domain();
     $domain->fqdn='schokokeks.org';
   }
-  output("<tr><td>{$local}@{$domain->fqdn}</td><td>".internal_link('chpass.php', 'Passwort ändern', 'account='.$acc['id'])."&#160;&#160;&#160;".internal_link('save.php', 'Löschen', 'action=delete&account='.$acc['id']).'</td></tr>');
+  output("<tr><td>{$local}@{$domain->fqdn}</td><td>".internal_link('chpass', 'Passwort ändern', 'account='.$acc['id'])."&#160;&#160;&#160;".internal_link('save', 'Löschen', 'action=delete&account='.$acc['id']).'</td></tr>');
 }
 
 output('</table>
 
-<p><a href="new_account.php">Neues Jabber-Konto anlegen</a></p>');
+<p>'.internal_link("new_account", "Neues Jabber-Konto anlegen").'</p>');
 
 ?>

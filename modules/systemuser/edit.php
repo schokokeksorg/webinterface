@@ -18,7 +18,7 @@ if (customer_useraccount($account['uid']))
   system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
 
 
-output(html_form('systemuser_edit', 'save.php', 'action=edit', '
+output(html_form('systemuser_edit', 'save', 'action=edit', '
 <table>
 <tr><td>Benutzername:</td><td><strong>'.$account['username'].'</strong></td></tr>
 <tr><td>richtiger Name:<br /><span style="font-size:85%;">(wenn nicht »'.$_SESSION['customerinfo']['name'].'«)</span></td><td><input type="text" name="fullname" value="'.$account['name'].'" /></td></tr>

@@ -30,11 +30,11 @@ beachtet. Subdomains können grundsätzlich nur durch Administratoren eingericht
 
 foreach ($domains AS $id => $dom) {
   $type = maildomain_type($dom['type']);
-  $edit = html_form('vmail_domainchange', 'domainchange.php', '', html_select('type', array('virtual' => 'Webinterface-Verwaltung', 'auto' => '.courier-Dateien', 'none' => 'keine E-Mails empfangen'), $dom['type']).' <input type="hidden" name="id" value="'.$id.'" /><input type="submit" value="ändern" />');
+  $edit = html_form('vmail_domainchange', 'domainchange', '', html_select('type', array('virtual' => 'Webinterface-Verwaltung', 'auto' => '.courier-Dateien', 'none' => 'keine E-Mails empfangen'), $dom['type']).' <input type="hidden" name="id" value="'.$id.'" /><input type="submit" value="ändern" />');
   if ($dom['type'] == 'manual')
     $edit = 'Kann nur von Admins geändert werden';
   if (domain_has_vmail_accounts($id))
-    $edit = 'Keine Änderung möglich, so lange noch <a href="vmail.php">E-Mail-Konten</a> für diese Domain eingerichtet sind.';
+    $edit = 'Keine Änderung möglich, so lange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
   output("<tr><td>{$dom['name']}</td><td>{$type}</td><td>{$edit}</td></tr>\n");
   if (array_key_exists($id, $subdomains)) {
     foreach ($subdomains[$id] AS $subdom) {

@@ -121,7 +121,7 @@ if ($output_something)
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>';
 
   foreach ($users as $user)
-    $form .= "<th>{$user}<br /><a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_user&amp;user={$user}\"><img src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" /></a></th>";
+    $form .= "<th>{$user}<br />".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" />", "action=delete_user&user={$user}")."</th>";
   $form .= '<th><input type="text" name="new_user" size="10" value="" /></th></tr>
 ';
 
@@ -129,7 +129,7 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&#160;<a href=\"?".($debugmode ? 'debug&amp;': '')."action=delete_db&amp;db={$db}\"><img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" /></a></td>";
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" />", "action=delete_db&amp;db={$db}")."</td>";
     foreach ($users as $user)
       $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>";
     $form .= "</tr>\n";
@@ -144,7 +144,7 @@ if ($output_something)
   <p><input type="submit" name="accesseditor" value="Speichern" /></p>';
 
   
-  output(html_form('mysql_databases', 'databases.php', '', $form));
+  output(html_form('mysql_databases', 'databases', '', $form));
 
   $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
@@ -162,7 +162,7 @@ if ($output_something)
   output('<h4>Passwort ändern</h4>
   <p>Hier können Sie das Passwort eines MySQL-Benutzeraccounts ändern bzw. neu setzen</p>
 
-  '.html_form('mysql_databases', 'databases.php', 'action=change_pw', $form));
+  '.html_form('mysql_databases', 'databases', 'action=change_pw', $form));
 
 }
 

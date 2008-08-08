@@ -37,7 +37,7 @@ if ($_POST['password1'] != '')
       system_failure("WTF?! (\$result={$result})");
     
     if (! $debugmode)
-      header('Location: index.php');
+      header('Location: index');
     else
       output('');
   }
@@ -50,7 +50,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER)
 
 output('<h3>Passwort ändern</h3>
 <p>Hier können Sie Ihr Passwort ändern.</p>
-'.html_form('index_chpass', 'chpass.php', '', '<table>
+'.html_form('index_chpass', 'chpass', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
   </tr>

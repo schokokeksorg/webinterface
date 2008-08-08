@@ -57,7 +57,7 @@ if ($_GET['action'] == 'edit')
   save_vmail_account($account);
 
   if (! ($debugmode || we_have_an_error()))
-    header('Location: vmail.php');
+    header('Location: vmail');
 }
 elseif ($_GET['action'] == 'delete')
 {
@@ -84,12 +84,12 @@ elseif ($_GET['action'] == 'delete')
   {
     delete_account($account['id']);
     if (! $debugmode)
-      header("Location: vmail.php");
+      header("Location: vmail");
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: vmail.php");
+      header("Location: vmail");
   }
 
 }

@@ -25,7 +25,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
       {
         require_once('session/checkuser.php');
         require_once('inc/base.php');
-        logger("modules/index/validate_token.php", "pwrecovery", "customer »{$customerno}« set a new password");
+        logger("modules/index/validate_token", "pwrecovery", "customer »{$customerno}« set a new password");
         set_customer_password($customerno, $_POST['password']);
         success_msg('Das Passwort wurde gesetzt!');
         set_customer_verified($customerno);
@@ -34,7 +34,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
         $_SESSION['role'] = ROLE_CUSTOMER;
         $_SESSION['customerinfo'] = get_customer_info($customerno);
         output('<h3>Passwort gesetzt</h3>
-        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt <a href="index.php">die Web-Oberfläche sofort benutzen</a>.</p>');
+        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link("index", "die Web-Oberfläche sofort benutzen").'.</p>');
         $show = NULL;
       }
     }

@@ -25,7 +25,7 @@ foreach($domains AS $dom)
   $records = get_domain_records($dom->id);
 
   $autorec = ($dom->autodns == 1 ? 'Ja' : 'Nein');
-  $output .= '<tr><td>'.internal_link("dns_domain.php", $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td></tr>';
+  $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td></tr>';
 
 /*  if ($records) 
   {
@@ -37,7 +37,7 @@ foreach($domains AS $dom)
       $data = ( $rec['ip'] ? $rec['ip'] : $rec['data'] );
       if ($rec['dyndns'])
         $data = '<em>DynDNS #'.$rec['dyndns'].'</em>';
-      $output .= "<tr><td>".internal_link("dns_edit.php", $rec['fqdn'], "id={$rec['id']}")."</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$rec['ttl']} Sek.</td><td>".internal_link("save.php", '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Account löschen" />', "id={$rec['id']}&type=dns&action=delete")."</td></tr>\n";
+      $output .= "<tr><td>".internal_link('dns_edit', $rec['fqdn'], "id={$rec['id']}")."</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$rec['ttl']} Sek.</td><td>".internal_link('save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Account löschen" />', "id={$rec['id']}&type=dns&action=delete")."</td></tr>\n";
     }
     #$output .= '</table><br />';
 
@@ -45,6 +45,6 @@ foreach($domains AS $dom)
 }
 
 $output .= '</table><br />';
-$output .= '<p>'.internal_link('dns_edit.php', 'Neuen DNS-Record anlegen').'</p>';
+$output .= '<p>'.internal_link('dns_edit', 'Neuen DNS-Record anlegen').'</p>';
 
 ?>
