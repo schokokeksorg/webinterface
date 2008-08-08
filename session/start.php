@@ -15,7 +15,7 @@ session_name('CONFIG_SCHOKOKEKS_ORG');
 
 if (!session_start())
 {
-        logger("session/start.php", "session", "Die session konnte nicht gestartet werden!");
+        logger("session/start", "session", "Die session konnte nicht gestartet werden!");
         system_failure('Die Sitzung konnte nicht gestartet werden, bitte benachrichtigen Sie den Administrator!');
 }
 
@@ -27,7 +27,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
   if ($role === NULL)
   {
     $_SESSION['role'] = ROLE_ANONYMOUS;
-    logger("session/start.php", "login", "wrong user data (username: »{$_POST['username']}«)");
+    logger("session/start", "login", "wrong user data (username: »{$_POST['username']}«)");
     login_screen('Ihre Anmeldung konnte nicht durchgeführt werden. Vermutlich haben Sie falsche Zugangsdaten eingegeben.');
   }
   else

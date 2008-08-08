@@ -10,7 +10,7 @@ function db_query($query)
   if (mysql_error())
   {
     $error = mysql_error();
-    logger("inc/base.php", "dberror", "mysql error: {$error}");
+    logger("inc/base", "dberror", "mysql error: {$error}");
     system_failure('Interner Datenbankfehler: »'.iconv('ISO-8859-1', 'UTF-8', $error).'«.');
   }
   return $result; 

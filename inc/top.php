@@ -59,29 +59,6 @@ foreach ($submenu AS $weight => $data) {
 DEBUG($submenu);
 
 
-
-/*
-$menuitem["index"]["label"] = "Übersicht";
-$menuitem["index"]["file"] = "index.php";
-
-
-$menuitem["domains"]["label"] = "Domains";
-$menuitem["domains"]["file"] = "domains.php";
-
-
-$menuitem["mail"]["label"] = "E-Mail";
-$menuitem["mail"]["file"] = "mail.php";
-
-$menuitem["chpass"]["label"] = "Passwort ändern";
-$menuitem["chpass"]["file"] = "chpass.php";
-
-
-$menuitem["logout"]["label"] = "Abmelden";
-$menuitem["logout"]["file"] = "logout.php";
-
-*/
-
-
 header("Content-Type: {$config['mime_type']}");
 ?>
 <?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
