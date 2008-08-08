@@ -8,7 +8,14 @@ $go = $_GET['go'];
  sanitize $go
 */
 
-if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go")) or (! is_file("modules/$go")))
+// filenames can end with .php
+if ( substr( $go, strlen( $go ) - 4 ) == '.php' ) {
+  $go = substr( $go, 0, strlen($go) - 4);
+}
+
+DEBUG($go);
+
+if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go.php")) or (! is_file("modules/$go.php")))
 {
   die("illegal command");
 }
@@ -43,7 +50,7 @@ ini_set('include_path',ini_get('include_path').':./modules/'.dirname($go).'/incl
 $section = str_replace("/", "_", str_replace(".php", "", $go));
 
 /* Let the module work */
-include("modules/".$go);
+include("modules/".$go.".php");
 
 
 include('inc/top.php');

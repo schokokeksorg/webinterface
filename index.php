@@ -1,5 +1,5 @@
 <?php
 
-header("Location: go/index/index.php");
+header("Location: go/index/index");
 ?>
 
