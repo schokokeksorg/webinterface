@@ -13,6 +13,8 @@ require_once('inc/base.php');
 
 session_name('CONFIG_SCHOKOKEKS_ORG');
 
+if ($_SERVER['HTTPS']) session_set_cookie_params( 0, '/', '', true, true );
+
 if (!session_start())
 {
         logger("session/start", "session", "Die session konnte nicht gestartet werden!");
