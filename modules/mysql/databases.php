@@ -14,6 +14,8 @@ if (isset($_GET['action']))
   switch ($_GET['action'])
   {
     case 'delete_db':
+      if (! has_mysql_database($_GET['db']))
+        system_failure('Ungültige Datenbank');
       $sure = user_is_sure();
       if ($sure === NULL)
       {
@@ -33,6 +35,8 @@ if (isset($_GET['action']))
       }
       break;
     case 'delete_user':
+      if (! has_mysql_username($_GET['user']))
+        system_failure('Ungültiger Benutzer');
       $sure = user_is_sure();
       if ($sure === NULL)
       {
@@ -52,6 +56,8 @@ if (isset($_GET['action']))
       }
       break;
     case 'change_pw':
+      if (! has_mysql_username($_POST['mysql_username']))
+        system_failure('Ungültiger Benutzer');
       check_form_token('mysql_databases');
       set_mysql_password($_POST['mysql_username'], $_POST['mysql_password']);
       header("Location: ?");
@@ -129,7 +135,7 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" />", "action=delete_db&amp;db={$db}")."</td>";
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" />", "action=delete_db&db={$db}")."</td>";
     foreach ($users as $user)
       $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>";
     $form .= "</tr>\n";

@@ -147,4 +147,22 @@ function set_mysql_password($username, $password)
 }
 
 
+function has_mysql_database($dbname)
+{
+  $uid = $_SESSION['userinfo']['uid'];
+  $dbname = mysql_real_escape_string($dbname);
+  $result = db_query("SELECT NULL FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
+  return (mysql_num_rows($result) == 1);
+}
+
+
+function has_mysql_user($username)
+{
+  $uid = $_SESSION['userinfo']['uid'];
+  $userame = mysql_real_escape_string($username);
+  $result = db_query("SELECT NULL FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
+  return (mysql_num_rows($result) == 1);
+}
+
+
 ?>
