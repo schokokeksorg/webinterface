@@ -37,6 +37,7 @@ class Domain extends KeksData
 
   function parse($data)
   {
+    DEBUG($data);
     foreach (array_keys($this->data) as $key)
       if (array_key_exists($key, $data))
         $this->data[$key] = $data[$key];

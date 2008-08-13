@@ -6,15 +6,15 @@ $debugmode = (isset($_GET['debug']) && $config['enable_debug']);
 
 function DEBUG($str)
 {
-	global $debugmode;
-	if ($debugmode)
-    if (is_array($str))
+  global $debugmode;
+  if ($debugmode)
+    if (is_array($str) || is_object($str))
     {
       echo "<pre>".print_r($str, true)."</pre>\n";
     }
     else
     {
-	  	echo $str."<br />\n";
+      echo $str . "<br />\n";
     }
 }
 

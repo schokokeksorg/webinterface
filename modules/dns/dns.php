@@ -22,6 +22,8 @@ DEBUG($domains);
 
 foreach($domains AS $dom)
 {
+  if ($dom->dns == 0)
+    continue;
   $records = get_domain_records($dom->id);
 
   $autorec = ($dom->autodns == 1 ? 'Ja' : 'Nein');
@@ -45,6 +47,5 @@ foreach($domains AS $dom)
 }
 
 $output .= '</table><br />';
-$output .= '<p>'.internal_link('dns_edit', 'Neuen DNS-Record anlegen').'</p>';
 
 ?>
