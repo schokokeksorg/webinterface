@@ -47,7 +47,7 @@ require_once("inc/base.php");
 ini_set('include_path',ini_get('include_path').':./modules/'.dirname($go).'/include:');
 
 /* Look where we are (but let the module override) */
-$section = str_replace("/", "_", str_replace(".php", "", $go));
+$section = str_replace("/", "_", $go);
 
 /* Let the module work */
 include("modules/".$go.".php");
