@@ -160,16 +160,6 @@ if ($output_something)
   &#160;&#160;<input type="submit" value="Setzen" />
 </div>';
 
-  
-  
-  /*<select name="mysql_username" id="username">
-';
-  foreach ($users as $user)
-    $form .= "<option value=\"{$user}\">{$user}</option>\n";
-  $form .= '</select>&#160;&#160;&#160;
-  <label for="password">Passwort:</label>&#160;<input type="password" name="mysql_password" id="password" />&#160;&#160;<input type="submit" value="Setzen" />
-</div>
-';*/
 
   output('<h4>Passwort ändern</h4>
   <p>Hier können Sie das Passwort eines MySQL-Benutzeraccounts ändern bzw. neu setzen</p>
