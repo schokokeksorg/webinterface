@@ -56,8 +56,6 @@ if (isset($_GET['action']))
       }
       break;
     case 'change_pw':
-      if (! has_mysql_username($_POST['mysql_username']))
-        system_failure('Ungültiger Benutzer');
       check_form_token('mysql_databases');
       set_mysql_password($_POST['mysql_username'], $_POST['mysql_password']);
       header("Location: ?");
