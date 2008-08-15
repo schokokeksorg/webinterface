@@ -35,7 +35,7 @@ if (isset($_GET['action']))
       }
       break;
     case 'delete_user':
-      if (! has_mysql_username($_GET['user']))
+      if (! has_mysql_user($_GET['user']))
         system_failure('Ungültiger Benutzer');
       $sure = user_is_sure();
       if ($sure === NULL)
@@ -154,19 +154,27 @@ if ($output_something)
 
 
   $form = '<div>
-  <label for="username">Benutzername:</label>&#160;<select name="mysql_username" id="username">
+  <label for="mysql_username">Benutzername:</label>&#160;'.html_select('mysql_username', $users).'
+  &#160;&#160;&#160;
+  <label for="password">Passwort:</label>&#160;<input type="password" name="mysql_password" id="password" />
+  &#160;&#160;<input type="submit" value="Setzen" />
+</div>';
+
+  
+  
+  /*<select name="mysql_username" id="username">
 ';
   foreach ($users as $user)
     $form .= "<option value=\"{$user}\">{$user}</option>\n";
   $form .= '</select>&#160;&#160;&#160;
   <label for="password">Passwort:</label>&#160;<input type="password" name="mysql_password" id="password" />&#160;&#160;<input type="submit" value="Setzen" />
 </div>
-';
+';*/
 
   output('<h4>Passwort ändern</h4>
   <p>Hier können Sie das Passwort eines MySQL-Benutzeraccounts ändern bzw. neu setzen</p>
 
-  '.html_form('mysql_databases', 'databases', 'action=change_pw', $form));
+  '.html_form('mysql_databases', 'databases', 'action=change_pw', $form).'<br />');
 
 }
 
