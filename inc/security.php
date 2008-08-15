@@ -58,8 +58,8 @@ function filter_input_username( $input )
 function verify_input_username( $input )
 {
   if (filter_input_username( $input ) != $input) {
-    system_failure("Ihre Daten enthielten ungültige Zeichen!");
     logger('inc/security', 'verify_input_username', 'Ungültige Daten: '.$input);
+    system_failure("Ihre Daten enthielten ungültige Zeichen!");
   }
 }
 
@@ -77,6 +77,28 @@ function filter_input_hostname( $input )
   return $input;
 }
 
+function verify_input_hostname( $input )
+{
+  if (filter_input_hostname( $input ) != $input) {
+    logger('inc/security', 'verify_input_hostname', 'Ungültige Daten: '.$input);
+    system_failure("Ihre Daten enthielten ungültige Zeichen!");
+  }
+}
+
+
+function verify_input_ipv4( $input )
+{
+  if (! preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $input))
+    system_failure('Keine IP-Adresse');
+}
+
+
+function verify_input_ipv6( $input )
+{
+  // ripped from Perl module Net-IPv6Addr v0.2
+  if (! preg_match("/^(([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}|[0-9a-f]{0,4}::|:(?::[a-f0-9]{1,4}){1,6}|(?:[a-f0-9]{1,4}:){1,6}:|(?:[a-f0-9]{1,4}:)(?::[a-f0-9]{1,4}){1,6}|(?:[a-f0-9]{1,4}:){2}(?::[a-f0-9]{1,4}){1,5}|(?:[a-f0-9]{1,4}:){3}(?::[a-f0-9]{1,4}){1,4}|(?:[a-f0-9]{1,4}:){4}(?::[a-f0-9]{1,4}){1,3}|(?:[a-f0-9]{1,4}:){5}(?::[a-f0-9]{1,4}){1,2}|(?:[a-f0-9]{1,4}:){6}(?::[a-f0-9]{1,4}))$/i", $input))
+    system_failure("Ungültige IPv6-Adresse");
+}
 
 
 function filter_quotes( $input )
