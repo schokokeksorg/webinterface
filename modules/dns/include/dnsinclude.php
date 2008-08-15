@@ -122,6 +122,7 @@ function get_dns_record($id)
   if (mysql_num_rows($result) != 1)
     system_failure('illegal ID');
   $data = mysql_fetch_assoc($result);
+  $dom = new Domain( (int) $data['domain']);
   DEBUG($data);
   return $data;
 }
@@ -156,5 +157,90 @@ function get_domain_auto_records($domainname)
 }
 
 
+$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv');
+
+function save_dns_record($id, $record)
+{
+  global $valid_record_types;
+  global $implemented_record_types;
+  $record['type'] = strtolower($record['type']);
+  if (!in_array($record['type'], $valid_record_types))
+    system_failure('invalid type: '.$record['type']);
+  if (!in_array($record['type'], $implemented_record_types))
+    system_failure('record type '.$record['type'].' not implemented at the moment.');
+  $dom = new Domain( (int) $record['domain'] );
+  if (! $dom->id)
+    system_failure('invalid domain');
+  verify_input_hostname($record['hostname']);
+  if ($record['ttl'] &&  (int) $record['ttl'] < 1)
+    system_failure('Fehler bei TTL');
+  switch ($record['type']) 
+  {
+    case 'a':
+      if ($record['dyndns'])
+      {
+        get_dyndns_account( $record['dyndns'] );
+	$record['ip'] = '';
+      }
+      else
+      {
+        verify_input_ipv4($record['ip']);
+        $record['data'] = '';
+        $record['spec'] = '';
+      }
+      break;
+    case 'aaaa':
+      $record['dyndns'] = '';
+      verify_input_ipv4($record['ip']);
+      $record['data'] = '';
+      $record['spec'] = '';
+      break;
+    case 'mx':
+      $record['dyndns'] = '';
+      $record['spec'] = (int) $record['spec'];
+      if ($record['spec'] < 1)
+        systen_failure("invalid priority");
+      verify_input_hostname($record['data']);
+      if (! $record['data'] )
+        system_failure('MX hostname missing');
+      $record['ip'] = '';
+      break;
+    case 'spf':
+    case 'txt':
+      system_failure('not implemented yet');
+    case 'cname':
+      $record['dyndns'] = '';
+      $record['spec'] = '';
+      $record['ip'] = '';
+      verify_input_hostname($record['data']);
+      if (! $record['data'] )
+        system_failure('MX hostname missing');
+      break;
+
+    case 'ptr':
+    case 'srv':
+      system_failure('not implemented yet');
+    default:
+      system_failure('Not implemented');
+  }
+  $id = (int) $id;
+  $record['hostname'] = maybe_null($record['hostname']);
+  $record['ttl'] = ($recory['ttl'] == 0 ? 'NULL' : (int) $record['ttl']);
+  $record['ip'] = maybe_null($record['ip']);
+  $record['data'] = maybe_null($record['data']);
+  $record['spec'] = maybe_null($record['spec']);
+  $record['dyndns'] = maybe_null($record['dyndns']);
+  if ($id)
+    db_query("UPDATE dns.custom_records SET hostname={$record['hostname']}, domain={$dom->id}, type={$record['type']}, ttl={$record['ttl']}, ip={$record['ip']}, dyndns={$record['dyndns']}, data={$record['data']}, spec={$record['spec']} WHERE id={$id} LIMIT 1");
+  else
+    db_query("INSERT INTO dns.custom_records (hostname, domain, type, ttl, ip, dyndns, data, spec) VALUES ({$record['hostname']}, {$dom->id}, {$record['type']}, {$record['ttl']}, {$record['ip']}, {$record['dyndns']}, {$record['data']}, {$record['spec']})");
+
+}
+
+
+function delete_dns_record($id)
+{
+ // ...
+}
 
 ?>
