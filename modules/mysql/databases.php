@@ -153,8 +153,14 @@ if ($output_something)
   $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
 
+
+  $my_users = array();
+  foreach ($users as $u)
+  {
+    $my_users[$u] = $u;
+  }
   $form = '<div>
-  <label for="mysql_username">Benutzername:</label>&#160;'.html_select('mysql_username', $users).'
+  <label for="mysql_username">Benutzername:</label>&#160;'.html_select('mysql_username', $my_users).'
   &#160;&#160;&#160;
   <label for="password">Passwort:</label>&#160;<input type="password" name="mysql_password" id="password" />
   &#160;&#160;<input type="submit" value="Setzen" />
