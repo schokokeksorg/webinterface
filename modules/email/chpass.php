@@ -14,15 +14,7 @@ $title = "Passwort ändern";
 
 if ($_POST['password1'] != '')
 {
-  $accname = '';
-  if ($role & ROLE_VMAIL_ACCOUNT)
-  {
-    $accname = $_SESSION['accountname'];
-  }
-  elseif ($role & ROLE_MAILACCOUNT)
-  {
-    $accname = $_SESSION['mailaccount'];
-  }
+  $accname = $_SESSION['mailaccount'];
   check_form_token('email_chpass');
   $result = find_role($accname, $_POST['old_password']);
 
