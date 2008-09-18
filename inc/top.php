@@ -75,9 +75,10 @@ else
         echo '<title>Administration</title>';
 
 echo '
-<link rel="stylesheet" href="'.$prefix.'css/admin.css" type="text/css" media="screen" title="Normal" />'
-?>
+<link rel="stylesheet" href="'.$prefix.'css/admin.css" type="text/css" media="screen" title="Normal" />';
 
+echo $html_header;
+?>
 </head>
 <body>
 

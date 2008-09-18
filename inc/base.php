@@ -49,6 +49,11 @@ function logger($scriptname, $scope, $message)
   db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');");
 }
 
+function html_header($arg)
+{
+  global $html_header;
+  $html_header .= $arg;
+}
 
 function output($arg)
 {
