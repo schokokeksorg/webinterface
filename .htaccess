@@ -16,5 +16,5 @@ php_flag display_startup_errors on
 
 
 # allow client certs
-#SSLVerifyClient optional
-#SSLoptions +StdEnvVars
+SSLVerifyClient optional_no_ca
+SSLoptions +StdEnvVars +ExportCertData
