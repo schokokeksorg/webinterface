@@ -12,6 +12,7 @@ if (isset($_GET['type']))
 {
   check_form_token('su_su_ajax', $_GET['formtoken']);
   $role = NULL;
+  $admin_user = $_SESSION['userinfo']['username'];
   if ($_GET['type'] == 'customer') {
     $role = find_role($_GET['id'], '', True);
     setup_session($role, $_GET['id']);
@@ -21,6 +22,7 @@ if (isset($_GET['type']))
   } else {
     system_failure('unknown type');
   }
+  $_SESSION['admin_user'] = $admin_user;
 
   header('Location: ../../go/index/index');
   die();

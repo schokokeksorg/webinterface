@@ -151,6 +151,12 @@ echo '<p class="userinfo">Angemeldet als:<br />';
   }
   echo '</p>';
 }
+
+if (isset($_SESSION['admin_user'])) {
+  echo '<p class="admininfo">';
+  echo '<a href="'.$prefix.'go/su/back_to_admin">Zurück zu »'.$_SESSION['admin_user'].'«</a>';
+  echo '</p>';
+}
 ?>
 
 </div>
