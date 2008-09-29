@@ -48,7 +48,8 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
 if ($show == 'password')
 {
   output('<h3>Neues Passwort setzen</h3>
-  <p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>'.
+  <p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>
+  <p>Aufgrund einer technischen Einschränkung sollten Sie momentan auf Anführungszeichen (" und \') sowie auf Backslashes (\) im Passwort verzichten.</p>'.
   html_form('initialize_useraccount', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
   <input type="hidden" name="token" value="'.$token.'" /><input type="hidden" name="agb" value="1" /></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
