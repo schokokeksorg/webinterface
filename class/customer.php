@@ -96,4 +96,3 @@ class Customer extends KeksData
 }
 
 
-?> 
