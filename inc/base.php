@@ -173,7 +173,7 @@ function html_form($form_id, $scriptname, $querystring, $content)
 }
 
 
-function html_select($name, $options, $default)
+function html_select($name, $options, $default='')
 {
   require_once('inc/security.php');
   $ret = "<select name=\"{$name}\" size=\"1\">\n";
