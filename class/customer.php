@@ -83,6 +83,8 @@ class Customer extends KeksData
       if (array_key_exists($key, $data))
         $this->data[$key] = $data[$key];
     $this->data['fullname'] = $data['vorname'].' '.$data['nachname'];
+    if ($this->data['fullname'] == ' ')
+      $this->data['fullname'] = $data['firma'];
     $this->data['email'] = new ContactMethod();
     $this->data['email']->loadByCustomer($this->data['id']);
     $this->data['email_rechnung'] = new ContactMethod();
