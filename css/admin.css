@@ -237,3 +237,31 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+div.freewvs {
+  width: 80%; 
+  padding: 0.5em; 
+  margin-bottom: 0.5em; 
+}
+
+div.freewvs-ok {
+  background-color: #bcfd8b; 
+  border: 2px solid #3c8e00;
+}
+
+div.freewvs-vulnerable {
+  background-color: #ff7070;
+  border: 2px solid red;
+}
+
+div.freewvs img {
+  float: right;
+  margin: 1em;
+}
+
+div.freewvs p {
+  margin: 0;
+  padding: 0;
+}
+
+
