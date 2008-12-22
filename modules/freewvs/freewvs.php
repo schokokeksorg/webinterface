@@ -39,6 +39,7 @@ foreach ($results AS $app) {
   }
   else {
     $vulnlink = $app['vulninfo'];
+    $doclink = get_upgradeinstructions($app['appname']);
     if (substr($vulnlink, 0, 3) == 'CVE') {
       $vulnlink = 'http://cve.mitre.org/cgi-bin/cvename.cgi?name='.$vulnlink;
     }
@@ -51,6 +52,8 @@ foreach ($results AS $app) {
     }
     output("<p><strong>Referenz zu diesem Sicherheitsproblem: <a href='{$vulnlink}'>{$app['vulninfo']}</a></strong></p>");
     output("<p>Gefunden in {$app['directory']}</p>\n");
+    if ($doclink != NULL)
+      output('<p><strong>Hinweis:</strong> Um Ihnen das Upgrade leichter zu machen, möchten wir Sie auf eine <a href="'.$doclink.'">deutschsprachige Upgrade-Anleitung</a> aufmerksam machen.</p>');
   }
   output("</div>\n");
   #output("<tr><td>{$app['appname']} ({$app['version']})</td><td>{$app['state']}</td></tr>");
