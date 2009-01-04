@@ -256,14 +256,17 @@ function delete_account($id)
 
 function domainsettings($only_domain=NULL) {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  if ($domain)
+  if ($only_domain)
     $only_domain = (int) $only_domain;
-  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id, IF(ISNULL(v.hostname),m.subdomain,v.hostname) AS hostname FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain) WHERE d.useraccount={$uid} OR m.uid={$uid};");
   $domains = array();
   $subdomains = array();
+
+  // Domains
+  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NULL) WHERE d.useraccount={$uid} OR m.uid={$uid};");
+
   while ($mydom = mysql_fetch_assoc($result)) {
     if (! array_key_exists($mydom['id'], $domains)) {
-      if ($mydom['v_id'] && ! $mydom['hostname'])
+      if ($mydom['v_id'])
         $mydom['mail'] = 'virtual';
       $domains[$mydom['id']] = array(
         "name" => $mydom['name'],
@@ -272,18 +275,21 @@ function domainsettings($only_domain=NULL) {
       if ($only_domain && $only_domain == $mydom['id'])
         return $domains[$only_domain];
     }
-    if ($mydom['hostname']) {
-      if (! array_key_exists($mydom['id'], $subdomains))
-        $subdomains[$mydom['id']] = array();
+  }      
+
+  // Subdomains
+  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id, IF(ISNULL(v.hostname),m.subdomain,v.hostname) AS hostname FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NOT NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NOT NULL) WHERE d.useraccount={$uid} OR m.uid={$uid};");
+  while ($mydom = mysql_fetch_assoc($result)) {
+    if (! array_key_exists($mydom['id'], $subdomains))
+      $subdomains[$mydom['id']] = array();
         
-      $type = 'auto';
-      if ($mydom['v_id'])
-        $type = 'virtual';
-      $subdomains[$mydom['id']][] = array(
-        "name" => $mydom['hostname'],
-        "type" => $type
-        );
-    }
+    $type = 'auto';
+    if ($mydom['v_id'])
+      $type = 'virtual';
+    $subdomains[$mydom['id']][] = array(
+      "name" => $mydom['hostname'],
+      "type" => $type
+      );
   }
   return array("domains" => $domains, "subdomains" => $subdomains);
 }
