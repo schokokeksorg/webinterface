@@ -44,6 +44,13 @@ function find_customers($string)
   while ($entry = mysql_fetch_assoc($result))
     $return[] = $entry['id'];
 
+  $result = db_query("SELECT kunde FROM kundendaten.domains WHERE kunde IS NOT NULL AND (
+                      domainname LIKE '%{$string}%' OR CONCAT_WS('.', domainname, tld) LIKE '%{$string}%'
+                      )");
+
+  while ($entry = mysql_fetch_assoc($result))
+    $return[] = $entry['kunde'];
+
   return $return;
 }
 
