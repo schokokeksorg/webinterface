@@ -25,8 +25,7 @@ else {
   output("<h3>Subdomain bearbeiten</h3>");
 }
 
-output("<script type=\"text/javascript\">
-  var default_docroot;
+html_header("<script type=\"text/javascript\">
  
   function selectedDomain() {
     var selected;
@@ -40,11 +39,11 @@ output("<script type=\"text/javascript\">
       hostname = selectedDomain();
     else
       hostname = document.getElementById('hostname').value + '.' + selectedDomain();
-    default_docroot = 'websites/' + hostname + '/htdocs';
-    useDefaultDocroot();
+    var default_docroot = hostname + '/htdocs';
+    useDefaultDocroot(default_docroot);
   }
   
-  function useDefaultDocroot() {
+  function useDefaultDocroot( default_docroot ) {
     var do_it = (document.getElementById('use_default_docroot').checked == true);
     var inputfield = document.getElementById('docroot');
     inputfield.disabled = do_it;
@@ -83,15 +82,21 @@ if (! $vhost['domain'])
 if ($vhost['hostname'])
   $defaultdocroot = $vhost['hostname'].'.'.$defaultdocroot;
 
-$defaultdocroot = 'websites/'.$defaultdocroot.'/htdocs';
+$defaultdocroot = $defaultdocroot.'/htdocs';
 
-$is_default_docroot = ($vhost['docroot'] == NULL) || ($vhost['homedir'].'/'.$defaultdocroot == $vhost['docroot']);
+$is_default_docroot = ($vhost['docroot'] == NULL) || ($vhost['homedir'].'/websites/'.$defaultdocroot == $vhost['docroot']);
+
+if ($vhost['docroot'] != '' && ! strstr($vhost['docroot'], '/websites/'))
+{
+  warning("Sie verwenden einen Speicherplatz außerhalb von »~/websites/«. Diese Einstellung ist momentan nicht mehr gestattet. Ihre Einstellung wurde daher auf die Standardeinstellung zurückgesetzt. Prüfen Sie dies bitte und verschieben Sie ggf. ihre Dateien.");
+  $is_default_docroot = True;
+}
 
 $docroot = '';
-if ($vhost['docroot'] == '')
+if ($is_default_docroot)
   $docroot = $defaultdocroot;
 else
-  $docroot = substr($vhost['docroot'], strlen($vhost['homedir'])+1);
+  $docroot = substr($vhost['docroot'], strlen($vhost['homedir'].'/websites/'));
 
 $s = (strstr($vhost['options'], 'aliaswww') ? ' checked="checked" ' : '');
 $errorlog = (strstr($vhost['errorlog'], 'on') ? ' checked="checked" ' : '');
@@ -121,22 +126,40 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
   <h5>Speicherort für Dateien (»Document Root«)</h5>
   <div style=\"margin-left: 2em;\">
     <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"defaultDocumentRoot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
-    <strong>".$vhost['homedir']."/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
+    <strong>".$vhost['homedir']."/websites/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
   </div>
 </div>
+";
 
+if ($vhost['php'] == 'mod_php')
+{
+$form .= "
 <div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
-  <h5>Script-Sprache</h5>
+  <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">
     <select name=\"php\" id=\"php\">
-      <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >keine Scriptsprache</option>
-      <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >PHP als Apache-Modul</option>
-      <option value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'selected="selected"' : '')." >PHP als FastCGI</option>
+      <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >ausgeschaltet</option>
+      <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >Eingeschaltet als Apache-Modul (veraltet)</option>
+      <option value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'selected="selected"' : '')." >Eingeschaltet</option>
       <!--  <option value=\"rubyonrails\" ".($vhost['php'] == 'rubyonrails' ? 'selected="selected"' : '')." >Ruby-on-Rails</option> -->
     </select>
   </div>
 </div>
+";
+}
+else
+{
+$form .= "
+<div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
+  <h5>PHP</h5>
+  <div style=\"margin-left: 2em;\">
+    <input type=\"checkbox\" name=\"php\" id=\"php\" value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'checked="checked" ' : '')." />&#160;<label for=\"php\">PHP aktivieren</label>
+  </div>
+</div>
+";
+}
 
+$form .= "
 <div class=\"vhostoptions\" id=\"options_webapp\" ".($vhost_type=='webapp' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>
   <h5>Anwendung</h5>
@@ -181,7 +204,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 
 $form .= '
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts', 'Abbrechen').'</p>
-  <p class="warning"><span class="warning">*</span>Es ist im Moment Gegenstand gerichtlicher Außeinandersetzungen, ob die Speicherung von Logfiles auf Webservern
+  <p class="warning"><span class="warning">*</span>Es ist im Moment fraglich, ob die Speicherung von Logfiles mit IP-Adressen auf Webservern
   zulässig ist. Wir weisen alle Nutzer darauf hin, dass sie selbst dafür verantwortlich sind, bei geloggten Nutzerdaten die
   Seitenbesucher darauf hinzuweisen. Wir empfehlen, wenn möglich, Logfiles abzuschalten oder anonymes Logging einzusetzen.</p>
 ';

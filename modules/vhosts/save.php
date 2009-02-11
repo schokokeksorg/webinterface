@@ -44,7 +44,7 @@ if ($_GET['action'] == 'edit')
   
     if (! check_path( $_POST['docroot'] ))
       system_failure("Eingegebener Pfad enthält ungültige Angaben");
-    $docroot = $vhost['homedir'].'/'.$_POST['docroot'];
+    $docroot = $vhost['homedir'].'/websites/'.$_POST['docroot'];
   
     if (($_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
       $docroot = '';
