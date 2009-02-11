@@ -142,7 +142,7 @@ function check_form_token($form_id, $formtoken = NULL)
 
 
 
-function internal_link($file, $label, $querystring = '')
+function internal_link($file, $label, $querystring = '', $attribs = '')
 {
   $debugstr = '';
   global $debugmode;
@@ -150,7 +150,7 @@ function internal_link($file, $label, $querystring = '')
     $debugstr = 'debug&amp;';
   $querystring = str_replace('&', '&amp;', $querystring);
 
-  return "<a href=\"{$file}?{$debugstr}${querystring}\">{$label}</a>";
+  return "<a href=\"{$file}?{$debugstr}${querystring}\" {$attribs} >{$label}</a>";
 }
 
 

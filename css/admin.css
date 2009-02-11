@@ -2,7 +2,7 @@ html {
         font-family: Verdana, Arial, Helvetica;
         font-size: 12px;
         color: #000000;
-        background-color: #EFEFEF;
+        background-color: #fff;
 }
 
 
@@ -10,7 +10,7 @@ body {
         font-family: Verdana, Arial, Helvetica, sans-serif;
         font-size: 12px;
         color: #000000;
-        background-color: #EFEFEF;
+        background-color: #fff;
 }
 
 
@@ -56,6 +56,7 @@ p.admininfo {
 
 p.userinfo {
   margin: 3px;
+  margin-top: 1.5em;
   margin-bottom: 1.5em;
   padding: 0.5em;
   border: 1px solid black;
@@ -132,6 +133,7 @@ div.menu img {
 }
 
 a.menuitem {
+  font-weight: normal;
         display: block;
         padding: 4px;
         margin: 3px;
@@ -144,15 +146,14 @@ a.submenuitem {
 }
 
 a.active {
-        padding: 3px;
-        border: 1px solid #000000;
+  text-decoration: underline;
+  font-weight: bold;
+  color: #425d6c;
 }
 
 a.menuitem:hover {
-        padding: 3px;
-        border: 1px dotted #000000;
-        text-decoration: none;
-        color: #000000;
+  text-decoration: underline;
+  color: #425d6c;
 }
 
 
@@ -197,17 +198,49 @@ div.content {
         margin-left: 200px;
         padding-left: 10px;
         border-left: 1px solid #000000;
+        overflow: hidden;
 }
 
+div.overview {
+  margin: 2em;
+  max-width: 50em;
+}
+
+div.overview div.block {
+  float: left;
+  margin: 1em;
+  padding: 1em;
+  /*background-color: #b2c2cb;*/
+  width: 10em;
+  min-height: 5em;
+  text-align: center;
+  background-color: #eee;
+}
+
+div.overview div.block img {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+/*
+div.overview div.block a {
+  color: #000;
+}
+*/
 
 div.foot {
-        border-top: 2px dotted #000000;
+  clear: both;
+        border-top: 1px solid #425d6c;
+  color: #425d6c;
         font-size: 90%;
 }
 
 
 h3 {
-        border-bottom: 2px dotted #000000;
+  color: #425d6c;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #425d6c;
 }
 
 
@@ -217,6 +250,16 @@ ul {
 
 table {
         border-collapse: collapse;
+}
+
+tr.odd td,
+tr.even td {
+  border: none;
+  padding: 0.5em 0.5em;
+}
+
+tr.odd {
+  background: #eee;
 }
 
 td {
@@ -230,7 +273,8 @@ th {
 
 a {
   text-decoration: none;
-  font-weight: bold;
+  /*font-weight: bold;*/
+  color: #425d6c;
 
 }
 

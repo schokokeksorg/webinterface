@@ -42,7 +42,35 @@ default:
 
 
 output('<h3>Administration</h3>
-<p>Herzlich willkommen, '.$role.'.</p>');
+<p>Herzlich willkommen, '.$role.".</p>\n");
 
+output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>
+<p>Nachfolgend sehen Sie eine Auswahl typischer Aufgaben.</p>\n");
+
+output("<div class=\"overview\">");
+
+if ($_SESSION['role'] & ROLE_MAILACCOUNT || $_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
+  output("<div class=\"block\">".internal_link("../email/chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
+}
+
+if ($_SESSION['role'] & ROLE_CUSTOMER || $_SESSION['role'] & ROLE_SYSTEMUSER) {
+  output("<div class=\"block\">".internal_link("chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
+}
+
+if ($_SESSION['role'] & ROLE_CUSTOMER) {
+  output("<div class=\"block\">".internal_link("../invoice/current", "<img src=\"{$prefix}images/invoice.png\" alt=\"\" /> Ihre Rechnungen ")."</div>");
+}
+
+if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
+  output("<div class=\"block\">".internal_link("../email/vmail", "<img src=\"{$prefix}images/email.png\" alt=\"\" /> E-Mail-Adressen verwalten ")."</div>");
+  output("<div class=\"block\">".internal_link("../vhosts/vhosts", "<img src=\"{$prefix}images/webserver.png\" alt=\"\" /> Webserver-Einstellungen ")."</div>");
+  output("<div class=\"block\">".internal_link("../mysql/databases", "<img src=\"{$prefix}images/mysql.png\" alt=\"\" /> MySQL-Datenbanken ")."</div>");
+}
+ 
+if ($_SESSION['role'] & ROLE_CUSTOMER) {
+  output("<div class=\"block\">".internal_link("../jabber/accounts", "<img src=\"{$prefix}images/jabber.png\" alt=\"\" /> Jabber-Accounts ")."</div>");
+}
+
+output("</div>");
 
 ?>
