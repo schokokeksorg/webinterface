@@ -31,7 +31,7 @@ if (count($vhosts) > 0)
     $fqdn = $vhost['fqdn'];
     $class = 'odd';
     if ($even) $class = 'even';
-    output("<tr class=\"{$class}\"><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"')."</td><td>".internal_link('save', "<img src=\"{$prefix}images/delete.png\" title=\"»{$vhost['fqdn']}« löschen\" alt=\"löschen\" />", 'action=delete&vhost='.$vhost['id'] )."</td><td>");
+    output("<tr class=\"{$class}\"><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"')."</td><td>".internal_link('save', "<img src=\"{$prefix}images/delete.png\" style=\"height: 16px; width: 16px;\" title=\"»{$vhost['fqdn']}« löschen\" alt=\"löschen\" />", 'action=delete&vhost='.$vhost['id'] )."</td><td>");
     $aliases = get_all_aliases($vhost['id']);
     $tmp = '';
     if (count($aliases) > 0)
@@ -72,13 +72,13 @@ if (count($vhosts) > 0)
       switch ($php)
       {
         case NULL:
-          $php = "<img src=\"{$prefix}images/error.png\" alt=\"aus\" title=\"PHP ausgeschaltet\" />";
+          $php = "<img src=\"{$prefix}images/error.png\" style=\"height: 18px; width: 18px;\" alt=\"aus\" title=\"PHP ausgeschaltet\" />";
           break;
         case 'mod_php':
-          $php = "<img src=\"{$prefix}images/warning.png\" alt=\"mod_php\" title=\"Veraltet: Bitte umstellen\" /> Apache-Modul";
+          $php = "<img src=\"{$prefix}images/warning.png\" style=\"height: 17px; width: 17px;\" alt=\"mod_php\" title=\"Veraltet: Bitte umstellen\" /> Apache-Modul";
           break;
         case 'fastcgi':
-          $php = "<img src=\"{$prefix}images/ok.png\" alt=\"ein\" title=\"PHP eingeschaltet\" />";
+          $php = "<img src=\"{$prefix}images/ok.png\" style=\"height: 17px; width: 17px;\" alt=\"ein\" title=\"PHP eingeschaltet\" />";
           break;
       }
       output("<td>{$php}</td>");

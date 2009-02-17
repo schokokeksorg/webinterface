@@ -221,6 +221,7 @@ div.overview div.block img {
   display: block;
   margin: 0 auto;
   margin-bottom: 1em;
+  height: 16px;
 }
 
 /*
