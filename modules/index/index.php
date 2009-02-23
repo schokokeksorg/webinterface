@@ -33,6 +33,9 @@ case ROLE_CUSTOMER:
 case ROLE_CUSTOMER | ROLE_SYSTEMUSER:
   $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde und Benutzer";
   break;
+case ROLE_SYSTEMUSER | ROLE_SYSADMIN:
+  $role = "{$_SESSION['userinfo']['name']}, angemeldet als Benutzer und Administrator";
+  break;
 case ROLE_CUSTOMER | ROLE_SYSTEMUSER | ROLE_SYSADMIN:
   $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde, Benutzer und Administrator";
   break;
