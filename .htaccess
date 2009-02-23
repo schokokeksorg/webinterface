@@ -18,5 +18,5 @@ RewriteRule ^go/(.*)$  dispatch.php?go=$1&%{QUERY_STRING}
 </IfModule>
 
 # allow client certs
-SSLVerifyClient optional_no_ca
-SSLoptions +StdEnvVars +ExportCertData
+#SSLVerifyClient optional_no_ca
+#SSLoptions +StdEnvVars +ExportCertData
