@@ -2,9 +2,6 @@
 
 require_once('inc/error.php');
 
-include('config.php');
-
-
 if (!@mysql_connect($config['db_host'], $config['db_user'], $config['db_pass']))
 	system_failure('Konnte nicht zur Datenbank verbinden. Wenn dieser Fehler wiederholt auftritt, beachrichtigen Sie bitte den Administrator.');
 	

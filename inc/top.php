@@ -5,7 +5,6 @@ if (! defined("TOP_INCLUDED"))
 
 define("TOP_INCLUDED", true);
 
-include("config.php");
 require_once("inc/error.php");
 global $prefix;
 
@@ -14,6 +13,7 @@ $weighted_menuitem = array();
 
 $submenu = array();
 
+global $config;
 foreach ($config['modules'] as $module)
 {
   $menu = false;

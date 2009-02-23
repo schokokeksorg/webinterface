@@ -125,7 +125,7 @@ function login_screen($why)
 	else
 	{
 		// der User hat die Startseite aufgerufen
-	        echo '<h3>schokokeks.org Webinterface</h3>';
+	        echo '<h3>'.$config['brand'].' Webinterface</h3>';
 		echo '<p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org festlegen. Sofern Sie noch kein Kunde von schokokeks.org sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="http://www.schokokeks.org/">öffentliche Seite</a>.</p>';
 	}
         echo '<form action="" method="post">

@@ -5,7 +5,6 @@ require_once('inc/error.php');
 
 function strong_password($password)
 {
-  include("config.php");
   if (isset($config['use_cracklib']) and $config['use_cracklib'] == false) {
     DEBUG('Cracklib deaktiviert');
     return true;
