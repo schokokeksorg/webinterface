@@ -13,6 +13,10 @@ function db_query($query)
     logger("inc/base", "dberror", "mysql error: {$error}");
     system_failure('Interner Datenbankfehler: »'.iconv('ISO-8859-1', 'UTF-8', $error).'«.');
   }
+  $count = @mysql_num_rows($result);
+  if (! $count)
+    $count = 'no';
+  DEBUG("=> {$count} rows");
   return $result; 
 }
 
@@ -173,10 +177,10 @@ function html_form($form_id, $scriptname, $querystring, $content)
 }
 
 
-function html_select($name, $options, $default='')
+function html_select($name, $options, $default='', $free='')
 {
   require_once('inc/security.php');
-  $ret = "<select name=\"{$name}\" size=\"1\">\n";
+  $ret = "<select name=\"{$name}\" id=\"{$name}\" size=\"1\" {$free} >\n";
   foreach ($options as $key => $value)
   {
     $selected = '';
