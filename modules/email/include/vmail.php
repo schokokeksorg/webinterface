@@ -119,6 +119,7 @@ function domainselect($selected = NULL, $selectattribute = '')
 
 function save_vmail_account($account)
 {
+  global $config;
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = $account['id'];
   if ($id != NULL)
@@ -240,7 +241,7 @@ function save_vmail_account($account)
   if ($account['password'] != 'NULL')
   {
     # notify the vmail subsystem of this new account
-    mail('vmail@schokokeks.org', 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
+    mail('vmail@'.$config['vmail_server'], 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
   }
 }
 
