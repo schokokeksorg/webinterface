@@ -37,20 +37,20 @@ if (isset($_POST['submit']))
 
 <p>Ihr MediaWiki wird jetzt installiert. Sie erhalten eine E-Mail, sobald das Wiki betriebsbereit ist.</p>
 ');
-  die();
-
+  
 }
+else
+{
 
-
-require_once('modules/vhosts/include/vhosts.php');
-$vhosts = list_vhosts();
-
-output('<h2>MediaWiki installieren</h2>
+  require_once('modules/vhosts/include/vhosts.php');
+  $vhosts = list_vhosts();
+  
+  output('<h2>MediaWiki installieren</h2>
 
 <p>Die Einrichtung von MediaWiki erfordert die Angabe ein paar weniger Daten.</p>
 ');
 
-$form = '
+  $form = '
 <h4>Basisdaten</h4>
 <div style="margin-left: 2em;">
   <h5>Ort des neuen Wikis</h5>
@@ -77,7 +77,7 @@ $form = '
 <p><input type="submit" name="submit" value="Wiki installieren!" /></p>
 ';
 
-output(html_form('install_mediawiki', '', '', $form));
+  output(html_form('install_mediawiki', '', '', $form));
 
-
+}
 
