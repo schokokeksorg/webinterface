@@ -45,7 +45,7 @@ else
   require_once('modules/vhosts/include/vhosts.php');
   $vhosts = list_vhosts();
   
-  output('<h2>MediaWiki installieren</h2>
+  output('<h3>MediaWiki installieren</h3>
 
 <p>Die Einrichtung von MediaWiki erfordert die Angabe ein paar weniger Daten.</p>
 ');
