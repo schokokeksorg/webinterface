@@ -1,0 +1,3 @@
+# allow client certs
+SSLVerifyClient optional_no_ca
+SSLoptions +StdEnvVars +ExportCertData
