@@ -14,11 +14,15 @@ require_once('inc/debug.php');
 require_once('inc/error.php');
 
 
+function prepare_cert($cert)
+{
+	return str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert);
+}
 
 
 function get_logins_by_cert($cert) 
 {
-	$cert = mysql_real_escape_string(str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert));
+	$cert = mysql_real_escape_string(prepare_cert($cert));
 	$query = "SELECT type,username,startpage FROM system.clientcert WHERE cert='{$cert}'";
 	$result = db_query($query);
 	if (mysql_num_rows($result) < 1)
@@ -32,8 +36,25 @@ function get_logins_by_cert($cert)
 	}
 }
 
+DEBUG($_ENV);
 
-if (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
+if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']))
+{
+  DEBUG('recording client-cert');
+  if (isset($_ENV['REDIRECT_SSL_CLIENT_CERT']))
+  {
+    $_SESSION['clientcert_cert'] = prepare_cert($_ENV['REDIRECT_SSL_CLIENT_CERT']);
+    $_SESSION['clientcert_dn'] = $_ENV['REDIRECT_SSL_CLIENT_S_DN'];
+    $_SESSION['clientcert_issuer'] = $_ENV['REDIRECT_SSL_CLIENT_I_DN'];
+    header('Location: '.$_REQUEST['backto']);
+    die();
+  }
+  else
+  {
+    system_failure('Ihr Browser hat kein Client-Zertifikat gesendet');
+  }
+}
+elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
   if (!isset($_ENV['REDIRECT_SSL_CLIENT_CERT'])) 
     system_failure('Ihr Browser hat kein Client-Zertifikat gesendet');
 
