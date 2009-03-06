@@ -9,7 +9,7 @@ $title = "Client-Zertifikate";
 output('<h3>Anmeldung über Client-Zertifikat</h3>
 
 <p>Sie können Sie an diesem Webinterface wahlweise auch über ein SSL-Client-Zertifikat anmelden. Dazu muss das gewünschte Zertifikat <em>vorher</em> in Ihrem Browser installiert werden und kann dann hier hinzugefügt werden.</p>
-<p>Wenn Sie ein Zertifikat mit der entsprechenden Funktion unten auf dieser Seite hinzufügen, wird Sie Ihr Browser fragen, welches Zertifikat verwendet werden soll. Sollte Ihr Browser nicht fragen, ist entweder kein Zertifikat im Browser installiert oder Sie haben Ihren Browser auf <em>Niemals fragen</em> (o.Ä. eingestellt.</p>
+<p>Wenn Sie ein Zertifikat mit der entsprechenden Funktion unten auf dieser Seite hinzufügen, wird Sie Ihr Browser fragen, welches Zertifikat verwendet werden soll. Sollte Ihr Browser nicht fragen, ist entweder kein Zertifikat im Browser installiert oder Sie haben Ihren Browser auf <em>Niemals fragen</em> (o.Ä.) eingestellt.</p>
 ');
 
 
