@@ -3,6 +3,7 @@
 require_once('session/start.php');
 
 require_once('freewvs.php');
+require_once('webapp-installer.php');
 
 require_role(array(ROLE_SYSTEMUSER));
 
@@ -30,11 +31,12 @@ $results = load_results();
 output('<h3>Aktuell installierte Web-Anwendungen</h3>
 <p>Die folgenden Web-Anwendungen wurden beim letzten Programmdurchlauf gefunden. Diese Liste wird i.d.R. täglich aktualisiert.</p>');
 foreach ($results AS $app) {
+  $url = get_url_for_dir($app['directory']);
   output("<div class='freewvs freewvs-{$app['state']}'>\n");
   if ($app['state'] == 'ok') {
     output("<img src='{$prefix}images/ok.png' />\n");
     output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-    output("<p>Gefunden in {$app['directory']}</p>\n");
+    output("<p>Gefunden in {$app['directory']} (<a href=\"{$url}\">{$url}</a>)</p>\n");
     output("<p>Diese Anwendung ist aktuell und hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
   }
   else {
@@ -45,7 +47,7 @@ foreach ($results AS $app) {
     }
     output("<img src='{$prefix}images/error.png' />\n");
     output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-    output("<p>Gefunden in {$app['directory']}</p>\n");
+    output("<p>Gefunden in {$app['directory']} (<a href=\"{$url}\">{$url}</a>)</p>\n");
     if ($app['safeversion'] != '') {
       output("<p>Diese Anwendung ist von Sicherheits-Problemen betroffen. Ein <strong>Update auf Version {$app['safeversion']}</strong> wird dringend empfohlen. Prüfen Sie anhand der unten genannten Referenz welche Gefahren von dieser Anwendung momentan ausgehen.</p>\n");
     } else {
@@ -53,7 +55,12 @@ foreach ($results AS $app) {
     }
     output("<p><strong>Referenz zu diesem Sicherheitsproblem: <a href='{$vulnlink}'>{$app['vulninfo']}</a></strong></p>");
     if ($doclink != NULL)
-      output('<p><strong>Hinweis:</strong> Um Ihnen das Upgrade leichter zu machen, möchten wir Sie auf eine <a href="'.$doclink.'">deutschsprachige Upgrade-Anleitung</a> aufmerksam machen.</p>');
+      output('<p><strong>Hinweis:</strong> Um Ihnen das Upgrade leichter zu machen, möchten wir Sie auf eine <a href="'.$doclink.'">deutschsprachige Upgrade-Anleitung</a> aufmerksam machen.</p>'."\n");
+    $up = upgradeable($app['appname'], $app['version']);
+    if ($up)
+    {
+      output('<p>'.internal_link('requestupdate', 'Update automatisch durchführen', "dir={$app['directory']}&app={$up}")."</p>\n");
+    }
   }
   output("</div>\n");
   #output("<tr><td>{$app['appname']} ({$app['version']})</td><td>{$app['state']}</td></tr>");

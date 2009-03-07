@@ -19,7 +19,7 @@ if (isset($_GET['action']))
       $sure = user_is_sure();
       if ($sure === NULL)
       {
-        are_you_sure("action=delete_db&amp;db={$_GET['db']}", "Möchten Sie die Datenbank »{$_GET['db']}« wirklich löschen?");
+        are_you_sure("action=delete_db&db={$_GET['db']}", "Möchten Sie die Datenbank »{$_GET['db']}« wirklich löschen?");
         $output_something = false;
       }
       elseif ($sure === true)
@@ -40,7 +40,7 @@ if (isset($_GET['action']))
       $sure = user_is_sure();
       if ($sure === NULL)
       {
-        are_you_sure("action=delete_user&amp;user={$_GET['user']}", "Möchten Sie den Benutzer »{$_GET['user']}« wirklich löschen?");
+        are_you_sure("action=delete_user&user={$_GET['user']}", "Möchten Sie den Benutzer »{$_GET['user']}« wirklich löschen?");
         $output_something = false;
       }
       elseif ($sure === true)

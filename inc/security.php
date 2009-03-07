@@ -144,6 +144,23 @@ function check_path( $input )
 }
 
 
+function in_homedir($path)
+{
+  DEBUG("Prüfe »{$path}«");
+  if (! check_path($path))
+  {
+    DEBUG('Kein Pfad');
+    return False;
+  }
+  if (! isset($_SESSION['userinfo']['homedir']))
+  {
+    DEBUG("Kann homedir nicht ermitteln");
+    return False;
+  }
+  return strncmp($_SESSION['userinfo']['homedir'], $path, count($_SESSION['userinfo']['homedir'])) == 0;
+}
+
+
 function check_emailaddr( $input )
 {
   return (bool) filter_var($input, FILTER_VALIDATE_EMAIL) == $input;

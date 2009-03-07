@@ -75,13 +75,11 @@ function random_string($nc, $a='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 
 function are_you_sure($query_string, $question)
 {
-  global $debugmode;
-  if ($debugmode)
-    $query_string = 'debug&amp;'.$query_string;
+  $query_string = encode_querystring($query_string);
   $token = random_string(20);
   $_SESSION['are_you_sure_token'] = $token;
   output("<h3>Sicherheitsabfrage</h3>
-    <form action=\"?{$query_string}\" method=\"post\">
+    <form action=\"{$query_string}\" method=\"post\">
     <div class=\"confirmation\">
       <div class=\"question\">{$question}</div>
       <p class=\"buttons\">
@@ -145,31 +143,40 @@ function check_form_token($form_id, $formtoken = NULL)
 }
 
 
+function encode_querystring($querystring)
+{
+  global $debugmode;
+  if ($debugmode)
+    $querystring = 'debug&'.$querystring;
+  $query = explode('&', $querystring);
+  $new_query = array();
+  foreach ($query AS $item)
+    if ($item != '')
+    {
+      list($key, $val) = explode('=', $item, 2);
+      $new_query[] = $key.'='.($val);
+    }
+  $querystring = implode('&amp;', $new_query);
+  if ($querystring)
+    $querystring = '?'.$querystring;
+  
+  return $querystring;
+}
+
+
 
 function internal_link($file, $label, $querystring = '', $attribs = '')
 {
-  $debugstr = '';
-  global $debugmode;
-  if ($debugmode)
-    $debugstr = 'debug&amp;';
-  $querystring = str_replace('&', '&amp;', $querystring);
-
-  return "<a href=\"{$file}?{$debugstr}${querystring}\" {$attribs} >{$label}</a>";
+  $querystring = encode_querystring($querystring);
+  return "<a href=\"{$file}{$querystring}\" {$attribs} >{$label}</a>";
 }
 
 
 function html_form($form_id, $scriptname, $querystring, $content)
 {
-  $debugstr = '';
-  global $debugmode;
-  if ($debugmode)
-    $debugstr = 'debug&amp;';
-  $querystring = str_replace('&', '&amp;', $querystring);
-  $qmark = '?';
-  if ($debugstr == '' && $querystring == '')
-    $qmark = '';
+  $querystring = encode_querystring($querystring);
   $ret = '';
-  $ret .= '<form action="'.$scriptname.$qmark.$debugstr.$querystring.'" method="post">'."\n";
+  $ret .= '<form action="'.$scriptname.$querystring.'" method="post">'."\n";
   $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="'.generate_form_token($form_id).'" /></p>'."\n";
   $ret .= $content;
   $ret .= '</form>';

@@ -211,7 +211,7 @@ elseif ($_GET['action'] == 'deletealias')
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure("action=deletealias&amp;alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Subdomain »{$vhost_string}« wirklich löschen?");
+    are_you_sure("action=deletealias&alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Subdomain »{$vhost_string}« wirklich löschen?");
   }
   elseif ($sure === true)
   {
@@ -236,7 +236,7 @@ elseif ($_GET['action'] == 'delete')
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure("action=delete&amp;vhost={$_GET['vhost']}", "Möchten Sie die Subdomain »{$vhost_string}« wirklich löschen?");
+    are_you_sure("action=delete&vhost={$_GET['vhost']}", "Möchten Sie die Subdomain »{$vhost_string}« wirklich löschen?");
   }
   elseif ($sure === true)
   {

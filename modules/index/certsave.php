@@ -29,7 +29,7 @@ elseif ($_GET['action'] == 'delete')
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure("action=delete&amp;id={$cert['id']}", "Möchten Sie das Zertifikat »{$cert['dn']}« wirklich löschen?");
+    are_you_sure("action=delete&id={$cert['id']}", "Möchten Sie das Zertifikat »{$cert['dn']}« wirklich löschen?");
   }
   elseif ($sure === true)
   {

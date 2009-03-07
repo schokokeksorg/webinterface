@@ -21,7 +21,7 @@ if ($_GET['type'] == 'dyndns') {
     $sure = user_is_sure();
     if ($sure === NULL)
     {
-      are_you_sure("type=dyndns&action=delete&amp;id={$id}", "Möchten Sie den DynDNS-Account wirklich löschen?");
+      are_you_sure("type=dyndns&action=delete&id={$id}", "Möchten Sie den DynDNS-Account wirklich löschen?");
     }
     elseif ($sure === true)
     {

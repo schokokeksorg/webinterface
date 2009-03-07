@@ -114,7 +114,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
     $_GET['account'] = (int) $_GET['account'];
     $account = get_mailaccount($_GET['account']);
     $enabled = ($account['enabled'] ? 'Ja' : 'Nein');
-    are_you_sure("action=delete&amp;account={$_GET['account']}", '
+    are_you_sure("action=delete&account={$_GET['account']}", '
     <p>Soll der folgende Account wirklich gelöscht werden?</p>
     <table style="margin-bottom: 1em;">
       <tr><td>Benutzername:</td>

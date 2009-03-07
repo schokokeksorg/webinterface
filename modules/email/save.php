@@ -78,7 +78,7 @@ elseif ($_GET['action'] == 'delete')
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure("action=delete&amp;id={$account['id']}", "Möchten Sie die E-Mail-Adresse »{$account_string}« wirklich löschen?");
+    are_you_sure("action=delete&id={$account['id']}", "Möchten Sie die E-Mail-Adresse »{$account_string}« wirklich löschen?");
   }
   elseif ($sure === true)
   {

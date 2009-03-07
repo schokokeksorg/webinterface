@@ -11,7 +11,7 @@ if ($_GET['action'] == 'delete')
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure("action=delete&amp;id={$entry['id']}", "Möchten Sie die E-Mail-Adresse »{$entry['local']}@{$entry['domain']}« von der Ausnahmeliste entfernen?");
+    are_you_sure("action=delete&id={$entry['id']}", "Möchten Sie die E-Mail-Adresse »{$entry['local']}@{$entry['domain']}« von der Ausnahmeliste entfernen?");
   }
   elseif ($sure === true)
   {
