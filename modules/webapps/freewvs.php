@@ -34,8 +34,8 @@ foreach ($results AS $app) {
   if ($app['state'] == 'ok') {
     output("<img src='{$prefix}images/ok.png' />\n");
     output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-    output("<p>Diese Anwendung ist aktuell und hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
     output("<p>Gefunden in {$app['directory']}</p>\n");
+    output("<p>Diese Anwendung ist aktuell und hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
   }
   else {
     $vulnlink = $app['vulninfo'];
@@ -45,13 +45,13 @@ foreach ($results AS $app) {
     }
     output("<img src='{$prefix}images/error.png' />\n");
     output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
+    output("<p>Gefunden in {$app['directory']}</p>\n");
     if ($app['safeversion'] != '') {
       output("<p>Diese Anwendung ist von Sicherheits-Problemen betroffen. Ein <strong>Update auf Version {$app['safeversion']}</strong> wird dringend empfohlen. Prüfen Sie anhand der unten genannten Referenz welche Gefahren von dieser Anwendung momentan ausgehen.</p>\n");
     } else {
       output("<p>Diese Anwendung ist von Sicherheits-Problemen betroffen. Leider gibt es <strong>momentan keine aktualisierte Version</strong>. Prüfen Sie bitte anhand der unten genannten Beschreibung des Problem die möglichen Gefahren eines weiteren Betriebs dieser Anwendung.</p>\n");
     }
     output("<p><strong>Referenz zu diesem Sicherheitsproblem: <a href='{$vulnlink}'>{$app['vulninfo']}</a></strong></p>");
-    output("<p>Gefunden in {$app['directory']}</p>\n");
     if ($doclink != NULL)
       output('<p><strong>Hinweis:</strong> Um Ihnen das Upgrade leichter zu machen, möchten wir Sie auf eine <a href="'.$doclink.'">deutschsprachige Upgrade-Anleitung</a> aufmerksam machen.</p>');
   }
