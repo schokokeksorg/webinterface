@@ -168,14 +168,27 @@ $form .= "
   </select>
   <p>Wenn Sie diese Option wählen, wird die Anwendung automatisch eingerichtet. Sie erhalten dann ihre Zugangsdaten per E-Mail.</p>
 </div>
+";
 
+$form .= "
 <h4>Verwendung</h4>
         <div style=\"margin-left: 2em;\">
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type=='regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
+";
+if ($vhost_type=='webapp')
+{
+  // Wird nur noch angezeigt wenn der Vhost schon auf webapp konfiguriert ist, ansonsten nicht.
+  // Die User sollen den Webapp-Installer benutzen.
+  $form .= "
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
+";
+}
+$form .= "
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
 	</div>
+<br />
+<br />
 <br />
 </div>
 
