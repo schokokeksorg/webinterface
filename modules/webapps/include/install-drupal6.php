@@ -9,14 +9,12 @@ function validate_data($post)
 {
   DEBUG('Validating Data:');
   DEBUG($post);
-  $fields = array('adminuser', 'adminpassword', 'adminemail', 'sitename', 'siteemail', 'dbhandle');
+  $fields = array('adminuser', 'adminpassword', 'adminemail', 'sitename', 'siteemail');
   foreach ($fields AS $field)
     if ((! isset($post[$field])) || $post[$field] == '')
       system_failure('Nicht alle Werte angegeben ('.$field.')');
 
-  $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-  $dbname = $username.'_'.$post['dbhandle'];
-  $dbpassword = create_webapp_mysqldb($post['dbhandle']);
+  $dbdata = create_webapp_mysqldb('drupal6', $post['sitename']);
 
   $passwordhash = md5( $post['adminpassword'] );
   
@@ -25,9 +23,9 @@ adminpassword={$passwordhash}
 adminemail={$post['adminemail']}
 sitename={$post['sitename']}
 siteemail={$post['siteemail']}
-dbname={$dbname}
-dbuser={$dbname}
-dbpass={$dbpassword}";
+dbname={$dbdata['dbname']}
+dbuser={$dbdata['dbuser']}
+dbpass={$dbdata['dbpass']}";
   DEBUG($data);
   return $data;
 }

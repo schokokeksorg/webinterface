@@ -61,32 +61,40 @@ function get_url_for_dir($docroot, $cutoff = '')
 }
 
 
-function create_webapp_mysqldb($handle)
+function create_webapp_mysqldb($application, $sitename)
 {
   // dependet auf das mysql-modul
   require_once('modules/mysql/include/mysql.php'); 
   
   $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-  if ($handle == '')
-    input_error('Kein Datenbank-Handle angegeben');
-  $handle = $username.'_'.$handle;
+  $description = "Automatisch erzeugte Datenbank für {$application} ({$sitename})";
   
-  if (! validate_mysql_username($handle))
+  // zuerst versuchen wir username_webappname. Wenn das nicht klappt, dann wird hochgezählt
+  $handle = $username.'_'.$application;
+  
+  if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle)))
   {
-    system_failure('Ungültiges MySQL-Handle');
+    create_mysql_database($handle, $description);
+    create_mysql_account($handle, $description);
+    set_mysql_access($handle, $handle, true);
+    $password = random_string(10);
+    set_mysql_password($handle, $password);
+    return array('dbuser' => $handle, 'dbname' => $handle, 'dbpass' => $password);
   }
 
-  if (has_mysql_user($handle) || has_mysql_database($handle))
-  {
-    system_failure('Eine Datenbank oder einen Datenbank-Benutzer mit diesem Namen gibt es bereits!');
+  for ($i = 0; $i < 100 ; $i++) {
+    $handle = $username.'_'.$i;
+    if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle)))
+    {
+      create_mysql_database($handle);
+      create_mysql_account($handle);
+      set_mysql_access($handle, $handle, true);
+      $password = random_string(10);
+      set_mysql_password($handle, $password);
+      return array('dbuser' => $handle, 'dbname' => $handle, 'dbpass' => $password);
+    }
   }
-
-  create_mysql_database($handle);
-  create_mysql_account($handle);
-  set_mysql_access($handle, $handle, true);
-  $password = random_string(10);
-  set_mysql_password($handle, $password);
-  return $password; 
+  system_failure('Konnte keine Datenbank erzeugen. Bitte melden Sie diesen Umstand den Administratoren!');
 }
 
 

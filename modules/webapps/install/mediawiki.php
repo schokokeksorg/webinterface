@@ -60,10 +60,6 @@ else
   <h5>Name des Wikis</h5>
   <p>Jedes MediaWiki benötigt einen griffigen Namen. Der Name kann entweder in »WikiSchreibweise« (zusammengezogene Wörter mit großgeschriebenen Anfangsbuchstaben) oder in normaler Schreibweise sein.</p>
   <p><label for="wikiname">Wiki-Name:</label> <input type="text" id="wikiname" name="wikiname" /></p>
-  
-  <h5>Datenbank-Kürzel</h5>
-  <p>Ein MediaWiki benötigt eine MySQL-Datenbank. Dieses Programm wird automatisch eine Datenbank für Sie anlegen. Damit Sie diese später erkennen und verwalten können, wird ein Kürzel benötigt. Der Name der Datenbank wird nachher aus Ihrem Benutzernamen und diesem Kürzel erzeugt. Die Eingabe hier darf keine Leer- oder Sonderzeichen enthalten und nur wenige Zeichen lang sein.</p>
-  <p><label for="dbhandle">Kürzel für Datenbankname:</label> <input type="text" name="dbhandle" id="dbhandle" value="wiki" /></p>
 </div>
 
 <h4>Wiki-Administrator</h4>

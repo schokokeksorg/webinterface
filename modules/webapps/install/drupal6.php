@@ -64,10 +64,6 @@ else
   <h5>E-Mail-Adresse der Seite</h5>
   <p>Wenn die Website E-Mails versendet (z.B. für neue Benutzer, bei kommentaren auf einzelnen Seiten, ...) erscheint diese Adresse als Absender.
   <p><label for="siteemail">E-Mail-Adresse:</label> <input type="text" id="siteemail" name="siteemail" value="'.$_SESSION['userinfo']['username'].'@'.$config['masterdomain'].'" /></p>
-  
-  <h5>Datenbank-Kürzel</h5>
-  <p>Drupal benötigt eine MySQL-Datenbank. Dieses Programm wird automatisch eine Datenbank für Sie anlegen. Damit Sie diese später erkennen und verwalten können, wird ein Kürzel benötigt. Der Name der Datenbank wird nachher aus Ihrem Benutzernamen und diesem Kürzel erzeugt. Die Eingabe hier darf keine Leer- oder Sonderzeichen enthalten und nur wenige Zeichen lang sein.</p>
-  <p><label for="dbhandle">Kürzel für Datenbankname:</label> <input type="text" name="dbhandle" id="dbhandle" value="drupal6" /></p>
 </div>
 
 <h4>Drupal-Administrator</h4>

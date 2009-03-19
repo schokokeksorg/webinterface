@@ -9,14 +9,12 @@ function validate_data($post)
 {
   DEBUG('Validating Data:');
   DEBUG($post);
-  $fields = array('adminuser', 'adminpassword', 'adminemail', 'wikiname', 'dbhandle');
+  $fields = array('adminuser', 'adminpassword', 'adminemail', 'wikiname');
   foreach ($fields AS $field)
     if ((! isset($post[$field])) || $post[$field] == '')
       system_failure('Nicht alle Werte angegeben ('.$field.')');
 
-  $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-  $dbname = $username.'_'.$post['dbhandle'];
-  $dbpassword = create_webapp_mysqldb($post['dbhandle']);
+  $dbdata = create_webapp_mysqldb('mediawiki', $post['wikiname']);
 
   $salt = random_string(8);
   $salthash = ':B:' . $salt . ':' . md5( $salt . '-' . md5( $post['adminpassword'] ));
@@ -25,9 +23,9 @@ function validate_data($post)
 adminpassword={$salthash}
 adminemail={$post['adminemail']}
 wikiname={$post['wikiname']}
-dbname={$dbname}
-dbuser={$dbname}
-dbpass={$dbpassword}";
+dbname={$dbdata['dbname']}
+dbuser={$dbdata['dbuser']}
+dbpass={$dbdata['dbpass']}";
   DEBUG($data);
   return $data;
 }
