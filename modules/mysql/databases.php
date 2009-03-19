@@ -147,14 +147,14 @@ if ($output_something)
     $desc = ($db['description'] ? $db['description'] : '');
     $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"{$desc}\">{$db['name']}</span>&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db['name']}« löschen\" alt=\"löschen\" />", "action=delete_db&db={$db['name']}")."</td>";
     foreach ($users as $user)
-      $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db['name'], $user['username']) ? 'checked="checked" ' : '')." /></td>";
+      $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db['name'].'_'.$user['username'].'" name="access['.$db['name'].'][]" value="'.$user['username'].'" '.(get_mysql_access($db['name'], $user['username']) ? 'checked="checked" ' : '')." /></td>";
     $form .= "</tr>\n";
   }
 
   $form .= '
   <tr><td style="border: 0px; font-weight: bold; text-align: right;"><input type="text" name="new_db" size="15" value="" /></td>';
   foreach ($users as $user)
-    $form .= '<td style="text-align: center;"><input type="checkbox" id="new_'.$user.'" name="access[new][]" value="'.$user.'" /></td>';
+    $form .= '<td style="text-align: center;"><input type="checkbox" id="new_'.$user['username'].'" name="access[new][]" value="'.$user['username'].'" /></td>';
   $form .= '</tr>
   </table>
   <p><input type="submit" name="accesseditor" value="Speichern" /></p>';
