@@ -3,13 +3,13 @@
 function get_mysql_accounts($UID)
 {
   $UID = (int) $UID;
-  $result = db_query("SELECT username FROM misc.mysql_accounts WHERE useraccount=$UID");
+  $result = db_query("SELECT username, description FROM misc.mysql_accounts WHERE useraccount=$UID");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
-  while ($item = mysql_fetch_object($result))
+  while ($item = mysql_fetch_assoc($result))
   {
-    array_push($list, $item->username);
+    $list[] = $item;
   }
   return $list;
 }
@@ -17,13 +17,13 @@ function get_mysql_accounts($UID)
 function get_mysql_databases($UID)
 {
   $UID = (int) $UID;
-  $result = db_query("SELECT name FROM misc.mysql_database WHERE useraccount=$UID");
+  $result = db_query("SELECT name, description FROM misc.mysql_database WHERE useraccount=$UID");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
-  while ($item = mysql_fetch_object($result))
+  while ($item = mysql_fetch_assoc($result))
   {
-    array_push($list, $item->name);
+    $list[] = $item;
   }
   return $list;
 }
@@ -70,22 +70,19 @@ function set_mysql_access($db, $account, $status)
 }
 
 
-function create_mysql_account($username)
+function create_mysql_account($username, $description = '')
 {
-  if (! validate_mysql_dbname($username))
+  if (! validate_mysql_username($username))
   {
     logger("modules/mysql/include/mysql", "mysql", "illegal username »{$username}«");
     input_error("Der eingegebene Benutzername entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
-  if (strlen($username) > 16)
-  {
-    warning('Der eingegebene MySQL-Benutzername wurde abgeschnitten. Systemseitig begrenzt MySQL einen Benutzernamen auf 16 Zeichen.');
-  }
   $uid = $_SESSION['userinfo']['uid'];
   $username = mysql_real_escape_string($username);
+  $description = maybe_null($description);
   logger("modules/mysql/include/mysql", "mysql", "creating user »{$username}«");
-  db_query("INSERT INTO misc.mysql_accounts (username, password, useraccount) VALUES ('$username', '!', $uid);");
+  db_query("INSERT INTO misc.mysql_accounts (username, password, useraccount, description) VALUES ('$username', '!', $uid, $description);");
 }
 
 
@@ -98,7 +95,7 @@ function delete_mysql_account($username)
 }
 
 
-function create_mysql_database($dbname)
+function create_mysql_database($dbname, $description = '')
 {
   if (! validate_mysql_dbname($dbname))
   {
@@ -108,8 +105,9 @@ function create_mysql_database($dbname)
   }
   $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
+  $description = maybe_null($description);
   logger("modules/mysql/include/mysql", "mysql", "creating database »{$dbname}«");
-  db_query("INSERT INTO misc.mysql_database (name, useraccount) VALUES ('$dbname', $uid);");
+  db_query("INSERT INTO misc.mysql_database (name, useraccount, description) VALUES ('$dbname', $uid, $description);");
 }
 
 
@@ -122,17 +120,16 @@ function delete_mysql_database($dbname)
 }
 
 
-function validate_mysql_username($username)
+function validate_mysql_dbname($dbname)
 {
   $sys_username = $_SESSION['userinfo']['username'];
-  return preg_match("/^{$sys_username}(_[a-zA-Z0-9_-]+)?$/", $username);
+  return preg_match("/^{$sys_username}(_[a-zA-Z0-9_-]+)?$/", $dbname);
 }
 
 
-function validate_mysql_dbname($dbname)
+function validate_mysql_username($username)
 {
-  // Funktioniert! ;-)
-  return validate_mysql_username($dbname);
+  return validate_mysql_dbname($username) && (count($username) <= 16);
 }
 
 

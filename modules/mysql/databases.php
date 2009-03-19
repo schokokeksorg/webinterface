@@ -80,6 +80,7 @@ if (isset($_POST['accesseditor']))
     {
       $_POST['access'][$_POST['new_db']] = array();
       foreach ($users as $user)
+        $user = $user['username'];
         if (in_array($user, $_POST['access']['new']))
           array_push($_POST['access'][$_POST['new_db']], $user);
       if (($_POST['new_user'] != '') and (in_array('new', $_POST['access']['new'])))
@@ -92,6 +93,7 @@ if (isset($_POST['accesseditor']))
   {
     create_mysql_account($_POST['new_user']);
     foreach ($dbs as $db)
+      $db = $db['name'];
       if (isset($_POST['access'][$db]) and (in_array('new', $_POST['access'][$db])))
         array_push($_POST['access'][$db], $_POST['new_user']);
   }
@@ -103,11 +105,17 @@ if (isset($_POST['accesseditor']))
   }
 
   foreach ($dbs as $db)
+  {
+    $db = $db['name'];
     foreach ($users as $user)
+    {
+      $user = $user['username'];
       if (! isset($_POST['access'][$db]))
         set_mysql_access($db, $user, false);
       else
         set_mysql_access($db, $user, in_array($user, $_POST['access'][$db]));
+    }
+  }
   $mysql_access = NULL;
 }
 
@@ -125,7 +133,10 @@ if ($output_something)
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>';
 
   foreach ($users as $user)
-    $form .= "<th>{$user}<br />".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user}« löschen\" alt=\"löschen\" />", "action=delete_user&user={$user}")."</th>";
+  {
+    $desc = ($user['description'] ? $user['description'] : '');
+    $form .= "<th><span title=\"{$desc}\">{$user['username']}</span><br />".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user['username']}« löschen\" alt=\"löschen\" />", "action=delete_user&user={$user['username']}")."</th>";
+  }
   $form .= '<th><input type="text" name="new_user" size="10" value="" /></th></tr>
 ';
 
@@ -133,9 +144,10 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\">{$db}&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db}« löschen\" alt=\"löschen\" />", "action=delete_db&db={$db}")."</td>";
+    $desc = ($db['description'] ? $db['description'] : '');
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"{$desc}\">{$db['name']}</span>&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db['name']}« löschen\" alt=\"löschen\" />", "action=delete_db&db={$db['name']}")."</td>";
     foreach ($users as $user)
-      $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db, $user) ? 'checked="checked" ' : '')." /></td>";
+      $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db.'_'.$user.'" name="access['.$db.'][]" value="'.$user.'" '.(get_mysql_access($db['name'], $user['username']) ? 'checked="checked" ' : '')." /></td>";
     $form .= "</tr>\n";
   }
 
@@ -157,7 +169,7 @@ if ($output_something)
   $my_users = array();
   foreach ($users as $u)
   {
-    $my_users[$u] = $u;
+    $my_users[$u['username']] = $u['username'];
   }
   $form = '<div>
   <label for="mysql_username">Benutzername:</label>&#160;'.html_select('mysql_username', $my_users).'
