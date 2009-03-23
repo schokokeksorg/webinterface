@@ -39,7 +39,7 @@ foreach ($whitelist AS $entry)
 	$form .= "<tr><td>{$entry['local']}@{$entry['domain']}</td><td>{$entry['date']}</td><td>{$end}</td><td>".internal_link("save", "<img src=\"{$prefix}images/delete.png\" alt=\"Eintrag löschen\" title=\"Diesen Eintrag löschen\" style=\"width: 16px; height: 16px;\" />", "action=delete&id={$entry['id']}")."</td></tr>\n";
 }
 
-$form .= '<tr><td><input type="text" name="address" /></td><td>-</td><td>'.html_select('expire', array('none' => 'Unbegrenzt', '5' => '5 Minuten', '10' => '10 Minuten', '20' => '20 Minuten', '30' => '30 Minuten', '60' => '1 Stunde', '120' => '2 Stunden', '1440' => '1 Tag'), '10').'</td><td></td></tr>';
+$form .= '<tr><td><input type="text" name="address" /></td><td>-</td><td>'.html_select('expire', array('none' => 'Unbegrenzt', '30' => '30 Minuten', '60' => '1 Stunde', '720' => '12 Stunden', '1440' => '1 Tag', '2880' => '2 Tage', '10080' => '1 Woche'), '1440').'</td><td></td></tr>';
 
 $form .= '</table>';
 
