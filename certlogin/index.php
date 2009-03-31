@@ -46,7 +46,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
     $_SESSION['clientcert_cert'] = prepare_cert($_ENV['REDIRECT_SSL_CLIENT_CERT']);
     $_SESSION['clientcert_dn'] = $_ENV['REDIRECT_SSL_CLIENT_S_DN'];
     $_SESSION['clientcert_issuer'] = $_ENV['REDIRECT_SSL_CLIENT_I_DN'];
-    header('Location: '.$_REQUEST['backto']);
+    header('Location: '.$prefix.$_REQUEST['backto'].encode_querystring(''));
     die();
   }
   else

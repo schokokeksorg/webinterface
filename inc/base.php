@@ -148,18 +148,24 @@ function encode_querystring($querystring)
   global $debugmode;
   if ($debugmode)
     $querystring = 'debug&'.$querystring;
+  DEBUG($querystring);
   $query = explode('&', $querystring);
+  DEBUG($query);
   $new_query = array();
   foreach ($query AS $item)
     if ($item != '')
     {
       list($key, $val) = explode('=', $item, 2);
-      $new_query[] = $key.'='.($val);
+      if ($val == '')
+        $new_query[] = $key;
+      else
+        $new_query[] = $key.'='.urlencode($val);
     }
+  DEBUG($new_query);
   $querystring = implode('&amp;', $new_query);
   if ($querystring)
     $querystring = '?'.$querystring;
-  
+  DEBUG($querystring);
   return $querystring;
 }
 

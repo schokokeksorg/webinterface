@@ -52,7 +52,7 @@ else
   output('<p><em>Bisher sind keine Zertifikate für Ihren Zugang eingerichtet</em>');
 }
 
-$backurl = str_replace('?clear', '', $_SERVER['REQUEST_URI']);
+$backurl = 'go/index/cert';
 
 output('<p>'.internal_link('../../certlogin/index.php', 'Neues Client-Zertifikat hinzufügen', 'record&backto='.$backurl).'</p>');
 
