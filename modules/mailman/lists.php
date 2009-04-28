@@ -24,12 +24,16 @@ if (! empty($lists))
       $style = ' style="text-decoration: line-through;" ';
     elseif ($list['status'] == 'pending')
       $style = ' style="text-decoration: underline;" ';
+    elseif ($list['status'] == 'failure')
+      $style = ' style="font-style: italic;" ';
 
     $status = 'In Betrieb';
     if ($list['status'] == 'delete')
       $status = 'Wird gelöscht';
     elseif ($list['status'] == 'pending')
       $status = 'Wird angelegt';
+    elseif ($list['status'] == 'failure')
+      $status = 'Fehler bei der Erstellung';
     
 
     $output .= "<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$list['admin']}</td><td>{$status}</td>";

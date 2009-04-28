@@ -23,6 +23,8 @@ if ($_GET['action'] == 'new')
       system_failure('Ihre Domain-Auswahl scheint ungültig zu sein');
 
   create_list($_POST['listname'], $maildomain, $_POST['admin']);
+  if (! $debugmode)
+    header('Location: lists');
 }
 
 elseif ($_GET['action'] == 'delete')
