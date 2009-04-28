@@ -24,6 +24,9 @@ function db_query($query)
 
 function maybe_null($value)
 {
+  if ($value == NULL)
+    return 'NULL';
+
   if (strlen( (string) $value ) > 0)
     return "'".mysql_real_escape_string($value)."'";
   else
