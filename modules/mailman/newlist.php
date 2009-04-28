@@ -23,7 +23,10 @@ output('<p>Tragen Sie hier die benötigten Daten zur Erstellung einer neuen Mail
 </table>
 <br />
 <input type="submit" name="submit" value="Anlegen" />
-'));
+').'
+
+<p><strong>Hinweis zu Domains:</strong> Aufgrund der Architektur von Mailman ist es momentan notwendig, bestimmte Domains oder Subdomains vollständig auf Mailman zu konfigurieren. Unter diesen Domains oder Subdomains kann keine anderweitige E-Mail-Adresse benutzt werden. Sofern Sie eine Ihrer eigenen Domains oder eine Subdomain unter einer Ihrer Domains für Mailinglisten benutzen möchten, müssen Sie diese Domain oder Subdomain vorher von einem Administrator anlegen lassen. Sie können danach in dieser Auswahlliste Ihre eigene Domain wählen.</p>'
+);
 
 
 ?>
