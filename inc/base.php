@@ -176,6 +176,11 @@ function encode_querystring($querystring)
 
 function internal_link($file, $label, $querystring = '', $attribs = '')
 {
+  global $prefix;
+  if (strpos($file, '/') == 0)
+  {
+    $file = $prefix.substr($file, 1);
+  }
   $querystring = encode_querystring($querystring);
   return "<a href=\"{$file}{$querystring}\" {$attribs} >{$label}</a>";
 }
