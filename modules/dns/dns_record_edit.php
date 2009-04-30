@@ -14,51 +14,93 @@ $section = 'dns_dns';
 $data = array();
 $type = NULL;
 
+$dyndns = false;
+$dyndns_accounts = array();
+foreach (get_dyndns_accounts() AS $t)
+{
+  $dyndns_accounts[$t['id']] = $t['handle'];
+}
+
+if ($_REQUEST['type'] == "dyndns")
+{
+  $_REQUEST['type'] = 'a';
+  $dyndns = true;
+}
+
 $new = false;
 if ($_REQUEST['id'] == 'new')
 {
   $new = true;
   $data = blank_dns_record($_REQUEST['type']);
-  $domain = new Domain((int) $_REQUEST['dom']);
-  $type = $_POST['type'];
+  $domain = new Domain((int) $_REQUEST['domain']);
+  $type = $_REQUEST['type'];
   if (! in_array($type, $valid_record_types))
     system_failure('Ungültiger Record-Typ!');
   $data['domain'] = $domain->id;
+  if ($dyndns)
+    $data['ttl'] = 120;
 }
 
 if (! $new)
 {
   $data = get_dns_record($_REQUEST['id']);
   $type = $data['type'];
+  $dyndns = isset($data['dyndns']);
+  $domain = new Domain((int) $data['domain']);
   if (! in_array($type, $valid_record_types))
     system_failure('Ungültiger Record-Typ!');
 }
 
 
-
-
 if ($new)
-  $output .= '<h3>DNS-Record erstellen</h3>';
+  output('<h3>DNS-Record erstellen</h3>');
 else
-  $output .= '<h3>DNS-Record bearbeiten</h3>';
+  output('<h3>DNS-Record bearbeiten</h3>');
 
+output('<p>Record-Typ: '.strtoupper($type).'</p>');
 
-$action = 'create';
-if (! $new)
-  $action = 'edit&id='.(int)$_REQUEST['id'];
-  
 $submit = 'Speichern';
 if ($new) 
   $submit = 'Anlegen';
 
-$domain = new Domain( (int) $data['domain'] );
+$form = '';
+
+if (! $dyndns && ($type == 'a' || $type == 'aaaa'))
+{
+  $form .= '
+<tr><td><label for="ip">IP-Adresse:</label></td><td><input type="text" name="ip" id="ip" value="'.$data['ip'].'" /></td></tr>
+';
+}
+
+if ($type == 'ptr' || $type == 'cname')
+{
+  $form .= '
+<tr><td><label for="data">Ziel:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
+';
+}
+
+if ($dyndns)
+{
+  $form .= '
+<tr><td><label for="dyndns">DynDNS-Zugang:</label></td><td>'.html_select('dyndns', $dyndns_accounts, $data['dyndns']).'</td></tr>
+';
+}
+
+if ($type == 'mx')
+{
+  $form .= '
+<tr><td><label for="spec">Priorität:</label></td><td><input type="text" name="spec" id="spec" value="'.$data['spec'].'" /></td></tr>
+<tr><td><label for="data">Posteingangsserver:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
+';
+}
 
 
-$output .= html_form('dns_record_edit', 'save', 'type=dns&action='.$action, 
-'<p>
-<label for="hostname">Hostname:</label>&#160;<input type="text" name="hostname" id="hostname" value="'.$data['hostname'].'" />&#160;<strong>.'.$domain->fqdn.'</strong><p>
-<p>Typ: 
+output(html_form('dns_record_edit', 'dns_record_save', "type={$type}&domain={$domain->id}&id={$_REQUEST['id']}", '<table>
+<tr><td><label for="hostname">Hostname:</label></td><td><input type="text" name="hostname" id="hostname" value="'.$data['hostname'].'" />&#160;<strong>.'.$domain->fqdn.'</strong></td></tr>
+'.$form.'
+<tr><td><label for="ttl">TTL:</label></td><td><input type="text" name="ttl" id="ttl" value="'.$data['ttl'].'" /></td></tr>
+</table>
 <p><input type="submit" value="'.$submit.'" /></p>
-</p>');
+</p>'));
 
 ?>

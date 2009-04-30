@@ -180,7 +180,7 @@ function save_dns_record($id, $record)
       if ($record['dyndns'])
       {
         get_dyndns_account( $record['dyndns'] );
-	$record['ip'] = '';
+      	$record['ip'] = '';
       }
       else
       {
@@ -191,7 +191,7 @@ function save_dns_record($id, $record)
       break;
     case 'aaaa':
       $record['dyndns'] = '';
-      verify_input_ipv4($record['ip']);
+      verify_input_ipv6($record['ip']);
       $record['data'] = '';
       $record['spec'] = '';
       break;
@@ -205,10 +205,8 @@ function save_dns_record($id, $record)
         system_failure('MX hostname missing');
       $record['ip'] = '';
       break;
-    case 'spf':
-    case 'txt':
-      system_failure('not implemented yet');
     case 'cname':
+    case 'ptr':
       $record['dyndns'] = '';
       $record['spec'] = '';
       $record['ip'] = '';
@@ -217,7 +215,8 @@ function save_dns_record($id, $record)
         system_failure('MX hostname missing');
       break;
 
-    case 'ptr':
+    case 'spf':
+    case 'txt':
     case 'srv':
       system_failure('not implemented yet');
     default:
@@ -225,22 +224,25 @@ function save_dns_record($id, $record)
   }
   $id = (int) $id;
   $record['hostname'] = maybe_null($record['hostname']);
-  $record['ttl'] = ($recory['ttl'] == 0 ? 'NULL' : (int) $record['ttl']);
+  $record['ttl'] = ($record['ttl'] == 0 ? 'NULL' : (int) $record['ttl']);
   $record['ip'] = maybe_null($record['ip']);
   $record['data'] = maybe_null($record['data']);
   $record['spec'] = maybe_null($record['spec']);
   $record['dyndns'] = maybe_null($record['dyndns']);
   if ($id)
-    db_query("UPDATE dns.custom_records SET hostname={$record['hostname']}, domain={$dom->id}, type={$record['type']}, ttl={$record['ttl']}, ip={$record['ip']}, dyndns={$record['dyndns']}, data={$record['data']}, spec={$record['spec']} WHERE id={$id} LIMIT 1");
+    db_query("UPDATE dns.custom_records SET hostname={$record['hostname']}, domain={$dom->id}, type='{$record['type']}', ttl={$record['ttl']}, ip={$record['ip']}, dyndns={$record['dyndns']}, data={$record['data']}, spec={$record['spec']} WHERE id={$id} LIMIT 1");
   else
-    db_query("INSERT INTO dns.custom_records (hostname, domain, type, ttl, ip, dyndns, data, spec) VALUES ({$record['hostname']}, {$dom->id}, {$record['type']}, {$record['ttl']}, {$record['ip']}, {$record['dyndns']}, {$record['data']}, {$record['spec']})");
+    db_query("INSERT INTO dns.custom_records (hostname, domain, type, ttl, ip, dyndns, data, spec) VALUES ({$record['hostname']}, {$dom->id}, '{$record['type']}', {$record['ttl']}, {$record['ip']}, {$record['dyndns']}, {$record['data']}, {$record['spec']})");
 
 }
 
 
 function delete_dns_record($id)
 {
- // ...
+  $id = (int) $id;
+  // Diese Funktion prüft, ob der Eintrag einer eigenen Domain gehört
+  $record = get_dns_record($id);
+  db_query("DELETE FROM dns.custom_records WHERE id={$id} LIMIT 1");
 }
 
 ?>
