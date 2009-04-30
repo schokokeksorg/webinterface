@@ -38,7 +38,7 @@ function get_logins_by_cert($cert)
 
 DEBUG($_ENV);
 
-if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']))
+if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']) && check_path($_REQUEST['backto']))
 {
   DEBUG('recording client-cert');
   if (isset($_ENV['REDIRECT_SSL_CLIENT_CERT']))
@@ -67,6 +67,8 @@ elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
       $destination = 'go/index/index';
       if (check_path($account['startpage']))
         $destination = $account['startpage'];
+      if (isset($_REQUEST['destination']) && check_path($_REQUEST['destination']))
+        $destination = $_REQUEST['destination'];
       header('Location: ../'.$destination);
       die();
     }
@@ -87,6 +89,8 @@ else
       $destination = 'go/index/index';
       if (check_path($ret[0]['startpage']))
         $destination = $ret[0]['startpage'];
+      if (isset($_REQUEST['destination']) && check_path($_REQUEST['destination']))
+        $destination = $_REQUEST['destination'];
       header('Location: ../'.$destination);
       die();
     }
@@ -100,7 +104,7 @@ else
       elseif ($account['type'] == 'customer') {
         $type = 'Kundenaccount';
       }
-      output('<li>'.internal_link('', $type.': <strong>'.$account['username'].'</strong>', 'type='.$account['type'].'&username='.urlencode($account['username'])).'</li>');
+      output('<li>'.internal_link('', $type.': <strong>'.$account['username'].'</strong>', 'type='.$account['type'].'&username='.urlencode($account['username']).'&destination='.urlencode($destination)).'</li>');
     }
     output('</ul>');
   } else {
