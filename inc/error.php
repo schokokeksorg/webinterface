@@ -114,6 +114,7 @@ function require_role($roles)
 
 function login_screen($why)
 {
+  global $go;
         $title = 'Login';
         include('inc/top.php');
         if ($why != "")
@@ -133,7 +134,9 @@ function login_screen($why)
         <p><span class="login_label">Passwort:</span> <input type="password" name="password" size="30" /></p>
         <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
         </form>
-        <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrem IMAP-Account oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>';
+        <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrem IMAP-Account oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
+
+        <p><em>'.internal_link('/certlogin?destination=go/'.$go, 'Mit einem Client-Zertifikat anmelden').'</em> ('.internal_link('/go/index/certinfo', 'Wie geht das?').')</p>';
 	/*
 	<p>Sofern Sie für Ihren Kundenaccount noch kein Passwort festgelegt haben oder Ihres vergessen haben, klicken Sie bitte <a href="new_password.php">hier</a></p>
         <p>Sollten Sie als Benutzer Ihr Passwort vergessen haben, wenden Sie sich bitte an den Inhaber des Kundenaccounts.</p>';
