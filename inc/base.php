@@ -177,7 +177,7 @@ function encode_querystring($querystring)
 function internal_link($file, $label, $querystring = '', $attribs = '')
 {
   global $prefix;
-  if (strpos($file, '/') == 0)
+  if (strpos($file, '/') === 0)
   {
     $file = $prefix.substr($file, 1);
   }
