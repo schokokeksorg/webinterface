@@ -146,6 +146,13 @@ function check_form_token($form_id, $formtoken = NULL)
 }
 
 
+function have_module($modname)
+{
+  global $config;
+  return in_array($modname, $config['modules']);
+}
+
+
 function encode_querystring($querystring)
 {
   global $debugmode;

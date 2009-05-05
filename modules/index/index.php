@@ -52,25 +52,31 @@ output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, d
 
 output("<div class=\"overview\">");
 
-if ($_SESSION['role'] & ROLE_MAILACCOUNT || $_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
+# Modul "email"
+if (have_module('email') && ($_SESSION['role'] & ROLE_MAILACCOUNT || $_SESSION['role'] & ROLE_VMAIL_ACCOUNT)) {
   output("<div class=\"block\">".internal_link("../email/chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
 }
 
+# Modul "index", kann man nicht ausschalten
 if ($_SESSION['role'] & ROLE_CUSTOMER || $_SESSION['role'] & ROLE_SYSTEMUSER) {
   output("<div class=\"block\">".internal_link("chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
 }
 
-if ($_SESSION['role'] & ROLE_CUSTOMER) {
+# Modul "invoice"
+if (have_module('invoice') && $_SESSION['role'] & ROLE_CUSTOMER) {
   output("<div class=\"block\">".internal_link("../invoice/current", "<img src=\"{$prefix}images/invoice.png\" alt=\"\" /> Ihre Rechnungen ")."</div>");
 }
 
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
-  output("<div class=\"block\">".internal_link("../email/vmail", "<img src=\"{$prefix}images/email.png\" alt=\"\" /> E-Mail-Adressen verwalten ")."</div>");
-  output("<div class=\"block\">".internal_link("../vhosts/vhosts", "<img src=\"{$prefix}images/webserver.png\" alt=\"\" /> Webserver-Einstellungen ")."</div>");
-  output("<div class=\"block\">".internal_link("../mysql/databases", "<img src=\"{$prefix}images/mysql.png\" alt=\"\" /> MySQL-Datenbanken ")."</div>");
+  if (have_module('email'))
+    output("<div class=\"block\">".internal_link("../email/vmail", "<img src=\"{$prefix}images/email.png\" alt=\"\" /> E-Mail-Adressen verwalten ")."</div>");
+  if (have_module('vhosts'))
+    output("<div class=\"block\">".internal_link("../vhosts/vhosts", "<img src=\"{$prefix}images/webserver.png\" alt=\"\" /> Webserver-Einstellungen ")."</div>");
+  if (have_module('mysql'))
+    output("<div class=\"block\">".internal_link("../mysql/databases", "<img src=\"{$prefix}images/mysql.png\" alt=\"\" /> MySQL-Datenbanken ")."</div>");
 }
  
-if ($_SESSION['role'] & ROLE_CUSTOMER) {
+if (have_module('jabber') && $_SESSION['role'] & ROLE_CUSTOMER) {
   output("<div class=\"block\">".internal_link("../jabber/accounts", "<img src=\"{$prefix}images/jabber.png\" alt=\"\" /> Jabber-Accounts ")."</div>");
 }
 
