@@ -52,19 +52,26 @@ output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, d
 
 output("<div class=\"overview\">");
 
-# Modul "email"
 if (have_module('email') && ($_SESSION['role'] & ROLE_MAILACCOUNT || $_SESSION['role'] & ROLE_VMAIL_ACCOUNT)) {
   output("<div class=\"block\">".internal_link("../email/chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
 }
 
-# Modul "index", kann man nicht ausschalten
 if ($_SESSION['role'] & ROLE_CUSTOMER || $_SESSION['role'] & ROLE_SYSTEMUSER) {
   output("<div class=\"block\">".internal_link("chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
 }
 
-# Modul "invoice"
 if (have_module('invoice') && $_SESSION['role'] & ROLE_CUSTOMER) {
-  output("<div class=\"block\">".internal_link("../invoice/current", "<img src=\"{$prefix}images/invoice.png\" alt=\"\" /> Ihre Rechnungen ")."</div>");
+  require_once('modules/invoice/include/invoice.php');
+  $unpayed_invoices = 0;
+  $my_invoices = my_invoices();
+  foreach($my_invoices AS $inv) {
+    if ($inv['bezahlt'] == 0)
+      $unpayed_invoices++;
+  }
+  $extra = '';
+  if ($unpayed_invoices > 0)
+    $extra = '<span style="color: red;">('.$unpayed_invoices.' unbezahlt)</span>';
+  output("<div class=\"block\">".internal_link("../invoice/current", "<img src=\"{$prefix}images/invoice.png\" alt=\"\" /> Ihre Rechnungen {$extra}")."</div>");
 }
 
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
