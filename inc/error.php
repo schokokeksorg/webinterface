@@ -135,6 +135,7 @@ function login_screen($why)
         <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
         </form>
         <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrem IMAP-Account oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
+        <p>Sollten Sie Ihr Passwort nicht mehr kennen, wenden Sie sich bitte unter Angabe Ihres Benutzernamens und/oder Ihrer Kundennummer an den Support. Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p>
 
         <p><em>'.internal_link('/certlogin?destination=go/'.$go, 'Mit einem Client-Zertifikat anmelden').'</em> ('.internal_link('/go/index/certinfo', 'Wie geht das?').')</p>';
 	/*
