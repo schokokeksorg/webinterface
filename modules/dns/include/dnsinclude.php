@@ -59,7 +59,12 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
 
   $pwhash = 'NULL';
   if ($password_http)
-    $pwhash = "'{SHA}".base64_encode(sha1($password_http, true))."'";
+  {
+    if ($password_http == '************')
+      $pwhash = 'password';
+    else
+      $pwhash = "'{SHA}".base64_encode(sha1($password_http, true))."'";
+  }
 
   db_query("UPDATE dns.dyndns SET handle={$handle}, password={$pwhash}, sshkey={$sshkey} WHERE id={$id} LIMIT 1");
   logger("modules/dns/include/dnsinclude", "dyndns", "edited account »{$id}«");
