@@ -4,6 +4,8 @@ require_once('inc/base.php');
 
 function create_new_webapp($appname, $directory, $url, $data)
 {
+  if (directory_in_use($directory))
+    system_failure('Sie haben erst kürzlich eine Anwendung in diesem Verzeichnis installieren lassen. Die Installation ist noch nicht beendet.');
   $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
   $appname = mysql_real_escape_string($appname);
   $directory = mysql_real_escape_string($directory);
@@ -15,6 +17,8 @@ function create_new_webapp($appname, $directory, $url, $data)
 
 function request_update($appname, $directory, $url)
 {
+  if (directory_in_use($directory))
+    system_failure('Sie haben erst kürzlich eine Anwendung in diesem Verzeichnis installieren lassen oder ein Update in diesem Verzeichnis angefordert. Bitte warten Sie bis diese Aktion durchgeführt wurde.');
   $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
   $appname = mysql_real_escape_string($appname);
   $directory = mysql_real_escape_string($directory);
@@ -22,6 +26,14 @@ function request_update($appname, $directory, $url)
   db_query("INSERT INTO vhosts.webapp_installer VALUES (NULL, '{$appname}', '{$directory}', {$url}, 'old', '{$username}', NULL)");
 }
 
+function directory_in_use($directory)
+{
+  $directory = mysql_real_escape_string($directory);
+  $result = db_query("SELECT id FROM vhosts.webapp_installer WHERE state IN ('new','old') AND directory='{$directory}'");
+  if (mysql_num_rows($result) > 0)
+    return true;
+  return false;
+}
 
 function upgradeable($appname, $version)
 {
