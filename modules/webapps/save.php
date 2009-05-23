@@ -89,7 +89,7 @@ if ($_POST['target'] == 'new')
   $domain = $domain->fqdn;
   if ($domainid == -1)
   {
-    $domain = $_SESSION['userinfo']['username'].'.'.$config['masterdomain'];
+    $domain = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
   }
 
   $url = ($ssl == 'forward' || $ssl == 'https' ? 'https://' : 'http://').($aliaswww ? 'www.' : '').((strlen($hostname) > 0) ? $hostname.'.' : '').$domain;

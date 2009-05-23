@@ -22,11 +22,11 @@ Diese automatische Nachricht dient der Überprüfung Ihrer Identität.
 
 Um sich ein neues Passwort setzen zu können, rufen Sie bitte den
 folgenden Link auf:
- https://config.schokokeks.org/go/index/validate_token.php?customerno={$customer['customerno']}&token={$token}
+ ".config('webinterface_url')."/go/index/validate_token.php?customerno={$customer['customerno']}&token={$token}
 
 Sollte Ihr E-Mail-Programm diesen Link nicht korrekt an den Browser
 übertragen, rufen Sie bitte die Seite
- https://config.schokokeks.org/go/index/validate_token.php
+ ".config('webinterface_url')."/go/index/validate_token.php
 auf und geben Sie die folgenden Daten ein:
  Kundennummer: {$customer['customerno']}
  Token:        {$token}
@@ -44,7 +44,7 @@ function send_mail($address, $subject, $body)
 {
   if (strstr($subject, "\n") !== false)
     die("Zeilenumbruch im subject!");
-  $header = "From: schokokeks.org Web Administration <noreply@schokokeks.org>\r\nReply-To: root@schokokeks.org\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: 8bit";
+  $header = "From: ".config('company_name')." Web Administration <noreply@".config('masterdomain').">\r\nReply-To: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: 8bit";
   mail($address, $subject, $body, $header);
 }
 

@@ -59,7 +59,7 @@ function find_role($login, $password, $i_am_admin = False)
   // Mail-Account
   $account = $login;
   if (! strstr($account, '@')) {
-    $account .= '@schokokeks.org';
+    $account .= '@'.config('masterdomain');
   }
   $result = db_query("SELECT cryptpass FROM mail.courier_mailaccounts WHERE account='{$account}' LIMIT 1;");
   if (@mysql_num_rows($result) > 0)
@@ -215,7 +215,7 @@ function setup_session($role, $useridentity)
   {
     $id = $useridentity;
     if (! strstr($id, '@'))
-      $id .= '@schokokeks.org';
+      $id .= '@'.config('masterdomain');
     $_SESSION['mailaccount'] = $id;
     DEBUG("We are mailaccount: {$_SESSION['mailaccount']}");
   }

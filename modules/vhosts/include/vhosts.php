@@ -23,7 +23,7 @@ function empty_vhost()
   $vhost['hostname'] = '';
   
   $vhost['domain_id'] = -1;
-  $vhost['domain'] = $_SESSION['userinfo']['username'].'.schokokeks.org';
+  $vhost['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
   
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
@@ -45,7 +45,7 @@ function empty_alias()
   $alias['hostname'] = '';
   
   $alias['domain_id'] = -1;
-  $alias['domain'] = $_SESSION['userinfo']['username'].'.schokokeks.org';
+  $alias['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
   
   $alias['options'] = '';
   return $alias;
@@ -54,14 +54,14 @@ function empty_alias()
 
 function domainselect($selected = NULL, $selectattribute = '')
 {
-  global $domainlist;
+  global $domainlist, $config;
   if ($domainlist == NULL)
     $domainlist = get_domain_list($_SESSION['customerinfo']['customerno'],
                                   $_SESSION['userinfo']['uid']);
   $selected = (int) $selected;
 
   $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
-  $ret .= ' <option value="-1">'.$_SESSION['userinfo']['username'].'.schokokeks.org</option>';
+  $ret .= ' <option value="-1">'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').'</option>';
   $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
   foreach ($domainlist as $dom)
   {

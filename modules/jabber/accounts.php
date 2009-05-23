@@ -24,7 +24,7 @@ foreach ($jabberaccounts as $acc)
   if ($domain->id == NULL)
   {
     $domain = new Domain();
-    $domain->fqdn='schokokeks.org';
+    $domain->fqdn = config('masterdomain');
   }
   output("<tr><td>{$local}@{$domain->fqdn}</td><td>".internal_link('chpass', 'Passwort ändern', 'account='.$acc['id'])."&#160;&#160;&#160;".internal_link('save', 'Löschen', 'action=delete&account='.$acc['id']).'</td></tr>');
 }

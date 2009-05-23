@@ -6,7 +6,7 @@ $title = "Neue Mailingliste erstellen";
 $section = 'mailman_lists';
 $domains = get_mailman_domains();
 
-$maildomains = array('0' => 'lists.schokokeks.org');
+$maildomains = array('0' => config('mailman_host'));
 foreach ($domains AS $domain)
 {
   $maildomains[$domain['id']] = $domain['fqdn'];
@@ -19,7 +19,7 @@ output('<p>Tragen Sie hier die benötigten Daten zur Erstellung einer neuen Mail
 '.html_form('mailman_newlist', 'save', 'action=new', '
 <table>
 <tr><td>Listenname:</td><td><input type="text" name="listname" value="" />&#160;@&#160;'.html_select('maildomain', $maildomains).'</td></tr>
-<tr><td>E-Mail-Adresse des Listen-Verwalters:</td><td><input type="text" name="admin" value="'.$_SESSION['userinfo']['username'].'@'.$config['masterdomain'].'" /></td></tr>
+<tr><td>E-Mail-Adresse des Listen-Verwalters:</td><td><input type="text" name="admin" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></td></tr>
 </table>
 <br />
 <input type="submit" name="submit" value="Anlegen" />

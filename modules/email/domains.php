@@ -14,7 +14,7 @@ $subdomains = $settings['subdomains'];
 DEBUG($settings);
 
 output('<h3>E-Mail-Verwaltung</h3>
-<p>Sie können bei schokokeks.org die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
+<p>Sie können bei '.config('company_namy').' die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>
 <li>Sie können die manuelle Verwaltung wählen, bei der Sie passende .courier-Dateien für den Empfang und
 manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>

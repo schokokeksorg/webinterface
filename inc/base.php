@@ -3,6 +3,17 @@
 require_once('inc/db_connect.php');
 
 
+function config($key)
+{
+  global $config;
+  if (array_key_exists($key, $config))
+    return $config[$key];
+  else
+    logger("inc/base", "config", "Request to read nonexistant config option »{$key}«.");
+    return '';
+}
+
+
 function db_query($query)
 {
   DEBUG($query);
@@ -37,8 +48,7 @@ function maybe_null($value)
 
 function logger($scriptname, $scope, $message)
 {
-  global $config;
-  if ($config['logging'] == false)
+  if (config('logging') == false)
     return;
 
   $user = 'NULL';
@@ -148,8 +158,7 @@ function check_form_token($form_id, $formtoken = NULL)
 
 function have_module($modname)
 {
-  global $config;
-  return in_array($modname, $config['modules']);
+  return in_array($modname, config('modules'));
 }
 
 

@@ -3,9 +3,6 @@
 require_once('inc/base.php');
 require_once('session/start.php');
 
-global $config;
-
-
 require_role(ROLE_SYSTEMUSER);
 
 $title = 'MediaWiki einrichten';
@@ -67,7 +64,7 @@ else
   <p>Der Wiki-Administrator kann später im Wiki neue Benutzer anlegen, Seiten sperren oder sonstige Verwaltungsaufgaben durchführen.</p>
   <p><label for="adminuser">Benutzername:</label> <input type="text" id="adminuser" name="adminuser" value="WikiSysop" /></p>
   <p><label for="adminpassword">Passwort:</label> <input type="password" id="adminpassword" name="adminpassword" /></p>
-  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="'.$_SESSION['userinfo']['username'].'@'.$config['masterdomain'].'" /></p>
+  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></p>
 </div>
 
 <p><input type="submit" name="submit" value="Wiki installieren!" /></p>

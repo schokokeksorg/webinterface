@@ -1,8 +1,7 @@
 <?php
 
 require_once('config.php');
-global $config;
-$debugmode = (isset($_GET['debug']) && $config['enable_debug']);
+$debugmode = (isset($_GET['debug']) && config('enable_debug'));
 
 function DEBUG($str)
 {

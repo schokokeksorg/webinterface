@@ -31,7 +31,7 @@ function get_jabberaccount_details($id)
     system_failure("Invalid account");
   $data = mysql_fetch_assoc($result);
   if ($data['domain'] == NULL)
-    $data['domain'] = 'schokokeks.org';
+    $data['domain'] = config('masterdomain');
   else
   {
     $dom = new Domain((int) $data['domain']);

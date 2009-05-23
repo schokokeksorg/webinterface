@@ -35,6 +35,34 @@ class Domain extends KeksData
     $this->parse($res[0]);
   }
 
+  function ensure_customerdomain()
+  {
+    if (! $this->is_customerdomain() )
+      system_failure('Diese Domain gehört nicht Ihrem Kundenaccount.');
+  }
+
+  function ensure_userdomain()
+  {
+    if (! $this->is_userdomain() )
+      system_failure('Diese Domain gehört nicht Ihrem Benutzeraccount.');
+  }
+
+  function is_customerdomain()
+  {
+    if (! isset($_SESSION['customerinfo']) )
+      return false;
+    $customerno = (int) $_SESSION['customerinfo']['customerno'];
+    return ($this->kunde == $customerno);
+  }
+
+  function is_userdomain()
+  {
+    if (! isset($_SESSION['userinfo']) )
+      return false;
+    $uid = (int) $_SESSION['userinfo']['uid'];
+    return ($this->useraccount == $uid);
+  }
+
   function parse($data)
   {
     DEBUG($data);
@@ -89,7 +117,7 @@ function get_jabberable_domains()
   DEBUG($domains);
   $result = array( new Domain() );
   $result[0]->id = 0;
-  $result[0]->fqdn = "schokokeks.org";
+  $result[0]->fqdn = config('masterdomain');
   foreach ($domains as $dom)
   {
     if ($dom->jabber)

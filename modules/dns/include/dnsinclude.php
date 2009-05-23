@@ -114,7 +114,7 @@ function blank_dns_record($type)
                'spec' => NULL);
   if (strtolower($type) == 'mx')
   {
-    $rec['data'] = 'zucker.schokokeks.org';
+    $rec['data'] = config('default_mx');
     $rec['spec'] = '5';
   }
   return $rec;

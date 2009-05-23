@@ -3,9 +3,6 @@
 require_once('inc/base.php');
 require_once('session/start.php');
 
-global $config;
-
-
 require_role(ROLE_SYSTEMUSER);
 
 $title = 'Drupal 6 einrichten';
@@ -63,7 +60,7 @@ else
   
   <h5>E-Mail-Adresse der Seite</h5>
   <p>Wenn die Website E-Mails versendet (z.B. für neue Benutzer, bei kommentaren auf einzelnen Seiten, ...) erscheint diese Adresse als Absender.
-  <p><label for="siteemail">E-Mail-Adresse:</label> <input type="text" id="siteemail" name="siteemail" value="'.$_SESSION['userinfo']['username'].'@'.$config['masterdomain'].'" /></p>
+  <p><label for="siteemail">E-Mail-Adresse:</label> <input type="text" id="siteemail" name="siteemail" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></p>
 </div>
 
 <h4>Drupal-Administrator</h4>
@@ -71,7 +68,7 @@ else
   <p>Der Administrator kann später auf der Website neue Benutzer anlegen, Seiten erzeugen und verändern und sonstige Verwaltungsaufgaben durchführen.</p>
   <p><label for="adminuser">Benutzername:</label> <input type="text" id="adminuser" name="adminuser" value="'.$_SESSION['userinfo']['username'].'" /></p>
   <p><label for="adminpassword">Passwort:</label> <input type="password" id="adminpassword" name="adminpassword" /></p>
-  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="'.$_SESSION['userinfo']['username'].'@'.$config['masterdomain'].'" /></p>
+  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></p>
 </div>
 
 <p><input type="submit" name="submit" value="Drupal installieren!" /></p>

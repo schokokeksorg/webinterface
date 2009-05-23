@@ -37,7 +37,7 @@ if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists
 }
 $tmp = explode('/', $go, 2);
 $module = $tmp[0];
-if (! in_array($module, $config['modules']))
+if (! in_array($module, config('modules')))
 {
   die("illegal command");
 }

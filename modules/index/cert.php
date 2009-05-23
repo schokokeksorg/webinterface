@@ -24,7 +24,6 @@ if (isset($_GET['clear']))
 if (isset($_SESSION['clientcert_cert']))
 {
   // FIXME: Es gibt keine Duplikaterkennung.
-  global $config;
   global $menu;
   output('<div style="margin: 1em; padding: 1em; border: 2px solid green;">');
   output('<p>Es wurde folgendes Client-Zertifikat von Ihrem Browser gesendet:</p>

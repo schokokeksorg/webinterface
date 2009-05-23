@@ -2,7 +2,7 @@
 
 require_once('inc/error.php');
 
-if (!@mysql_connect($config['db_host'], $config['db_user'], $config['db_pass']))
+if (!@mysql_connect(config('db_host'), config('db_user'), config('db_pass')))
 	system_failure('Konnte nicht zur Datenbank verbinden. Wenn dieser Fehler wiederholt auftritt, beachrichtigen Sie bitte den Administrator.');
 	
 if (!@mysql_query('SET NAMES utf8'))

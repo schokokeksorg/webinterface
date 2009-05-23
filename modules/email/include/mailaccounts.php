@@ -11,9 +11,8 @@ require_once('common.php');
 
 function mailaccounts($uid)
 {
-  global $config;
   $uid = (int) $uid;
-  $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'{$config['masterdomain']}',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid");
+  $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'{config('masterdomain')}',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid");
   DEBUG("Found ".@mysql_num_rows($result)." rows!");
   $accounts = array();
   if (@mysql_num_rows($result) > 0)
@@ -24,9 +23,8 @@ function mailaccounts($uid)
 
 function get_mailaccount($id)
 {
-  global $config;
   $uid = (int) $uid;
-  $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'{$config['masterdomain']}',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id");
+  $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'{config('masterdomain')}',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id");
   DEBUG("Found ".mysql_num_rows($result)." rows!");
   $acc = mysql_fetch_object($result);
   $ret = array('account' => $acc->account, 'mailbox' => $acc->maildir,  'enabled' => ($acc->aktiv == 1));
@@ -136,7 +134,6 @@ function delete_mailaccount($id)
 
 function check_valid($acc)
 {
-  global $config;
   $user = $_SESSION['userinfo'];
   DEBUG("Account-data: ".print_r($acc, true));
   DEBUG("User-data: ".print_r($user, true));
@@ -151,7 +148,7 @@ function check_valid($acc)
   if ($acc['account'] == '' || strpos($acc['account'], '@') == 0)
     return "Es wurde kein Benutzername angegeben!";
   if (strpos($acc['account'], '@') === false)
-    return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen müssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie »@{$config['masterdomain']}«.";
+    return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen müssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie »@{config('masterdomain')}«.";
 
   list($local, $domain) = explode('@', $acc['account'], 2);
   verify_input_username($local);
@@ -162,11 +159,11 @@ function check_valid($acc)
 
   if (array_search($domain, $domains) === false)
   {
-    if ($domain == $config['masterdomain'])
+    if ($domain == config('masterdomain'))
     {
       if (substr($local, 0, strlen($user['username'])) != $user['username'] || ($acc['account'][strlen($user['username'])] != '-' && $acc['account'][strlen($user['username'])] != '@'))
       {
-        return "Sie haben »@{$config['masterdomain']}« als Domain-Teil angegeben, aber der Benutzer-Teil beginnt nicht mit Ihrem Benutzername!";
+        return "Sie haben »@{config('masterdomain')}« als Domain-Teil angegeben, aber der Benutzer-Teil beginnt nicht mit Ihrem Benutzername!";
       }
     }
     else

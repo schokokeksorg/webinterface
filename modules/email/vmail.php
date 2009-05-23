@@ -10,7 +10,7 @@ if (! user_has_vmail_domain()) {
   output("<h3>E-Mail-Verwaltung</h3>");
   
   output('
-<p>Sie können bei schokokeks.org die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
+<p>Sie können bei '.config('company_name').' die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>
 <li>Sie können die manuelle Verwaltung wählen, bei der Sie passende .courier-Dateien für den Empfang und
 manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>
@@ -101,7 +101,7 @@ output('<h3>E-Mail-Accounts</h3>
 output('<p>'.internal_link("edit", "Neue E-Mail-Adresse anlegen").'</p>');
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
-output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: schokokeks.org bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
+output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: '.config('company_name').' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
 
 }
 

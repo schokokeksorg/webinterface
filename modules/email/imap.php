@@ -7,7 +7,6 @@ require_once('mailaccounts.php');
 
 require_role(ROLE_SYSTEMUSER);
 
-global $config;
 
 $user = $_SESSION['userinfo'];
 
@@ -86,7 +85,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
   <tr>
     <td>Benutzername:</td>
     <td><input type="text" id="user" name="user" />@<select name="domain" size="1">
-    <option value="'.$config['masterdomain'].'">'.$config['masterdomain'].'</option>
+    <option value="'.config('masterdomain').'">'.config('masterdomain').'</option>
   '.$options.'
     </select></td>
   </tr>
@@ -157,7 +156,7 @@ elseif (isset($_GET['edit']))
   <tr><th>Einstellung:</th><th>alter Wert:</th><th>neuer Wert:</th><th>&#160;</th></tr>
   <tr><td>Benutzername:</td><td><input type="text" id="old_account" name="old_account" value="'.$account['account'].'" readonly="readonly" style="background-color: #C0C0C0;" /></td>
           <td><input type="text" id="user" name="user" value="'.$username.'" />@<select name="domain" id="domain" size="1">
-    <option value="'.$config['masterdomain'].'">'.$config['masterdomain'].'</option>
+    <option value="'.config('masterdomain').'">'.config('masterdomain').'</option>
     ';
     $domains = get_domain_list($user['customerno'], $user['uid']);
     if (count($domains) > 0)

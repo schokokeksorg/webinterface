@@ -27,8 +27,7 @@ if ($_GET['action'] == 'edit')
   $domainid = (int) $_POST['domain'];
   if ($domainid != -1) {
     $domain = new Domain( (int) $_POST['domain'] );
-    if ($domain->useraccount != $_SESSION['userinfo']['uid'])
-      system_failure('Ungültige Domain');
+    $domain->ensure_userdomain();
     $domainid = $domain->id;
   }
 
@@ -165,8 +164,7 @@ elseif ($_GET['action'] == 'addalias')
   $domainid = (int) $_POST['domain'];
   if ($domainid != -1) {
     $domain = new Domain( (int) $_POST['domain'] );
-    if ($domain->useraccount != $_SESSION['userinfo']['uid'])
-      system_failure('Ungültige Domain');
+    $domain->ensure_userdomain();
     $domainid = $domain->id;
   }
 

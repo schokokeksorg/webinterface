@@ -78,7 +78,7 @@ html_header("<script type=\"text/javascript\">
 
 $defaultdocroot = $vhost['domain'];
 if (! $vhost['domain'])
-  $defaultdocroot = $_SESSION['userinfo']['username'].'.schokokeks.org';
+  $defaultdocroot = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
 if ($vhost['hostname'])
   $defaultdocroot = $vhost['hostname'].'.'.$defaultdocroot;
 
