@@ -58,7 +58,7 @@ foreach ($submenu AS $weight => $data) {
 DEBUG($submenu);
 
 
-header("Content-Type: {config('mime_type')}");
+header("Content-Type: ".config('mime_type'));
 ?>
 <?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"

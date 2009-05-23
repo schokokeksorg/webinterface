@@ -51,7 +51,6 @@ if ($debugmode)
 
 html_header('<script type="text/javascript" src="'.$prefix.'js/ajax.js" ></script>
 <script type="text/javascript">
-<!--
 
 function doRequest() {
   ajax_request(\'su_ajax\', \''.$debug.'q=\'+document.getElementById(\'query\').value, got_response)
@@ -69,7 +68,6 @@ function got_response() {
   }
 }
 
-// -->
 </script>
 ');
 
@@ -78,6 +76,7 @@ output(html_form('su_su_ajax', '', '', '<strong>Suchtext:</strong> <input type="
 output('<div id="response"></div>
 <div style="height: 3em;">&#160;</div>');
 
+/*
 
 
 $users = list_system_users();
@@ -99,7 +98,7 @@ $customers = list_customers();
 $options = '';
 foreach ($customers as $customer)
 {
-  $options .= "  <option value=\"{$customer->id}\">{$customer->id} - {$customer->name}</option>\n";
+  $options .= "  <option value=\"{$customer->id}\">{$customer->id} - ".htmlspecialchars($customer->name)."</option>\n";
 }
 
 output(html_form('su_su', 'su', '', '<p>Kunde auswählen:
@@ -110,6 +109,6 @@ output(html_form('su_su', 'su', '', '<p>Kunde auswählen:
 </p>
 '));
 
-
+*/
 
 ?>

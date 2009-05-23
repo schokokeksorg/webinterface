@@ -10,7 +10,7 @@ function config($key)
     return $config[$key];
   else
     logger("inc/base", "config", "Request to read nonexistant config option »{$key}«.");
-    return '';
+    return NULL;
 }
 
 

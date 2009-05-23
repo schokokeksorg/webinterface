@@ -48,7 +48,7 @@ if ($certs != NULL) {
 }
 else
 {
-  output('<p><em>Bisher sind keine Zertifikate für Ihren Zugang eingerichtet</em>');
+  output('<p><em>Bisher sind keine Zertifikate für Ihren Zugang eingerichtet</em></p>');
 }
 
 $backurl = 'go/index/cert';

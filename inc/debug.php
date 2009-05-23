@@ -1,6 +1,7 @@
 <?php
 
 require_once('config.php');
+require_once('inc/base.php');
 $debugmode = (isset($_GET['debug']) && config('enable_debug'));
 
 function DEBUG($str)

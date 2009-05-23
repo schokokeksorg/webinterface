@@ -41,7 +41,7 @@ foreach ($auto_records AS $rec)
 {
   $data = ( $rec['ip'] ? $rec['ip'] : $rec['data'] );
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
-  output("<tr><td><em>{$rec['fqdn']}</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
+  output("<tr><td><em>{$rec['fqdn']}</em></td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
   
 }
 

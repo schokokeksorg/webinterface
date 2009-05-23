@@ -24,7 +24,7 @@ output('<h3>Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken</h3>');
 
 output('<p>Das Programm freewvs prüft automatisch regelmäßig Ihre Web-Anwendungen (z.B. Blog-Software, Content-Management-Systeme, ...) auf bekannte Sicherheitsprobleme. Sie können festlegen, wie oft Sie bei gefundenen Problemen benachrichtigt werden möchten.</p>
 <p><strong>Wie oft möchten Sie über Sicherheitsprobleme benachrichtigt werden?</strong></p>
-'.html_form('freewvs_freq', '', '', '<p>'.html_select('freq', array('day' => 'täglich', 'week' => 'höchstens einmal pro Woche', 'month' => 'höchstens einmal pro Monat'), $freq).' &#160; <input type="submit" value="speichern" />').'</p>');
+'.html_form('freewvs_freq', 'freewvs', '', '<p>'.html_select('freq', array('day' => 'täglich', 'week' => 'höchstens einmal pro Woche', 'month' => 'höchstens einmal pro Monat'), $freq).' &#160; <input type="submit" value="speichern" /></p>'));
 
 $results = load_results();
 

@@ -101,6 +101,6 @@ output(html_form('dns_record_edit', 'dns_record_save', "type={$type}&domain={$do
 <tr><td><label for="ttl">TTL:</label></td><td><input type="text" name="ttl" id="ttl" value="'.$data['ttl'].'" /></td></tr>
 </table>
 <p><input type="submit" value="'.$submit.'" /></p>
-</p>'));
+'));
 
 ?>
