@@ -140,7 +140,7 @@ if ($output_something)
   $form .= '<th><input type="text" name="new_user" size="10" value="" /></th></tr>
 ';
 
-  array_push($users, "new");
+  array_push($users, array('username' => "new", 'description' => NULL));
 
   foreach($dbs as $db)
   {
