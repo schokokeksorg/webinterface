@@ -177,7 +177,7 @@ function save_dns_record($id, $record)
   $dom = new Domain( (int) $record['domain'] );
   if (! $dom->id)
     system_failure('invalid domain');
-  verify_input_hostname($record['hostname']);
+  verify_input_hostname($record['hostname'], true);
   if ($record['ttl'] &&  (int) $record['ttl'] < 1)
     system_failure('Fehler bei TTL');
   switch ($record['type']) 

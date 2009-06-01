@@ -64,21 +64,25 @@ function verify_input_username( $input )
 
 
 
-function filter_input_hostname( $input )
+function filter_input_hostname( $input, $wildcard=false )
 {
+  // FIXME: Eine "filter"-Funktion sollte keinen system_failure verursachen sondern einfach einen bereinigten String liefern.
+  
   $input = str_replace(array('Ä', 'Ö', 'Ü'), array('ä', 'ö', 'ü'), strtolower($input));
   $input = rtrim($input, "\t\n\r\x00 .");
   $input = ltrim($input, "\t\n\r\x00 .");
-  if (ereg_replace("[^[:alnum:]äöü\.\-]", "", $input ) != $input)
+  if (ereg_replace("[^[:alnum:]äöü*\.\-]", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
+  if (! $wildcard && ereg_replace("\*", "", $input ) != $input)
+    system_failure("Ihre Daten enthielten ungültige Zeichen (Keine Wildcards erlaubt)!");
   if (strstr($input, '..'))
     system_failure("Ungültiger Hostname");
   return $input;
 }
 
-function verify_input_hostname( $input )
+function verify_input_hostname( $input, $wildcard=false )
 {
-  if (filter_input_hostname( $input ) != $input) {
+  if (filter_input_hostname( $input, $wildcard ) != $input) {
     logger('inc/security', 'verify_input_hostname', 'Ungültige Daten: '.$input);
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
   }
