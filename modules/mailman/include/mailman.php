@@ -41,7 +41,7 @@ function delete_list($id)
 
 function create_list($listname, $maildomain, $admin)
 {
-  $listname = filter_input_username($listname);
+  verify_input_username($listname);
   $maildomain = maybe_null( (int) $maildomain );
   $owner = (int) $_SESSION['userinfo']['uid'];
   $admin = filter_input_general($admin);
