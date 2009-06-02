@@ -35,6 +35,7 @@ function get_jabberaccount_details($id)
   else
   {
     $dom = new Domain((int) $data['domain']);
+    $dom->ensure_customerdomain();
     $data['domain'] = $dom->fqdn;
   }
   return $data;

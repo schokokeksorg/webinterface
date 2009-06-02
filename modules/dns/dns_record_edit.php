@@ -33,6 +33,7 @@ if ($_REQUEST['id'] == 'new')
   $new = true;
   $data = blank_dns_record($_REQUEST['type']);
   $domain = new Domain((int) $_REQUEST['domain']);
+  $domain->ensure_customerdomain();
   $type = $_REQUEST['type'];
   if (! in_array($type, $valid_record_types))
     system_failure('Ungültiger Record-Typ!');
@@ -47,6 +48,7 @@ if (! $new)
   $type = $data['type'];
   $dyndns = isset($data['dyndns']);
   $domain = new Domain((int) $data['domain']);
+  $domain->ensure_customerdomain();
   if (! in_array($type, $valid_record_types))
     system_failure('Ungültiger Record-Typ!');
 }
@@ -56,6 +58,9 @@ if ($new)
   output('<h3>DNS-Record erstellen</h3>');
 else
   output('<h3>DNS-Record bearbeiten</h3>');
+
+output('<p><strong>Bitte beachten Sie:</strong> Um Ihnen auch ungewöhniche Konstellationen zu ermöglichen, erlaubt dieses Webinterface sehr großzügige Eintragungen, die eventuell nicht plausibel sind oder vom DNS-Server gar nicht so verstanden werden können. Wir können sicherheitskritische Einträge herausfiltern, jedoch nicht logische Fehler automatisch erkennen. Im Fehlerfall wird meistens Ihre gesamte Domain vom DNS-Server ausgeschlossen, so lange sich Fehler in der Konfiguration befinden. Sollten Sie hier also fehlerhafte Eintragungen machen, kann dies die Erreichbarkeit der betreffenden Domain im Ganzen stören.</p>');
+
 
 output('<p>Record-Typ: '.strtoupper($type).'</p>');
 

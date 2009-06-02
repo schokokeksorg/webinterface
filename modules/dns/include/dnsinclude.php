@@ -87,6 +87,7 @@ function get_dyndns_records($id)
   $data = array();
   while ($entry = mysql_fetch_assoc($result)) {
     $dom = new Domain((int) $entry['domain']);
+    $dom->ensure_customerdomain();
     $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
     if (! $entry['hostname'])
       $entry['fqdn'] = $dom->fqdn;
@@ -128,6 +129,7 @@ function get_dns_record($id)
     system_failure('illegal ID');
   $data = mysql_fetch_assoc($result);
   $dom = new Domain( (int) $data['domain']);
+  $dom->ensure_customerdomain();
   DEBUG($data);
   return $data;
 }
@@ -140,6 +142,7 @@ function get_domain_records($dom)
   $data = array();
   while ($entry = mysql_fetch_assoc($result)) {
     $dom = new Domain((int) $entry['domain']);
+    $dom->ensure_customerdomain();
     $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
     if (! $entry['hostname'])
       $entry['fqdn'] = $dom->fqdn;
@@ -175,6 +178,7 @@ function save_dns_record($id, $record)
   if (!in_array($record['type'], $implemented_record_types))
     system_failure('record type '.$record['type'].' not implemented at the moment.');
   $dom = new Domain( (int) $record['domain'] );
+  $dom->ensure_customerdomain();
   if (! $dom->id)
     system_failure('invalid domain');
   verify_input_hostname($record['hostname'], true);

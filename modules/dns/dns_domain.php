@@ -12,6 +12,7 @@ require_once('dnsinclude.php');
 $section = 'dns_dns';
 
 $domain = new Domain((int) $_REQUEST['dom']);
+$domain->ensure_customerdomain();
 
 DEBUG($domain);
 

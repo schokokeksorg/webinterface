@@ -18,8 +18,7 @@ if ($_POST['target'] == 'new')
   $domainid = (int) $_POST['domain'];
   if ($domainid != -1) {
     $domain = new Domain( (int) $_POST['domain'] );
-    if ($domain->useraccount != $_SESSION['userinfo']['uid'])
-      system_failure('Ungültige Domain');
+    $domain->ensure_userdomain();
     $domainid = $domain->id;
   }
 
