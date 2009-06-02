@@ -44,9 +44,10 @@ function create_list($listname, $maildomain, $admin)
   verify_input_username($listname);
   $maildomain = maybe_null( (int) $maildomain );
   $owner = (int) $_SESSION['userinfo']['uid'];
-  $admin = filter_input_general($admin);
+  verify_input_general($admin);
   if (! check_emailaddr($admin))
     system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
+  $admin = mysql_real_escape_string($admin);
   $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname='{$listname}'");
   if (mysql_num_rows($result) > 0)
     system_failure('Eine Liste mit diesem Namen existiert bereits (unter dieser oder einer anderen Domain). Jeder Listenname kann nur einmal verwendet werden.');
