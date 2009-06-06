@@ -211,7 +211,7 @@ else
   output('</table>');
   if (imap_on_vmail_domain())
   {
-    output('<div class="error"><strong>Achtung:</strong> Es scheint als hätten Sie einen (manuellen) IMAP-Account mittels einer Domain angelegt, die für Webinterface-Verwaltung konfiguriert ist. Sollten Sie nicht genau wissen was Sie tun, ist das vermutlich falsch und wird zu Fehlfuntkionen führen.</div>');
+    output('<div class="error"><strong>Achtung:</strong> Es scheint als hätten Sie einen (manuellen) IMAP-Account mittels einer Domain angelegt, die für Webinterface-Verwaltung konfiguriert ist. Sollten Sie nicht genau wissen was Sie tun, ist das vermutlich falsch und wird zu Fehlfunktionen führen.</div>');
   }
   output('<p>'.internal_link("imap", "Neuen Account anlegen", "action=create").'</p>
 ');
