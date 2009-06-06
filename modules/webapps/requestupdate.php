@@ -23,7 +23,7 @@ elseif ($sure === true)
 {
   request_update($app, $directory, get_url_for_dir($directory));
   if (! $debugmode)
-    header("Location: freewvs");
+    header("Location: waitforupdate");
 }
 elseif ($sure === false)
 {
