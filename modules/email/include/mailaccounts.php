@@ -26,6 +26,8 @@ function get_mailaccount($id)
   $uid = (int) $uid;
   $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id");
   DEBUG("Found ".mysql_num_rows($result)." rows!");
+  if (mysql_num_rows($result) != 1)
+    system_failure('Dieser Mailaccount existiert nicht oder gehört Ihnen nicht');
   $acc = mysql_fetch_object($result);
   $ret = array('account' => $acc->account, 'mailbox' => $acc->maildir,  'enabled' => ($acc->aktiv == 1));
   DEBUG(print_r($ret, true));
@@ -171,6 +173,25 @@ function check_valid($acc)
   }
 
   return '';
+}
+
+
+function imap_on_vmail_domain()
+{
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT m.id FROM mail.mailaccounts AS m INNER JOIN mail.virtual_mail_domains AS vd USING (domain) WHERE m.uid={$uid}");
+  if (mysql_num_rows($result) > 0)
+    return true;
+  return false;
+}
+
+function user_has_only_vmail_domains()
+{
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT d.id FROM mail.v_domains AS d LEFT JOIN mail.v_vmail_domains AS vd USING (domainname) WHERE vd.id IS NULL AND d.user={$uid}");
+  if (mysql_num_rows($result) == 0)
+    return true;
+  return false;
 }
 
 

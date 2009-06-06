@@ -187,8 +187,12 @@ elseif (isset($_GET['edit']))
 }
 else
 {
-  output('<h3>IMAP-Accounts</h3>
-<p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
+  output('<h3>IMAP-Accounts</h3>');
+  if (user_has_only_vmail_domains())
+  {
+    output('<div class="error"><strong>Achtung:</strong> Alle Ihre Domains sind auf Webinterface-Verwaltung konfiguriert. Sie können dennoch manuelle IMAP-Konten für Ihre speziellen Konfigurationen anlegen, in der Regel sollten Sie aber hier keine IMAP-Acccounts anlegen. Dies kann zu Fehlfunktionen führen.</div>');
+  }
+  output('<p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
 <table style="margin-bottom: 1em;">
 <tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&#160;</th></tr>
 ');
@@ -204,9 +208,12 @@ else
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
             <td>'.internal_link("imap", "löschen", "action=delete&account=".$account['id']).'</td></tr>');
         }
-        output('</table>
-<p>'.internal_link("imap", "Neuen Account anlegen", "action=create").'</p>
-
+  output('</table>');
+  if (imap_on_vmail_domain())
+  {
+    output('<div class="error"><strong>Achtung:</strong> Es scheint als hätten Sie einen (manuellen) IMAP-Account mittels einer Domain angelegt, die für Webinterface-Verwaltung konfiguriert ist. Sollten Sie nicht genau wissen was Sie tun, ist das vermutlich falsch und wird zu Fehlfuntkionen führen.</div>');
+  }
+  output('<p>'.internal_link("imap", "Neuen Account anlegen", "action=create").'</p>
 ');
 }
 
