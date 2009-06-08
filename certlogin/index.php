@@ -40,7 +40,7 @@ DEBUG($_ENV);
 if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']) && check_path($_REQUEST['backto']))
 {
   DEBUG('recording client-cert');
-  if (isset($_ENV['REDIRECT_SSL_CLIENT_CERT']))
+  if (isset($_ENV['REDIRECT_SSL_CLIENT_CERT']) && $_ENV['REDIRECT_SSL_CLIENT_S_DN'] != '' && $_ENV['REDIRECT_SSL_CLIENT_I_DN'] != '')
   {
     $_SESSION['clientcert_cert'] = prepare_cert($_ENV['REDIRECT_SSL_CLIENT_CERT']);
     $_SESSION['clientcert_dn'] = $_ENV['REDIRECT_SSL_CLIENT_S_DN'];
