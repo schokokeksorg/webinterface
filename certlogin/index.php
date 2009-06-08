@@ -76,7 +76,7 @@ elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
 }
 else
 {
-  if (isset($_ENV['REDIRECT_SSL_CLIENT_CERT'])) {
+  if (isset($_ENV['REDIRECT_SSL_CLIENT_CERT']) && $_ENV['REDIRECT_SSL_CLIENT_S_DN'] != '' && $_ENV['REDIRECT_SSL_CLIENT_I_DN'] != '') {
     $ret = get_logins_by_cert($_ENV['REDIRECT_SSL_CLIENT_CERT']);
     if ($ret === NULL) {
       system_failure('Ihr Browser hat ein Client-Zertifikat gesendet, dieses ist aber noch nicht für den Zugang hinterlegt. Gehen Sie bitte zurück und melden Sie sich bitte per Benutzername und Passwort an.');
