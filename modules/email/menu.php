@@ -13,7 +13,7 @@ if ($role & (ROLE_VMAIL_ACCOUNT | ROLE_MAILACCOUNT))
   $menu['email_chpass'] = array("label" => "Passwort ändern", "file" => "chpass", "weight" => 15);
 }
 if ($role & ROLE_SYSTEMUSER) {
-  $menu["email_domains"] = array("label" => "Mail-Verwaltung", "file" => "domains", "weight" => 2, "submenu" => "domains_domains");
+  $menu["email_domains"] = array("label" => "Mail-Verwaltung", "file" => "domains", "weight" => 1, "submenu" => "domains_domains");
 }
 if ($role & ROLE_SYSTEMUSER && (user_has_accounts() || ! user_has_vmail_domain() || user_has_regular_domain() ) )
 {
