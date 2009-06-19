@@ -36,7 +36,11 @@ foreach ($records AS $rec)
     $data .= ' ('.$rec['spec'].')';
   }
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
-  output("<tr><td>".internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}")."</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
+  $link = $rec['fqdn'];
+  if (in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname'))) {
+      $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
+  }
+  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
 }  
 foreach ($auto_records AS $rec)
 {
