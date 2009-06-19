@@ -46,8 +46,10 @@ function change_mailaccount($id, $arr)
     if ($domain->id == NULL)
       array_push($conditions, "domain=NULL");
     else
+    {
+      $domain->ensure_userdomain();
       array_push($conditions, "domain={$domain->id}");
-
+    }
     array_push($conditions, "local='".mysql_real_escape_string($local)."'");
   }
   if (isset($arr['mailbox']))
@@ -84,8 +86,10 @@ function create_mailaccount($arr)
   $domain = new Domain( (string) $domain);
   if ($domain->id == NULL)
     $values['domain'] = "NULL";
-  else
+  else {
+    $domain->ensure_userdomain();
     $values['domain'] = $domain->id;
+  }
 
   $values['local'] = "'".mysql_real_escape_string($local)."'";
 
