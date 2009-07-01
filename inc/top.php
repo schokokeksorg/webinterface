@@ -75,7 +75,7 @@ else
 
 echo '
 <link rel="stylesheet" href="'.$prefix.'css/admin.css" type="text/css" media="screen" title="Normal" />
-<link rel="shortcut icon" href="'.$prefix.'favvicon.ico" type="image/x-icon" />';
+<link rel="shortcut icon" href="'.$prefix.'favicon.ico" type="image/x-icon" />';
 
 echo $html_header;
 ?>
