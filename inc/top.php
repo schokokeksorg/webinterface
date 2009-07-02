@@ -82,7 +82,7 @@ echo $html_header;
 </head>
 <body>
 
-<a href="#content" style="display: none;">Zum Inhalt</a>
+<div><a href="#content" style="display: none;">Zum Inhalt</a></div>
 
 <div class="menu">
 <img src="<?php echo $prefix.config('logo'); ?>" width="190" height="141" alt="<?php echo config('company_name'); ?>" />
@@ -162,7 +162,7 @@ if (isset($_SESSION['admin_user'])) {
 </div>
 
 <div class="content">
-<a name="content" style="display: none"> </a>
+<a id="content" style="display: none"> </a>
 <?php
 show_messages();
 
