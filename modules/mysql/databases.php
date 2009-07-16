@@ -134,7 +134,7 @@ if ($output_something)
 
   foreach ($users as $user)
   {
-    $desc = ($user['description'] ? $user['description'] : '');
+    $desc = ($user['description'] ? $user['description'].' (Erstellt: '.$user['created'].')' : 'Erstellt: '.$user['created']);
     $form .= "<th><span title=\"{$desc}\">{$user['username']}</span><br />".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Benutzer »{$user['username']}« löschen\" alt=\"löschen\" />", "action=delete_user&user={$user['username']}")."</th>";
   }
   $form .= '<th><input type="text" name="new_user" size="10" value="" /></th></tr>
@@ -144,7 +144,7 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
-    $desc = ($db['description'] ? $db['description'] : '');
+    $desc = ($db['description'] ? $db['description'].' (Erstellt: '.$db['created'].')' : 'Erstellt: '.$db['created']);
     $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"{$desc}\">{$db['name']}</span>&#160;".internal_link("", "<img src=\"{$prefix}images/delete.png\" title=\"Datenbank »{$db['name']}« löschen\" alt=\"löschen\" />", "action=delete_db&db={$db['name']}")."</td>";
     foreach ($users as $user)
       $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db['name'].'_'.$user['username'].'" name="access['.$db['name'].'][]" value="'.$user['username'].'" '.(get_mysql_access($db['name'], $user['username']) ? 'checked="checked" ' : '')." /></td>";
