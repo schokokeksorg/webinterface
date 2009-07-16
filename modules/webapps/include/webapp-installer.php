@@ -5,13 +5,13 @@ require_once('inc/base.php');
 function create_new_webapp($appname, $directory, $url, $data)
 {
   if (directory_in_use($directory))
-    system_failure('Sie haben erst kürzlich eine Anwendung in diesem Verzeichnis installieren lassen. Die Installation ist noch nicht beendet.');
+    system_failure('Sie haben erst kürzlich eine Anwendung in diesem Verzeichnis installieren lassen. Aus Sicherheitsgründen können Sie in diesem Verzeichnis am selben Tag nicht schon wieder eine Anwendung installieren.');
   $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
   $appname = mysql_real_escape_string($appname);
   $directory = mysql_real_escape_string($directory);
   $url = mysql_real_escape_string($url);
   $data = mysql_real_escape_string($data);
-  db_query("INSERT INTO vhosts.webapp_installer VALUES (NULL, '{$appname}', '{$directory}', '{$url}', 'new', '{$username}', '{$data}')");
+  db_query("INSERT INTO vhosts.webapp_installer (appname, directory, url, state, username, data) VALUES ('{$appname}', '{$directory}', '{$url}', 'new', '{$username}', '{$data}')");
 }
 
 
@@ -23,13 +23,13 @@ function request_update($appname, $directory, $url)
   $appname = mysql_real_escape_string($appname);
   $directory = mysql_real_escape_string($directory);
   $url = maybe_null(mysql_real_escape_string($url));
-  db_query("INSERT INTO vhosts.webapp_installer VALUES (NULL, '{$appname}', '{$directory}', {$url}, 'old', '{$username}', NULL)");
+  db_query("INSERT INTO vhosts.webapp_installer (appname, directory, url, state, username) VALUES ('{$appname}', '{$directory}', {$url}, 'old', '{$username}')");
 }
 
 function directory_in_use($directory)
 {
   $directory = mysql_real_escape_string($directory);
-  $result = db_query("SELECT id FROM vhosts.webapp_installer WHERE state IN ('new','old') AND directory='{$directory}'");
+  $result = db_query("SELECT id FROM vhosts.webapp_installer WHERE (state IN ('new','old') OR DATE(lastchange)=CURDATE()) AND directory='{$directory}'");
   if (mysql_num_rows($result) > 0)
     return true;
   return false;
@@ -47,6 +47,11 @@ function upgradeable($appname, $version)
       return 'drupal6';
     }
     DEBUG("Version: ".substr($version, 0, 2));
+  }
+  elseif ($appname == 'MediaWiki')
+  {
+    DEBUG("found MediaWiki");
+    return 'mediawiki';
   }
   DEBUG("found no upgradeable webapp!");
   return NULL;
@@ -98,8 +103,8 @@ function create_webapp_mysqldb($application, $sitename)
     $handle = $username.'_'.$i;
     if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle)))
     {
-      create_mysql_database($handle);
-      create_mysql_account($handle);
+      create_mysql_database($handle, $description);
+      create_mysql_account($handle, $description);
       set_mysql_access($handle, $handle, true);
       $password = random_string(10);
       set_mysql_password($handle, $password);

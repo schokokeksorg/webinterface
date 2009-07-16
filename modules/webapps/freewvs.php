@@ -59,7 +59,10 @@ foreach ($results AS $app) {
     $up = upgradeable($app['appname'], $app['version']);
     if ($up)
     {
-      output('<p>'.internal_link('requestupdate', 'Update automatisch durchführen', "dir={$app['directory']}&app={$up}")."</p>\n");
+      if (directory_in_use($app['directory']))
+        output('<p><em>Automatische Update-Aktion heute nicht mehr möglich</em></p>');
+      else
+        output('<p>'.internal_link('requestupdate', 'Update automatisch durchführen', "dir={$app['directory']}&app={$up}")."</p>\n");
     }
   }
   output("</div>\n");
