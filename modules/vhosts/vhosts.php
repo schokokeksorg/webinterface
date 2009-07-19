@@ -21,7 +21,7 @@ $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
 {
-  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>PHP</th><th>Lokaler Pfad<sup>*</sup></th></tr>\n");
+  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>SSL</th><th>PHP</th><th>Lokaler Pfad<sup>*</sup></th></tr>\n");
 
   $even = True;
 
@@ -58,6 +58,20 @@ if (count($vhosts) > 0)
         $logfiles .= ' und Fehler';
     }
     output("<td>{$logfiles}</td>");
+  
+    if ($vhost['ssl'] == 'http')
+    {
+      output("<td><img src=\"{$prefix}images/error.png\" style=\"height: 18px; width: 18px;\" alt=\"aus\" title=\"SSL ausgeschaltet\" /></td>");
+    }
+    elseif ($vhost['cert'])
+    {
+      output("<td><img src=\"{$prefix}images/secure.png\" style=\"height: 16px; width: 16px;\" alt=\"cert\" title=\"SSL mit eigenem Zertifikat\" /></td>");
+    }
+    else
+    {
+      output("<td><img src=\"{$prefix}images/ok.png\" style=\"height: 17px; width: 17px;\" alt=\"ein\" title=\"SSL eingeschaltet\" /></td>");
+    }
+
     if ($vhost['is_webapp'] == 1) {
       output('<td colspan="2"><em><strong>Sonderanwendung:</strong> Vorinstallierte Webanwendung</em></td>');
     }

@@ -101,6 +101,8 @@ if ($_GET['action'] == 'edit')
     /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
   }
 
+  $cert = (int) $_POST['cert'];
+
   $logtype = '';
   switch ($_POST['logtype']) {
     case 'anonymous':
@@ -138,6 +140,7 @@ if ($_GET['action'] == 'edit')
   $vhost['docroot'] = $docroot;
   $vhost['php'] = $php;
   $vhost['ssl'] = $ssl;
+  $vhost['cert'] = $cert;
   $vhost['logtype'] = $logtype;
   $vhost['errorlog'] = $errorlog; 
   $vhost['options'] = $options;

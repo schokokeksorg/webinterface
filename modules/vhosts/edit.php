@@ -4,6 +4,7 @@ require_once('inc/debug.php');
 require_once('inc/security.php');
 
 require_once('vhosts.php');
+require_once('certs.php');
 
 $title = "Subdomain bearbeiten";
 $section = 'vhosts_vhosts';
@@ -192,7 +193,7 @@ $form .= "
 <br />
 </div>
 
-<h4 style=\"margin-top: 3em;\">Allgemeine Optionen</h4>
+<h4 style=\"clear: right; margin-top: 3em;\">Allgemeine Optionen</h4>
 <div style=\"margin-left: 2em;\">
     <h5>SSL-Verschlüsselung</h5>
     <div style=\"margin-left: 2em;\">
@@ -214,6 +215,46 @@ $form .= "
     </div>
 </div>
     ";
+
+$ipaddrs = user_ipaddrs();
+$certs = user_certs();
+
+if (count($ipaddrs) || count($certs))
+{
+  $form .= "
+<h4 style=\"margin-top: 3em;\">Erweiterte Optionen</h4>
+<div style=\"margin-left: 2em;\">
+";
+  if (count($certs))
+  {
+    $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen');
+    foreach ($certs as $c)
+    {
+      $certselect[$c['id']] = $c['subject'];
+    }
+    $form .= "
+      <h5>verwendetes SSL-Zertifikat</h5>
+      <div style=\"margin-left: 2em;\">
+      ".html_select('cert', $certselect, $vhost['certid'])."
+      </div>";
+  }
+ /* if (count($ipaddrs))
+  {
+    $ipselect = array(0 => 'System-Standard');
+    foreach ($ipaddrs AS $i)
+    {
+      $ipselect[$i] = $i;
+    }
+    $form .= "
+      <h5>IP-Adresse</h5>
+      <div style=\"margin-left: 2em;\">
+      ".html_select('ipaddr', $ipselect, $vhost['ipaddr'])."
+      </div>";
+  } */
+  $form .= "</div>";
+}
+
+
 
 $form .= '
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts', 'Abbrechen').'</p>

@@ -169,7 +169,6 @@ function encode_querystring($querystring)
     $querystring = 'debug&'.$querystring;
   DEBUG($querystring);
   $query = explode('&', $querystring);
-  DEBUG($query);
   $new_query = array();
   foreach ($query AS $item)
     if ($item != '')
@@ -180,7 +179,6 @@ function encode_querystring($querystring)
       else
         $new_query[] = $key.'='.urlencode($val);
     }
-  DEBUG($new_query);
   $querystring = implode('&amp;', $new_query);
   if ($querystring)
     $querystring = '?'.$querystring;

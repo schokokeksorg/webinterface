@@ -6,17 +6,18 @@ require_once("inc/security.php");
 
 require_once('class/domain.php');
 
+require_once("certs.php");
+
 
 function list_vhosts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT vh.id,fqdn,docroot,docroot_is_default,php,vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
+  $result = db_query("SELECT vh.id,fqdn,docroot,docroot_is_default,php,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
   $ret = array();
   while ($item = mysql_fetch_assoc($result))
     array_push($ret, $item);
   return $ret;
 }
-
 
 function empty_vhost()
 {
@@ -33,8 +34,10 @@ function empty_vhost()
   $vhost['is_dav'] = 0;
   $vhost['is_svn'] = 0;
   $vhost['is_webapp'] = 0;
-  $vhsot['webapp_id'] = NULL;
-    
+  $vhost['webapp_id'] = NULL;
+  
+  $vhost['cert'] = NULL;
+
   $vhost['options'] = '';
   return $vhost;
 }
@@ -82,7 +85,9 @@ function get_vhost_details($id)
   if (mysql_num_rows($result) != 1)
     system_failure('Interner Fehler beim Auslesen der Daten');
 
-  return mysql_fetch_assoc($result);
+  $ret = mysql_fetch_assoc($result);
+  DEBUG($ret);
+  return $ret;
 }
 
 
@@ -207,13 +212,22 @@ function save_vhost($vhost)
   }
   $options = mysql_real_escape_string( $vhost['options'] );
 
+  $cert = 0;
+  $certs = user_certs();
+  foreach ($certs as $c)
+    if ($c['id'] == $vhost['cert'])
+      $cert = $c['id'];
+
+  if ($cert == 0)
+    $cert = 'NULL';
+
   if ($id != 0) {
     logger('modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, options='{$options}' WHERE id={$id} LIMIT 1");
+    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, options='{$options}' WHERE id={$id} LIMIT 1");
   }
   else {
     logger('modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, '{$options}')");
+    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, '{$options}')");
     $id = mysql_insert_id();
   }
   $oldvhost = get_vhost_details($id);
@@ -286,6 +300,21 @@ function save_alias($alias)
   }
 }
 
+
+
+
+function user_ipaddrs()
+{
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT ipaddr FROM vhosts.ipaddr_available WHERE uid={$uid}");
+  $ret = array();
+  while ($i = mysql_fetch_assoc($result))
+  {
+    $ret[] = $i['ipaddr'];
+  }
+  DEBUG($ret);
+  return $ret;
+}
 
 
 ?>
