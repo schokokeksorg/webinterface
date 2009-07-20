@@ -44,7 +44,7 @@ if ($mode == 'csr')
   }
 
 
-  output('<p>'.internal_link('certfromcsr', 'Unterschriebenes Zertifikat eingeben', "id={$_REQUEST['id']}").'</p>');
+  addnew('certfromcsr', 'Unterschriebenes Zertifikat eingeben', "id={$_REQUEST['id']}");
 
 
 }

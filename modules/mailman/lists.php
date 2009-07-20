@@ -51,7 +51,7 @@ else
   output('<p><em>Sie betreiben bisher keine Mailinglisten.</em></p>');
 }
 
-
-output("<p><strong>".internal_link('newlist', 'Neue Mailingliste anlegen')."</strong></p>
+addnew('newlist', 'Neue Mailingliste anlegen');
+output("
 <p><strong>Hinweis:</strong> Sie können im Webinterface von Mailman einen abweichenden oder auch mehrere Verwalter eintragen. Die Information auf dieser Seite wird dann nicht automatisch geändert sondern bezeichnet den Verwalter, den Sie beim Anlegen der Liste benannt haben.</p>\n");
 

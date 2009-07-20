@@ -213,8 +213,7 @@ else
   {
     output('<div class="error"><strong>Achtung:</strong> Es scheint als hätten Sie einen (manuellen) IMAP-Account mittels einer Domain angelegt, die für Webinterface-Verwaltung konfiguriert ist. Sollten Sie nicht genau wissen was Sie tun, ist das vermutlich falsch und wird zu Fehlfunktionen führen.</div>');
   }
-  output('<p>'.internal_link("imap", "Neuen Account anlegen", "action=create").'</p>
-');
+  addnew("imap", "Neuen Account anlegen", "action=create");
 }
 
 ?>

@@ -33,8 +33,8 @@ foreach ($dyndns AS $entry) {
       $method = '<em>keine</em>';
   $output .= "<tr><td>".internal_link('dyndns_edit', $handle, "id={$entry['id']}")."</td><td>{$method}</td><td>{$entry['address']}</td><td>{$entry['lastchange']}</td><td>".internal_link('save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Account löschen" />', "id={$entry['id']}&type=dyndns&action=delete")."</td></tr>\n";
 }
-$output .= '</table><br />
+$output .= '</table>';
 
-<p>'.internal_link('dyndns_edit', 'Neuen DynDNS-Account anlegen').'</p>';
+addnew('dyndns_edit', 'Neuen DynDNS-Account anlegen');
 
 ?>

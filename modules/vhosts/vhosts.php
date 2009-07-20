@@ -104,15 +104,15 @@ if (count($vhosts) > 0)
     output("</tr>\n");
   }
   output('</table>');
-  output('<p><sup>*</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
-  output('  <br />');
+  output('<p style="font-size: 90%;"><sup>*</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
 }
 else // keine VHosts vorhanden
 {
   output("<p><strong><em>Bisher haben Sie keine Domain bzw. Subdomain eingerichtet.</em></strong></p>");
 }
-output('<p>'.internal_link('edit', 'Neue Domain bzw. Subdomain einrichten').'</p>');
-output('  <br />');
 
+addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
+
+addnew('../webapps/install', 'Neue Domain bzw. Subdomain mit vorinstallierter Web-Anwendung einrichten');
 
 ?>

@@ -98,7 +98,7 @@ output('<h3>E-Mail-Accounts</h3>
 	    }
 
         }
-output('<p>'.internal_link("edit", "Neue E-Mail-Adresse anlegen").'</p>');
+addnew("edit", "Neue E-Mail-Adresse anlegen");
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
 output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: '.config('company_name').' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');

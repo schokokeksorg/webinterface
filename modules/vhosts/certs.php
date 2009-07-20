@@ -28,7 +28,7 @@ else
   output('<p><em>Bisher haben Sie keine Zertifikate eingetragen</em></p>');
 }
 
-output('<p>'.internal_link('newcert', 'Neues Zertifikat hinzufügen').'</p>');
+addnew('newcert', 'Neues Zertifikat eintragen');
 
 output('<h3>offene CSRs</h3>');
 
@@ -50,8 +50,9 @@ else
 
 output('
 <p>Wenn Sie ein einfaches Zertifikat benötigen, können Sie mit Hilfe dieser Funktion einen CSR (»certificate signing request«) 
-erstellen, mit dem Sie Ihr endgültiges Zertifikat beantragen können.</p>
-<p>'.internal_link('newcsr', 'Neuen CSR erzeugen').'</p>');
+erstellen, mit dem Sie Ihr endgültiges Zertifikat beantragen können.</p>');
+
+addnew('newcsr', 'Neuen CSR erzeugen');
 
 
 
