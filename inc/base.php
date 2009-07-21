@@ -189,7 +189,7 @@ function encode_querystring($querystring)
 
 function addnew($file, $label, $querystring = '')
 {
-  output('<p class="addnew">'.internal_link($file, $label).'</p>');
+  output('<p class="addnew">'.internal_link($file, $label, $querystring).'</p>');
 }
 
 
