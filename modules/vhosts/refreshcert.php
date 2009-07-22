@@ -11,7 +11,7 @@ $cert = cert_details($_REQUEST['id']);
 
 output("<h3>Neue Version eines Zertifikats einspielen</h3>
 <p>Ein bereits vorhandenes Zetifikat können Sie (z.B. wenn es bald abläuft) durch eine neue Version des selben 
-Zertifikats ersetzen. Die meisten Zetifizierungsstellen bieten diese Funktion an, ohne dass ein neuer CSR erzeugt 
+Zertifikats ersetzen. Die meisten Zertifizierungsstellen bieten diese Funktion an ohne dass ein neuer CSR erzeugt 
 werden muss.</p>
 
 <p>Bitte stellen Sie sicher, dass es sich um das richtige Zertifikat handelt. Das bisherige Zertifikat wurde 
