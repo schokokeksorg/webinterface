@@ -36,7 +36,7 @@ function cert_details($id)
   
   $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, cert, `key` FROM vhosts.certs WHERE uid={$uid} AND id={$id}");
   if (mysql_num_rows($result) != 1)
-    system_failure("Ungültiges Zertifikat");
+    system_failure("Ungültiges Zertifikat #{$id}");
   return mysql_fetch_assoc($result);
 }
 
@@ -111,6 +111,20 @@ function save_cert($info, $cert, $key)
 
   db_query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, cert, `key`) VALUES ({$uid}, '{$subject}', '{$cn}', '{$valid_from}', '{$valid_until}', '{$cert}', '{$key}')");
 }
+
+
+function refresh_cert($id, $info, $cert)
+{
+  $id = (int) $id;
+  $oldcert = cert_details($id);
+  $cert = mysql_real_escape_string($cert);
+  
+  $valid_from = mysql_real_escape_string($info['valid_from']);
+  $valid_until = mysql_real_escape_string($info['valid_until']);
+
+  db_query("UPDATE vhosts.certs SET cert='{$cert}', valid_from='{$valid_from}', valid_until='{$valid_until}' WHERE id={$id} LIMIT 1");
+}
+
 
 function delete_cert($id)
 {

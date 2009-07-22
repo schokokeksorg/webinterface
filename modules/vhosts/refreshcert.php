@@ -1,0 +1,39 @@
+<?php
+
+require_once('certs.php');
+require_role(ROLE_SYSTEMUSER);
+
+
+$section = "vhosts_certs";
+$title = "Neue Version eines Zertifikats einspielen";
+
+$cert = cert_details($_REQUEST['id']);
+
+output("<h3>Neue Version eines Zertifikats einspielen</h3>
+<p>Ein bereits vorhandenes Zetifikat können Sie (z.B. wenn es bald abläuft) durch eine neue Version des selben 
+Zertifikats ersetzen. Die meisten Zetifizierungsstellen bieten diese Funktion an, ohne dass ein neuer CSR erzeugt 
+werden muss.</p>
+
+<p>Bitte stellen Sie sicher, dass es sich um das richtige Zertifikat handelt. Das bisherige Zertifikat wurde 
+ausgestellt als <strong>{$cert['subject']}</strong>. Nur das dazu passende Zertifikat wird akzeptiert.</p>
+
+<p>Wenn die Überprüfung erfolgreich verläuft, wird das alte Zertifikat in unserer Datenbank durch die neue 
+Version ersetzt. Der private Schlüssel bleibt erhalten.");
+
+$form = '
+<h4>neues Zertifikat:</h4>
+<p><textarea name="cert" rows="10" cols="70"></textarea></p>
+
+<p><input type="submit" value="Speichern" /></p>
+
+';
+
+output(html_form('vhosts_certs_refresh', 'savecert', 'action=refresh&id='.$cert['id'], $form));
+
+
+
+
+
+
+
+
