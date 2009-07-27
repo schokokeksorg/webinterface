@@ -37,6 +37,7 @@ function empty_vhost()
   $vhost['webapp_id'] = NULL;
   
   $vhost['cert'] = NULL;
+  $vhost['ipv4'] = NULL;
 
   $vhost['options'] = '';
   return $vhost;
@@ -217,17 +218,23 @@ function save_vhost($vhost)
   foreach ($certs as $c)
     if ($c['id'] == $vhost['cert'])
       $cert = $c['id'];
-
   if ($cert == 0)
     $cert = 'NULL';
 
+  $ipv4 = 'NULL';
+  $ipv4_avail = user_ipaddrs();
+  if (in_array($vhost['ipv4'], $ipv4_avail))
+  {
+    $ipv4 = maybe_null($vhost['ipv4']);
+  }
+
   if ($id != 0) {
     logger('modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, options='{$options}' WHERE id={$id} LIMIT 1");
+    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, options='{$options}' WHERE id={$id} LIMIT 1");
   }
   else {
     logger('modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, '{$options}')");
+    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, ipv4, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, '{$options}')");
     $id = mysql_insert_id();
   }
   $oldvhost = get_vhost_details($id);

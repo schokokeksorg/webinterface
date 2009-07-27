@@ -103,6 +103,8 @@ if ($_GET['action'] == 'edit')
 
   $cert = (int) $_POST['cert'];
 
+  $ipv4 = $_POST['ipv4'];
+
   $logtype = '';
   switch ($_POST['logtype']) {
     case 'anonymous':
@@ -141,6 +143,7 @@ if ($_GET['action'] == 'edit')
   $vhost['php'] = $php;
   $vhost['ssl'] = $ssl;
   $vhost['cert'] = $cert;
+  $vhost['ipv4'] = $ipv4;
   $vhost['logtype'] = $logtype;
   $vhost['errorlog'] = $errorlog; 
   $vhost['options'] = $options;

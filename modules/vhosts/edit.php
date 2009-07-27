@@ -238,7 +238,7 @@ if (count($ipaddrs) || count($certs))
       ".html_select('cert', $certselect, $vhost['certid'])."
       </div>";
   }
- /* if (count($ipaddrs))
+  if (count($ipaddrs))
   {
     $ipselect = array(0 => 'System-Standard');
     foreach ($ipaddrs AS $i)
@@ -248,9 +248,9 @@ if (count($ipaddrs) || count($certs))
     $form .= "
       <h5>IP-Adresse</h5>
       <div style=\"margin-left: 2em;\">
-      ".html_select('ipaddr', $ipselect, $vhost['ipaddr'])."
+      ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
       </div>";
-  } */
+  } 
   $form .= "</div>";
 }
 
