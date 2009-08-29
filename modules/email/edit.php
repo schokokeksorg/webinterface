@@ -9,8 +9,8 @@ $title = "E-Mail-Adresse bearbeiten";
 $section = 'email_vmail';
 require_role(ROLE_SYSTEMUSER);
 
-$id = (int) $_GET['id'];
 $account = empty_account();
+$id = (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 
 if ($id != 0)
   $account = get_account_details($id);
@@ -119,7 +119,7 @@ else
 $form .= '</div>';
 
 $form .= '<p style="margin-left: 2em;">[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
-  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('accounts', 'Abbrechen').'</p>';
+  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vmail', 'Abbrechen').'</p>';
 
 output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 

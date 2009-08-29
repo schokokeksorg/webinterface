@@ -6,7 +6,7 @@ if (! defined("TOP_INCLUDED"))
 define("TOP_INCLUDED", true);
 
 require_once("inc/error.php");
-global $prefix;
+global $prefix, $section;
 
 $menuitem = array();
 $weighted_menuitem = array();
@@ -68,7 +68,7 @@ header("Content-Type: ".config('mime_type'));
 <head>
 
 <?php
-if ($title != "")
+if (isset($title) and ($title != ""))
         echo '<title>Administration - '.$title.'</title>';
 else
         echo '<title>Administration</title>';
@@ -77,7 +77,8 @@ echo '
 <link rel="stylesheet" href="'.$prefix.'css/admin.css" type="text/css" media="screen" title="Normal" />
 <link rel="shortcut icon" href="'.$prefix.'favicon.ico" type="image/x-icon" />';
 
-echo $html_header;
+if (isset($html_header))
+  echo $html_header;
 ?>
 </head>
 <body>

@@ -31,7 +31,7 @@ if ($_GET['action'] == 'edit')
     $domainid = $domain->id;
   }
 
-  if (! is_array($_POST['options']))
+  if (! (isset($_POST['options']) && is_array($_POST['options'])))
     $_POST['options'] = array();
   $aliaswww = in_array('aliaswww', $_POST['options']);
 
@@ -41,18 +41,21 @@ if ($_GET['action'] == 'edit')
   {
     $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain->fqdn).'/htdocs';
   
-    if (! check_path( $_POST['docroot'] ))
-      system_failure("Eingegebener Pfad enthält ungültige Angaben");
-    $docroot = $vhost['homedir'].'/websites/'.$_POST['docroot'];
-  
-    if (($_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
+    $docroot = '';
+    if (isset($_POST['docroot']))
+    {
+      if (! check_path( $_POST['docroot'] ))
+        system_failure("Eingegebener Pfad enthält ungültige Angaben");
+      $docroot = $vhost['homedir'].'/websites/'.$_POST['docroot'];
+    }
+    if ((isset($_POST['use_default_docroot']) && $_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
       $docroot = '';
     }
   
     DEBUG("Document-Root: ".$docroot);
   }
   $php = '';
-  if ($_POST['vhost_type'] == 'regular')
+  if ($_POST['vhost_type'] == 'regular' && isset($_POST['php']))
   {
     switch ($_POST['php']) {
       case 'mod_php':

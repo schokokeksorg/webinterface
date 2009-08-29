@@ -15,6 +15,11 @@ if ($_GET['action'] == 'new')
     $csr = csr_details($_REQUEST['csr']);
     $key = $csr['key'];
   }
+  $oldcert = NULL;
+  if ($_REQUEST['replace'])
+  {
+    $oldcert = cert_details($_REQUEST['replace']);
+  }
 
   if (! $cert or ! $key)
     system_failure('Es muss ein Zertifikat und der dazu passende private Schlüssel eingetragen werden');
@@ -24,7 +29,10 @@ if ($_GET['action'] == 'new')
   {
     case CERT_OK:
       $certinfo = parse_cert_details($cert);
-      save_cert($certinfo, $cert, $key);
+      if ($oldcert)
+        refresh_cert($oldcert['id'], $certinfo, $cert, $key);
+      else
+        save_cert($certinfo, $cert, $key);
       if (isset($_REQUEST['csr']))
         delete_csr($_REQUEST['csr']);
       header('Location: certs');
@@ -36,7 +44,10 @@ if ($_GET['action'] == 'new')
     case CERT_NOCHAIN:
       warning('Ihr Zertifikat konnte nicht mit einer Zertifikats-Kette validiert werden. Dies wird zu Problemen beim Betrachten der damit betriebenen Websites führen. Meist liegt dies an einem nicht hinterlegten CA-Bundle. Die Admins können Ihr Zertifikats-Bundle auf dem System eintragen. Das Zertifikat wurde dennoch gespeichert.');
       $certinfo = parse_cert_details($cert);
-      save_cert($certinfo, $cert, $key, $cabundle);
+      if ($oldcert)
+        refresh_cert($oldcert['id'], $certinfo, $cert, $key);
+      else
+        save_cert($certinfo, $cert, $key);
       output('<p>'.internal_link('certs', 'Zurück zur Übersicht').'</p>');
       if (isset($_REQUEST['csr']))
         delete_csr($_REQUEST['csr']);

@@ -21,6 +21,7 @@ function list_vhosts()
 
 function empty_vhost()
 {
+  $vhost['id'] = NULL;
   $vhost['hostname'] = '';
   
   $vhost['domain_id'] = -1;

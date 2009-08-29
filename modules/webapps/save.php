@@ -16,10 +16,12 @@ if ($_POST['target'] == 'new')
   $hostname = filter_input_hostname($_POST['hostname']);
 
   $domainid = (int) $_POST['domain'];
+  $domainname = NULL;
   if ($domainid != -1) {
     $domain = new Domain( (int) $_POST['domain'] );
     $domain->ensure_userdomain();
     $domainid = $domain->id;
+    $domainname = $domain->fqdn;
   }
 
   if (! is_array($_POST['options']))
@@ -85,7 +87,7 @@ if ($_POST['target'] == 'new')
   $vhost['errorlog'] = $errorlog; 
   $vhost['options'] = $options;
   
-  $domain = $domain->fqdn;
+  $domain = $domainname;
   if ($domainid == -1)
   {
     $domain = $_SESSION['userinfo']['username'].'.'.config('masterdomain');

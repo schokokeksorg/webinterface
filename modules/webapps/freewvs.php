@@ -9,7 +9,7 @@ require_role(array(ROLE_SYSTEMUSER));
 
 $uid = (int) $_SESSION['userinfo']['uid'];
 
-if (in_array($_POST['freq'],array("day","week","month"))) {
+if (isset($_POST['freq']) && in_array($_POST['freq'],array("day","week","month"))) {
   check_form_token('freewvs_freq'); 
 	db_query("REPLACE INTO qatools.freewvs (user,freq) VALUES ({$uid},'{$_POST['freq']}');");
 	header("Location: freewvs");

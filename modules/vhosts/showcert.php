@@ -31,7 +31,7 @@ if ($mode == 'csr')
 {$cert}
 </pre>");
   
-  if ($_REQUEST['private'] == 'yes')
+  if (isset($_REQUEST['private']) && $_REQUEST['private'] == 'yes')
   {
     output("<h4>privater Schlüssel</h4>
 <pre>

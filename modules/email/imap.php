@@ -5,6 +5,8 @@ require_once('session/start.php');
 require_once('class/domain.php');
 require_once('mailaccounts.php');
 
+require_once('inc/icons.php');
+
 require_role(ROLE_SYSTEMUSER);
 
 
@@ -206,7 +208,7 @@ else
             <td>'.internal_link('imap', $account['account'], 'edit='.$account['id']).'</td>
             <td>'.$mailbox.'</td>
             <td><b>'.($account['enabled'] ? 'Ja' : 'Nein').'</b></td>
-            <td>'.internal_link("imap", "löschen", "action=delete&account=".$account['id']).'</td></tr>');
+            <td>'.internal_link("imap", icon_delete("»{$account['account']}« löschen"), "action=delete&account=".$account['id']).'</td></tr>');
         }
   output('</table>');
   if (imap_on_vmail_domain())

@@ -31,8 +31,8 @@ $form .= '<h4>Installationsort:</h4>
 <div style="margin-left: 2em;">
 <h5>Name</h5>
 ';
-$form .= "<div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onkeyup=\"document.getElementById('radio_new').checked=true\" /><strong>.</strong>".domainselect('', 'onchange="document.getElementById(\'radio_new\').checked=true"');
-$form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>";
+$form .= "<div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" onkeyup=\"document.getElementById('radio_new').checked=true\" /><strong>.</strong>".domainselect('', 'onchange="document.getElementById(\'radio_new\').checked=true"');
+$form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" /> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>";
 $form .= "
     <h5>SSL-Verschlüsselung</h5>
     <div style=\"margin-left: 2em;\">

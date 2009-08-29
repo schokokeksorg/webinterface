@@ -8,7 +8,7 @@ $error = '';
 require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
 
-if ($_POST['password1'] != '')
+if (isset($_POST['password1']))
 {
   check_form_token('index_chpass');
   $result = NULL;

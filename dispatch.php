@@ -69,6 +69,7 @@ $section = str_replace("/", "_", $go);
 /* Let the module work */
 include("modules/".$go.".php");
 
+$title = '';
 
 include('inc/top.php');
 print $output;

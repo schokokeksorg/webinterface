@@ -100,8 +100,8 @@ function get_domain_list($customerno, $uid = NULL)
   $domains = array();
   DEBUG('Result set is '.mysql_num_rows($result)." rows.<br />\n");
   if (mysql_num_rows($result) > 0)
-    while ($domain = mysql_fetch_object($result)->id)
-      array_push($domains, new Domain((int) $domain));
+    while ($domain = mysql_fetch_object($result))
+      array_push($domains, new Domain((int) $domain->id));
   DEBUG($domains);
 	return $domains;	
 }

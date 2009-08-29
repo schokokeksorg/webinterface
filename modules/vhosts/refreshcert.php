@@ -12,13 +12,19 @@ $cert = cert_details($_REQUEST['id']);
 output("<h3>Neue Version eines Zertifikats einspielen</h3>
 <p>Ein bereits vorhandenes Zetifikat können Sie (z.B. wenn es bald abläuft) durch eine neue Version des selben 
 Zertifikats ersetzen. Die meisten Zertifizierungsstellen bieten diese Funktion an ohne dass ein neuer CSR erzeugt 
-werden muss.</p>
+werden muss. Der private Schlüssel wird dabei erhalten und kann unverändert weiter benutzt werden.</p>
 
 <p>Bitte stellen Sie sicher, dass es sich um das richtige Zertifikat handelt. Das bisherige Zertifikat wurde 
 ausgestellt als <strong>{$cert['subject']}</strong>. Nur das dazu passende Zertifikat wird akzeptiert.</p>
 
 <p>Wenn die Überprüfung erfolgreich verläuft, wird das alte Zertifikat in unserer Datenbank durch die neue 
-Version ersetzt. Der private Schlüssel bleibt erhalten.");
+Version ersetzt. Der private Schlüssel bleibt erhalten.</p>
+
+<p>Möchten Sie das Zertifikat durch ein gänzlich neues Zertifikat mit neuem privaten Schlüssel ersetzen, so 
+folgen Sie bitte diesem Link: ".internal_link('newcert', 'Neues Zertifikat als Ersatz für dieses Zertifikat 
+hochladen', 'replace='.$cert['id'])."</p>
+
+");
 
 $form = '
 <h4>neues Zertifikat:</h4>
