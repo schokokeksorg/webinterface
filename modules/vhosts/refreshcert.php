@@ -17,9 +17,6 @@ werden muss. Der private Schlüssel wird dabei erhalten und kann unverändert we
 <p>Bitte stellen Sie sicher, dass es sich um das richtige Zertifikat handelt. Das bisherige Zertifikat wurde 
 ausgestellt als <strong>{$cert['subject']}</strong>. Nur das dazu passende Zertifikat wird akzeptiert.</p>
 
-<p>Wenn die Überprüfung erfolgreich verläuft, wird das alte Zertifikat in unserer Datenbank durch die neue 
-Version ersetzt. Der private Schlüssel bleibt erhalten.</p>
-
 <p>Möchten Sie das Zertifikat durch ein gänzlich neues Zertifikat mit neuem privaten Schlüssel ersetzen, so 
 folgen Sie bitte diesem Link: ".internal_link('newcert', 'Neues Zertifikat als Ersatz für dieses Zertifikat 
 hochladen', 'replace='.$cert['id'])."</p>
