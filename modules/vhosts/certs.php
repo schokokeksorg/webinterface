@@ -6,8 +6,8 @@ require_role(ROLE_SYSTEMUSER);
 $title = "SSL-Zertifikate";
 
 output('<h3>SSL-Zertifikate</h3>
-<p>Bei schokokeks.org können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die <a href="https://wiki.schokokeks.org/SNI">SNI-Technik</a>.</p>
-<p>Das Verfahren ist bei uns folgendermaßen implementiert: Sie können hier eines oder mehrere SSL-Zertifikate hochladen, die Sie vorher extern erzeugt haben. Beim Anlegen von Webserver-Konfigurationen können Sie dann eines Ihrer Zertifikate für jede Konfiguration auswählen.</p>
+<p>Bei schokokeks.org können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die <a href="https://wiki.schokokeks.org/SNI">SNI-Technik</a>.
+Beim Anlegen von Webserver-Konfigurationen können Sie dann eines Ihrer Zertifikate für jede Konfiguration auswählen.</p>
 
 <h4>Ihre bisher vorhandenen Zertifikate</h4>
 ');
