@@ -101,6 +101,8 @@ validTo_time_t => 1267190790
 
 function save_cert($info, $cert, $key)
 {
+  openssl_pkey_export($key, $key);
+  openssl_x509_export($cert, $cert);
   $subject = mysql_real_escape_string(filter_input_general($info['subject']));
   $cn = mysql_real_escape_string(filter_input_general($info['cn']));
   $valid_from = mysql_real_escape_string($info['valid_from']);
@@ -115,6 +117,7 @@ function save_cert($info, $cert, $key)
 
 function refresh_cert($id, $info, $cert, $key = NULL)
 {
+  openssl_x509_export($cert, $cert);
   $id = (int) $id;
   $oldcert = cert_details($id);
   $cert = mysql_real_escape_string($cert);
@@ -123,8 +126,10 @@ function refresh_cert($id, $info, $cert, $key = NULL)
   $valid_until = mysql_real_escape_string($info['valid_until']);
 
   $keyop = '';
-  if ($key)
+  if ($key) {
+    openssl_pkey_export($key, $key);
     $keyop = ", `key`='".mysql_real_escape_string($key)."'";
+  }
   db_query("UPDATE vhosts.certs SET cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}' WHERE id={$id} LIMIT 1");
 }
 
