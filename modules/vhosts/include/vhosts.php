@@ -289,7 +289,7 @@ function save_alias($alias)
 {
   if (! is_array($alias))
     system_failure('$alias kein array!');
-  $id = (int) $alias['id'];
+  $id = (isset($alias['id']) ? (int) $alias['id'] : 0);
   $hostname = maybe_null($alias['hostname']);
   $domain = (int) $alias['domainid'];
   if ($domain == 0)
