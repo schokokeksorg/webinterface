@@ -106,7 +106,7 @@ if ($_GET['action'] == 'edit')
 
   $cert = (int) $_POST['cert'];
 
-  $ipv4 = $_POST['ipv4'];
+  $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : NULL);
 
   $logtype = '';
   switch ($_POST['logtype']) {
