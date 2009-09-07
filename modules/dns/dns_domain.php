@@ -37,7 +37,7 @@ foreach ($records AS $rec)
   }
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
   $link = $rec['fqdn'];
-  if (in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname'))) {
+  if (in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf'))) {
       $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
   }
   output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
@@ -70,9 +70,23 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <ul>
 <li>'.internal_link('dns_record_edit', 'AAAA (IPv6-Adresse)', 'id=new&type=aaaa&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'CNAME (Aliasnamen)', 'id=new&type=cname&domain='.$domain->id).'</li>
-<li>'.internal_link('dns_record_edit', 'SPF', 'id=new&type=spf&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'NS (Nameserver)', 'id=new&type=ns&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'SPF (sender policy framework)', 'id=new&type=spf&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'TXT', 'id=new&type=txt&domain='.$domain->id).'</li>
 </ul>
+
+<h4>Automatische DNS-Records</h4>
 ');
+
+if ($domain->autodns)
+{
+  output("<p>Automatische Einträge können nicht geändert werden. Möchten Sie davon abweichende Records setzen, so können Sie hiermit alle automatischen Einträge in normale Einträge konvertieren und die Erzeugung neuer automatischer Einträge abschalten. Diese Einstellung betrifft nur diese Domain und kann jederzeit geändert werden.</p>
+<p>".internal_link('dns_save', 'Automatisch erzeugte Einträge umwandeln', "type=autodns&action=disable&dom={$domain->id}")."</p>");
+}
+else
+{
+  output("<p>Sie verwealten Ihre DNS-Einträge selbst. Wenn Sie möchten, können Sie die DNS-Einträge auch automatisch anhand der angelegten Webserver-VHosts und anderer Einstellungen festlegen lassen. Diese Eintäge können Sie dann nicht direkt ändern. Ihre bestehenden Einträge bleiben unberührt und zusätzlich erhalten. Bitte löschen Sie dadurch entstehende Duplikate!</p>
+<p>".internal_link('dns_save', 'Automatisch erzeugte Einträge aktivieren', "type=autodns&action=enable&dom={$domain->id}")."</p>");
+}
 
 ?>

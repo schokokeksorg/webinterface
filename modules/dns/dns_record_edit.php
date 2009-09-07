@@ -21,7 +21,7 @@ foreach (get_dyndns_accounts() AS $t)
   $dyndns_accounts[$t['id']] = $t['handle'];
 }
 
-if ($_REQUEST['type'] == "dyndns")
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == "dyndns")
 {
   $_REQUEST['type'] = 'a';
   $dyndns = true;
@@ -74,6 +74,13 @@ if (! $dyndns && ($type == 'a' || $type == 'aaaa'))
 {
   $form .= '
 <tr><td><label for="ip">IP-Adresse:</label></td><td><input type="text" name="ip" id="ip" value="'.$data['ip'].'" /></td></tr>
+';
+}
+
+if ($type == 'ns')
+{
+  $form .= '
+<tr><td><label for="data">DNS-Server:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
 ';
 }
 

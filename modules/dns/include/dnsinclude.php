@@ -166,7 +166,7 @@ function get_domain_auto_records($domainname)
 }
 
 
-$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv');
+$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns');
 
 function save_dns_record($id, $record)
 {
@@ -217,6 +217,7 @@ function save_dns_record($id, $record)
       break;
     case 'cname':
     case 'ptr':
+    case 'ns':
       $record['dyndns'] = '';
       $record['spec'] = '';
       $record['ip'] = '';
@@ -261,5 +262,42 @@ function delete_dns_record($id)
   $record = get_dns_record($id);
   db_query("DELETE FROM dns.custom_records WHERE id={$id} LIMIT 1");
 }
+
+
+function convert_from_autorecords($domainid)
+{
+  $dom = new Domain( (int) $domainid );
+  $dom->ensure_customerdomain();
+  $dom = $dom->id;
+
+  db_query("INSERT IGNORE INTO dns.custom_records SELECT r.id, r.lastchange, type, d.id, hostname, ip, NULL AS dyndns, data, spec, ttl FROM dns.v_tmptable_allrecords AS r INNER JOIN dns.v_domains AS d ON (d.name=r.domain) WHERE d.id={$dom}");
+  disable_autorecords($dom);
+}
+
+
+function enable_autorecords($domainid)
+{
+  $dom = new Domain( (int) $domainid );
+  $dom->ensure_customerdomain();
+  $dom = $dom->id;
+
+  db_query("UPDATE kundendaten.domains SET autodns=1 WHERE id={$dom} LIMIT 1");
+}
+
+function disable_autorecords($domainid)
+{
+  $dom = new Domain( (int) $domainid );
+  $dom->ensure_customerdomain();
+  $dom = $dom->id;
+
+  db_query("UPDATE kundendaten.domains SET autodns=0 WHERE id={$dom} LIMIT 1");
+}
+
+
+function sync_autorecords()
+{
+  db_query("CALL dns.sync_autorecords()");
+}
+
 
 ?>
