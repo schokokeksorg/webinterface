@@ -26,7 +26,7 @@ else
 }
 
 
-if ($_GET['action'] == 'delete') {
+if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
   $sure = user_is_sure();
   if ($sure === NULL)
   {
@@ -56,10 +56,10 @@ else
   
   $record['hostname'] = $_REQUEST['hostname'];
   $record['domain'] = (int) $_REQUEST['domain'];
-  $record['ip'] = $_REQUEST['ip'];
+  $record['ip'] = (isset($_REQUEST['ip']) ? $_REQUEST['ip'] : '');
   $record['data'] = $_REQUEST['data'];
-  $record['dyndns'] = (int) $_REQUEST['dyndns'];
-  $record['spec'] = (int) $_REQUEST['spec'];
+  $record['dyndns'] = (isset($_REQUEST['dyndns']) ? (int) $_REQUEST['dyndns'] : '');
+  $record['spec'] = (isset($_REQUEST['spec']) ? (int) $_REQUEST['spec'] : '');
   $record['ttl'] = (int) $_REQUEST['ttl'];
   
   save_dns_record($id, $record);

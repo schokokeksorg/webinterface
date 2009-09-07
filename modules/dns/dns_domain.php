@@ -70,6 +70,8 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <ul>
 <li>'.internal_link('dns_record_edit', 'AAAA (IPv6-Adresse)', 'id=new&type=aaaa&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'CNAME (Aliasnamen)', 'id=new&type=cname&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'SPF', 'id=new&type=spf&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'TXT', 'id=new&type=txt&domain='.$domain->id).'</li>
 </ul>
 ');
 

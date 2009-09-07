@@ -84,6 +84,13 @@ if ($type == 'ptr' || $type == 'cname')
 ';
 }
 
+if ($type == 'spf' || $type == 'txt')
+{
+  $form .= '
+<tr><td><label for="data">Inhalt:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
+';
+}
+
 if ($dyndns)
 {
   $form .= '

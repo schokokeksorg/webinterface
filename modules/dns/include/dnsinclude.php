@@ -222,11 +222,18 @@ function save_dns_record($id, $record)
       $record['ip'] = '';
       verify_input_hostname($record['data']);
       if (! $record['data'] )
-        system_failure('MX hostname missing');
+        system_failure('destination host missing');
       break;
 
     case 'spf':
     case 'txt':
+      $record['dyndns'] = '';
+      $record['spec'] = '';
+      $record['ip'] = '';
+      if (! $record['data'] )
+        system_failure('text entry missing');
+      break;
+
     case 'srv':
       system_failure('not implemented yet');
     default:
