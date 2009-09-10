@@ -83,12 +83,19 @@ function create_mailaccount($arr)
   $values['uid'] = (int) $_SESSION['userinfo']['uid'];
 
   list($local, $domain) = explode('@', $arr['account'], 2);
-  $domain = new Domain( (string) $domain);
-  if ($domain->id == NULL)
+  if ($domain == config('masterdomain'))
+  {
     $values['domain'] = "NULL";
-  else {
-    $domain->ensure_userdomain();
-    $values['domain'] = $domain->id;
+  }
+  else
+  {
+    $domain = new Domain( (string) $domain);
+    if ($domain->id == NULL)
+      $values['domain'] = "NULL";
+    else {
+      $domain->ensure_userdomain();
+      $values['domain'] = $domain->id;
+    }
   }
 
   $values['local'] = "'".mysql_real_escape_string($local)."'";
