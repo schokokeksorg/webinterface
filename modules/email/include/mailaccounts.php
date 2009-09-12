@@ -42,13 +42,20 @@ function change_mailaccount($id, $arr)
   if (isset($arr['account']))
   {
     list($local, $domain) = explode('@', $arr['account'], 2);
-    $domain = new Domain( (string) $domain);
-    if ($domain->id == NULL)
-      array_push($conditions, "domain=NULL");
+    if ($domain == config('masterdomain'))
+    {
+      $values['domain'] = "NULL";
+    }
     else
     {
-      $domain->ensure_userdomain();
-      array_push($conditions, "domain={$domain->id}");
+      $domain = new Domain( (string) $domain);
+      if ($domain->id == NULL)
+        array_push($conditions, "domain=NULL");
+      else
+      {
+        $domain->ensure_userdomain();
+        array_push($conditions, "domain={$domain->id}");
+      }
     }
     array_push($conditions, "local='".mysql_real_escape_string($local)."'");
   }
