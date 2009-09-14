@@ -62,7 +62,7 @@ function set_mysql_access($db, $account, $status)
       logger(LOG_ERR, "modules/mysql/include/mysql", "mysql", "cannot find database {$db}");
       system_failure("cannot find database »{$db}«");
     }
-    $result = db_query("SELECT id FROM misc.mysql_database WHERE username='{$account}' AND useraccount={$uid} LIMIT 1");
+    $result = db_query("SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid} LIMIT 1");
     if (mysql_num_rows($result) != 1)
     {
       logger(LOG_ERR, "modules/mysql/include/mysql", "mysql", "cannot find user {$account}");
