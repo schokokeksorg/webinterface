@@ -12,7 +12,7 @@ function strong_password($password)
   DEBUG("Öffne Wörterbuch: ".config('cracklib_dict'));
   if (! ($dict = crack_opendict(config('cracklib_dict'))))
   {
-    logger("inc/security", "cracklib", "could not open cracklib-dictionary »".config('cracklib_dict')."«");
+    logger(LOG_ERR, "inc/security", "cracklib", "could not open cracklib-dictionary »".config('cracklib_dict')."«");
     system_failure("Kann Crack-Lib-Wörterbuch nicht öffnen: ".config('cracklib_dict'));
   }
   // Führe eine Überprüfung des Passworts durch
@@ -44,7 +44,7 @@ function verify_input_general( $input )
 {
   if (filter_input_general($input) != $input) {
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
-    logger('inc/security', 'verify_input_general', 'Ungültige Daten: '.$input);
+    logger(LOG_WARNING, 'inc/security', 'verify_input_general', 'Ungültige Daten: '.$input);
   }
 }
 
@@ -57,7 +57,7 @@ function filter_input_username( $input )
 function verify_input_username( $input )
 {
   if (filter_input_username( $input ) != $input) {
-    logger('inc/security', 'verify_input_username', 'Ungültige Daten: '.$input);
+    logger(LOG_WARNING, 'inc/security', 'verify_input_username', 'Ungültige Daten: '.$input);
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
   }
 }
@@ -83,7 +83,7 @@ function filter_input_hostname( $input, $wildcard=false )
 function verify_input_hostname( $input, $wildcard=false )
 {
   if (filter_input_hostname( $input, $wildcard ) != $input) {
-    logger('inc/security', 'verify_input_hostname', 'Ungültige Daten: '.$input);
+    logger(LOG_WARNING, 'inc/security', 'verify_input_hostname', 'Ungültige Daten: '.$input);
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
   }
 }
@@ -129,7 +129,7 @@ function check_path( $input )
   DEBUG("checking {$input} for valid path name");
   if ($input != filter_input_general($input))
   {
-    logger('inc/security', 'check_path', 'HTML-Krams im Pfad: '.$input);
+    logger(LOG_WARNING, 'inc/security', 'check_path', 'HTML-Krams im Pfad: '.$input);
     DEBUG("HTML-Krams im Pfad");
     return False;
   }
@@ -138,7 +138,7 @@ function check_path( $input )
   {
     if ($item == '..')
     {
-      logger('inc/security', 'check_path', '»..« im Pfad: '.$input);
+      logger(LOG_WARNING, 'inc/security', 'check_path', '»..« im Pfad: '.$input);
       DEBUG("»..« im Pfad");
       return False;
     }

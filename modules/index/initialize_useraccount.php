@@ -27,7 +27,7 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
       {
         require_once('session/checkuser.php');
         require_once('inc/base.php');
-        logger("modules/index/initialize_useraccount", "initialize", "uid »{$uid}« set a new password");
+        logger(LOG_INFO, "modules/index/initialize_useraccount", "initialize", "uid »{$uid}« set a new password");
         set_systemuser_password($uid, $_POST['password']);
         success_msg('Das Passwort wurde gesetzt!');
         invalidate_systemuser_token($uid);

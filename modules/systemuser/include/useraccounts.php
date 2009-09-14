@@ -67,7 +67,7 @@ function set_systemuser_details($uid, $fullname, $quota)
   $quota = (int) $quota;
 
   db_query("UPDATE system.useraccounts SET name={$fullname} WHERE kunde={$customerno} AND uid={$uid} LIMIT 1");
-  logger("modules/systemuser/include/useraccounts", "systemuser", "updated real name for uid {$uid}");
+  logger(LOG_INFO, "modules/systemuser/include/useraccounts", "systemuser", "updated real name for uid {$uid}");
 
 }
 

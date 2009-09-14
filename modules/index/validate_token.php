@@ -25,7 +25,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
       {
         require_once('session/checkuser.php');
         require_once('inc/base.php');
-        logger("modules/index/validate_token", "pwrecovery", "customer »{$customerno}« set a new password");
+        logger(LOG_INFO, "modules/index/validate_token", "pwrecovery", "customer »{$customerno}« set a new password");
         set_customer_password($customerno, $_POST['password']);
         success_msg('Das Passwort wurde gesetzt!');
         set_customer_verified($customerno);

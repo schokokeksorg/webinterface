@@ -37,12 +37,12 @@ function find_role($login, $password, $i_am_admin = False)
         $role = $role | ROLE_CUSTOMER;
       if ($entry->admin)
         $role = $role | ROLE_SYSADMIN;
-      logger("session/checkuser", "login", "logged in systemuser »{$login}«.");
+      logger(LOG_INFO, "session/checkuser", "login", "logged in systemuser »{$login}«.");
       return $role;
     }
-    logger("session/checkuser", "login", "wrong password for existing useraccount »{$login}«.");
+    logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing useraccount »{$login}«.");
   } else {
-    logger("session/checkuser", "login", "did not find useraccount »{$login}«. trying other roles...");
+    logger(LOG_WARNING, "session/checkuser", "login", "did not find useraccount »{$login}«. trying other roles...");
   }
 
   // Customer?
@@ -69,10 +69,10 @@ function find_role($login, $password, $i_am_admin = False)
     $hash = crypt($password, $db_password);
     if ($hash == $db_password || $i_am_admin)
     {
-      logger("session/checkuser", "login", "logged in e-mail-account »{$account}«.");
+      logger(LOG_INFO, "session/checkuser", "login", "logged in e-mail-account »{$account}«.");
       return ROLE_MAILACCOUNT;
     }
-    logger("session/checkuser", "login", "wrong password for existing e-mail-account »{$account}«.");
+    logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing e-mail-account »{$account}«.");
   }
   
   // virtueller Mail-Account
@@ -85,10 +85,10 @@ function find_role($login, $password, $i_am_admin = False)
     $hash = crypt($password, $db_password);
     if ($hash == $db_password || $i_am_admin)
     {
-      logger("session/checkuser", "login", "logged in virtual e-mail-account »{$account}«.");
+      logger(LOG_INFO, "session/checkuser", "login", "logged in virtual e-mail-account »{$account}«.");
       return ROLE_VMAIL_ACCOUNT;
     }
-    logger("session/checkuser", "login", "wrong password for existing virtual e-mail-account »{$account}«.");
+    logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing virtual e-mail-account »{$account}«.");
   }
   
 
@@ -146,7 +146,7 @@ function get_user_info($username)
                       FROM system.v_useraccounts WHERE username='{$username}' OR uid='{$username}' LIMIT 1");
   if (mysql_num_rows($result) < 1)
   {
-    logger("session/checkuser", "login", "error reading user's data: »{$username}«");
+    logger(LOG_ERR, "session/checkuser", "login", "error reading user's data: »{$username}«");
     system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
   }
   $val = @mysql_fetch_object($result);
@@ -163,7 +163,7 @@ function set_customer_verified($customerno)
 {
   $customerno = (int) $customerno;
   db_query("UPDATE kundendaten.kunden SET status=0 WHERE id={$customerno};");
-  logger("session/checkuser", "register", "set customer's status to 0.");
+  logger(LOG_INFO, "session/checkuser", "register", "set customer's status to 0.");
 }
 
 function set_customer_lastlogin($customerno)
@@ -177,7 +177,7 @@ function set_customer_password($customerno, $newpass)
   $customerno = (int) $customerno;
   $newpass = sha1($newpass);
   db_query("UPDATE kundendaten.kunden SET passwort='$newpass' WHERE id='".$customerno."' LIMIT 1");
-  logger("session/checkuser", "pwchange", "changed customer's password.");
+  logger(LOG_INFO, "session/checkuser", "pwchange", "changed customer's password.");
 }
 
 
@@ -188,7 +188,7 @@ function set_systemuser_password($uid, $newpass)
   $salt = random_string(8);
   $newpass = crypt($newpass, "\$1\${$salt}\$");
   db_query("UPDATE system.passwoerter SET passwort='$newpass' WHERE uid='".$uid."' LIMIT 1");
-  logger("session/checkuser", "pwchange", "changed user's password.");
+  logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
 }
 
 
@@ -201,7 +201,7 @@ function setup_session($role, $useridentity)
     DEBUG("We are system user");
     $info = get_user_info($useridentity);
     $_SESSION['userinfo'] = $info;
-    logger("session/start", "login", "logged in user »{$info['username']}«");
+    logger(LOG_INFO, "session/start", "login", "logged in user »{$info['username']}«");
     $useridentity = $info['customerno'];
   }
   if ($role & ROLE_CUSTOMER)
@@ -209,7 +209,7 @@ function setup_session($role, $useridentity)
     $info = get_customer_info($useridentity);
     $_SESSION['customerinfo'] = $info;
     set_customer_lastlogin($info['customerno']);
-    logger("session/start", "login", "logged in customer no »{$info['customerno']}«");
+    logger(LOG_INFO, "session/start", "login", "logged in customer no »{$info['customerno']}«");
   }
   if ($role & ROLE_MAILACCOUNT)
   {

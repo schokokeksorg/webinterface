@@ -6,12 +6,12 @@ require_once('inc/error.php');
 
 if (!session_destroy())
 {
-  logger("modules/index/logout", "logout", "session timed out.");
+  logger(LOG_INFO, "modules/index/logout", "logout", "session timed out.");
 	system_failure('Die Sitzung konnte nicht geschlossen werden, eventuell ist die Wartezeit abgelaufen und die Sitzung wurde daher schon beendet.');
 }
 unset($_SESSION['role']);
 
-logger("modules/index/logout", "logout", "logged out");
+logger(LOG_INFO, "modules/index/logout", "logout", "logged out");
 
 output('
 

@@ -9,7 +9,7 @@ function config($key)
   if (array_key_exists($key, $config))
     return $config[$key];
   else
-    logger("inc/base", "config", "Request to read nonexistant config option »{$key}«.");
+    logger(LOG_ERR, "inc/base", "config", "Request to read nonexistant config option »{$key}«.");
     return NULL;
 }
 
@@ -21,7 +21,7 @@ function db_query($query)
   if (mysql_error())
   {
     $error = mysql_error();
-    logger("inc/base", "dberror", "mysql error: {$error}");
+    logger(LOG_ERR, "inc/base", "dberror", "mysql error: {$error}");
     system_failure('Interner Datenbankfehler: »'.iconv('ISO-8859-1', 'UTF-8', $error).'«.');
   }
   $count = @mysql_num_rows($result);
@@ -44,11 +44,13 @@ function maybe_null($value)
     return 'NULL';
 }
 
+#define('LOG_ERR', 3);
+#define('LOG_WARNING', 4);
+#define('LOG_INFO', 6);
 
-
-function logger($scriptname, $scope, $message)
+function logger($severity, $scriptname, $scope, $message)
 {
-  if (config('logging') == false)
+  if (config('logging') <= $severity)
     return;
 
   $user = 'NULL';

@@ -139,7 +139,7 @@ function delete_vhost($id)
   if ($id == 0)
     system_failure("id == 0");
   $vhost = get_vhost_details($id);
-  logger('modules/vhosts/include/vhosts', 'vhosts', 'Removing vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
+  logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Removing vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
   db_query("DELETE FROM vhosts.vhost WHERE id={$vhost['id']} LIMIT 1");
 }
 
@@ -150,7 +150,7 @@ function make_svn_vhost($id)
   $id = (int) $id;
   if ($id == 0)
     system_failure("id == 0");
-  logger('modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to SVN');
+  logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to SVN');
   db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES ({$id}, 'svn')");
   db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
@@ -160,7 +160,7 @@ function make_dav_vhost($id)
   $id = (int) $id;
   if ($id == 0)
     system_failure("id == 0");
-  logger('modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
+  logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
   db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES ({$id}, 'dav', 'nouserfile')");
   db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
@@ -170,7 +170,7 @@ function make_regular_vhost($id)
   $id = (int) $id;
   if ($id == 0)
     system_failure("id == 0");
-  logger('modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to regular');
+  logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to regular');
   db_query("DELETE FROM vhosts.dav WHERE vhost={$id}");
   db_query("DELETE FROM vhosts.webapps WHERE vhost={$id}");
 }
@@ -186,7 +186,7 @@ function make_webapp_vhost($id, $webapp)
   if (mysql_num_rows($result) == 0)
     system_failure("webapp-id invalid");
   $webapp_name = mysql_fetch_object($result)->displayname;
-  logger('modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
+  logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
   db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES ({$id}, {$webapp})");
   mail('webapps-setup@schokokeks.org', 'setup', 'setup');
 }
@@ -230,11 +230,11 @@ function save_vhost($vhost)
   }
 
   if ($id != 0) {
-    logger('modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
     db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, options='{$options}' WHERE id={$id} LIMIT 1");
   }
   else {
-    logger('modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
     $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, ipv4, options) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, '{$options}')");
     $id = mysql_insert_id();
   }
@@ -281,7 +281,7 @@ function delete_alias($id)
   $id = (int) $id;
   $alias = get_alias_details($id);
 
-  logger('modules/vhosts/include/vhosts', 'aliases', 'Removing alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
+  logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Removing alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
   db_query("DELETE FROM vhosts.alias WHERE id={$id}");
 }
 
@@ -299,11 +299,11 @@ function save_alias($alias)
   $vhost = get_vhost_details( (int) $alias['vhost']);
   $options = mysql_real_escape_string( $alias['options'] );
   if ($id == 0) {
-    logger('modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
     db_query("INSERT INTO vhosts.alias (hostname, domain, vhost, options) VALUES ({$hostname}, {$domain}, {$vhost['id']}, '{$options}')");
   }
   else {
-    logger('modules/vhosts/include/vhosts', 'aliases', 'Updating alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Updating alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
     db_query("UPDATE vhosts.alias SET hostname={$hostname}, domain={$domain}, options='{$options}' WHERE id={$id} LIMIT 1");
   }
 }

@@ -57,14 +57,14 @@ function set_mysql_access($db, $account, $status)
     if (get_mysql_access($db, $account))
       return NULL;
     $query = "INSERT INTO misc.mysql_access (`database`,user) VALUES ((SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1), (SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid}));";
-    logger("modules/mysql/include/mysql", "mysql", "granting access on »{$db}« to »{$account}«");
+    logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "granting access on »{$db}« to »{$account}«");
   }
   else
   {
     if (! get_mysql_access($db, $account))
       return NULL;
     $query = "DELETE FROM misc.mysql_access WHERE `database`=(SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1) AND user=(SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid});";
-    logger("modules/mysql/include/mysql", "mysql", "revoking access on »{$db}« from »{$account}«");
+    logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "revoking access on »{$db}« from »{$account}«");
   }
   db_query($query);
 }
@@ -74,14 +74,14 @@ function create_mysql_account($username, $description = '')
 {
   if (! validate_mysql_username($username))
   {
-    logger("modules/mysql/include/mysql", "mysql", "illegal username »{$username}«");
+    logger(LOG_WARNING, "modules/mysql/include/mysql", "mysql", "illegal username »{$username}«");
     input_error("Der eingegebene Benutzername entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
   $uid = $_SESSION['userinfo']['uid'];
   $username = mysql_real_escape_string($username);
   $description = maybe_null($description);
-  logger("modules/mysql/include/mysql", "mysql", "creating user »{$username}«");
+  logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating user »{$username}«");
   db_query("INSERT INTO misc.mysql_accounts (username, password, useraccount, description) VALUES ('$username', '!', $uid, $description);");
 }
 
@@ -90,7 +90,7 @@ function delete_mysql_account($username)
 {
   $username = mysql_real_escape_string($username);
   $uid = $_SESSION['userinfo']['uid'];
-  logger("modules/mysql/include/mysql", "mysql", "deleting user »{$username}«");
+  logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "deleting user »{$username}«");
   db_query("DELETE FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
 }
 
@@ -99,14 +99,14 @@ function create_mysql_database($dbname, $description = '')
 {
   if (! validate_mysql_dbname($dbname))
   {
-    logger("modules/mysql/include/mysql", "mysql", "illegal db-name »{$dbname}«");
+    logger(LOG_WARNING, "modules/mysql/include/mysql", "mysql", "illegal db-name »{$dbname}«");
     input_error("Der eingegebene Datenbankname entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
   $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
   $description = maybe_null($description);
-  logger("modules/mysql/include/mysql", "mysql", "creating database »{$dbname}«");
+  logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating database »{$dbname}«");
   db_query("INSERT INTO misc.mysql_database (name, useraccount, description) VALUES ('$dbname', $uid, $description);");
 }
 
@@ -115,7 +115,7 @@ function delete_mysql_database($dbname)
 {
   $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
-  logger("modules/mysql/include/mysql", "mysql", "removing database »{$dbname}«");
+  logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "removing database »{$dbname}«");
   db_query("DELETE FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
 }
 
@@ -139,7 +139,7 @@ function set_mysql_password($username, $password)
   $username = mysql_real_escape_string($username);
   $password = mysql_real_escape_string($password);
   $uid = $_SESSION['userinfo']['uid'];
-  logger("modules/mysql/include/mysql", "mysql", "updating password for »{$username}«");
+  logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "updating password for »{$username}«");
   db_query("UPDATE misc.mysql_accounts SET password=PASSWORD('$password') WHERE username='$username' AND useraccount=$uid;");
 }
 

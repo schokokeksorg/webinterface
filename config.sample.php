@@ -14,7 +14,7 @@ $config['use_cracklib'] = true;
 $config['cracklib_dict'] = 'inc/cracklib_dict';
 
 $config['enable_debug'] = true;
-$config['logging'] = true;
+$config['logging'] = LOG_ERR;
 
 
 $config['mime_type'] = 'application/xhtml+xml';

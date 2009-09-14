@@ -14,7 +14,7 @@ if (isset($_POST['customerno']))
       require_once('mail.php');
       require_once('inc/base.php');
       send_customer_token($_POST['customerno']);
-      logger("modules/index/new_password", "pwrecovery", "token sent for customer »{$_POST['customerno']}«");
+      logger(LOG_INFO, "modules/index/new_password", "pwrecovery", "token sent for customer »{$_POST['customerno']}«");
       success_msg('Die angegebenen Daten waren korrekt, Sie sollten umgehend eine E-Mail erhalten.');
     }
   }

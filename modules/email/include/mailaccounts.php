@@ -76,7 +76,7 @@ function change_mailaccount($id, $arr)
 
 
   db_query("UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id='$id' LIMIT 1");
-  logger("modules/imap/include/mailaccounts", "imap", "updated account »{$arr['account']}«");
+  logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "updated account »{$arr['account']}«");
 
 }
 
@@ -124,7 +124,7 @@ function create_mailaccount($arr)
 
 
   db_query("INSERT INTO mail.mailaccounts (".implode(',', array_keys($values)).") VALUES (".implode(",", array_values($values)).")");
-  logger("modules/imap/include/mailaccounts", "imap", "created account »{$arr['account']}«");
+  logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "created account »{$arr['account']}«");
 
 }
 
@@ -148,7 +148,7 @@ function delete_mailaccount($id)
 {
   $id = (int) $id;
   db_query("DELETE FROM mail.mailaccounts WHERE id=".$id." LIMIT 1");
-  logger("modules/imap/include/mailaccounts", "imap", "deleted account »{$id}«");
+  logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "deleted account »{$id}«");
 }
 
 
