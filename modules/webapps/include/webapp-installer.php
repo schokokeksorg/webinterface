@@ -91,6 +91,7 @@ function create_webapp_mysqldb($application, $sitename)
   
   if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle)))
   {
+    logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
     create_mysql_database($handle, $description);
     create_mysql_account($handle, $description);
     set_mysql_access($handle, $handle, true);
@@ -103,6 +104,7 @@ function create_webapp_mysqldb($application, $sitename)
     $handle = $username.'_'.$i;
     if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle)))
     {
+      logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
       create_mysql_database($handle, $description);
       create_mysql_account($handle, $description);
       set_mysql_access($handle, $handle, true);

@@ -56,6 +56,18 @@ function set_mysql_access($db, $account, $status)
   {
     if (get_mysql_access($db, $account))
       return NULL;
+    $result = db_query("SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1");
+    if (mysql_num_rows($result) != 1)
+    {
+      logger(LOG_ERR, "modules/mysql/include/mysql", "mysql", "cannot find database {$db}");
+      system_failure("cannot find database »{$db}«");
+    }
+    $result = db_query("SELECT id FROM misc.mysql_database WHERE username='{$account}' AND useraccount={$uid} LIMIT 1");
+    if (mysql_num_rows($result) != 1)
+    {
+      logger(LOG_ERR, "modules/mysql/include/mysql", "mysql", "cannot find user {$account}");
+      system_failure("cannot find database user »{$account}«");
+    }
     $query = "INSERT INTO misc.mysql_access (`database`,user) VALUES ((SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1), (SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid}));";
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "granting access on »{$db}« to »{$account}«");
   }
@@ -129,7 +141,7 @@ function validate_mysql_dbname($dbname)
 
 function validate_mysql_username($username)
 {
-  return validate_mysql_dbname($username) && (count($username) <= 16);
+  return validate_mysql_dbname($username) && (strlen($username) <= 16);
 }
 
 
