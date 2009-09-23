@@ -46,11 +46,14 @@ foreach ($all_accounts AS $account)
 
 DEBUG($sorted_by_domains);
 
-output('<h3>E-Mail-Accounts</h3>
+output('<h3>E-Mail-Accounts</h3>');
+if (count($sorted_by_domains) > 0)
+{
+  output('
 <p>Folgende E-Mail-Konten sind eingerichtet:</p>
 ');
-        foreach ($sorted_by_domains as $accounts_on_domain)
-        {
+  foreach ($sorted_by_domains as $accounts_on_domain)
+  {
 	    output('<h4>'.$accounts_on_domain[0]['domainname'].'</h4>');
 	    foreach ($accounts_on_domain AS $this_account)
 	    {
@@ -96,8 +99,13 @@ output('<h3>E-Mail-Accounts</h3>
               <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;"><p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>
 	      <p>'.$dest.'</p></div>');
 	    }
-
-        }
+  }
+}
+else
+{
+  output('<p><em>Sie haben bisher keine E-Mail-Adressen angelegt</em></p>');
+}
+        
 addnew("edit", "Neue E-Mail-Adresse anlegen");
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
