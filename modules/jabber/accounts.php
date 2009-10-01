@@ -33,5 +33,6 @@ foreach ($jabberaccounts as $acc)
 output('</table>');
 
 addnew("new_account", "Neues Jabber-Konto anlegen");
+addnew("new_domain", "Eigene Domain für Jabber freischalten");
 
 ?>

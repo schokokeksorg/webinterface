@@ -71,6 +71,12 @@ elseif ($_GET['action'] == 'delete')
   }
 
 }
+elseif ($_GET['action'] == 'newdomain')
+{
+  check_form_token('jabber_new_domain');
+  new_jabber_domain( $_REQUEST['domain'] );
+  header("Location: accounts");
+}
 else
   system_failure("Unimplemented action");
 

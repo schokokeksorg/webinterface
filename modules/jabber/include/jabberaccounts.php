@@ -125,4 +125,13 @@ function delete_jabber_account($id)
   logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");
 }
 
+
+function new_jabber_domain($id)
+{
+  $d = new Domain( (int) $id );
+  $d->ensure_customerdomain();
+  db_query("UPDATE kundendaten.domains SET jabber=2 WHERE jabber=0 AND id={$d->id} LIMIT 1");
+}
+
+
 ?>

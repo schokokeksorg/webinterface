@@ -7,6 +7,7 @@ require_once('jabberaccounts.php');
 
 require_role(ROLE_CUSTOMER);
 
+$section = 'jabber_accounts';
 $title = "Neues Jabber-Konto erstellen";
 
 $jabberdomains = get_jabberable_domains();
