@@ -39,6 +39,10 @@ function get_dyndns_account($id)
 function create_dyndns_account($handle, $password_http, $sshkey)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
+
+  if ($password_http == '' && $sshkey == '')
+    system_failure('Sie müssen entweder einen SSH-Key oder ein Passwort zum Web-Update eingeben.');  
+
   $handle = maybe_null(mysql_real_escape_string(filter_input_username($handle)));
   $sshkey = maybe_null(mysql_real_escape_string(filter_input_general($sshkey)));
 

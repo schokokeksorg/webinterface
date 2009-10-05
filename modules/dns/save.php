@@ -12,7 +12,7 @@ require_once('dnsinclude.php');
 $section = 'dns_dyndns';
 
 $id = NULL;
-if ($_REQUEST['id'])
+if (isset($_REQUEST['id']))
   $id = (int) $_REQUEST['id'];
 
 
