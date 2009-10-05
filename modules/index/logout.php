@@ -9,7 +9,7 @@ if (!session_destroy())
   logger(LOG_INFO, "modules/index/logout", "logout", "session timed out.");
 	system_failure('Die Sitzung konnte nicht geschlossen werden, eventuell ist die Wartezeit abgelaufen und die Sitzung wurde daher schon beendet.');
 }
-unset($_SESSION['role']);
+$_SESSION['role'] = ROLE_ANONYMOUS;
 
 logger(LOG_INFO, "modules/index/logout", "logout", "logged out");
 
