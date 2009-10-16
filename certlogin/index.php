@@ -103,6 +103,9 @@ else
       elseif ($account['type'] == 'customer') {
         $type = 'Kundenaccount';
       }
+      $destination = 'go/index/index';
+      if (check_path($account['startpage']))
+        $destination = $account['startpage'];
       output('<li>'.internal_link('', $type.': <strong>'.$account['username'].'</strong>', 'type='.$account['type'].'&username='.urlencode($account['username']).'&destination='.urlencode($destination)).'</li>');
     }
     output('</ul>');
@@ -110,5 +113,9 @@ else
     system_failure('Ihr Browser hat kein Client-Zertifikat gesendet.');
   }
 }
+
+include('../inc/top.php');
+print $output;
+include('../inc/bottom.php');
 
 ?>
