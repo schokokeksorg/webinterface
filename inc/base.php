@@ -175,11 +175,11 @@ function encode_querystring($querystring)
   foreach ($query AS $item)
     if ($item != '')
     {
-      list($key, $val) = explode('=', $item, 2);
-      if ($val == '')
-        $new_query[] = $key;
+      $split = explode('=', $item, 2);
+      if (count($split) == 1)
+        $new_query[] = $split[0];
       else
-        $new_query[] = $key.'='.urlencode($val);
+        $new_query[] = $split[0].'='.urlencode($split[1]);
     }
   $querystring = implode('&amp;', $new_query);
   if ($querystring)
