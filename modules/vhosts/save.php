@@ -64,6 +64,9 @@ if ($_GET['action'] == 'edit')
       case 'fastcgi':
         $php = 'fastcgi';
         break;
+      case 'php53':
+        $php = 'php53';
+        break;
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }
   }

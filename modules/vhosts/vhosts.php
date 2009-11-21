@@ -93,7 +93,10 @@ if (count($vhosts) > 0)
           $php = icon_warning('[mod_php] Veraltet, bitte umstellen!').' Apache-Modul';
           break;
         case 'fastcgi':
-          $php = icon_enabled('PHP eingeschaltet');
+          $php = icon_enabled('PHP eingeschaltet (PHP 5.2)');
+          break;
+        case 'php53':
+          $php = icon_enabled('PHP eingeschaltet (PHP 5.3)');
           break;
       }
       output("<td>{$php}</td>");

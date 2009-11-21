@@ -132,33 +132,21 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 </div>
 ";
 
+$options = array("none" => 'ausgeschaltet', "fastcgi" => "PHP 5.2", "php53" => 'Testbetrieb: PHP 5.3');
+
 if ($vhost['php'] == 'mod_php')
 {
+  $options['mod_php'] = 'PHP als Apache-Modul (veraltet)';
+}
+
 $form .= "
 <div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">
-    <select name=\"php\" id=\"php\">
-      <option value=\"none\" ".($vhost['php'] == NULL ? 'selected="selected"' : '')." >ausgeschaltet</option>
-      <option value=\"mod_php\" ".($vhost['php'] == 'mod_php' ? 'selected="selected"' : '')." >Eingeschaltet als Apache-Modul (veraltet)</option>
-      <option value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'selected="selected"' : '')." >Eingeschaltet</option>
-      <!--  <option value=\"rubyonrails\" ".($vhost['php'] == 'rubyonrails' ? 'selected="selected"' : '')." >Ruby-on-Rails</option> -->
-    </select>
+    ".html_select("php", $options, $vhost['php'])."
   </div>
 </div>
 ";
-}
-else
-{
-$form .= "
-<div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
-  <h5>PHP</h5>
-  <div style=\"margin-left: 2em;\">
-    <input type=\"checkbox\" name=\"php\" id=\"php\" value=\"fastcgi\" ".($vhost['php'] == 'fastcgi' ? 'checked="checked" ' : '')." />&#160;<label for=\"php\">PHP aktivieren</label>
-  </div>
-</div>
-";
-}
 
 $form .= "
 <div class=\"vhostoptions\" id=\"options_webapp\" ".($vhost_type=='webapp' ? '' : 'style="display: none;"').">
