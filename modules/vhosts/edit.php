@@ -11,7 +11,7 @@ $section = 'vhosts_vhosts';
 
 require_role(ROLE_SYSTEMUSER);
 
-$id = (int) $_GET['vhost'];
+$id = (isset($_GET['vhost']) ? (int) $_GET['vhost'] : 0);
 $vhost = empty_vhost();
 
 if ($id != 0)
@@ -100,7 +100,7 @@ else
   $docroot = substr($vhost['docroot'], strlen($vhost['homedir'].'/websites/'));
 
 $s = (strstr($vhost['options'], 'aliaswww') ? ' checked="checked" ' : '');
-$errorlog = (strstr($vhost['errorlog'], 'on') ? ' checked="checked" ' : '');
+$errorlog = ($vhost['errorlog'] == 1 ? ' checked="checked" ' : '');
 
 $vhost_type = 'regular';
 if ($vhost['is_dav'])

@@ -32,12 +32,14 @@ function empty_vhost()
   $vhost['php'] = 'fastcgi';
   $vhost['ssl'] = NULL;
   $vhost['logtype'] = NULL;
+  $vhost['errorlog'] = 0;
   $vhost['is_dav'] = 0;
   $vhost['is_svn'] = 0;
   $vhost['is_webapp'] = 0;
   $vhost['webapp_id'] = NULL;
   
   $vhost['cert'] = NULL;
+  $vhost['certid'] = NULL;
   $vhost['ipv4'] = NULL;
 
   $vhost['options'] = '';
