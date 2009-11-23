@@ -5,6 +5,11 @@ require_once('inc/error.php');
 
 function strong_password($password)
 {
+  if (! function_exists("crack_opendict"))
+  {
+    DEBUG("cracklib not available!");
+    return true;
+  }
   if (config('use_cracklib') === NULL or config('use_cracklib') === false) {
     DEBUG('Cracklib deaktiviert');
     return true;
