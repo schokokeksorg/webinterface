@@ -107,7 +107,7 @@ if ($_GET['action'] == 'edit')
     /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
   }
 
-  $cert = (int) $_POST['cert'];
+  $cert = (isset($_POST['cert']) ? (int) $_POST['cert'] : NULL);
 
   $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : NULL);
 
