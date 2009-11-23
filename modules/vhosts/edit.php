@@ -201,6 +201,7 @@ $form .= "
       </select><br />
       <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label>
     </div>
+    <p>Logfiles werden unter <b>/var/log/apache2/".$_SESSION[userinfo][username]."</b> abgelegt.</p>
 </div>
     ";
 
