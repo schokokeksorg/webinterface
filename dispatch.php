@@ -5,18 +5,6 @@ require_once('inc/debug.php');
 require_once('inc/db_connect.php');
 require_once("inc/base.php");
 
-/*
- read configuration from database
-*/
-
-$options = db_query( "SELECT `key`, value FROM misc.config" );
-
-while( $object = mysql_fetch_assoc( $options ) ) {
-//	echo "1";
-//	echo $object['key'];
-	$config[$object['key']]=$object['value'];
-}
-//print_r($config);
 
 $go = $_GET['go'];
 

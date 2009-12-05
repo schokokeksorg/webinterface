@@ -8,6 +8,16 @@ function config($key)
   global $config;
   if (array_key_exists($key, $config))
     return $config[$key];
+  
+  /* read configuration from database */
+  $options = db_query( "SELECT `key`, value FROM misc.config" );
+  
+  while( $object = mysql_fetch_assoc( $options ) ) {
+	  $config[$object['key']]=$object['value'];
+  }
+  DEBUG($config);
+  if (array_key_exists($key, $config))
+    return $config[$key];
   else
     logger(LOG_ERR, "inc/base", "config", "Request to read nonexistant config option »{$key}«.");
     return NULL;
