@@ -33,6 +33,39 @@ function redirect($target)
 }
 
 
+function my_server_id()
+{
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT server FROM system.useraccounts WHERE uid={$uid}");
+  $r = mysql_fetch_assoc($result);
+  DEBUG($r);
+  return $r['server'];
+}
+
+
+function additional_servers()
+{
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT server FROM system.user_server WHERE uid={$uid}");
+  $servers = array();
+  while ($s = mysql_fetch_assoc($result))
+    $servers[] = $s['server'];
+  DEBUG($servers);
+  return $servers;
+}
+
+
+function server_names()
+{
+  $result = db_query("SELECT id, hostname FROM system.servers");
+  $servers = array();
+  while ($s = mysql_fetch_assoc($result))
+    $servers[$s['id']] = $s['hostname'];
+  DEBUG($servers);
+  return $servers;
+}
+
+
 function db_query($query)
 {
   DEBUG($query);
