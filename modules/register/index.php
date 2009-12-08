@@ -39,14 +39,14 @@ if (count($_POST) > 0)
     $customerno = create_customer($_POST);
     if ($customerno == NULL)
     {
-      array_push($fail, 'Diese E-Mail-Adresse ist bereits in unserer Datenbank vorhanden!');
+      array_push($fail, 'Diese E-Mail-Adresse ist bereits in unserer Datenbank vorhanden! Wenn Sie einen weiteren Benutzeraccount nutzen möchten, wenden Sie sich bitte an den Support.');
     }
     elseif (create_token($customerno))
     {
       require_once('inc/base.php');
-      send_initial_customer_token($customerno);
-      notify_admins_about_new_customer($customerno);
-      logger(LOG_INFO, "modules/register/index", "register", "token sent for customer »{$customerno}«");
+   //   send_initial_customer_token($customerno);
+   //   notify_admins_about_new_customer($customerno);
+   //   logger(LOG_INFO, "modules/register/index", "register", "token sent for customer »{$customerno}«");
       $success = true;
       #success_msg('Die angegebenen Daten wurden gespeichert, Sie sollten umgehend eine E-Mail erhalten.');
     }
@@ -67,13 +67,9 @@ if ($success)
 else
 {
   output('<h3>Bei schokokeks.org registrieren</h3>
-  <p>Hier können Sie sich bei schokokeks.org anmelden. Eine Anmeldung ist kostenlos und unverbindlich, erlaubt Ihnen aber, kostenpflichtige Dienste von schokokeks.org in Anspruch zu nehmen.</p>
-  <p><strong>Gehen Sie daher sorgfältig mit den Anmeldedaten um!</strong></p>
-  <p>Um Sie als Kunden identifizieren zu können, benötigen wir den Namen und die E-Mail-Adresse. Die eingegebenen Daten werden manuell bearbeitet und bei Spass-Eintragungen wird der Zugang gesperrt. Je nach dem, welche späteren Dienste Sie bei uns in Anspruch nehmen, kann es notwendig sein, dass Sie weitere Daten eingeben (z.B. Adresse bei Domainregistrierung).</p>
-  
-  <h4>Anmeldung</h4>
-  <p>Um sich jetzt bei schokokeks.org anzumelden, müssen Sie hier zuerst Ihren Namen und Ihre E-Mail-Adresse eingeben.</p>');
-  
+  <p>Hier können Sie sich bei schokokeks.org Hosting anmelden. Mit der Anmeldung beantragen Sie einen Webhosting-Account mit den auf der Hauptseite genannten Leistungen zu den ebenfalls dort genannten Konditionen.</p>
+  <p>Um Sie als Kunden identifizieren zu können, benötigen wir mindestens Ihren Namen (oder Firmennamen) und Ihre E-Mail-Adresse. Für eine (spätere) Domain-Registrierung benötigen wir zudem eine Adresse sowie eine Telefonnummer. Wir behalten uns vor, den Zugang in Einzelfällen erst nach manueller Prüfung freizuschalten.</p>');
+
   foreach ($fail as $f)
     output('<p class="warning"><b>Fehler:</b> '.$f.'</p>');
   
@@ -81,13 +77,20 @@ else
    * Hier werden POST-Variablen benutzt, die es eventuell gar nicht gibt. Das erlaubt PHP zwar, ist aber nicht elegant.
    */
 
-  output(html_form("register_index", "", "", '<p><span class="login_label">Anrede:</span>
+  output(html_form("register_index", "", "", '<h4>Stammdaten</h4>
+  <p><span class="login_label">Anrede:</span>
   '.html_select('anrede', array('Herr' => 'Herr', 'Frau' => 'Frau', 'Firma' => 'Firma'), $_POST['anrede']).'</p>
   <p><span class="login_label">Firma:</span> <input type="text" name="firma" size="30" value="'.$_POST['firma'].'" /></p>
   <p><span class="login_label">Vorname:</span> <input type="text" name="vorname" size="30" value="'.$_POST['vorname'].'" /></p>
   <p><span class="login_label">Nachname:</span> <input type="text" name="nachname" size="30" value="'.$_POST['nachname'].'" /></p>
+  <p><span class="login_label">Straße:</span> <input type="text" name="strasse" size="30" value="'.$_POST['strasse'].'" /></p>
+  <p><span class="login_label">PLZ / Ort:</span> <input type="text" name="plz" size="6" value="'.$_POST['plz'].'" /> <input type="text" name="ort" size="30" value="'.$_POST['ort'].'" /></p>
   <p><span class="login_label">E-Mail-Adresse:</span> <input type="text" name="email" size="30" value="'.$_POST['email'].'" /></p>
+<h4>Benutzeraccount</h4>
+  <p><span class="login_label">Benutzername:</span> <input type="text" name="username" size="30" value="'.$_POST['username'].'" /></p>
+<h4>Zustimmung</h4>
   <p><span class="login_label">AGB:</span> <input type="checkbox" name="agb_gelesen" value="1"'.($_POST['agb_gelesen'] == 1 ? ' checked="checked"' : '').' /> Ja, ich habe <a href="http://schokokeks.org/agb">die Allgemeinen Geschäftsbedingungen von schokokeks.org Webhosting</a> gelesen und erkläre mich damit einverstanden.</p>
+  <p><span class="login_label">Preis:</span> <input type="checkbox" name="preis_ok" value="1"'.($_POST['preis_ok'] == 1 ? ' checked="checked"' : '').' /> Ich nehme zur Kenntnis, dass für den Zugang eine monatliche Gebühr von <strong>8,- €</strong> anfällt. Wünschen Sie ein individuelles Angebot, wenden Sie sich bitte <a href="http://www.schokokeks.org/kontakt">direkt an uns</a>.</p>
   <p><span class="login_label">&#160;</span> <input type="submit" value="Zugang erstellen" /></p>'));
   
 }
