@@ -56,7 +56,7 @@ function verify_input_general( $input )
 
 function filter_input_username( $input )
 {
-  return ereg_replace("[^[:alnum:]\_\.\+\-]", "", $input );
+  return preg_replace("/[^[:alnum:]\_\.\+\-]/", "", $input );
 }
 
 function verify_input_username( $input )
@@ -76,9 +76,9 @@ function filter_input_hostname( $input, $wildcard=false )
   $input = str_replace(array('Ä', 'Ö', 'Ü'), array('ä', 'ö', 'ü'), strtolower($input));
   $input = rtrim($input, "\t\n\r\x00 .");
   $input = ltrim($input, "\t\n\r\x00 .");
-  if (ereg_replace("[^[:alnum:]äöü*\.\-]", "", $input ) != $input)
+  if (preg_replace("/[^[:alnum:]äöü*\.\-]/", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
-  if (! $wildcard && ereg_replace("\*", "", $input ) != $input)
+  if (! $wildcard && preg_replace("/\*/", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen (Keine Wildcards erlaubt)!");
   if (strstr($input, '..'))
     system_failure("Ungültiger Hostname");
@@ -111,14 +111,14 @@ function verify_input_ipv6( $input )
 
 function filter_quotes( $input )
 {
-  return ereg_replace('["\'`]', '', $input );
+  return preg_replace('/["\'`]/', '', $input );
 }
 
 
 
 function filter_shell( $input )
 {
-  return ereg_replace('[^-[:alnum:]\_\.\+ßäöüÄÖÜ/%§=]', '', $input );
+  return preg_replace('/[^-[:alnum:]\_\.\+ßäöüÄÖÜ/%§=]/', '', $input );
 }
 
 function verify_shell( $input )
