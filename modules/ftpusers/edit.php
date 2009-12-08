@@ -3,6 +3,7 @@
 include('ftpusers.php');
 
 require_once('inc/base.php');
+require_role(ROLE_SYSTEMUSER);
 
 $title="FTP-Benutzer einrichten";
 $section='ftpusers_accounts';

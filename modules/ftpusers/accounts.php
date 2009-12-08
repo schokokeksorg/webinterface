@@ -2,6 +2,7 @@
 
 require_once('inc/base.php');
 require_once('inc/icons.php');
+require_role(ROLE_SYSTEMUSER);
 
 include("ftpusers.php");
 
