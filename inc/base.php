@@ -1,7 +1,7 @@
 <?php
 
 require_once('inc/db_connect.php');
-
+require_once('inc/debug.php');
 
 function config($key)
 {
@@ -21,6 +21,15 @@ function config($key)
   else
     logger(LOG_ERR, "inc/base", "config", "Request to read nonexistant config option »{$key}«.");
     return NULL;
+}
+
+
+function redirect($target)
+{
+  global $debugmode;
+  if (! $debugmode)
+    header("Location: {$target}");
+  die();
 }
 
 
