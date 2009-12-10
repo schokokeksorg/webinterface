@@ -8,16 +8,6 @@ require_role(ROLE_SYSTEMUSER);
 $title="FTP-Benutzer einrichten";
 $section='ftpusers_accounts';
 
-if (isset($_GET['regular_ftp']))
-{
-  if ($_GET['regular_ftp'] == 'yes')
-    enable_regular_ftp();
-  else
-    disable_regular_ftp();
-  redirect('accounts'); 
-}
-
-
 $ftpuser = empty_ftpuser();
 
 if (isset($_GET['id']))

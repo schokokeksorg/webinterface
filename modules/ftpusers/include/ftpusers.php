@@ -115,6 +115,7 @@ function have_regular_ftp()
 
 function enable_regular_ftp()
 {
+  require_role(ROLE_SYSTEMUSER);
   $gid = get_gid('ftpusers');
   $uid = (int) $_SESSION['userinfo']['uid'];
   db_query("REPLACE INTO system.gruppenzugehoerigkeit (gid, uid) VALUES ('$gid', '$uid')");

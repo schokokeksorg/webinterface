@@ -3,6 +3,17 @@ include('ftpusers.php');
 
 require_role(ROLE_SYSTEMUSER);
 
+if (isset($_GET['regular_ftp']))
+{
+  check_form_token('regular_ftp', $_REQUEST['token']);
+  if ($_GET['regular_ftp'] == 'yes')
+    enable_regular_ftp();
+  else
+    disable_regular_ftp();
+  redirect('accounts'); 
+}
+
+
 if (isset($_GET['delete']))
 {
   $ftpuser = load_ftpuser($_GET['delete']);
