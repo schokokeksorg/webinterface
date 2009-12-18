@@ -23,7 +23,7 @@ function mailaccounts($uid)
 
 function get_mailaccount($id)
 {
-  $uid = (int) $uid;
+  $id = (int) $id;
   $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id");
   DEBUG("Found ".mysql_num_rows($result)." rows!");
   if (mysql_num_rows($result) != 1)
@@ -206,7 +206,12 @@ function imap_on_vmail_domain()
 function user_has_only_vmail_domains()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT id FROM mail.v_vmail_domains WHERE useraccount={$uid}");
+  // User hat keine VMail-Domains
+  if (mysql_num_rows($result) == 0)
+    return false;
   $result = db_query("SELECT d.id FROM mail.v_domains AS d LEFT JOIN mail.v_vmail_domains AS vd USING (domainname) WHERE vd.id IS NULL AND d.user={$uid}");
+  // User hat keine Domains die nicht vmail-Domains sind
   if (mysql_num_rows($result) == 0)
     return true;
   return false;
