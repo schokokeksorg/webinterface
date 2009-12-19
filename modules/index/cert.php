@@ -53,7 +53,12 @@ else
 
 $backurl = 'go/index/cert';
 
-output('<p>'.internal_link('../../certlogin/index.php', 'Neues Client-Zertifikat hinzufügen', 'record&backto='.$backurl).'</p>');
+addnew('../../certlogin/index.php', 'Neues Client-Zertifikat hinzufügen', 'record&backto='.$backurl);
+output('
+<div class="error"><strong>Hinweis:</strong><br />
+Aufgrund einer aktuellen Sicherheits-Lücke wurde in vielen Browsern die so genannte TLS-Renegotiation abgeschaltet. Ohne diese Funktion ist ein Login über Client-Zertifikate technisch nicht möglich.
+Es gibt daher momentan viele aktuelle Browser, mit denen der Login via Client-Zertifikat nicht benutzt werden kann.</div>');
+
 
 
 
