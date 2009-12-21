@@ -57,7 +57,9 @@ addnew('../../certlogin/index.php', 'Neues Client-Zertifikat hinzufügen', 'reco
 output('
 <div class="error"><strong>Hinweis:</strong><br />
 Aufgrund einer aktuellen Sicherheits-Lücke wurde in vielen Browsern die so genannte TLS-Renegotiation abgeschaltet. Ohne diese Funktion ist ein Login über Client-Zertifikate technisch nicht möglich.
-Es gibt daher momentan viele aktuelle Browser, mit denen der Login via Client-Zertifikat nicht benutzt werden kann.</div>');
+Mit einigen aktuellen Browser-Versionen ist der Login mittels Client-Zertifikat momentan nicht möglich.
+
+<a href="http://groups.google.com/group/mozilla.dev.tech.crypto/browse_thread/thread/42c17928ea4fc374">Informationen und Lösungsmöglichkeit zum Mozilla-Firefox</a>');
 
 
 
