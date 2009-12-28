@@ -6,6 +6,8 @@ require_once('invoice.php');
 
 require_role(ROLE_CUSTOMER);
 
+$section = 'invoice_current';
+
 output('<h3>offene Posten</h3>
 <p>Hier sehen Sie einen Überblick über alle aktuell offenen und zukünftigen Posten.</p>');
 

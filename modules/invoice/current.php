@@ -21,7 +21,9 @@ foreach($invoices AS $invoice)
 	output("<tr><td>{$invoice['id']}</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "PDF", "id={$invoice['id']}").' &#160; '.internal_link("html", "HTML", "id={$invoice['id']}")."</td></tr>\n");
 }
 
-output('</table><br />');
+output('</table><br />
+
+<p>'.internal_link('upcoming', 'Zukünftige Rechnungsposten anzeigen').'</p>');
 
 
 ?>
