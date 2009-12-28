@@ -135,8 +135,9 @@ if ($output_something)
 
   foreach ($users as $user)
   {
+    $username = str_replace('_', '_ ', $user['username']);
     $desc = ($user['description'] ? $user['description'].' (Erstellt: '.$user['created'].')' : 'Erstellt: '.$user['created']);
-    $form .= "<th><span title=\"{$desc}\">{$user['username']}</span><br />".internal_link("", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}")."</th>";
+    $form .= "<th><span title=\"{$desc}\">{$username}</span><br />".internal_link("", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}")."</th>";
   }
   $form .= '<th><input type="text" name="new_user" size="10" value="" /><br />'.icon_add().'</th></tr>
 ';
