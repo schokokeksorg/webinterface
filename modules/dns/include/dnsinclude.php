@@ -91,7 +91,7 @@ function get_dyndns_records($id)
   $data = array();
   while ($entry = mysql_fetch_assoc($result)) {
     $dom = new Domain((int) $entry['domain']);
-    $dom->ensure_customerdomain();
+    $dom->ensure_userdomain();
     $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
     if (! $entry['hostname'])
       $entry['fqdn'] = $dom->fqdn;
@@ -133,7 +133,7 @@ function get_dns_record($id)
     system_failure('illegal ID');
   $data = mysql_fetch_assoc($result);
   $dom = new Domain( (int) $data['domain']);
-  $dom->ensure_customerdomain();
+  $dom->ensure_userdomain();
   DEBUG($data);
   return $data;
 }
@@ -146,7 +146,7 @@ function get_domain_records($dom)
   $data = array();
   while ($entry = mysql_fetch_assoc($result)) {
     $dom = new Domain((int) $entry['domain']);
-    $dom->ensure_customerdomain();
+    $dom->ensure_userdomain();
     $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
     if (! $entry['hostname'])
       $entry['fqdn'] = $dom->fqdn;
@@ -182,7 +182,7 @@ function save_dns_record($id, $record)
   if (!in_array($record['type'], $implemented_record_types))
     system_failure('record type '.$record['type'].' not implemented at the moment.');
   $dom = new Domain( (int) $record['domain'] );
-  $dom->ensure_customerdomain();
+  $dom->ensure_userdomain();
   if (! $dom->id)
     system_failure('invalid domain');
   verify_input_hostname($record['hostname'], true);
@@ -271,7 +271,7 @@ function delete_dns_record($id)
 function convert_from_autorecords($domainid)
 {
   $dom = new Domain( (int) $domainid );
-  $dom->ensure_customerdomain();
+  $dom->ensure_userdomain();
   $dom = $dom->id;
 
   db_query("INSERT IGNORE INTO dns.custom_records SELECT r.id, r.lastchange, type, d.id, hostname, ip, NULL AS dyndns, data, spec, ttl FROM dns.v_tmptable_allrecords AS r INNER JOIN dns.v_domains AS d ON (d.name=r.domain) WHERE d.id={$dom}");
@@ -282,7 +282,7 @@ function convert_from_autorecords($domainid)
 function enable_autorecords($domainid)
 {
   $dom = new Domain( (int) $domainid );
-  $dom->ensure_customerdomain();
+  $dom->ensure_userdomain();
   $dom = $dom->id;
 
   db_query("UPDATE kundendaten.domains SET autodns=1 WHERE id={$dom} LIMIT 1");
@@ -291,7 +291,7 @@ function enable_autorecords($domainid)
 function disable_autorecords($domainid)
 {
   $dom = new Domain( (int) $domainid );
-  $dom->ensure_customerdomain();
+  $dom->ensure_userdomain();
   $dom = $dom->id;
 
   db_query("UPDATE kundendaten.domains SET autodns=0 WHERE id={$dom} LIMIT 1");
