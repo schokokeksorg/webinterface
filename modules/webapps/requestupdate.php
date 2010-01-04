@@ -4,7 +4,7 @@ require_once('webapp-installer.php');
 
 require_role(ROLE_SYSTEMUSER);
 
-
+$section = 'webapps_freewvs';
 $directory = $_GET['dir'];
 
 if (! in_homedir($directory))
