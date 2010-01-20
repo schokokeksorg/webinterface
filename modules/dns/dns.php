@@ -8,7 +8,7 @@ require_role(ROLE_CUSTOMER);
 require_once('dnsinclude.php');
 
 
-$domains = get_domain_list($_SESSION['customerinfo']['customerno']);
+$domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
 
 $output .= '<h3>DNS-Records</h3>
 <p>Hier sehen Sie eine Übersicht über die angelegten DNS-records zu Ihren Domains.</p>';
