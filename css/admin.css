@@ -222,8 +222,8 @@ div.content {
         margin-left: 200px;
         padding-left: 10px;
         border-left: 1px solid #000000;
-        overflow: hidden;
 }
+/*        overflow: hidden; */
 
 div.overview {
   margin: 2em;
