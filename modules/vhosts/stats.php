@@ -95,7 +95,7 @@ foreach ($all_vhosts AS $v)
 
 output(html_form('stats_new', '', 'action=new', "<p>".html_select("vhost", $sel).'<br/>
 <input type="radio" name="public" id="public_0" value="0" checked="checked" /><label for="public_0"> Statistiken hier im Webinterface anzeigen</label><br />
-<input type="radio" name="public" id="public_1" value="1" /><label for="public_1"> Statistiken unter stats.schokokeks.org veröffentlichen (Ohne Passwortschutz)</label><br />
+<input type="radio" name="public" id="public_1" value="1" /><label for="public_1"> Statistiken unter '.config('stats_hostname').' veröffentlichen (Ohne Passwortschutz)</label><br />
 <input type="submit" value="Neue Statistiken erzeugen" /></p>
 '));
 
