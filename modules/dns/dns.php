@@ -3,6 +3,7 @@
 require_once('inc/base.php');
 require_once('inc/security.php');
 
+require_role(ROLE_SYSTEMUSER);
 require_role(ROLE_CUSTOMER);
 
 require_once('dnsinclude.php');
