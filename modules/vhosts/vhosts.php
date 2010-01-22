@@ -58,7 +58,8 @@ if (count($vhosts) > 0)
       else
         $logfiles .= ' und Fehler';
     }
-    output("<td>{$logfiles}</td>");
+    $stats = $vhost['stats'] ? internal_link("showstats", other_icon("chart_bar.png", "Statistiken anzeigen"), "vhost={$vhost['id']}").' ' : '';
+    output("<td>{$stats}{$logfiles}</td>");
   
     if ($vhost['ssl'] == 'http')
     {

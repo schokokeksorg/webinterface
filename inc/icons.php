@@ -68,3 +68,15 @@ function icon_delete($title = '')
 
 
 
+function other_icon($filename, $title = '')
+{
+  global $prefix;
+  return "<img src=\"{$prefix}images/{$filename}\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
+}
+
+
+
+
+
+
+

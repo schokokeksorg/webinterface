@@ -24,11 +24,11 @@ if ($_GET['action'] == 'edit')
 
   $hostname = filter_input_hostname($_POST['hostname']);
 
-  $domainid = (int) $_POST['domain'];
-  if ($domainid != -1) {
+  $domain_id = (int) $_POST['domain'];
+  if ($domain_id != -1) {
     $domain = new Domain( (int) $_POST['domain'] );
     $domain->ensure_userdomain();
-    $domainid = $domain->id;
+    $domain_id = $domain->id;
   }
 
   if (! (isset($_POST['options']) && is_array($_POST['options'])))
@@ -111,6 +111,7 @@ if ($_GET['action'] == 'edit')
 
   $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : NULL);
 
+
   $logtype = '';
   switch ($_POST['logtype']) {
     case 'anonymous':
@@ -126,6 +127,18 @@ if ($_GET['action'] == 'edit')
   if (isset($_POST['errorlog']) and ($_POST['errorlog'] == 1))
     $errorlog = 1;
 
+
+  if (isset($_POST['stats']) && $_POST['stats'] == 1)
+  {
+    if ($vhost['stats'] == NULL)
+      $vhost['stats'] = 'private';
+  }
+  else
+    $vhost['stats'] = NULL;
+
+  if ($logtype == '')
+    $vhost['stats'] = NULL;
+  
   DEBUG("PHP: {$php} / Logging: {$logtype}");
 
   $old_options = explode(',', $vhost['options']);
@@ -144,7 +157,7 @@ if ($_GET['action'] == 'edit')
   DEBUG('New options: '.$options);
 
   $vhost['hostname'] = $hostname;
-  $vhost['domainid'] = $domainid;
+  $vhost['domain_id'] = $domain_id;
   $vhost['docroot'] = $docroot;
   $vhost['php'] = $php;
   $vhost['ssl'] = $ssl;
