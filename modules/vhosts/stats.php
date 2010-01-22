@@ -93,16 +93,26 @@ foreach ($all_vhosts AS $v)
 }
 
 
-output(html_form('stats_new', '', 'action=new', "<p>".html_select("vhost", $sel).'<br/>
+if (count($sel) > 0)
+{
+
+  output(html_form('stats_new', '', 'action=new', "<p>".html_select("vhost", $sel).'<br/>
 <input type="radio" name="public" id="public_0" value="0" checked="checked" /><label for="public_0"> Statistiken hier im Webinterface anzeigen</label><br />
 <input type="radio" name="public" id="public_1" value="1" /><label for="public_1"> Statistiken unter '.config('stats_hostname').' veröffentlichen (Ohne Passwortschutz)</label><br />
 <input type="submit" value="Neue Statistiken erzeugen" /></p>
 '));
 
 
-output('
+  output('
 
 <p><strong>Hinweis:</strong> Die Statistiken werden mindestens täglich erzeugt. Bis zum ersten Durchlauf nach der Aktivierung der Statistik wird der obige Link eine Fehlermeldung erzeugen. Bitte warten Sie mindestens einen Tag ab bevor Sie die Statistik zum ersten Mal aufrufen.</p>
 ');
+}
+else
+{
+  # keine VHosts mehr verfügbar
+  output('<p><em>Sie haben aktuell keine Domains/Subdomains, für die Protokolle erstellt aber noch nicht ausgewertet werden.</em></p>');
+}
+
 
 }
