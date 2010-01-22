@@ -57,7 +57,7 @@ if (count($stats_vhosts) > 0)
     output("<td>".internal_link('showstats', $v['fqdn'], "vhost={$v['id']}")."</td>");
 
     if ($v['stats'] == 'public')
-      output("<td><a href=\"http://stats.schokokeks.org/{$v['fqdn']}\">".icon_enabled("Diese Statistiken können von jedermann aufgerufen werden. Klicken Sie hier um die öffentliche Version zu sehen.")."</a></td>");
+      output("<td><a href=\"http://".config('stats_hostname')."/{$v['fqdn']}\">".icon_enabled("Diese Statistiken können von jedermann aufgerufen werden. Klicken Sie hier um die öffentliche Version zu sehen.")."</a></td>");
     else
       output("<td>".icon_disabled("Diese Statistiken können nur hier im Webinterface betrachtet werden.")."</td>");
     
