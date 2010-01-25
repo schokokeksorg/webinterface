@@ -208,7 +208,7 @@ elseif ($_GET['action'] == 'addalias')
   DEBUG('New options: '.$options);
 
   $alias['hostname'] = $hostname;
-  $alias['domainid'] = $domainid;
+  $alias['domain_id'] = $domainid;
     
   $alias ['options'] = $options;
     
