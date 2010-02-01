@@ -191,7 +191,7 @@ commonName_default = *.{$cn}
   fclose($c);
 
   $output = '';
-  $cmdline = "openssl req -new -batch -config {$config} -out {$csrfile}";
+  $cmdline = "openssl req -sha256 -new -batch -config {$config} -out {$csrfile}";
   $retval = 0;
   exec($cmdline, $output, $retval);
   DEBUG($output);
@@ -249,7 +249,7 @@ commonName_default = {$cn}
   fclose($c);
 
   $output = '';
-  $cmdline = "openssl req -new -batch -config {$config} -out {$csrfile}";
+  $cmdline = "openssl req -sha256 -new -batch -config {$config} -out {$csrfile}";
   $retval = 0;
   exec($cmdline, $output, $retval);
   DEBUG($output);
