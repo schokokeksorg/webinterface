@@ -242,7 +242,7 @@ $form .= "
 $checked = ($vhost['autoipv6'] == 1) ? ' checked="checked"' : '';
 $form .= '<h5>IPv6</h5>
 <div style="margin-left: 2em;">
-<input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label>
+<input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label> (<strong>Achtung:</strong> Bitte beachten Sie die <a href="http://wiki.schokokeks.org/IPv6">Hinweise zu IPv6 im Wiki</a>.)
 </div>';
 
 $form .= "</div>";
