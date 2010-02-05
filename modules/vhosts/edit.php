@@ -209,9 +209,7 @@ $form .= "
 $ipaddrs = user_ipaddrs();
 $certs = user_certs();
 
-if (count($ipaddrs) || count($certs))
-{
-  $form .= "
+$form .= "
 <h4 style=\"margin-top: 3em;\">Erweiterte Optionen</h4>
 <div style=\"margin-left: 2em;\">
 ";
@@ -241,8 +239,14 @@ if (count($ipaddrs) || count($certs))
       ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
       </div>";
   } 
-  $form .= "</div>";
-}
+$checked = ($vhost['autoipv6'] == 1) ? ' checked="checked"' : '';
+$form .= '<h5>IPv6</h5>
+<div style="margin-left: 2em;">
+<input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label>
+</div>';
+
+$form .= "</div>";
+
 
 
 

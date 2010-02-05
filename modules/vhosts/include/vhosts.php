@@ -41,6 +41,7 @@ function empty_vhost()
   $vhost['cert'] = NULL;
   $vhost['certid'] = NULL;
   $vhost['ipv4'] = NULL;
+  $vhost['autoipv6'] = 0;
 
   $vhost['options'] = '';
   $vhost['stats'] = NULL;
@@ -231,15 +232,18 @@ function save_vhost($vhost)
   {
     $ipv4 = maybe_null($vhost['ipv4']);
   }
+
+  $autoipv6 = ( $vhost['autoipv6'] == 1) ? '1' : '0';
+
   $stats = maybe_null($vhost['stats']);
 
   if ($id != 0) {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, options='{$options}', stats={$stats} WHERE id={$id} LIMIT 1");
+    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, autoipv6={$autoipv6}, options='{$options}', stats={$stats} WHERE id={$id} LIMIT 1");
   }
   else {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, ipv4, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, '{$options}', {$stats})");
+    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, {$autoipv6}, '{$options}', {$stats})");
     $id = mysql_insert_id();
   }
   $oldvhost = get_vhost_details($id);

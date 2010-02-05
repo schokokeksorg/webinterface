@@ -111,6 +111,13 @@ if ($_GET['action'] == 'edit')
 
   $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : NULL);
 
+  if (isset($_POST['ipv6']) && $_POST['ipv6'] == 'yes')
+  {
+    $vhost['autoipv6'] = 1;
+  } else {
+    $vhost['autoipv6'] = 0;
+  }
+  
 
   $logtype = '';
   switch ($_POST['logtype']) {
