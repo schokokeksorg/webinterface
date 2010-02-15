@@ -27,16 +27,16 @@ if ($mode == 'csr')
   Passwort geschützt.</p>");
 
   output("<h4>CSR</h4>
-  <pre>
+  <textarea cols=\"70\" rows=\"20\">
 {$cert}
-</pre>");
+</textarea>");
   
   if (isset($_REQUEST['private']) && $_REQUEST['private'] == 'yes')
   {
     output("<h4>privater Schlüssel</h4>
-<pre>
+<textarea cols=\"70\" rows=\"20\">
 {$key}
-</pre>");
+</textarea>");
   }
   else
   {
@@ -63,16 +63,16 @@ else
   Passwort geschützt.</p>");
 
   output("<h4>Zertifikat</h4>
-  <pre>
+  <textarea cols=\"70\" rows=\"20\">
 {$cert}
-</pre>");
+</textarea>");
   
-  if ($_REQUEST['private'] == 'yes')
+  if (isset($_REQUEST['private']) && $_REQUEST['private'] == 'yes')
   {
     output("<h4>privater Schlüssel</h4>
-<pre>
+<textarea cols=\"70\" rows=\"20\">
 {$key}
-</pre>");
+</textarea>");
   }
   else
   {
