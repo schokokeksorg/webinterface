@@ -33,7 +33,7 @@ if (count($vhosts) > 0)
     $class = 'odd';
     if ($even) $class = 'even';
     output("<tr class=\"{$class}\"><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"')."</td><td>".internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost='.$vhost['id'] )."</td><td>");
-    $aliases = get_all_aliases($vhost['id']);
+    $aliases = get_all_aliases($vhost);
     $tmp = '';
     if (count($aliases) > 0)
     {

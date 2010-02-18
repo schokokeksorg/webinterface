@@ -111,7 +111,7 @@ function get_aliases($vhost)
 
 function get_all_aliases($vhost)
 {
-  $vhost = get_vhost_details( (int) $vhost );
+  //$vhost = get_vhost_details( (int) $vhost );
   $aliases = get_aliases($vhost['id']);
   $ret = array();
   if (strstr($vhost['options'], 'aliaswww')) {
