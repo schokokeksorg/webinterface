@@ -8,7 +8,8 @@ function send_customer_token($customerno)
   $customerno = (int) $customerno;
   $token = get_customer_token($customerno);
   $customer = get_customer_info($customerno);
-  $email = get_customer_email($customerno);
+  if ($customer['email'] == '')
+    system_failure('Für Ihr Kundenkonto ist keine E-Mail-Adresse eingetragen. Diese Funktion steht Ihnen daher nicht zur Verfügung.')
   $anrede = "Sehr geehrte Damen und Herren";
   if ($customer['title'] == 'Herr')
     $anrede = "Sehr geehrter Herr {$customer['name']}";
@@ -22,11 +23,11 @@ Diese automatische Nachricht dient der Überprüfung Ihrer Identität.
 
 Um sich ein neues Passwort setzen zu können, rufen Sie bitte den
 folgenden Link auf:
- https://config.schokokeks.org/go/index/validate_token.php?customerno={$customer['customerno']}&token={$token}
+ https://config.schokokeks.org/go/index/validate_token?customerno={$customer['customerno']}&token={$token}
 
 Sollte Ihr E-Mail-Programm diesen Link nicht korrekt an den Browser
 übertragen, rufen Sie bitte die Seite
- https://config.schokokeks.org/go/index/validate_token.php
+ https://config.schokokeks.org/go/index/validate_token
 auf und geben Sie die folgenden Daten ein:
  Kundennummer: {$customer['customerno']}
  Token:        {$token}
@@ -35,7 +36,7 @@ Diese Prozedur müssen Sie bis spätestens 24 Stunden nach Erhalt
 dieser Nachricht durchführen, sonst verliert das Token seine
 Gültigkeit.
 ";
-  send_mail($email, "Passwortanforderung fuer Webinterface", $msg);
+  send_mail($customer['email'], "Passwortanforderung fuer Webinterface", $msg);
 }
 
 

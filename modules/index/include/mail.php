@@ -8,7 +8,8 @@ function send_customer_token($customerno)
   $customerno = (int) $customerno;
   $token = get_customer_token($customerno);
   $customer = get_customer_info($customerno);
-  $email = get_customer_email($customerno);
+  if ($customer['email'] == '')
+    system_failure('Für Ihr Kundenkonto ist keine E-Mail-Adresse eingetragen. Diese Funktion steht Ihnen daher nicht zur Verfügung.')
   $anrede = "Sehr geehrte Damen und Herren";
   if ($customer['title'] == 'Herr')
     $anrede = "Sehr geehrter Herr {$customer['name']}";
@@ -35,7 +36,7 @@ Diese Prozedur müssen Sie bis spätestens 24 Stunden nach Erhalt
 dieser Nachricht durchführen, sonst verliert das Token seine
 Gültigkeit.
 ";
-  send_mail($email, "Passwortanforderung fuer Webinterface", $msg);
+  send_mail($customer['email'], "Passwortanforderung fuer Webinterface", $msg);
 }
 
 

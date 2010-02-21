@@ -113,7 +113,7 @@ function get_customer_info($customer)
   {
     $username = mysql_real_escape_string($customer);
     DEBUG('looking up customer info for username '.$username);
-    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
+    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
   }
   if (@mysql_num_rows($result) == 0)
     system_failure("Konnte Kundendaten nicht auslesen!");
@@ -123,20 +123,10 @@ function get_customer_info($customer)
   $ret['title'] = $data->anrede;
   $ret['company'] = $data->firma;
   $ret['name'] = $data->name;
+  $ret['email'] = $data->email;
   
   return $ret;
 }
-
-
-function get_customer_email($customerno)
-{
-  $customerno = (int) $customerno;
-  $result = db_query("SELECT wert FROM kundendaten.kundenkontakt WHERE kundennr={$customerno} AND typ='email' LIMIT 1;");
-  if (@mysql_num_rows($result) == 0)
-    system_failure("Konnte keine E-Mail-Adresse finden!");
-  return mysql_fetch_object($result)->wert;
-}
-
 
 
 function get_user_info($username)

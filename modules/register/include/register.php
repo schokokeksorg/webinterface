@@ -6,11 +6,11 @@ require_once('mail.php');
 function customer_with_email($email)
 {
   $email = mysql_real_escape_string($email);
-  $result = db_query("SELECT kundennr FROM kundendaten.kundenkontakt WHERE wert='{$email}' LIMIT 1;");
+  $result = db_query("SELECT id FROM kundendaten.kunden WHERE email='{$email}' OR email_rechnung='{$email}' OR email_extern='{$email}' LIMIT 1;");
   if (mysql_num_rows($result) == 0)
     return NULL;
   else
-    return mysql_fetch_object($result)->kundennr;
+    return mysql_fetch_object($result)->id;
 }
 
 
@@ -32,17 +32,14 @@ function create_customer($data)
 
   logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: {$anrede} / {$firma} / {$vorname} / {$nachname} / {$email}");
   
-  $realname = maybe_null(chop($vorname.' '.$nachname));
-
   $anrede = maybe_null($anrede);
   $firma = maybe_null($firma);
   $vorname = maybe_null($vorname);
   $nachname = maybe_null($nachname);
 
   db_query("BEGIN");
-  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, erstellungsdatum,status) VALUES ({$firma}, {$nachname}, {$vorname}, {$anrede}, CURDATE(), 3)");
+  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES ({$firma}, {$nachname}, {$vorname}, {$anrede}, {$email}, CURDATE(), 3)");
   $customerno = mysql_insert_id();
-  db_query("INSERT INTO kundendaten.kundenkontakt (typ, comment, wert, name, kundennr) VALUES ('email', 'extern', '{$email}', {$realname}, {$customerno})");
   db_query("COMMIT");
   return $customerno;
 
@@ -54,7 +51,6 @@ function send_initial_customer_token($customerno)
   $customerno = (int) $customerno;
   $token = get_customer_token($customerno);
   $customer = get_customer_info($customerno);
-  $email = get_customer_email($customerno);
   $anrede = "Sehr geehrte Damen und Herren";
   if ($customer['title'] == 'Herr')
     $anrede = "Sehr geehrter Herr {$customer['name']}";
@@ -87,7 +83,7 @@ Gültigkeit und der Zugang wird wieder gelöscht.
 Sofern Sie keinen Account bei schokokeks.org angemeldet haben, 
 können Sie diese Nachricht ignorieren.
 ";
-  send_mail($email, "Willkommen bei schokokeks.org Webhosting", $msg);
+  send_mail($customer['email'], "Willkommen bei schokokeks.org Webhosting", $msg);
 }
 
 
@@ -95,12 +91,11 @@ function notify_admins_about_new_customer($customerno)
 {
   $customerno = (int) $customerno;
   $customer = get_customer_info($customerno);
-  $email = get_customer_email($customerno);
   $msg = "Folgender Kunde hat sich gerade über's Webinterface neu angemeldet:
 
 Kundennummer: {$customerno}
 Name: {$customer['name']}
-E-mail: {$email}
+E-mail: {$customer['email']}
 
 Registriert von IP-Adresse {$_SERVER['REMOTE_ADDR']}.
 ";
@@ -113,7 +108,6 @@ function welcome_customer($customerno)
 {
   $customerno = (int) $customerno;
   $customer = get_customer_info($customerno);
-  $email = get_customer_email($customerno);
   $anrede = "Sehr geehrte Damen und Herren";
   if ($customer['title'] == 'Herr')
     $anrede = "Sehr geehrter Herr {$customer['name']}";
@@ -140,7 +134,7 @@ Informationen. Schauen Sie sich um, es lohnt sich!
   * FIXME: Diese Mail muss noch überarbeitet werden!
   */
 
-  send_mail($email, "Willkommen bei schokokeks.org", $msg);
+  send_mail($customer['email'], "Willkommen bei schokokeks.org", $msg);
 }
 
 
