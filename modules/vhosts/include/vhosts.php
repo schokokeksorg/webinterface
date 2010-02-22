@@ -29,7 +29,7 @@ function empty_vhost()
   
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
-  $vhost['php'] = 'fastcgi';
+  $vhost['php'] = 'php53';
   $vhost['ssl'] = NULL;
   $vhost['logtype'] = NULL;
   $vhost['errorlog'] = 0;

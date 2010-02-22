@@ -132,7 +132,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 </div>
 ";
 
-$options = array("none" => 'ausgeschaltet', "fastcgi" => "PHP 5.2", "php53" => 'Testbetrieb: PHP 5.3');
+$options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "fastcgi" => "Kompatibilitätsmodus: PHP 5.2");
 
 if ($vhost['php'] == 'mod_php')
 {
