@@ -69,8 +69,8 @@ if (count($stats_vhosts) > 0)
     output(" &#160; ".internal_link("", icon_delete("Diese Statistiken löschen"), "vhost={$v['id']}&action=delete")."</td>");
     output("</tr>");
   
-  }
-  output('</table');
+}
+output('</table>');
 }
 else
   output('<em>Für Ihre Seiten werden bisher keine Statistiken erzeugt</em>');

@@ -59,7 +59,7 @@ if ($new)
 else
   output('<h3>DNS-Record bearbeiten</h3>');
 
-output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;"><strong>Bitte beachten Sie:</strong> Um Ihnen auch ungewöhniche Konstellationen zu ermöglichen, erlaubt dieses Webinterface sehr großzügige Eintragungen, die eventuell nicht plausibel sind oder vom DNS-Server gar nicht so verstanden werden können. Wir können sicherheitskritische Einträge herausfiltern, jedoch nicht logische Fehler automatisch erkennen. Im Fehlerfall wird meistens Ihre gesamte Domain vom DNS-Server ausgeschlossen, so lange sich Fehler in der Konfiguration befinden. Sollten Sie hier also fehlerhafte Eintragungen machen, kann dies die Erreichbarkeit der betreffenden Domain im Ganzen stören.</p>');
+output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;" /><strong>Bitte beachten Sie:</strong> Um Ihnen auch ungewöhniche Konstellationen zu ermöglichen, erlaubt dieses Webinterface sehr großzügige Eintragungen, die eventuell nicht plausibel sind oder vom DNS-Server gar nicht so verstanden werden können. Wir können sicherheitskritische Einträge herausfiltern, jedoch nicht logische Fehler automatisch erkennen. Im Fehlerfall wird meistens Ihre gesamte Domain vom DNS-Server ausgeschlossen, so lange sich Fehler in der Konfiguration befinden. Sollten Sie hier also fehlerhafte Eintragungen machen, kann dies die Erreichbarkeit der betreffenden Domain im Ganzen stören.</p>');
 
 
 output('<p>Record-Typ: '.strtoupper($type).'</p>');

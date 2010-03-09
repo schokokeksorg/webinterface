@@ -44,10 +44,26 @@ if ( is_file($file) )
   $html = preg_replace(':^.*?<BODY[^>]*>(.*)</BODY>.*$:si', '$1', $html);
   DEBUG($html);
 
+  // <BR> rewriten
+  $html = preg_replace('/<BR>/', '<BR />', $html);
+  // <HR> rewriten
+  $html = preg_replace('/<HR>/', '<HR />', $html);
+  // <P> rewriten
+  $html = preg_replace('/<P>/', '<BR />', $html);
+  // NOWRAP rewriten
+  $html = preg_replace('/NOWRAP/', 'nowrap="nowrap"', $html);
+  // lowercase tag names and keys
+  $html = preg_replace('/(<[^ ]+ )/e', "strtolower('$1')", $html);
+  $html = preg_replace('/( [A-Z]+=)/e', "strtolower('$1')", $html);
+  // xml-values mit anführungszeichen
+  $html = preg_replace('/=([-0-9a-zA-Z]+)([ >])/', '="$1"$2', $html);
   // Bilder rewriten
-  $html = preg_replace('/SRC="((daily_|hourly_|ctry_)?usage(_[0-9]+)?\.png)"/', 'SRC="showstats?vhost='.$vhost['id'].'&amp;file=$1"', $html);
+  $html = preg_replace('_<img ([^>]+[^/])>_', '<img $1 />', $html);
+  
+  // Bilder rewriten
+  $html = preg_replace('/src="((daily_|hourly_|ctry_)?usage(_[0-9]+)?\.png)"/', 'src="showstats?vhost='.$vhost['id'].'&amp;file=$1"', $html);
   // Interne Links rewriten
-  $html = preg_replace('!HREF="(./)?((usage|agent|search|ref|url|site|index)(_[0-9]+)?\.html)"!', 'HREF="showstats?vhost='.$vhost['id'].'&amp;file=$2"', $html);
+  $html = preg_replace('!href="(./)?((usage|agent|search|ref|url|site|index)(_[0-9]+)?\.html)"!', 'href="showstats?vhost='.$vhost['id'].'&amp;file=$2"', $html);
   output($html);
 }
 else
