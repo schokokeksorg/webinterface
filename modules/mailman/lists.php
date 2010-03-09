@@ -39,7 +39,7 @@ if (! empty($lists))
 
     output("<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$list['admin']}</td><td>{$status}</td>");
     if ($list['status'] == 'running')
-      output("<td>".internal_link('save', "<img src=\"{$prefix}images/delete.png\" />", "action=delete&id={$list['id']}")."</tr>\n");
+      output("<td>".internal_link('save', "<img src=\"{$prefix}images/delete.png\" />", "action=delete&id={$list['id']}")."</td></tr>\n");
     else
       output("<td>&#160;</td></tr>\n");
   }
