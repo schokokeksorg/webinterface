@@ -86,7 +86,7 @@ if (isset($html_header))
 <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
 
 <div class="menu">
-<img src="<?php echo $prefix.config('logo'); ?>" width="190" height="141" alt="<?php echo config('company_name'); ?>" />
+<a href="<?php echo $prefix; ?>"><img src="<?php echo $prefix.config('logo'); ?>" width="190" height="141" alt="<?php echo config('company_name'); ?>" /></a>
 
 
 <?php
