@@ -15,7 +15,7 @@ if ($role & (ROLE_VMAIL_ACCOUNT | ROLE_MAILACCOUNT))
 if ($role & ROLE_SYSTEMUSER) {
   $menu["email_domains"] = array("label" => "Mail-Verwaltung", "file" => "domains", "weight" => 1, "submenu" => "domains_domains");
 }
-if ($role & ROLE_SYSTEMUSER && (user_has_accounts() || ! user_has_vmail_domain() || user_has_regular_domain() ) )
+if ($role & ROLE_SYSTEMUSER && (user_has_accounts() || ! user_has_vmail_domain() || user_has_dotcourier_domain() ) )
 {
   $menu["email_imap"] = array("label" => "IMAP/POP3", "file" => "imap", "weight" => 20, 'submenu' => "email_vmail");
 }

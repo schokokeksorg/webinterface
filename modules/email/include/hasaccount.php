@@ -27,11 +27,3 @@ if (! function_exists("user_has_vmail_domain"))
   }
 }
 
-function user_has_regular_domain()
-{
-  $result = db_query("SELECT id FROM kundendaten.domains AS dom WHERE id NOT IN (SELECT domain FROM mail.virtual_mail_domains WHERE hostname IS NULL)");
-  return (mysql_num_rows($result) > 0);
-}
-
-
-?>
