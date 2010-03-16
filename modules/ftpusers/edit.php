@@ -16,7 +16,10 @@ if (isset($_GET['id']))
 if ($ftpuser['username'])
   output('<h3>Ändern des FTP-Benutzers</h3>');
 else
+{
   output('<h3>Neuer FTP-Zugang</h3>');
+  output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;" /><strong>Bitte beachten Sie:</strong> Ein FTP-Benutzer kann nur im hier angegebenen Verzeichnis (und dallen darin enthaltenen Verzeichnissen) Dateien erstellen oder ändern. Sofern der Benutzer allerdings die Möglichkeit hat, PHP- oder CGI-Programme zu installieren und über den Webserver aufzurufen, kann er damit auch außerhalb dieses Verzeichnisses agieren. Schalten Sie bitte ggf. die PHP- und CGI-Unterstützung für die betreffende Website aus.</p>');
+}
 
 $username = substr($ftpuser['username'], strlen($_SESSION['userinfo']['username'])+1);
 
