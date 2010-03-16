@@ -36,7 +36,6 @@ if ($_GET['action'] == 'edit')
   $aliaswww = in_array('aliaswww', $_POST['options']);
 
   $docroot = '';
-  $php = '';
   if ($_POST['vhost_type'] == 'regular' || $_POST['vhost_type'] == 'dav')
   {
     $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain->fqdn).'/htdocs';
@@ -70,6 +69,12 @@ if ($_GET['action'] == 'edit')
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }
   }
+  $cgi = 0;
+  if (isset($_POST['cgi']) && isset($_POST['cgi']) && $_POST['cgi'] == 'yes')
+  {
+    $cgi = 1;
+  }
+
   if ($_POST['vhost_type'] == 'regular') {
     $vhost['is_dav'] = 0;
     $vhost['is_svn'] = 0;
@@ -167,6 +172,7 @@ if ($_GET['action'] == 'edit')
   $vhost['domain_id'] = $domain_id;
   $vhost['docroot'] = $docroot;
   $vhost['php'] = $php;
+  $vhost['cgi'] = $cgi;
   $vhost['ssl'] = $ssl;
   $vhost['cert'] = $cert;
   $vhost['ipv4'] = $ipv4;

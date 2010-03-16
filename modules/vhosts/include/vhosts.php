@@ -12,7 +12,7 @@ require_once("certs.php");
 function list_vhosts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
+  $result = db_query("SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
   $ret = array();
   while ($item = mysql_fetch_assoc($result))
     array_push($ret, $item);
@@ -30,6 +30,7 @@ function empty_vhost()
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
   $vhost['php'] = 'php53';
+  $vhost['cgi'] = 1;
   $vhost['ssl'] = NULL;
   $vhost['logtype'] = NULL;
   $vhost['errorlog'] = 0;
@@ -209,6 +210,7 @@ function save_vhost($vhost)
     $domain = 'NULL';
   $docroot = maybe_null($vhost['docroot']);
   $php = maybe_null($vhost['php']);
+  $cgi = ($vhost['cgi'] == 1 ? 1 : 0);
   $ssl = maybe_null($vhost['ssl']);
   $logtype = maybe_null($vhost['logtype']);
   $errorlog = (int) $vhost['errorlog'];
@@ -239,11 +241,11 @@ function save_vhost($vhost)
 
   if ($id != 0) {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, autoipv6={$autoipv6}, options='{$options}', stats={$stats} WHERE id={$id} LIMIT 1");
+    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, cgi={$cgi}, `ssl`={$ssl}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, autoipv6={$autoipv6}, options='{$options}', stats={$stats} WHERE id={$id} LIMIT 1");
   }
   else {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, `ssl`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, {$autoipv6}, '{$options}', {$stats})");
+    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$cgi}, {$ssl}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, {$autoipv6}, '{$options}', {$stats})");
     $id = mysql_insert_id();
   }
   $oldvhost = get_vhost_details($id);

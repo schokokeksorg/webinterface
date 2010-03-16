@@ -139,11 +139,17 @@ if ($vhost['php'] == 'mod_php')
   $options['mod_php'] = 'PHP als Apache-Modul (veraltet)';
 }
 
+$have_cgi = ($vhost['cgi'] == 1 ? ' checked="checked" ' : '');
+
 $form .= "
 <div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">
     ".html_select("php", $options, $vhost['php'])."
+  </div>
+  <h5>CGI</h5>
+  <div style=\"margin-left: 2em;\">
+    <input type=\"checkbox\" name=\"cgi\" id=\"cgi\" value=\"yes\" {$have_cgi}/>&#160;<label for=\"cgi\">Erlaube CGI-Nutzung</label>
   </div>
 </div>
 ";
