@@ -75,6 +75,9 @@ if ($_GET['action'] == 'edit')
     $cgi = 1;
   }
 
+  if (isset($_POST['suexec_user']))
+    $vhost['suexec_user'] = $_POST['suexec_user'];
+
   if ($_POST['vhost_type'] == 'regular') {
     $vhost['is_dav'] = 0;
     $vhost['is_svn'] = 0;

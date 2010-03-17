@@ -214,6 +214,7 @@ $form .= "
 
 $ipaddrs = user_ipaddrs();
 $certs = user_certs();
+$available_users = available_suexec_users();
 
 $form .= "
 <h4 style=\"margin-top: 3em;\">Erweiterte Optionen</h4>
@@ -245,6 +246,19 @@ $form .= "
       ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
       </div>";
   } 
+  if (count($available_users))
+  {
+    $userselect = array(0 => 'Eigener Benutzeraccount');
+    foreach ($available_users AS $u)
+    {
+      $userselect[$u['uid']] = $u['username'];
+    }
+    $form .= "
+      <h5>SuExec-Benutzeraccount</h5>
+      <div style=\"margin-left: 2em;\">
+      ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
+      </div>";
+  }
 $checked = ($vhost['autoipv6'] == 1) ? ' checked="checked"' : '';
 $form .= '<h5>IPv6</h5>
 <div style="margin-left: 2em;">
