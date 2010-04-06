@@ -37,21 +37,25 @@ foreach ($user_domains as $domain)
 
   $features = array();
   if ($domain->dns == 1) {
-    $features[] = 'DNS';
+    if (dns_in_use($domain->id))
+      $features[] = 'DNS';
     //if ($domain->autodns == 1)
     //  $features[] = 'AutoDNS';
   }
   $mailman = mailman_subdomains($domain->id);
-  if ($domain->mail != 'none')
+  if (mail_in_use($domain->id))
     $features[] = 'Mail';
   if ($mailman)
     $features[] = 'Mailinglisten';
-  if ($domain->webserver == 1)
+  if (web_in_use($domain->id))
     $features[] = 'Web';
   if ($domain->jabber == 1)
     $features[] = 'Jabber';
 
-    output("  <tr><td>{$domain->fqdn}</td><td>{$regdate}</td><td>".implode(', ', $features)."</td></tr>\n");
+  $features = implode(', ', $features);
+  if (! $features)
+    $features = '<em>unbenutzt</em>';
+  output("  <tr><td>{$domain->fqdn}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
 }
 output('</table>');
 output("<br />");
