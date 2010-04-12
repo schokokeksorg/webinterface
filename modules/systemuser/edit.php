@@ -1,6 +1,6 @@
 <?php
 
-require_once('session/start.php');
+require_once('inc/base.php');
 
 require_once('useraccounts.php');
 
@@ -12,21 +12,42 @@ $section = "systemuser_accounts";
 
 $account = get_account_details($_GET['uid']);
 
+
 output("<h3>Bearbeiten von Benutzer »{$account['username']}«</h3>");
 
-if (customer_useraccount($account['uid']))
-  system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
+#if (customer_useraccount($account['uid']))
+#  system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
+
+$shells = available_shells();
+$defaultname = ($account['name'] ? '' : 'checked="checked" ');
+$nondefaultname = ($account['name'] ? 'checked="checked" ' : '');
+
+$customerquota = get_customer_quota();
+
+$maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
 
 
-output(html_form('systemuser_edit', 'save', 'action=edit', '
-<table>
-<tr><td>Benutzername:</td><td><strong>'.$account['username'].'</strong></td></tr>
-<tr><td>richtiger Name:<br /><span style="font-size:85%;">(wenn nicht »'.$_SESSION['customerinfo']['name'].'«)</span></td><td><input type="text" name="fullname" value="'.$account['name'].'" /></td></tr>
-<tr><td>Passwort:</td><td><input type="password" name="newpass" value="" /><br /><span style="font-size:85%;">(Bitte leer lassen um das Passwort nicht zu ändern!)</span></td></tr>
-<tr><td>Wiederholung:</td><td><input type="password" name="newpass2" value="" /></td></tr>
-</table>
+output(html_form('systemuser_edit', 'save', 'action=edit&uid='.$account['uid'], '
+
+<h5>Name (E-Mail-Absender, ...)</h5>
+<div style="margin-left: 2em;"> 
+  <p><input type="radio" name="defaultname" id="defaultname" value="1" '.$defaultname.'/> <label for="defaultname">Kundenname: <strong>'.$_SESSION['customerinfo']['name'].'</strong></label></p>
+  <p><input type="radio" name="defaultname" id="nondefaultname" value="0" '.$nondefaultname.'/> <label for="nondefaultname">Abweichend:</label> <input type="text" name="fullname" id="fullname" value="'.$account['name'].'" /></p>
+</div>
+
+<h5>Speicherplatz</h5>
+<div style="margin-left: 2em;">
+  <p>Wenn Sie mehrere Benutzeraccounts haben, können Sie den verfügbaren Speicherplatz selbst auf diese Accounts verteilen, bis diese zusammen das Limit erreichen, das für Ihr Kundenkonto vereinbart wurde (aktuell insgesamt '.$customerquota['max'].' MB).</p>
+  <p><label for="quota">Speicherplatz für »<strong>'.$account['username'].'</strong>«:</label> <input style="text-align: right; width: 5em;" type="text" name="quota" id="quota" value="'.$account['quota'].'" /> MB (Maximal '.$maxquota.' MB möglich.)</p>
+</div>
+
+<h5>Shell</h5>
+<div style="margin-left: 2em;">
+  <p>Hier können Sie eine andere Kommandozeile einstellen. Tun Sie das bitte nur, wenn Sie wissen was Sie tun. Möchten Sie gerne eine Shell benutzen, die hier nicht aufgeführt ist, wenden Sie sich bitte an den Support.</p>
+  <p>'.html_select('shell', $shells, $account['shell']).'</p>
+</div>
+
 <p>
-<input type="hidden" name="uid" value="'.$account['uid'].'" />
 <input type="submit" name="submit" value="Speichern" />
 </p>
 '));

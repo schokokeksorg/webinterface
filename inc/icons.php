@@ -45,6 +45,12 @@ function icon_error($title = '')
   return "<img src=\"{$prefix}images/error.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
+function icon_edit($title = '')
+{
+  global $prefix;
+  return "<img src=\"{$prefix}images/edit.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
+}
+
 function icon_pwchange($title = '')
 {
   global $prefix;

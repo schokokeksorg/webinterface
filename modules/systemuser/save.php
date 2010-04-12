@@ -30,33 +30,54 @@ if ($_GET['action'] == 'new')
   }
   */
 }
-elseif ($_GET['action'] == 'edit')
+elseif ($_GET['action'] == 'pwchange')
 {
   $error = false;
-  check_form_token('systemuser_edit');
-  if (customer_useraccount($_POST['uid']))
-    system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');
+  check_form_token('systemuser_pwchange');
+  if (customer_useraccount($_REQUEST['uid']))
+    system_failure('Zum Ändern dieses Passworts verwenden Sie bitte die Funktion im Hauptmenü!');
 
-  if ($_POST['newpass'] != '')
+  //if (! strong_password($_POST['newpass']))
+  //  input_error('Das Passwort ist zu einfach');
+  //else
+  if ($_POST['newpass1'] == '' ||
+      $_POST['newpass1'] != $_POST['newpass2'])
   {
-    //if (! strong_password($_POST['newpass']))
-    //  input_error('Das Passwort ist zu einfach');
-    //else
-    if ($_POST['newpass2'] == '' ||
-        $_POST['newpass'] != $_POST['newpass2'])
-    {
-      input_error('Bitte zweimal ein neues Passwort eingeben!');
-      $error = true;
-    }
-    else
-    {
-      $user = get_account_details($_POST['uid']);
-      # set_systemuser_password kommt aus den Session-Funktionen!
-      set_systemuser_password($user['uid'], $_POST['newpass']);
-    }
+    input_error('Bitte zweimal ein neues Passwort eingeben!');
+    $error = true;
   }
+  else
+  {
+    $user = get_account_details($_REQUEST['uid']);
+    # set_systemuser_password kommt aus den Session-Funktionen!
+    set_systemuser_password($user['uid'], $_POST['newpass1']);
+  }
+  if (! ($debugmode || $error))
+    header('Location: accounts');
+}
+elseif ($_GET['action'] == 'edit')
+{
+  check_form_token('systemuser_edit');
+  $account = get_account_details($_REQUEST['uid']);
 
-  set_systemuser_details($_POST['uid'], $_POST['fullname'], $_POST['quota']);
+  $customerquota = get_customer_quota();
+  $maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
+ 
+  $quota = (int) $_POST['quota'];
+  if ($quota > $maxquota) 
+    system_failure("Sie können diesem Account maximal {$maxquota} MB Speicherplatz zuweisen.");
+  $account['quota'] = $quota;
+
+  if ($_POST['defaultname'] == 1)
+    $account['name'] = NULL;
+  else
+    $account['name'] = filter_input_general($_POST['fullname']);
+  
+  $shells = available_shells();
+  if (isset($shells[$_POST['shell']]))
+    $account['shell'] = $_POST['shell'];
+
+  set_account_details($account);
   if (! ($debugmode || $error))
     header('Location: accounts');
   
