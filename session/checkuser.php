@@ -107,23 +107,23 @@ function get_customer_info($customer)
   if ($customerno != 0)
   {
     DEBUG('Looking up customerinfo for customer no. '.$customerno);
-    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name FROM kundendaten.kunden WHERE id={$customerno} LIMIT 1;");
+    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden WHERE id={$customerno} LIMIT 1;");
   }
   else
   {
     $username = mysql_real_escape_string($customer);
     DEBUG('looking up customer info for username '.$username);
-    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
+    $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
   }
   if (@mysql_num_rows($result) == 0)
     system_failure("Konnte Kundendaten nicht auslesen!");
-  $data = mysql_fetch_object($result);
-
-  $ret['customerno'] = $data->id;
-  $ret['title'] = $data->anrede;
-  $ret['company'] = $data->firma;
-  $ret['name'] = $data->name;
-  $ret['email'] = $data->email;
+  $data = mysql_fetch_assoc($result);
+  DEBUG($data);
+  $ret['customerno'] = $data['id'];
+  $ret['title'] = $data['anrede'];
+  $ret['company'] = $data['firma'];
+  $ret['name'] = $data['name'];
+  $ret['email'] = $data['email'];
   
   return $ret;
 }
