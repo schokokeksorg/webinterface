@@ -170,13 +170,21 @@ function set_customer_password($customerno, $newpass)
   logger(LOG_INFO, "session/checkuser", "pwchange", "changed customer's password.");
 }
 
-
 function set_systemuser_password($uid, $newpass)
 {
   $uid = (int) $uid;
   require_once('inc/base.php');
-  $salt = random_string(8);
-  $newpass = crypt($newpass, "\$1\${$salt}\$");
+  if (defined("CRYPT_SHA512") && CRYPT_SHA512 == 1)
+  {
+    $rounds = rand(1000, 5000);
+    $salt = "rounds=".$rounds."$".random_string(8);
+    $newpass = crypt($newpass, "\$6\${$salt}\$");
+  }
+  else
+  {
+    $salt = random_string(8);
+    $newpass = crypt($newpass, "\$1\${$salt}\$");
+  }
   db_query("UPDATE system.passwoerter SET passwort='$newpass' WHERE uid='".$uid."' LIMIT 1");
   logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
 }
