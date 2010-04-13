@@ -3,7 +3,6 @@
 require_once("inc/debug.php");
 require_once("inc/db_connect.php");
 
-require_role(ROLE_CUSTOMER);
 
 
 function customer_may_have_useraccounts()
@@ -59,11 +58,13 @@ function list_useraccounts()
 }
 
 
-function get_account_details($uid)
+function get_account_details($uid, $customerno=0)
 {
   $uid = (int) $uid;
-  $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT uid,username,name,shell,quota FROM system.useraccounts WHERE kunde={$customerno} AND uid={$uid}");
+  $customerno = (int) $customerno;
+  if ($customerno == 0)
+    $customerno = $_SESSION['customerinfo']['customerno'];
+  $result = db_query("SELECT uid,username,name,shell,quota,erstellungsdatum FROM system.useraccounts WHERE kunde={$customerno} AND uid={$uid}");
   if (mysql_num_rows($result) == 0)
     system_failure("Cannot find the requestes useraccount (for this customer).");
   return mysql_fetch_assoc($result);
@@ -84,7 +85,12 @@ function get_used_quota($uid)
 function set_account_details($account)
 {
   $uid = (int) $account['uid'];
-  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $customerno = NULL;
+  if ($_SESSION['role'] & ROLE_CUSTOMER)
+    $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  else
+    $customerno = (int) $_SESSION['userinfo']['customerno'];
+
   $fullname = maybe_null(mysql_real_escape_string(filter_input_general($account['name'])));
   $shell = mysql_real_escape_string(filter_input_general($account['shell']));
   $quota = (int) $account['quota'];

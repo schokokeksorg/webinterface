@@ -7,7 +7,9 @@ require_once('useraccounts.php');
 require_once('inc/security.php');
 
 
-require_role(ROLE_CUSTOMER);
+require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
+
+$role = $_SESSION['role'];
 
 require_once("inc/debug.php");
 global $debugmode;
@@ -32,6 +34,8 @@ if ($_GET['action'] == 'new')
 }
 elseif ($_GET['action'] == 'pwchange')
 {
+  if (! $role & ROLE_CUSTOMER)
+    system_failure("Zum Ändern Ihres Passworts verwenden Sie bitte die Funktion im Hauptmenü!");
   $error = false;
   check_form_token('systemuser_pwchange');
   if (customer_useraccount($_REQUEST['uid']))
@@ -58,15 +62,22 @@ elseif ($_GET['action'] == 'pwchange')
 elseif ($_GET['action'] == 'edit')
 {
   check_form_token('systemuser_edit');
-  $account = get_account_details($_REQUEST['uid']);
+  $account = NULL;
+  if ($role & ROLE_CUSTOMER)
+    $account = get_account_details($_REQUEST['uid']);
+  else
+    $account = get_account_details($_SESSION['userinfo']['uid'], $_SESSION['userinfo']['customerno']);
 
-  $customerquota = get_customer_quota();
-  $maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
- 
-  $quota = (int) $_POST['quota'];
-  if ($quota > $maxquota) 
-    system_failure("Sie können diesem Account maximal {$maxquota} MB Speicherplatz zuweisen.");
-  $account['quota'] = $quota;
+  if ($role & ROLE_CUSTOMER)
+  {
+    $customerquota = get_customer_quota();
+    $maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
+   
+    $quota = (int) $_POST['quota'];
+    if ($quota > $maxquota) 
+      system_failure("Sie können diesem Account maximal {$maxquota} MB Speicherplatz zuweisen.");
+    $account['quota'] = $quota;
+  }
 
   if ($_POST['defaultname'] == 1)
     $account['name'] = NULL;
@@ -78,8 +89,11 @@ elseif ($_GET['action'] == 'edit')
     $account['shell'] = $_POST['shell'];
 
   set_account_details($account);
+  $target = 'accounts';
+  if (! ($role & ROLE_CUSTOMER))
+    $target = 'myaccount';
   if (! ($debugmode || $error))
-    header('Location: accounts');
+    header('Location: '.$target);
   
 }
 elseif ($_GET['action'] == 'delete')
