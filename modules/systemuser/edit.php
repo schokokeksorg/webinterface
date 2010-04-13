@@ -35,12 +35,15 @@ $customerquota = get_customer_quota();
 
 $maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
 
+$customer = get_customer_info($_SESSION['userinfo']['customerno']);
+if ($role & ROLE_CUSTOMER)
+  $customer = $_SESSION['customerinfo'];
 
 $form = '
 
 <h5>Name (E-Mail-Absender, ...)</h5>
 <div style="margin-left: 2em;"> 
-  <p><input type="radio" name="defaultname" id="defaultname" value="1" '.$defaultname.'/> <label for="defaultname">Kundenname: <strong>'.$_SESSION['customerinfo']['name'].'</strong></label></p>
+  <p><input type="radio" name="defaultname" id="defaultname" value="1" '.$defaultname.'/> <label for="defaultname">Kundenname: <strong>'.$customer['name'].'</strong></label></p>
   <p><input type="radio" name="defaultname" id="nondefaultname" value="0" '.$nondefaultname.'/> <label for="nondefaultname">Abweichend:</label> <input type="text" name="fullname" id="fullname" value="'.$account['name'].'" /></p>
 </div>
 ';
