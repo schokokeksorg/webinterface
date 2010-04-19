@@ -87,6 +87,9 @@ elseif ($_GET['action'] == 'edit')
   $shells = available_shells();
   if (isset($shells[$_POST['shell']]))
     $account['shell'] = $_POST['shell'];
+  else
+    if (isset($_POST['shell']) && $_POST['shell'] != '')
+      system_failure('Ungültige Shell');
 
   set_account_details($account);
   $target = 'accounts';
