@@ -149,7 +149,7 @@ $form .= "
   </div>
   <h5>CGI</h5>
   <div style=\"margin-left: 2em;\">
-    <input type=\"checkbox\" name=\"cgi\" id=\"cgi\" value=\"yes\" {$have_cgi}/>&#160;<label for=\"cgi\">Erlaube CGI-Nutzung</label>
+    <input type=\"checkbox\" name=\"cgi\" id=\"cgi\" value=\"yes\" {$have_cgi}/>&#160;<label for=\"cgi\">Erlaube CGI-Nutzung</label><br /><em>(Wenn Sie dies ausschalten, werden einige andere Dinge auch nicht mehr erlaubt.)</em>
   </div>
 </div>
 ";
