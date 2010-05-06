@@ -65,8 +65,17 @@ function save_ftpuser($data)
   $password_hash = '';
   if ($data['password'] != '')
   {
-    $salt = random_string(8);
-    $password_hash = crypt($data['password'], "\$1\${$salt}\$");
+    if (defined("CRYPT_SHA512") && CRYPT_SHA512 == 1)
+    {
+      $rounds = rand(1000, 5000);
+      $salt = "rounds=".$rounds."$".random_string(8);
+      $password_hash = crypt($data['password'], "\$6\${$salt}\$");
+    }
+    else
+    {
+      $salt = random_string(8);
+      $password_hash = crypt($data['password'], "\$1\${$salt}\$");
+    }
     $password_query = "password='{$password_hash}', ";
   }
   elseif (! $id)
