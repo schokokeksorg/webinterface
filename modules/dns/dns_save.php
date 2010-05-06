@@ -7,7 +7,7 @@ require_once('inc/security.php');
 
 require_once('class/domain.php');
 
-require_role(ROLE_CUSTOMER);
+require_role(ROLE_SYSTEMUSER);
 
 require_once('dnsinclude.php');
 
@@ -18,7 +18,7 @@ if ($_GET['type'] == 'autodns')
   if ($_GET['action'] == 'enable')
   {
     $dom = new Domain( (int) $_GET['dom'] );
-    $dom->ensure_customerdomain();
+    $dom->ensure_userdomain();
 
     $sure = user_is_sure();
     if ($sure === NULL)
@@ -41,7 +41,7 @@ if ($_GET['type'] == 'autodns')
   elseif ($_GET['action'] == 'disable')
   {
     $dom = new Domain( (int) $_GET['dom'] );
-    $dom->ensure_customerdomain();
+    $dom->ensure_userdomain();
 
     $sure = user_is_sure();
     if ($sure === NULL)

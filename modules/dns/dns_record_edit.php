@@ -5,7 +5,7 @@ require_once('inc/security.php');
 
 require_once('class/domain.php');
 
-require_role(ROLE_CUSTOMER);
+require_role(ROLE_SYSTEMUSER);
 
 require_once('dnsinclude.php');
 
@@ -33,7 +33,7 @@ if ($_REQUEST['id'] == 'new')
   $new = true;
   $data = blank_dns_record($_REQUEST['type']);
   $domain = new Domain((int) $_REQUEST['domain']);
-  $domain->ensure_customerdomain();
+  $domain->ensure_userdomain();
   $type = $_REQUEST['type'];
   if (! in_array($type, $valid_record_types))
     system_failure('Ungültiger Record-Typ!');
@@ -48,7 +48,7 @@ if (! $new)
   $type = $data['type'];
   $dyndns = isset($data['dyndns']);
   $domain = new Domain((int) $data['domain']);
-  $domain->ensure_customerdomain();
+  $domain->ensure_userdomain();
   if (! in_array($type, $valid_record_types))
     system_failure('Ungültiger Record-Typ!');
 }
