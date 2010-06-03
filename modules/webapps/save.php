@@ -81,7 +81,7 @@ if ($_POST['target'] == 'new')
   $vhost['hostname'] = $hostname;
   $vhost['domainid'] = $domainid;
   $vhost['docroot'] = '';
-  $vhost['php'] = 'fastcgi';
+  $vhost['php'] = 'php53';
   $vhost['ssl'] = $ssl;
   $vhost['logtype'] = $logtype;
   $vhost['errorlog'] = $errorlog; 
