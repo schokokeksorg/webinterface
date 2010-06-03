@@ -23,8 +23,9 @@ if ($_POST['target'] == 'new')
     $domainid = $domain->id;
     $domainname = $domain->fqdn;
   }
+  DEBUG('Domain: '.$domainid.' / '.$domainname);
 
-  if (! is_array($_POST['options']))
+  if (! isset($_POST['options']) || ! is_array($_POST['options']))
     $_POST['options'] = array();
   $aliaswww = in_array('aliaswww', $_POST['options']);
 
@@ -79,7 +80,8 @@ if ($_POST['target'] == 'new')
   DEBUG('New options: '.$options);
 
   $vhost['hostname'] = $hostname;
-  $vhost['domainid'] = $domainid;
+  $vhost['domain_id'] = $domainid;
+  $vhost['domain'] = $domainname;
   $vhost['docroot'] = '';
   $vhost['php'] = 'php53';
   $vhost['ssl'] = $ssl;
