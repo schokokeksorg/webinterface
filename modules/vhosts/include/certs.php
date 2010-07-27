@@ -64,6 +64,21 @@ function get_available_CAs()
 }
 
 
+function get_chain($cert)
+{
+  $certdata = openssl_x509_parse($cert, true);
+  $issuer = mysql_real_escape_string($certdata['issuer']['CN']);
+  $result = db_query("SELECT id FROM vhosts.certchain WHERE cn='{$issuer}'");
+  if (mysql_num_rows($result) > 0)
+  {
+    $c = mysql_fetch_assoc($result);
+    //$chainfile = '/etc/apache2/certs/chains/'.$c['id'].'.pem';
+    DEBUG("identified fitting certificate chain #".$c['id']);
+    return $c['id'];
+  }
+}
+
+
 function validate_certificate($cert, $key)
 {  
   if (openssl_x509_check_private_key($cert, $key) !== true)
@@ -72,7 +87,12 @@ function validate_certificate($cert, $key)
     return CERT_INVALID;
   }
 
-  $cacerts = get_available_CAs();
+  $cacerts = array('/etc/ssl/certs');
+  $chain = get_chain($cert);
+  if ($chain)
+  {
+    $cacerts[] = '/etc/apache2/certs/chains/'.$chain.'.pem';
+  }
 
   if (openssl_x509_checkpurpose($cert, X509_PURPOSE_SSL_SERVER, $cacerts) !== true)
   { 
@@ -96,7 +116,7 @@ validTo_time_t => 1267190790
   */
  
   //return array('subject' => $certdata['name'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']));
-  return array('subject' => $certdata['subject']['CN'].' / '.$certdata['issuer']['O'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']));
+  return array('subject' => $certdata['subject']['CN'].' / '.$certdata['issuer']['O'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN']);
 }
 
 
@@ -108,11 +128,12 @@ function save_cert($info, $cert, $key)
   $cn = mysql_real_escape_string(filter_input_general($info['cn']));
   $valid_from = mysql_real_escape_string($info['valid_from']);
   $valid_until = mysql_real_escape_string($info['valid_until']);
+  $chain = maybe_null( get_chain($cert) );
   $cert = mysql_real_escape_string($cert);
   $key = mysql_real_escape_string($key);
   $uid = (int) $_SESSION['userinfo']['uid'];
 
-  db_query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, cert, `key`) VALUES ({$uid}, '{$subject}', '{$cn}', '{$valid_from}', '{$valid_until}', '{$cert}', '{$key}')");
+  db_query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, chain, cert, `key`) VALUES ({$uid}, '{$subject}', '{$cn}', '{$valid_from}', '{$valid_until}', {$chain}, '{$cert}', '{$key}')");
 }
 
 
