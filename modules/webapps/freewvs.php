@@ -37,7 +37,7 @@ foreach ($results AS $app) {
     output("<img src='{$prefix}images/ok.png' />\n");
     output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
     output("<p>Gefunden in {$app['directory']} (<a href=\"{$url}\">{$url}</a>)</p>\n");
-    output("<p>Diese Anwendung ist aktuell und hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
+    output("<p>Diese Anwendung hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
   }
   else {
     $vulnlink = $app['vulninfo'];
