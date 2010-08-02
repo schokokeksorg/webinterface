@@ -42,7 +42,7 @@ if ($_GET['action'] == 'new')
       system_failure("Das Zertifikat konnte nicht gelesen werden. Eventuell ist der private Schlüssel mit einem Paswort versehen?");
       break;
     case CERT_NOCHAIN:
-      warning('Ihr Zertifikat konnte nicht mit einer Zertifikats-Kette validiert werden. Dies wird zu Problemen beim Betrachten der damit betriebenen Websites führen. Meist liegt dies an einem nicht hinterlegten CA-Bundle. Die Admins können Ihr Zertifikats-Bundle auf dem System eintragen. Das Zertifikat wurde dennoch gespeichert.');
+      warning('Ihr Zertifikat konnte nicht mit einer Zertifikats-Kette validiert werden. Dies wird zu Problemen beim Betrachten der damit betriebenen Websites führen. Dies kann daran liegen dass es abgelaufen ist oder wenn kein passendes CA-Bundle hinterlegt wurde. Die Admins können Ihr Zertifikats-Bundle auf dem System eintragen. Das Zertifikat wurde dennoch gespeichert.');
       $certinfo = parse_cert_details($cert);
       if ($oldcert)
         refresh_cert($oldcert['id'], $certinfo, $cert, $key);
