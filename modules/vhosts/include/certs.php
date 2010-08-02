@@ -147,12 +147,14 @@ function refresh_cert($id, $info, $cert, $key = NULL)
   $valid_from = mysql_real_escape_string($info['valid_from']);
   $valid_until = mysql_real_escape_string($info['valid_until']);
 
+  $chain = maybe_null( get_chain($cert) );
+
   $keyop = '';
   if ($key) {
     openssl_pkey_export($key, $key);
     $keyop = ", `key`='".mysql_real_escape_string($key)."'";
   }
-  db_query("UPDATE vhosts.certs SET cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}' WHERE id={$id} LIMIT 1");
+  db_query("UPDATE vhosts.certs SET cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}', chain={$chain} WHERE id={$id} LIMIT 1");
 }
 
 
