@@ -42,7 +42,7 @@ if ($_GET['action'] == 'edit')
         break;
       if ($_POST['forward_to_'.$num] == '')
         break;
-      $fwd = array("spamfilter" => $_POST['spamfilter_action_'.$num], "destination" => $_POST['forward_to_'.$num]);
+      $fwd = array("spamfilter" => $_POST['spamfilter_action_'.$num], "destination" => chop($_POST['forward_to_'.$num]));
       array_push($account['forwards'], $fwd);
       $num++;
     }
