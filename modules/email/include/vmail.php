@@ -48,7 +48,7 @@ function get_account_details($id, $checkuid = true)
 function get_vmail_accounts()
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT * from mail.v_vmail_accounts WHERE useraccount='{$uid}'");
+	$result = db_query("SELECT * from mail.v_vmail_accounts WHERE useraccount='{$uid}' ORDER BY domainname,local ASC");
 	$ret = array();
 	while ($line = mysql_fetch_assoc($result))
 	{
