@@ -28,7 +28,6 @@ if ($_GET['type'] == 'autodns')
     elseif ($sure === true)
     {
       enable_autorecords($dom->id);
-      sync_autorecords();
       if (! $debugmode)
         header("Location: dns_domain?dom={$dom->id}");
     }
@@ -51,7 +50,6 @@ if ($_GET['type'] == 'autodns')
     elseif ($sure === true)
     {
       convert_from_autorecords($dom->id);
-      sync_autorecords();
       if (! $debugmode)
         header("Location: dns_domain?dom={$dom->id}");
     }
