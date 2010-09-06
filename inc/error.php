@@ -25,27 +25,24 @@ function input_error($reason)
 
 function warning($msg)
 {
-  global $warning;
-  if (!isset($warning))
-    $warning = array();
-  array_push($warning, $msg);
+  if (!isset($_SESSION['warning']))
+    $_SESSION['warning'] = array();
+  array_push($_SESSION['warning'], $msg);
 }
 
 function success_msg($msg)
 {
-  global $success_msg;
-  if (!isset($success_msg))
-    $success_msg = array();
-  array_push($success_msg, $msg);
+  if (!isset($_SESSION['success_msg']))
+    $_SESSION['success_msg'] = array();
+  array_push($_SESSION['success_msg'], $msg);
 }
 
 
 function we_have_an_error()
 {
   global $input_error;
-  global $warning;
 
-  return ((count($input_error) + count($warning)) > 0);
+  return ((count($input_error) + count($_SESSION['warning'])) > 0);
 
 }
 
@@ -53,8 +50,6 @@ function we_have_an_error()
 function show_messages()
 {
   global $input_error;
-  global $success_msg;
-  global $warning;
   if (isset($input_error))
   {
     echo '<div class="error">
@@ -69,29 +64,31 @@ function show_messages()
     echo '</ul>
     </div>';
   }
-  if (isset($warning))
+  if (isset($_SESSION['warning']))
   {
     echo '<div class="error">
     <ul>
     ';
-    foreach ($warning as $msg)
+    foreach ($_SESSION['warning'] as $msg)
     {
       echo '<li>'.nl2br(filter_input_general($msg))."</li>\n";
     }
     echo '</ul>
     </div>';
+    unset($_SESSION['warning']);
   }
-  if (isset($success_msg))
+  if (isset($_SESSION['success_msg']))
   {
     echo '<div class="success">
     <ul>
     ';
-    foreach ($success_msg as $msg)
+    foreach ($_SESSION['success_msg'] as $msg)
     {
       echo '<li>'.nl2br(filter_input_general($msg))."</li>\n";
     }
     echo '</ul>
     </div>';
+    unset($_SESSION['success_msg']);
   }
 }
 
