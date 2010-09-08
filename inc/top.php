@@ -57,7 +57,8 @@ foreach ($submenu AS $weight => $data) {
 
 DEBUG($submenu);
 
-
+// Verbiete das Laden in jeglichem Frameset
+header("X-FRAME-OPTIONS: DENY");
 header("Content-Type: ".config('mime_type'));
 ?>
 <?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
