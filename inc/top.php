@@ -6,6 +6,7 @@ if (! defined("TOP_INCLUDED"))
 define("TOP_INCLUDED", true);
 
 require_once("inc/error.php");
+require_once("inc/debug.php");
 global $prefix, $section;
 
 $menuitem = array();
