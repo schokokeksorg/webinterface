@@ -7,6 +7,8 @@ function show_page($path = NULL)
   	$module = $path;
   }
   $theme = config('theme');
+  if (! $theme)
+    $theme = 'default';
   $theme_path = "themes/$theme/";
   $candidates = array();
   if ($page) {
