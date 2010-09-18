@@ -5,15 +5,14 @@ require_once('inc/icons.php');
 
 require_once('vhosts.php');
 
-$title = "Subdomains";
+title("Subdomains");
 $error = '';
 
 require_role(ROLE_SYSTEMUSER);
 
 global $prefix;
 
-output("<h3>Subdomains</h3>
-<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>
+output("<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>
 <p>Änderungen an Ihren Einstellungen werden im 5-Minuten-Takt auf dem Server übernommen.</p>
 ");
 

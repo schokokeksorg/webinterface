@@ -5,12 +5,11 @@ require_role(ROLE_SYSTEMUSER);
 
 
 $section = "vhosts_certs";
-$title = "Zertifikat zum CSR hinzufügen";
+title("Zertifikat zum CSR hinzufügen");
 
 $csr = csr_details($_REQUEST['id']);
 
-output("<h3>Zertifikat zu CSR hinzufügen</h3>
-<p>Wenn Ihr CSR von der Zertifizierungsstelle akzeptiert und unterschrieben wurde, erhalten Sie ein SSL-Zertifikat zurück.
+output("<p>Wenn Ihr CSR von der Zertifizierungsstelle akzeptiert und unterschrieben wurde, erhalten Sie ein SSL-Zertifikat zurück.
 Dieses hat in etwa die Form
 <pre>-----BEGIN CERTIFICATE-----
 ...

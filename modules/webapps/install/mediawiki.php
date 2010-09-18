@@ -5,7 +5,7 @@ require_once('session/start.php');
 
 require_role(ROLE_SYSTEMUSER);
 
-$title = 'MediaWiki einrichten';
+title('MediaWiki einrichten');
 $section = 'webapps_install';
 
 // Wurde beim Schreiben in die Session schon verifiziert
@@ -30,9 +30,8 @@ if (isset($_POST['submit']))
     system_failure('wtf?!');
   create_new_webapp('mediawiki', $docroot, $url, $data); 
   
-  output('<h2>MediaWiki installieren</h2>
-
-<p>Ihr MediaWiki wird jetzt installiert. Sie erhalten eine E-Mail, sobald das Wiki betriebsbereit ist.</p>
+  title("MediaWiki wird installiert");
+  output('<p>Ihr MediaWiki wird jetzt installiert. Sie erhalten eine E-Mail, sobald das Wiki betriebsbereit ist.</p>
 ');
   
 }
@@ -42,10 +41,7 @@ else
   require_once('modules/vhosts/include/vhosts.php');
   $vhosts = list_vhosts();
   
-  output('<h3>MediaWiki installieren</h3>
-
-<p>Die Einrichtung von MediaWiki erfordert die Angabe ein paar weniger Daten.</p>
-');
+  output('<p>Die Einrichtung von MediaWiki erfordert die Angabe ein paar weniger Daten.</p>');
 
   $form = '
 <h4>Basisdaten</h4>

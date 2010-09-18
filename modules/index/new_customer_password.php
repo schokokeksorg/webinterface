@@ -1,5 +1,5 @@
 <?php
-$title = "Passwort beantragen";
+title("Neues Passwort beantragen");
 
 //require_once('inc/error.php');
 //system_failure("Diese Funktion ist noch nicht fertiggestellt.");
@@ -24,8 +24,7 @@ if (isset($_POST['customerno']))
   }
 }
 
-output('<h3>Neues Passwort beantragen</h3>
-<p>Sofern Sie bei Ihrer Anmeldung noch kein Passwort für Ihren Kundenaccount festgelegt hatten, können Sie hier ein neues Passwort festlegen. Sie müssen dafür Ihre Kundennummer und die bei der Anmeldung angegebene E-Mail-Adresse eingeben.</p>
+output('<p>Sofern Sie bei Ihrer Anmeldung noch kein Passwort für Ihren Kundenaccount festgelegt hatten, können Sie hier ein neues Passwort festlegen. Sie müssen dafür Ihre Kundennummer und die bei der Anmeldung angegebene E-Mail-Adresse eingeben.</p>
 <p>Nach dem Ausfüllen dieses Formulars erhalten Sie eine E-Mail mit einem Link, den Sie in Ihrem Browser öffnen müssen. Dort können Sie dann ein neues Passwort eingeben.</p>
 <form action="" method="post">
 <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>

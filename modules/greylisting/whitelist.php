@@ -5,15 +5,14 @@ require_once('inc/security.php');
 
 require_once('greylisting.php');
 
-$title = "Ausnahmeliste für greylisting";
+title("Ausnahmeliste für Greylisting");
 
 require_role(ROLE_SYSTEMUSER);
 
 $whitelist = whitelist_entries();
 DEBUG($whitelist);
 
-output("<h3>Ausnahmeliste für Greylisting</h3>
-<p>Als mittlerweile sehr bewährte Methode gegen unerwünschte E-Mails (»Spam«)
+output("<p>Als mittlerweile sehr bewährte Methode gegen unerwünschte E-Mails (»Spam«)
 setzen wir Greylisting ein. Diese Technik arbeitet sehr erfolgreich bei vergleichsweise
 geringem Aufwand.</p>
 <p>Ein möglicher Nachteil für den Empfänger besteht allerdings darin, dass E-Mails 

@@ -3,10 +3,9 @@
 require_once("certs.php");
 require_role(ROLE_SYSTEMUSER);
 
-$title = "SSL-Zertifikate";
+title("SSL-Zertifikate");
 
-output('<h3>SSL-Zertifikate</h3>
-<p>Bei schokokeks.org können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die <a href="https://wiki.schokokeks.org/SNI">SNI-Technik</a>.
+output('<p>Bei schokokeks.org können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die <a href="https://wiki.schokokeks.org/SNI">SNI-Technik</a>.
 Beim Anlegen von Webserver-Konfigurationen können Sie dann eines Ihrer Zertifikate für jede Konfiguration auswählen.</p>
 
 <h4>Ihre bisher vorhandenen Zertifikate</h4>

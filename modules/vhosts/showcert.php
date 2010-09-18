@@ -18,9 +18,8 @@ if ($mode == 'csr')
   $key = $data['key'];
 
 
-  $title = 'CSR anzeigen';
-  output("<h3>CSR anzeigen</h3>
-  <p>Untenstehend sehen Sie Ihren automatisch erzeugten CSR (»certificate signing request«) und evtl.
+  title('CSR anzeigen');
+  output("<p>Untenstehend sehen Sie Ihren automatisch erzeugten CSR (»certificate signing request«) und evtl.
   den dazu gehörigen privaten Schlüssel. Sofern Sie den privaten Schlüssel auf Ihrer Festplatte 
   speichern, stellen Sie bitte sicher, dass dieser vor unbefugtem Zugriff geschützt ist. Der
   private Schlüssel ist selbst <strong>nicht verschlüsselt</strong> und nicht mit einem 
@@ -54,9 +53,8 @@ else
   $cert = $data['cert'];
   $key = $data['key'];
 
-  $title = 'Zertifikat anzeigen';
-  output("<h3>Zertifikat anzeigen</h3>
-  <p>Untenstehend sehen Sie Ihr SSL-Zertifikat und evtl. den dazu gehörigen privaten 
+  title('Zertifikat anzeigen');
+  output("<p>Untenstehend sehen Sie Ihr SSL-Zertifikat und evtl. den dazu gehörigen privaten 
   Schlüssel. Sofern Sie den privaten Schlüssel auf Ihrer Festplatte speichern, stellen 
   Sie bitte sicher, dass dieser vor unbefugtem Zugriff geschützt ist. Der private 
   Schlüssel ist selbst <strong>nicht verschlüsselt</strong> und nicht mit einem 

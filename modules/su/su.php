@@ -39,10 +39,9 @@ if (isset($_POST['submit']))
   die();
 }
 
-$title = "Benutzer wechseln";
+title("Benutzer wechseln");
 
-output('<h3>Benutzer wechseln</h3>
-<p>Hiermit können Sie (als Admin) das Webinterface mit den Rechten eines beliebigen anderen Benutzers benutzen.</p>
+output('<p>Hiermit können Sie (als Admin) das Webinterface mit den Rechten eines beliebigen anderen Benutzers benutzen.</p>
 ');
 
 $debug = '';

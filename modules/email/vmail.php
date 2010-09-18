@@ -7,7 +7,7 @@ require_role(ROLE_SYSTEMUSER);
 require_once('hasdomain.php');
 
 if (! user_has_vmail_domain()) {
-  output("<h3>E-Mail-Verwaltung</h3>");
+  title("E-Mail-Verwaltung");
   
   output('
 <p>Sie können bei '.config('company_name').' die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
@@ -46,7 +46,7 @@ foreach ($all_accounts AS $account)
 
 DEBUG($sorted_by_domains);
 
-output('<h3>E-Mail-Accounts</h3>');
+title('E-Mail-Accounts');
 if (count($sorted_by_domains) > 0)
 {
   output('

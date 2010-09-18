@@ -10,9 +10,8 @@ $ftpusers = list_ftpusers();
 $regular_ftp = have_regular_ftp();
 
 
-
+title("Zusätzliche FTP-Benutzer");
 output('
-<h3>Zusätzliche FTP-Benutzer</h3>
 <p>Als Zusatzleistung bieten wir Ihnen die Möglichkeit, weitere FTP-Benutzerzugänge anzulegen. Diese Zugänge sind auf das angegebene Verzeichnis beschränkt und es kann nur mit dem FTP-Protokoll verwendet werden. Ein Login mittels SSH ist für diese Benutzerkonten nicht möglich.</p>');
 
 

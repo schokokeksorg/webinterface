@@ -1,6 +1,4 @@
 <?php
-$title = "schokokeks.org testen";
-
 //require_once('inc/error.php');
 //system_failure("Diese Funktion ist noch nicht fertiggestellt.");
 
@@ -13,7 +11,8 @@ $fail = array();
 $success = false;
 $customerno = 0;
 
-output("<h3>schokokeks.org unverbindlich testen</h3>");
+title("schokokeks.org testen");
+headline("schokokeks.org unverbindlich testen");
 
 output("<p>Da wir bei schokokeks.org Hosting immer auf volle Transparenz und Kundenzufriedenheit setzen, können Sie unser Angebot unverbindlich und in (beinahe) vollem Umfang testen. Funktionen, die zusätzliche Kosten verursachen (z.B. Domainregistrierungen) sind im Testaccount nicht möglich.</p>
 <p>Mit Ausfüllen dieses Formulars können Sie sich einen Test-Zugang einrichten, den Sie 4 Tage lang nutzen können. Sollten Sie mit uns zufrieden sein, können Sie den Zugang jederzeit und ohne Verlust von bisherigen Einstellungen oder Daten in einen normalen Zugang umwandeln.</p>

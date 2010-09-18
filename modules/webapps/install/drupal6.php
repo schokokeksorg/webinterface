@@ -5,7 +5,7 @@ require_once('session/start.php');
 
 require_role(ROLE_SYSTEMUSER);
 
-$title = 'Drupal 6 einrichten';
+title('Drupal 6 einrichten');
 $section = 'webapps_install';
 
 // Wurde beim Schreiben in die Session schon verifiziert
@@ -30,9 +30,8 @@ if (isset($_POST['submit']))
     system_failure('wtf?!');
   create_new_webapp('drupal6', $docroot, $url, $data); 
   
-  output('<h2>Drupal 6 installieren</h2>
-
-<p>Ihr Drupal wird jetzt installiert. Sie erhalten eine E-Mail, sobald die Website betriebsbereit ist.</p>
+  title("Drupal wird installiert");
+  output('<p>Ihr Drupal wird jetzt installiert. Sie erhalten eine E-Mail, sobald die Website betriebsbereit ist.</p>
 ');
   
 }
@@ -42,10 +41,7 @@ else
   require_once('modules/vhosts/include/vhosts.php');
   $vhosts = list_vhosts();
   
-  output('<h3>Drupal 6 installieren</h3>
-
-<p>Die Einrichtung von Drupal erfordert die Angabe ein paar weniger Daten.</p>
-');
+  output('<p>Die Einrichtung von Drupal erfordert die Angabe ein paar weniger Daten.</p>');
 
   $form = '
 <h4>Basisdaten</h4>

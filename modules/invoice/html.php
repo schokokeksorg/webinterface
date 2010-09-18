@@ -7,8 +7,8 @@ require_once('inc/security.php');
 require_role(ROLE_CUSTOMER);
 $section = 'invoice_current';
 
-output('<h3>Rechnung</h3>
-<p>Detailansicht Ihrer Rechnung. Beachten Sie bitte, dass diese Informationsseite sowie auch ein Ausdruck dieser Seite keine Rechnung darstellt. Ein gültiges Rechnungsdokument stellt lediglich die signierte PDF-Version bzw. eine Papierrechnung dar, die Sie von uns erhalten haben.</p>');
+title('Rechnung');
+output('<p>Detailansicht Ihrer Rechnung. Beachten Sie bitte, dass diese Informationsseite sowie auch ein Ausdruck dieser Seite keine Rechnung darstellt. Ein gültiges Rechnungsdokument stellt lediglich die signierte PDF-Version bzw. eine Papierrechnung dar, die Sie von uns erhalten haben.</p>');
 
 $invoice_id = (int) filter_input_general($_GET['id']);
 

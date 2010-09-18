@@ -8,8 +8,8 @@ require_role(ROLE_CUSTOMER);
 
 $section = 'invoice_current';
 
-output('<h3>offene Posten</h3>
-<p>Hier sehen Sie einen Überblick über alle aktuell offenen und zukünftigen Posten.</p>');
+title("Offene Posten");
+output('<p>Hier sehen Sie einen Überblick über alle aktuell offenen und zukünftigen Posten.</p>');
 
 
 output('<p style="margin: 1em; padding: 1em; border: 2px solid red; background: white;"><strong>Hinweis:</strong> Die hier aufgeführten Posten dienen nur Ihrer Information und erheben keinen Anspruch auf Vollständigkeit. Aus technischen Gründen sind manche Posten hier nicht aufgeführt, die dennoch berechnet werden. Zudem können, bedingt durch Rundungsfehler, die Beträge auf dieser Seite falsch dargestellt sein.</p>');

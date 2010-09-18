@@ -12,11 +12,9 @@ require_role(ROLE_CUSTOMER);
 
 $jabberaccounts = get_jabber_accounts();
 
-output("<h3>Jabber-Accounts</h3>
+title("Jabber-Accounts");
 
-
-<table>
-");
+output("<table>");
 
 foreach ($jabberaccounts as $acc)
 {

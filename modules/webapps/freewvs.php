@@ -7,6 +7,8 @@ require_once('webapp-installer.php');
 
 require_role(array(ROLE_SYSTEMUSER));
 
+title("Prüfung Ihrer Web-Anwendungen");
+
 $uid = (int) $_SESSION['userinfo']['uid'];
 
 if (isset($_POST['freq']) && in_array($_POST['freq'],array("day","week","month"))) {
@@ -20,7 +22,7 @@ $result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid={$uid};");
 $result=mysql_fetch_assoc($result);
 $freq=$result['freq'];
 
-output('<h3>Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken</h3>');
+headline('Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken');
 
 output('<p>Das Programm freewvs prüft automatisch regelmäßig Ihre Web-Anwendungen (z.B. Blog-Software, Content-Management-Systeme, ...) auf bekannte Sicherheitsprobleme. Sie können festlegen, wie oft Sie bei gefundenen Problemen benachrichtigt werden möchten.</p>
 <p><strong>Wie oft möchten Sie über Sicherheitsprobleme benachrichtigt werden?</strong></p>

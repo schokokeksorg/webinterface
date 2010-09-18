@@ -6,10 +6,8 @@ require_once('useraccounts.php');
 
 require_role(ROLE_SYSTEMUSER);
 
-$title = "Benutzeraccount";
+title("Ihr Benutzeraccount");
 
-
-output("<h3>System-Benutzeraccount</h3>");
 
 $shells = available_shells();
 output("<p>Daten zu Ihrem Benutzeraccount:</p>");

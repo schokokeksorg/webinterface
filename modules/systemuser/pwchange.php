@@ -7,13 +7,13 @@ require_once('useraccounts.php');
 require_role(ROLE_CUSTOMER);
 
 
-$title = "Passwort neu setzen";
+title("Passwort neu setzen");
 $section = "systemuser_accounts";
 
 $account = get_account_details($_GET['uid']);
 
 
-output("<h3>Rücksetzen des Passworts für Benutzer »{$account['username']}«</h3>");
+headline("Rücksetzen des Passworts für Benutzer »{$account['username']}«");
 
 if (customer_useraccount($account['uid']))
   system_failure('Zum Ändern des Passwortes für den Hauptbenutzer verwenden Sie bitte die entsprechende Funktion im Hauptmenü!');

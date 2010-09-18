@@ -1,7 +1,6 @@
 <?php
 
-$title = 'Login über SSL-Client-Zertifikat';
-output('<h3>Login über SSL-Client-Zertfikat</h3>');
+title('Login über SSL-Client-Zertifikat');
 output('<p>Sie können Sich an diesem Interface auch per SSL-Client-Zertifikat anmelden. Dazu müssen Sie dieses Zertifikat vorab hinterlegt haben.</p>
 
 <div class="error"><strong>Hinweis:</strong><br />

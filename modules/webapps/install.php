@@ -7,11 +7,9 @@ require_once('modules/vhosts/include/vhosts.php');
 
 require_role(ROLE_SYSTEMUSER);
 
-$title = 'Web-Anwendung einrichten';
+title('Web-Anwendung installieren');
 
-output('<h3>Web-Anwendung installieren</h3>
-
-<p>Richten Sie hiermit unkompliziert eine neue Web-Anwendung ein. Sie können dafür entweder eine vorhandene Domain bzw. Subdomain benutzen oder eine neue anlegen.</p>
+output('<p>Richten Sie hiermit unkompliziert eine neue Web-Anwendung ein. Sie können dafür entweder eine vorhandene Domain bzw. Subdomain benutzen oder eine neue anlegen.</p>
 <p>Wählen Sie bitte auf dieser Seite aus, welche Anwendung Sie installieren möchten und unter welcher Domain/Subdomain dies geschehen soll. Nach dieser Seite werden noch ein paar Details zur betreffenden Anwendung erfasst.</p>
 ');
 

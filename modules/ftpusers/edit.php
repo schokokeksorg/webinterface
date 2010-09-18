@@ -5,7 +5,6 @@ include('ftpusers.php');
 require_once('inc/base.php');
 require_role(ROLE_SYSTEMUSER);
 
-$title="FTP-Benutzer einrichten";
 $section='ftpusers_accounts';
 
 $ftpuser = empty_ftpuser();
@@ -14,10 +13,10 @@ if (isset($_GET['id']))
   $ftpuser = load_ftpuser($_GET['id']);
 
 if ($ftpuser['username'])
-  output('<h3>Ändern des FTP-Benutzers</h3>');
+  title('Ändern des FTP-Benutzers');
 else
 {
-  output('<h3>Neuer FTP-Zugang</h3>');
+  title('Neuer FTP-Zugang');
   output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;" /><strong>Bitte beachten Sie:</strong> Ein FTP-Benutzer kann nur im hier angegebenen Verzeichnis (und dallen darin enthaltenen Verzeichnissen) Dateien erstellen oder ändern. Sofern der Benutzer allerdings die Möglichkeit hat, PHP- oder CGI-Programme zu installieren und über den Webserver aufzurufen, kann er damit auch außerhalb dieses Verzeichnisses agieren. Schalten Sie bitte ggf. die PHP- und CGI-Unterstützung für die betreffende Website aus.</p>');
 }
 

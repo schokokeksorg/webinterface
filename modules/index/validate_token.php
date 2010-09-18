@@ -1,5 +1,5 @@
 <?php
-$title = "Passwort beantragen";
+title("Passwort setzen");
 
 $show = 'token';
 
@@ -33,8 +33,8 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
         invalidate_customer_token($customerno);
         $_SESSION['role'] = ROLE_CUSTOMER;
         $_SESSION['customerinfo'] = get_customer_info($customerno);
-        output('<h3>Passwort gesetzt</h3>
-        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link("index", "die Web-Oberfläche sofort benutzen").'.</p>');
+	title("Passwort gesetzt");
+        output('<p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link("index", "die Web-Oberfläche sofort benutzen").'.</p>');
         $show = NULL;
       }
     }
@@ -47,8 +47,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
 
 if ($show == 'password')
 {
-  output('<h3>Neues Passwort setzen</h3>
-  <p>Bitte legen Sie jetzt Ihr neues Kunden-Passwort fest.</p>
+  output('<p>Bitte legen Sie jetzt Ihr neues Kunden-Passwort fest.</p>
   <form action="" method="post">
   <p style="display: none"><input type="hidden" name="customerno" value="'.$customerno.'" />
   <input type="hidden" name="token" value="'.$token.'" /></p>
@@ -59,8 +58,7 @@ if ($show == 'password')
 }
 elseif ($show == 'token')
 {
-  output('<h3>Neues Passwort setzen</h3>
-  <p>Bitte geben Sie Ihre Kundennummer und den per E-Mail zugeschickten Code ein. Alternativ können sie den Link aus der E-Mail direkt aufrufen.</p>
+  output('<p>Bitte geben Sie Ihre Kundennummer und den per E-Mail zugeschickten Code ein. Alternativ können sie den Link aus der E-Mail direkt aufrufen.</p>
   <form action="" method="post">
   <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>
   <p><span class="login_label">Code:</span> <input type="text" name="token" size="30" /></p>

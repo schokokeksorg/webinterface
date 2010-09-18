@@ -9,7 +9,7 @@ require_role(ROLE_CUSTOMER);
 
 $section = 'jabber_accounts';
 $title = "Domain für Jabber freischalten";
-output("<h3>Eigene Domain für Jabber-Nutzung freischalten</h3>");
+title("Eigene Domain für Jabber-Nutzung freischalten");
 
 
 $domains = get_domain_list((int) $_SESSION['customerinfo']['customerno']);

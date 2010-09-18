@@ -157,7 +157,8 @@ function are_you_sure($query_string, $question)
   $query_string = encode_querystring($query_string);
   $token = random_string(20);
   $_SESSION['are_you_sure_token'] = $token;
-  output("<h3>Sicherheitsabfrage</h3>
+  title('Sicherheitsabfrage');
+  output("
     <form action=\"{$query_string}\" method=\"post\">
     <div class=\"confirmation\">
       <div class=\"question\">{$question}</div>

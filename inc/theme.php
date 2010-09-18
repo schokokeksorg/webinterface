@@ -37,6 +37,8 @@ function show_page($path = NULL)
   include('inc/top.php');
   if (!isset($title))
     $title = '';
+  if (!isset($headline))
+    $headline = $title;
   $content = $output;
 
   include($theme_file);

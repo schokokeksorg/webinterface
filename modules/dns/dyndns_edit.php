@@ -28,7 +28,7 @@ if (isset($dyndns['password']))
   $http_update_info = ' Lassen Sie das Passworteingabefeld unberührt um das bestehende Passwort zu erhalten. Entfernen Sie das bestehende Passwort um das HTTP-Update zu deaktivieren.';
 
 
-$output .= '<script type="text/javascript">
+$html_header .= '<script type="text/javascript">
 var username = "'.$_SESSION['userinfo']['username'].'";
 var handle;
 var http_username;
@@ -46,7 +46,7 @@ document.getElementById("username_http").firstChild.data = http_username;
 ';
 
 
-$output .= '<h3>DynDNS-Account</h3>';
+title('DynDNS-Account');
 
 
 if (! $new ) 

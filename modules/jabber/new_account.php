@@ -8,7 +8,7 @@ require_once('jabberaccounts.php');
 require_role(ROLE_CUSTOMER);
 
 $section = 'jabber_accounts';
-$title = "Neues Jabber-Konto erstellen";
+title("Neues Jabber-Konto erstellen");
 
 $jabberdomains = get_jabberable_domains();
 
@@ -20,8 +20,6 @@ foreach ($jabberdomains as $dom)
   $options .= '<option value="'.$dom->id.'">'.$dom->fqdn.'</option>'."\n";
 }
 
-
-output("<h3>Neuen Jabber-Account erstellen</h3>");
 
 output('<p>Erstellen Sie hier ein neues Jabber-Konto. Ihre Änderungen werden nach ca. 10 Minuten automatisch in das System übertragen. Accounts funktionieren also nicht unmittelbar nach dem Anlegen.</p>
 

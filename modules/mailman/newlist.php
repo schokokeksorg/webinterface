@@ -2,7 +2,7 @@
 require_once('mailman.php');
 require_role(ROLE_SYSTEMUSER);
 
-$title = "Neue Mailingliste erstellen";
+title("Neue Mailingliste erstellen");
 $section = 'mailman_lists';
 $domains = get_mailman_domains();
 
@@ -11,8 +11,6 @@ foreach ($domains AS $domain)
 {
   $maildomains[$domain['id']] = $domain['fqdn'];
 }
-
-output("<h3>Neue Mailingliste erstellen</h3>");
 
 output('<p>Tragen Sie hier die benötigten Daten zur Erstellung einer neuen Mailingliste ein. Die Liste wird <strong>mit etwas Zeitverzögerung</strong> angelegt, Sie erhalten dann eine E-Mail an die unten angegebene Adresse des Listen-Verwalters</p>
 

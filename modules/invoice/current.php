@@ -6,8 +6,8 @@ require_once('invoice.php');
 
 require_role(ROLE_CUSTOMER);
 
-output('<h3>Rechnungen</h3>
-<p>Hier können Sie Ihre bisherigen Rechnungen einsehen und herunterladen.</p>');
+title('Rechnungen');
+output('<p>Hier können Sie Ihre bisherigen Rechnungen einsehen und herunterladen.</p>');
 
 $invoices = my_invoices();
 

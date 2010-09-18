@@ -7,12 +7,10 @@ require_once('jabberaccounts.php');
 require_role(ROLE_CUSTOMER);
 
 $section = 'jabber_accounts';
-$title = "Neues Jabber-Konto erstellen";
+title("Passwort für Jabber-Account ändern");
 
 $account = get_jabberaccount_details($_GET['account']);
 $account_string = $account['local'].'@'.$account['domain'];
-
-output("<h3>Passwort für Jabber-Account ändern</h3>");
 
 output(html_form('jabber_chpass', 'save', 'action=chpass', '
 <table>

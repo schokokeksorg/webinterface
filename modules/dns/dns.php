@@ -10,8 +10,8 @@ require_once('dnsinclude.php');
 
 $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
 
-$output .= '<h3>DNS-Records</h3>
-<p>Hier sehen Sie eine Übersicht über die angelegten DNS-records zu Ihren Domains.</p>';
+title('DNS-Records');
+output('<p>Hier sehen Sie eine Übersicht über die angelegten DNS-records zu Ihren Domains.</p>');
 
 //$output .= '<table><tr><th>Hostname</th><th>Typ</th><th>IP-Adresse/Inhalt</th><th>TTL</th><th>&#160;</th></tr>
 //';

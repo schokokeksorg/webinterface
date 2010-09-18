@@ -6,7 +6,7 @@
 <head>
 
 <title>Administration - Bildrechte</title>
-<link rel="stylesheet" href="../css/admin.css" type="text/css" media="screen" title="Normal" /></head>
+<link rel="stylesheet" href="../css/default.css" type="text/css" media="screen" title="Normal" /></head>
 <body>
 
 <div class="content">

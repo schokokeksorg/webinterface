@@ -5,7 +5,6 @@ require_once('inc/security.php');
 
 require_once('vmail.php');
 
-$title = "E-Mail-Adresse bearbeiten";
 $section = 'email_vmail';
 require_role(ROLE_SYSTEMUSER);
 
@@ -17,11 +16,10 @@ if ($id != 0)
 
 DEBUG($account);
 if ($id == 0) {
-  output("<h3>Neue E-Mail-Adresse anlegen</h3>");
-  $title = "E-Mail-Adresse anlegen";
+  title("E-Mail-Adresse anlegen");
 }
 else {
-  output("<h3>E-Mail-Adresse bearbeiten</h3>");
+  title("E-Mail-Adresse bearbeiten");
 }
 
 

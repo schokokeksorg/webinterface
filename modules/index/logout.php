@@ -13,9 +13,8 @@ $_SESSION['role'] = ROLE_ANONYMOUS;
 
 logger(LOG_INFO, "modules/index/logout", "logout", "logged out");
 
+title("Abmeldung");
 output('
-
-<h3>Abmeldung</h3>
 
 <p>Sie wurden vom System abgemeldet.</p>
 

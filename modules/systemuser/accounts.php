@@ -6,10 +6,8 @@ require_once('useraccounts.php');
 
 require_role(ROLE_CUSTOMER);
 
-$title = "System-Benutzeraccounts";
+title("System-Benutzeraccounts");
 
-
-output("<h3>System-Benutzeraccounts</h3>");
 
 if (! customer_may_have_useraccounts())
 {

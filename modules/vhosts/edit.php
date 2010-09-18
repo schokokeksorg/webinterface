@@ -6,7 +6,6 @@ require_once('inc/security.php');
 require_once('vhosts.php');
 require_once('certs.php');
 
-$title = "Subdomain bearbeiten";
 $section = 'vhosts_vhosts';
 
 require_role(ROLE_SYSTEMUSER);
@@ -19,11 +18,10 @@ if ($id != 0)
 
 DEBUG($vhost);
 if ($id == 0) {
-  output("<h3>Neue Subdomain anlegen</h3>");
-  $title = "Subdomain anlegen";
+  title("Neue Subdomain anlegen");
 }
 else {
-  output("<h3>Subdomain bearbeiten</h3>");
+  title("Subdomain bearbeiten");
 }
 
 html_header("<script type=\"text/javascript\">

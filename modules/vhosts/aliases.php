@@ -5,7 +5,7 @@ require_once('inc/security.php');
 
 require_once('vhosts.php');
 
-$title = "Aliasnamen für Subdomain bearbeiten";
+title("Aliasnamen für Subdomain bearbeiten");
 $section = 'vhosts_vhosts';
 
 require_role(ROLE_SYSTEMUSER);
@@ -17,8 +17,6 @@ DEBUG($vhost);
 
 $aliases = get_aliases($id);
 DEBUG($aliases);
-
-output("<h3>Aliasnamen für Subdomain bearbeiten</h3>");
 
 $mainalias = (strstr($vhost['options'], 'aliaswww') ? '<br /><strong>www.'.$vhost['fqdn'].'</strong>' : '');
 

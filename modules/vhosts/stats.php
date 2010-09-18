@@ -6,7 +6,7 @@ require_once("vhosts.php");
 
 require_role(ROLE_SYSTEMUSER);
 
-
+title("Zugriffs-Statistiken");
 
 if (isset($_REQUEST['vhost']))
 {
@@ -37,10 +37,7 @@ foreach ($all_vhosts AS $v)
     $stats_vhosts[] = $v;
 
 
-$title = "Zugriffs-Statistiken";
-
-output('<h3>Zugriffs-Statistiken</h3>
-<p>Um die Reichweite und das Publikum Ihrer Internet-Seiten besser einschätzen zu können, besteht die Möglichkeit aus den ggf. vorhandenen Webserver-Logfiles grafisch aufbereitete Statistiken erstellen zu lassen.</p>
+output('<p>Um die Reichweite und das Publikum Ihrer Internet-Seiten besser einschätzen zu können, besteht die Möglichkeit aus den ggf. vorhandenen Webserver-Logfiles grafisch aufbereitete Statistiken erstellen zu lassen.</p>
 
 <h3>Statistiken für Ihre Seiten</h3>
 ');

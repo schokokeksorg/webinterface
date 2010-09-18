@@ -12,7 +12,7 @@ require_role(ROLE_SYSTEMUSER);
 
 $user = $_SESSION['userinfo'];
 
-$title = "E-Mail-Accounts";
+title("E-Mail-Accounts");
 
 
 if (isset($_GET['action']) && $_GET['action'] == 'save')
@@ -78,8 +78,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'create')
   foreach ($domains as $dom)
     $options .= '<option value="'.$dom->fqdn.'">'.$dom->fqdn.'</option>';
 
-  output('<h3>IMAP-Account anlegen</h3>
-<p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
+  title("IMAP-Account anlegen");
+  output('<p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
 <p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt '.internal_link("../email/domains", "unter Domains").'.</p>
   '.html_form('email_imap_create', 'imap', 'action=save', '
   <table style="margin-bottom: 1em;">
@@ -146,8 +146,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && $_GET['account'
 }
 elseif (isset($_GET['edit']))
 {
-  output('<h3>IMAP-Account bearbeiten</h3>
-<p>Hier können Sie die Einstellungen des IMAP-Kontos bearbeiten.</p>
+  title("IMAP-Account bearbeiten");
+  output('<p>Hier können Sie die Einstellungen des IMAP-Kontos bearbeiten.</p>
 ');
   $_GET['edit'] = (int) $_GET['edit'];
   $account = get_mailaccount($_GET['edit']);
@@ -189,7 +189,7 @@ elseif (isset($_GET['edit']))
 }
 else
 {
-  output('<h3>IMAP-Accounts</h3>');
+  title("IMAP-Accounts");
   if (user_has_only_vmail_domains())
   {
     output('<div class="error"><strong>Achtung:</strong> Alle Ihre Domains sind auf Webinterface-Verwaltung konfiguriert. Sie können dennoch manuelle IMAP-Konten für Ihre speziellen Konfigurationen anlegen, in der Regel sollten Sie aber hier keine IMAP-Acccounts anlegen. Dies kann zu Fehlfunktionen führen.</div>');

@@ -14,10 +14,9 @@ if ($_SESSION['role'] & ROLE_CUSTOMER)
 else
   $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
 
-$title = "Domainüberblick";
+title("Domains");
 
-output('<h3>Domains</h3>
-<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
+output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
 <table>
 <tr><th>Domainname</th><th>Status</th><th>Funktionen</th></tr>
 ');

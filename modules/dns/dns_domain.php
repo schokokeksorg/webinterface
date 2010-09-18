@@ -16,7 +16,8 @@ $domain->ensure_userdomain();
 
 DEBUG($domain);
 
-output('<h3>DNS-Records für <em>'.filter_input_general($domain->fqdn).'</em></h3>');
+title('DNS-Records für '.filter_input_general($domain->fqdn));
+headline('DNS-Records für <em>'.filter_input_general($domain->fqdn).'</em>');
 
 $records = get_domain_records($domain->id);
 $auto_records = get_domain_auto_records($domain->fqdn);

@@ -7,7 +7,7 @@ require_once('useraccounts.php');
 require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
 
 
-$title = "System-Benutzeraccounts";
+title("System-Benutzeraccounts");
 $section = "systemuser_accounts";
 
 $account = NULL;
@@ -22,7 +22,7 @@ else
 }
 
 
-output("<h3>Bearbeiten von Benutzer »{$account['username']}«</h3>");
+headline("Bearbeiten von Benutzer »{$account['username']}«");
 
 #if (customer_useraccount($account['uid']))
 #  system_failure('Aus Sicherheitsgründen können Sie diesen Account nicht ändern!');

@@ -4,12 +4,11 @@ require_once("certs.php");
 require_role(ROLE_SYSTEMUSER);
 
 
-$title="Neues Zertifikat erzeugen";
+title("Neues Zertifikat (CSR) erzeugen");
 $section = 'vhosts_certs';
 
 
-output("<h3>Neues Zertifikat (CSR) erzeugen</h3>
-<p>Mit dieser Funktion können Sie ein neues Zertifikat erzeugen lassen. Dabei wird ein so genannter 
+output("<p>Mit dieser Funktion können Sie ein neues Zertifikat erzeugen lassen. Dabei wird ein so genannter 
 CSR (certifikate signing request) erzeugt. Diesen CSR müssen Sie dann (meistens per Webinterface) an 
 Ihre Zertifizierungsstelle übergeben. Von dort erhalten Sie dann das fertige, unterschriebene 
 Zertifikat zurück.</p>

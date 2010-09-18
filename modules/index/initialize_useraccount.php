@@ -1,5 +1,5 @@
 <?php
-$title = "Passwort setzen";
+title("Passwort setzen");
 $show = 'token';
 
 if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
@@ -33,8 +33,8 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
         invalidate_systemuser_token($uid);
         $_SESSION['role'] = find_role($uid, '', True);;
 	setup_session($_SESSION['role'], $uid);
-        output('<h3>Passwort gesetzt</h3>
-        <p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link('index', 'die Web-Oberfläche sofort benutzen').'.</p>');
+	title("Passwort gesetzt");
+        output('<p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link('index', 'die Web-Oberfläche sofort benutzen').'.</p>');
         $show = NULL;
       }
     }
@@ -47,8 +47,8 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
 
 if ($show == 'password')
 {
-  output('<h3>Neues Passwort setzen</h3>
-  <p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>
+  title("Neues Passwort setzen");
+  output('<p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>
   <p>Aufgrund einer technischen Einschränkung sollten Sie momentan auf Anführungszeichen (" und \') sowie auf Backslashes (\) im Passwort verzichten.</p>'.
   html_form('initialize_useraccount', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
   <input type="hidden" name="token" value="'.$token.'" /><input type="hidden" name="agb" value="1" /></p>
@@ -59,8 +59,8 @@ if ($show == 'password')
 }
 elseif ($show == 'agb')
 {
-  output('<h3>Bestätigung unserer AGB</h3>
-  <p>Die Nutzung unseres Angebots ist an unsere <a href="http://www.schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>'.
+  title("Bestätigung unserer AGB");
+  output('<p>Die Nutzung unseres Angebots ist an unsere <a href="http://www.schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>'.
   html_form('initialize_useraccount_agb', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
   <input type="hidden" name="token" value="'.$token.'" /></p>
   <p><span class="login_label">&#160;</span><input type="checkbox" name="agb" value="1" /> Ja, ich akzeptiere die AGB.<p>
@@ -69,8 +69,8 @@ elseif ($show == 'agb')
 }
 elseif ($show == 'token')
 {
-  output('<h3>Neues Passwort setzen</h3>
-  <p>Bitte rufen Sie die Adresse aus Ihrer Begrüßungs-E-Mail auf um ein neues Passwort zu setzen.');
+  title("Neues Passwort setzen");
+  output('<p>Bitte rufen Sie die Adresse aus Ihrer Begrüßungs-E-Mail auf um ein neues Passwort zu setzen.');
 }
 
 

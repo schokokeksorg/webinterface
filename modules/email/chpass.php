@@ -8,7 +8,7 @@ require_role(array(ROLE_VMAIL_ACCOUNT, ROLE_MAILACCOUNT));
 
 $role = $_SESSION['role'];
 
-$title = "Passwort ändern";
+title("Passwort ändern");
 
 
 
@@ -48,8 +48,7 @@ if ($_POST['password1'] != '')
 
 
 
-output('<h3>Passwort ändern</h3>
-<p>Hier können Sie Ihr Passwort ändern.</p>
+output('<p>Hier können Sie Ihr Passwort ändern.</p>
 '.html_form('email_chpass', 'chpass', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>

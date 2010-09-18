@@ -18,11 +18,10 @@ if (isset($_REQUEST['replace']))
 
 $section = 'vhosts_certs';
 
-$title = 'Neues Server-Zertifikat hinzufügen';
+title('Neues Server-Zertifikat hinzufügen');
 
 
-output('<h3>Neues Server-Zertifikat hinzufügen</h3>
-<p>Sie können Ihr eigenes SSL-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
+output('<p>Sie können Ihr eigenes SSL-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
 <p>Sie benötigen dazu mindestens ein <strong>Zertifikat</strong> und einen <strong>privaten Schlüssel</strong> (ohne Passwort!). Alle Daten müssen im <strong>PEM-Format</strong> vorliegen, also in etwa die Form</p>
 <pre>-----BEGIN CERTIFICATE-----
 ...

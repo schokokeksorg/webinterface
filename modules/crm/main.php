@@ -40,7 +40,7 @@ function got_response() {
 ');
 
 
-output('<h3>Customer Relationship Management</h3>');
+title('Customer Relationship Management');
 
 
 
