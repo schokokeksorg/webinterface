@@ -19,6 +19,7 @@ $config['logging'] = LOG_ERR;
 
 $config['mime_type'] = 'application/xhtml+xml';
 
+$config['theme'] = 'default';
 
 ini_set('error_reporting','On');
 
