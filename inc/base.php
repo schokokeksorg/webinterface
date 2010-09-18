@@ -126,6 +126,18 @@ function html_header($arg)
   $html_header .= $arg;
 }
 
+function title($arg)
+{
+  global $title;
+  $title = $arg;
+}
+
+function headline($arg)
+{
+  global $headline;
+  $headline = $arg;
+}
+
 function output($arg)
 {
   global $output;

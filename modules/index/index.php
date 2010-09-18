@@ -44,8 +44,9 @@ default:
 }
 
 
-output('<h3>Administration</h3>
-<p>Herzlich willkommen, '.$role.".</p>\n");
+title('Übersicht');
+headline('Administration');
+output('<p>Herzlich willkommen, '.$role.".</p>\n");
 
 output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>
 <p>Nachfolgend sehen Sie eine Auswahl typischer Aufgaben.</p>\n");

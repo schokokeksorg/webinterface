@@ -61,38 +61,9 @@ DEBUG($submenu);
 // Verbiete das Laden in jeglichem Frameset
 header("X-FRAME-OPTIONS: DENY");
 header("Content-Type: ".config('mime_type'));
-?>
-<?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
-<head>
-
-<?php
-if (isset($title) and ($title != ""))
-        echo '<title>Administration - '.$title.'</title>';
-else
-        echo '<title>Administration</title>';
-
-echo '
-<link rel="stylesheet" href="'.$prefix.'css/admin.css" type="text/css" media="screen" title="Normal" />
-<link rel="shortcut icon" href="'.$prefix.'favicon.ico" type="image/x-icon" />';
-
-if (isset($html_header))
-  echo $html_header;
-?>
-</head>
-<body>
-
-<div><a href="#content" style="display: none;">Zum Inhalt</a></div>
-
-<div class="menu">
-<a href="<?php echo $prefix; ?>"><img src="<?php echo $prefix.config('logo'); ?>" width="190" height="141" alt="<?php echo config('company_name'); ?>" /></a>
-
-
-<?php
-$role = $_SESSION['role'];
+if (!isset($html_header))
+  $html_header = '';
 
 function array_key_exists_r($needle, $haystack)
 {
@@ -108,71 +79,69 @@ function array_key_exists_r($needle, $haystack)
 }
 
 
+$menu = '';
 
-  foreach ($weighted_menuitem as $key => $menuitem)
+foreach ($weighted_menuitem as $key => $menuitem)
         foreach ($menuitem as $key => $item)
         {
                 if ($key == $section)
-                        echo '<a href="'.$item['file'].'" class="menuitem active">'.$item['label'].'</a>'."\n";
+                        $menu .= '<a href="'.$item['file'].'" class="menuitem active">'.$item['label'].'</a>'."\n";
                 else
-                        echo '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
+                        $menu .= '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
                 if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists_r($section, $submenu[$key])))
                 {
                         if (isset($submenu[$key]))
                         {
-                                echo "\n";
+                                $menu .= "\n";
 				foreach ($submenu[$key] as $weight => $mysub) 
 				{
                                   foreach ($mysub as $sec => $item)
                                   {
                                           if ($sec == $section)
-                                                  echo '<a href="'.$item['file'].'" class="submenuitem menuitem active">'.$item['label'].'</a>'."\n";
+                                                  $menu .= '<a href="'.$item['file'].'" class="submenuitem menuitem active">'.$item['label'].'</a>'."\n";
                                           else
-                                                  echo '<a href="'.$item['file'].'" class="submenuitem menuitem">'.$item['label'].'</a>'."\n";
+                                                  $menu .= '<a href="'.$item['file'].'" class="submenuitem menuitem">'.$item['label'].'</a>'."\n";
                                   }
 				}
-                                echo "\n";
+                                $menu .= "\n";
                         }
 		}
 
         }
 
+$userinfo = '';
+
+$role = $_SESSION['role'];
 if ($role != ROLE_ANONYMOUS) {
-echo '<p class="userinfo">Angemeldet als:<br />';
+  $userinfo .= '<p class="userinfo">Angemeldet als:<br />';
   if ($role & ROLE_SYSTEMUSER) {
-    echo '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
-    echo '<br />'.$_SESSION['userinfo']['name'];
-    echo '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';
+    $userinfo .= '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
+    $userinfo .= '<br />'.$_SESSION['userinfo']['name'];
+    $userinfo .= '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';
   }
   elseif ($role & ROLE_CUSTOMER) {
-    echo '<strong>'.$_SESSION['customerinfo']['customerno'].'</strong>';
-    echo '<br />'.$_SESSION['customerinfo']['name'];
-    echo '<br />(Kunde)';
+    $userinfo .= '<strong>'.$_SESSION['customerinfo']['customerno'].'</strong>';
+    $userinfo .= '<br />'.$_SESSION['customerinfo']['name'];
+    $userinfo .= '<br />(Kunde)';
   }
   elseif ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
-    echo '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
+    $userinfo .= '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
   }
-  echo '</p>';
+  $userinfo .= '</p>';
 }
 
 if (isset($_SESSION['admin_user'])) {
-  echo '<p class="admininfo">';
-  echo '<a href="'.$prefix.'go/su/back_to_admin">Zurück zu »'.$_SESSION['admin_user'].'«</a>';
-  echo '</p>';
-}
-?>
-
-</div>
-
-<div class="content">
-<a id="content" style="display: none"> </a>
-<?php
-show_messages();
-
+  $userinfo .= '<p class="admininfo">';
+  $userinfo .= '<a href="'.$prefix.'go/su/back_to_admin">Zurück zu »'.$_SESSION['admin_user'].'«</a>';
+  $userinfo .= '</p>';
 }
 
+
+$messages = get_messages();
+
+$BASE_PATH = $prefix;
+$THEME_PATH = $prefix."themes/".config('theme')."/";
+
+
+}
 ?>
-
-
-
-

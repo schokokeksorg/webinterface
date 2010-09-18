@@ -1,11 +1,11 @@
 <?php
 require_once('inc/debug.php');
 require_once('inc/security.php');
+require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
 $title = "Passwort ändern";
 $error = '';
 
-require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
 
 if (isset($_POST['password1']))

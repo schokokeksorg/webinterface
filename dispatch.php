@@ -4,6 +4,7 @@ require_once('config.php');
 require_once('inc/debug.php');
 require_once('inc/db_connect.php');
 require_once("inc/base.php");
+require_once("inc/theme.php");
 
 
 $go = $_GET['go'];
@@ -23,11 +24,11 @@ if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists
 {
   die("illegal command");
 }
-$tmp = explode('/', $go, 2);
-$module = $tmp[0];
+list($module, $page) = explode('/', $go, 2);
+$page = str_replace('/', '-', $page);
 if (! in_array($module, config('modules')))
 {
-  die("illegal command");
+  die("inactive module");
 }
 
 
@@ -57,12 +58,12 @@ $section = str_replace("/", "_", $go);
 /* Let the module work */
 include("modules/".$go.".php");
 
-//$title = '';
 if ($output)
 {
-  include('inc/top.php');
-  print $output;
-  include('inc/bottom.php');
+  if (!isset($title)) {
+    $title = '';
+  }
+  show_page($module, $page);
 }
 
 ?>

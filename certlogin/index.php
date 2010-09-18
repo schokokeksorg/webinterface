@@ -1,6 +1,8 @@
 <?php
 
-require_once('../config.php');
+chdir('..');
+
+require_once('config.php');
 global $prefix;
 $prefix = '../';
 
@@ -11,6 +13,7 @@ require_once('session/start.php');
 require_once('inc/base.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
+require_once('inc/theme.php');
 
 
 function prepare_cert($cert)
@@ -116,8 +119,5 @@ else
   }
 }
 
-include('../inc/top.php');
-print $output;
-include('../inc/bottom.php');
-
+show_page('certlogin');
 ?>
