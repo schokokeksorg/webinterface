@@ -2,7 +2,7 @@
 
 function show_page($path = NULL) 
 {
-  global $go, $title, $headline, $output, $module, $page;
+  global $go, $title, $headline, $output, $module, $page, $html_header;
   if ($path) {
   	$module = $path;
   }
