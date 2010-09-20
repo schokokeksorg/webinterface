@@ -48,7 +48,7 @@ if ($messages) {
 <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrem IMAP-Account oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
 <p>Sollten Sie Ihr Passwort nicht mehr kennen, wenden Sie sich bitte unter Angabe Ihres Benutzernamens und/oder Ihrer Kundennummer an den Support. Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p>
 
-<p><em><a href="../../certlogin?destination=go/index/index"  >Mit einem Client-Zertifikat anmelden</a></em> (<a href="../../go/index/certinfo"  >Wie geht das?</a>)</p></div>
+<p><em><a href="../../certlogin?destination=go/index/index"  >Mit einem Client-Zertifikat anmelden</a></em> (<a href="../../go/index/certinfo"  >Wie geht das?</a>)</p>
 
 
 </div>
