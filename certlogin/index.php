@@ -45,7 +45,7 @@ DEBUG($_SERVER);
 if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']) && check_path($_REQUEST['backto']))
 {
   DEBUG('recording client-cert');
-  if (isset($_SERVER['REDIRECT_SSL_CLIENT_CERT']) && $_SERVER['REDIRECT_SSL_CLIENT_S_DN'] != '' && $_SERVER['REDIRECT_SSL_CLIENT_I_DN'] != '')
+  if (isset($_SERVER['REDIRECT_SSL_CLIENT_CERT']) && isset($_SERVER['REDIRECT_SSL_CLIENT_S_DN']) && isset($_SERVER['REDIRECT_SSL_CLIENT_I_DN']))
   {
     $_SESSION['clientcert_cert'] = prepare_cert($_SERVER['REDIRECT_SSL_CLIENT_CERT']);
     $_SESSION['clientcert_dn'] = $_SERVER['REDIRECT_SSL_CLIENT_S_DN'];
@@ -104,6 +104,9 @@ else
       $type = 'System-Account';
       if ($account['type'] == 'email') {
         $type = 'E-Mail-Konto';
+      }
+      elseif ($account['type'] == 'subuser') {
+        $type = 'Unter-Nutzer';
       }
       elseif ($account['type'] == 'customer') {
         $type = 'Kundenaccount';

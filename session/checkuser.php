@@ -95,11 +95,18 @@ function find_role($login, $password, $i_am_admin = False)
 
   // Sub-User
 
-  $result = db_query("SELECT uid FROM system.subusers WHERE username='{$login}' AND password=SHA1('{$password}')");
+  $result = db_query("SELECT password FROM system.subusers WHERE username='{$login}'");
   if (@mysql_num_rows($result) > 0)
   {
-    // FIXME: Admin-Su-Anmeldung geht damit nicht
-    return ROLE_SUBUSER;
+    $entry = mysql_fetch_object($result);
+    $db_password = $entry->password;
+    $hash = sha1($password);
+    if ($hash == $db_password || $i_am_admin)
+    {
+      logger(LOG_INFO, "session/checkuser", "login", "logged in virtual subuser »{$login}«.");
+      return ROLE_SUBUSER;
+    }
+    logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing subuser »{$login}«.");
   }
 
 

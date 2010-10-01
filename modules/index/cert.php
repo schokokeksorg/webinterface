@@ -33,7 +33,10 @@ if (isset($_SESSION['clientcert_cert']))
 }
 
 
-$certs = get_certs_by_username($_SESSION['userinfo']['username']);
+$username = $_SESSION['userinfo']['username'];
+if (isset($_SESSION['subuser']))
+  $username = $_SESSION['subuser'];
+$certs = get_certs_by_username($username);
 if ($certs != NULL) {
   output('<p>Sie haben bereits Zertifikate für den Zugang eingerichtet.</p>
   <ul>');

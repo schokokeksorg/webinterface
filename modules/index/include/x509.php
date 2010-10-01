@@ -51,14 +51,19 @@ function get_certs_by_username($username)
 
 function add_clientcert($certdata, $dn, $issuer, $startpage='')
 {
+  $type = 'user';
+  if (isset($_SESSION['subuser']))
+    $type = 'subuser';
   $certdata = mysql_real_escape_string($certdata);
   $dn = maybe_null(mysql_real_escape_string($dn));
   $issuer = maybe_null(mysql_real_escape_string($issuer));
   if ($startpage &&  ! check_path($startpage))
     system_failure('Startseite kaputt');
   $startpage = maybe_null(mysql_real_escape_string($startpage));
-  
+
   $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
+  if ($type == 'subuser')
+    $username = $_SESSION['subuser'];
   if ($username == '')
     system_failure('Kein Username');
 
@@ -69,7 +74,7 @@ function add_clientcert($certdata, $dn, $issuer, $startpage='')
   DEBUG($issuer);
 
   db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `cert`, `type`, `username`, `startpage`) 
-VALUES ({$dn}, {$issuer}, '{$certdata}', 'user', '{$username}', {$startpage})");
+VALUES ({$dn}, {$issuer}, '{$certdata}', '{$type}', '{$username}', {$startpage})");
 
 }
 
