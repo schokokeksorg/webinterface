@@ -202,6 +202,15 @@ function set_customer_password($customerno, $newpass)
   logger(LOG_INFO, "session/checkuser", "pwchange", "changed customer's password.");
 }
 
+function set_subuser_password($subuser, $newpass)
+{
+  $subuser = mysql_real_escape_string($subuser);
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $newpass = sha1($newpass);
+  db_query("UPDATE system.subusers SET password='$newpass' WHERE username='{$subuser}' AND uid={$uid}");
+  logger(LOG_INFO, "session/checkuser", "pwchange", "changed subuser's password.");
+}
+
 function set_systemuser_password($uid, $newpass)
 {
   $uid = (int) $uid;

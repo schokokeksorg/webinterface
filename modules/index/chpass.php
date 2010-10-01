@@ -1,7 +1,7 @@
 <?php
 require_once('inc/debug.php');
 require_once('inc/security.php');
-require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
+require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER, ROLE_SUBUSER));
 
 title("Passwort ändern");
 $error = '';
@@ -13,7 +13,10 @@ if (isset($_POST['password1']))
   check_form_token('index_chpass');
   $result = NULL;
   if ($_SESSION['role'] & ROLE_SYSTEMUSER)
-    $result = find_role($_SESSION['userinfo']['uid'], $_POST['old_password']);
+    if ($_SESSION['role'] & ROLE_SUBUSER)
+      $result = find_role($_SESSION['subuser'], $_POST['old_password']);
+    else
+      $result = find_role($_SESSION['userinfo']['uid'], $_POST['old_password']);
   else
     $result = find_role($_SESSION['customerinfo']['customerno'], $_POST['old_password']);
 
@@ -31,6 +34,8 @@ if (isset($_POST['password1']))
   {
     if ($result & ROLE_SYSTEMUSER)
       set_systemuser_password($_SESSION['userinfo']['uid'], $_POST['password1']);
+    elseif ($result & ROLE_SUBUSER)
+      set_subuser_password($_SESSION['subuser'], $_POST['password1']);
     elseif ($result & ROLE_CUSTOMER)
       set_customer_password($_SESSION['customerinfo']['customerno'], $_POST['password1']);
     else
@@ -45,7 +50,7 @@ if (isset($_POST['password1']))
 
 
 
-if ($_SESSION['role'] & ROLE_SYSTEMUSER)
+if ($_SESSION['role'] & ROLE_SYSTEMUSER && ! ($_SESSION['role'] & ROLE_SUBUSER))
   warning('Beachten Sie: Wenn Sie hier Ihr Passwort ändern, betrifft dies auch Ihr Anmelde-Passwort am Server (SSH).');
 
 output('<p>Hier können Sie Ihr Passwort ändern.</p>

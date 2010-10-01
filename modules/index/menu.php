@@ -8,7 +8,7 @@ if ($role == ROLE_ANONYMOUS) {
 } else {
   if ($role & (ROLE_SYSTEMUSER | ROLE_SUBUSER))
     $menu["index_cert"] = array("label" => "Client-Zertifikat", "file" => "cert", "weight" => 10, "submenu" => "index_index");
-  if ($role & (ROLE_SYSTEMUSER | ROLE_CUSTOMER) && ! $role & ROLE_SUBUSER) {
+  if ($role & (ROLE_SYSTEMUSER | ROLE_CUSTOMER)) {
     $menu["index_chpass"] = array("label" => "Passwort ändern", "file" => "chpass", "weight" => 98);
   }
 
