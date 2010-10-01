@@ -6,6 +6,18 @@ require_once('inc/debug.php');
 function config($key)
 {
   global $config;
+
+  if ($key == 'modules' && isset($_SESSION['restrict_modules']))
+  {
+    $modules = array();
+    foreach ($config['modules'] as $mod)
+    {
+      if (in_array($mod, $_SESSION['restrict_modules']))
+        $modules[] = $mod;
+    }
+    return $modules;
+  }
+
   if (array_key_exists($key, $config))
     return $config[$key];
   

@@ -114,7 +114,11 @@ $userinfo = '';
 $role = $_SESSION['role'];
 if ($role != ROLE_ANONYMOUS) {
   $userinfo .= '<p class="userinfo">Angemeldet als:<br />';
-  if ($role & ROLE_SYSTEMUSER) {
+  if ($role & ROLE_SYSTEMUSER && isset($_SESSION['subuser'])) {
+    $userinfo .= '<strong>'.$_SESSION['subuser'].'</strong>';
+    $userinfo .= '<br />Mitbenutzer von '.$_SESSION['userinfo']['username'];
+  }
+  elseif ($role & ROLE_SYSTEMUSER) {
     $userinfo .= '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
     $userinfo .= '<br />'.$_SESSION['userinfo']['name'];
     $userinfo .= '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';

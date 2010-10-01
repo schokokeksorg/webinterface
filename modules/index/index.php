@@ -27,6 +27,9 @@ case ROLE_MAILACCOUNT:
 case ROLE_SYSTEMUSER:
   $role = "{$_SESSION['userinfo']['name']}, angemeldet als Benutzer";
   break;
+case ROLE_SYSTEMUSER | ROLE_SUBUSER:
+  $role = "{$_SESSION['subuser']}, Unternutzer von {$_SESSION['userinfo']['username']}";
+  break;
 case ROLE_CUSTOMER:
   $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde";
   break;

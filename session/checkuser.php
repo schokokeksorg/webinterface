@@ -12,6 +12,7 @@ define('ROLE_VMAIL_ACCOUNT', 2);
 define('ROLE_SYSTEMUSER', 4);
 define('ROLE_CUSTOMER', 8);
 define('ROLE_SYSADMIN', 16);
+define('ROLE_SUBUSER', 32);
 
 
 // Gibt die Rolle aus, wenn das Passwort stimmt
@@ -92,6 +93,15 @@ function find_role($login, $password, $i_am_admin = False)
   }
   
 
+  // Sub-User
+
+  $result = db_query("SELECT uid FROM system.subusers WHERE username='{$login}' AND password=SHA1('{$password}')");
+  if (@mysql_num_rows($result) > 0)
+  {
+    // FIXME: Admin-Su-Anmeldung geht damit nicht
+    return ROLE_SUBUSER;
+  }
+
 
   // Nothing?
   return NULL;
@@ -126,6 +136,21 @@ function get_customer_info($customer)
   $ret['email'] = $data['email'];
   
   return $ret;
+}
+
+
+function get_subuser_info($username)
+{
+  $result = db_query("SELECT uid, modules FROM system.subusers WHERE username='{$username}'");
+  if (mysql_num_rows($result) < 1)
+  {
+    logger(LOG_ERR, "session/checkuser", "login", "error reading subuser's data: »{$username}«");
+    system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
+  }
+  $data = mysql_fetch_assoc($result);
+  $userinfo = get_user_info($data['uid']);
+  $userinfo['modules'] = $data['modules'];
+  return $userinfo;
 }
 
 
@@ -194,6 +219,16 @@ function setup_session($role, $useridentity)
 {
   session_regenerate_id();
   $_SESSION['role'] = $role;
+  if ($role & ROLE_SUBUSER)
+  {
+    DEBUG("We are a sub-user");
+    $info = get_subuser_info($useridentity);
+    $_SESSION['userinfo'] = $info;
+    $_SESSION['subuser'] = $useridentity;
+    $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_SUBUSER;
+    $_SESSION['restrict_modules'] = explode(',', $info['modules']);
+    logger(LOG_INFO, "session/start", "login", "logged in user »{$info['username']}«");
+  }
   if ($role & ROLE_SYSTEMUSER)
   {
     DEBUG("We are system user");
