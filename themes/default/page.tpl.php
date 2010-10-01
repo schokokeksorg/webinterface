@@ -11,7 +11,7 @@ if ($title)
 else
 	echo "<title>Administration</title>";
 ?>
-<link rel="stylesheet" href="<?php echo $BASE_PATH; ?>css/default.css" type="text/css" media="screen" title="Normal" />
+<!--<link rel="stylesheet" href="<?php echo $BASE_PATH; ?>css/default.css" type="text/css" media="screen" title="Normal" />-->
 <link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal" />
 <link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon" />
 <?php echo $html_header; ?>
