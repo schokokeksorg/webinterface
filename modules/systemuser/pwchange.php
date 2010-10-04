@@ -8,7 +8,7 @@ require_role(ROLE_CUSTOMER);
 
 
 title("Passwort neu setzen");
-$section = "systemuser_accounts";
+$section = "systemuser_account";
 
 $account = get_account_details($_GET['uid']);
 

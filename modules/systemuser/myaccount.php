@@ -7,6 +7,7 @@ require_once('useraccounts.php');
 require_role(ROLE_SYSTEMUSER);
 
 title("Ihr Benutzeraccount");
+$section = "systemuser_account";
 
 
 $shells = available_shells();

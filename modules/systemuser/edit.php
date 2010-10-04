@@ -8,7 +8,7 @@ require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
 
 
 title("System-Benutzeraccounts");
-$section = "systemuser_accounts";
+$section = "systemuser_account";
 
 $account = NULL;
 $role = $_SESSION['role'];
