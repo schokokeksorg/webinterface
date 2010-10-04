@@ -88,9 +88,9 @@ foreach ($weighted_menuitem as $key => $menuitem)
                         $menu .= '<a href="'.$item['file'].'" class="menuitem active">'.$item['label'].'</a>'."\n";
                 else
                         $menu .= '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
-                if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists_r($section, $submenu[$key])))
+                if (isset($submenu[$key]))
                 {
-                        if (isset($submenu[$key]))
+                        if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists_r($section, $submenu[$key])))
                         {
                                 $menu .= "\n";
 				foreach ($submenu[$key] as $weight => $mysub) 
