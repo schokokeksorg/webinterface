@@ -7,7 +7,7 @@ require_role(ROLE_SYSTEMUSER);
 
 title('Mailinglisten');
 
-output('<p>Mit <a href="http://www.mailman.org">Mailman</a> bieten wir Ihnen eine umfangreiche Lösung für E-Mail-Verteilerlisten an. <a href="https://wiki.schokokeks.org/E-Mail/Mailinglisten">In unserem Wiki</a> sind die Möglichkeiten einer Mailingliste detaillierter beschrieben.</p>
+output('<p>Mit <a href="http://www.mailman.org">Mailman</a> bieten wir Ihnen eine umfangreiche Lösung für E-Mail-Verteilerlisten an.</p>
 <p>Auf dieser Seite können Sie Ihre Mailinglisten verwalten.</p>
 ');
 

@@ -5,7 +5,7 @@ require_role(ROLE_SYSTEMUSER);
 
 title("SSL-Zertifikate");
 
-output('<p>Bei '.config('company_name').' können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die <a href="http://wiki.schokokeks.org/SNI">SNI-Technik</a>.
+output('<p>Bei '.config('company_name').' können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die SNI-Technik.
 Beim Anlegen von Webserver-Konfigurationen können Sie dann eines Ihrer Zertifikate für jede Konfiguration auswählen.</p>
 
 <h4>Ihre bisher vorhandenen Zertifikate</h4>
