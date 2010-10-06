@@ -19,12 +19,14 @@ function list_vhosts()
   return $ret;
 }
 
-function ipv6_possible($serverid)
+function ipv6_possible($server)
 {
-  $serverid = (int) $serverid;
-  $result = db_query("SELECT v6_prefix FROM system.servers WHERE id={$serverid}");
-  $server = mysql_fetch_assoc($result);
-  return ($server['v6_prefix'] != NULL);
+  $serverid = (int) $server;
+  $servername = mysql_real_escape_string($server);
+  $result = db_query("SELECT v6_prefix FROM system.servers WHERE id={$serverid} OR hostname='{$servername}'");
+  $line = mysql_fetch_assoc($result);
+  DEBUG("Server {$server} is v6-capable: ". ($line['v6_prefix'] != NULL));
+  return ($line['v6_prefix'] != NULL);
 }
 
 function empty_vhost()
