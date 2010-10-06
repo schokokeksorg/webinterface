@@ -11,7 +11,7 @@ require_once('inc/debug.php');
 
 require_once('inc/base.php');
 
-session_name('CONFIG_SCHOKOKEKS_ORG');
+session_name(config('session_name'));
 
 if ($_SERVER['HTTPS']) session_set_cookie_params( 0, '/', '', true, true );
 
