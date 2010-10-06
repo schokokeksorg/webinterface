@@ -16,6 +16,11 @@ $vhost = empty_vhost();
 if ($id != 0)
   $vhost = get_vhost_details($id);
 
+$have_v6 = false;
+$server = (isset($vhost['server']) ? $vhost['server'] : $_SESSION['userinfo']['server']);
+if (ipv6_possible($server))
+  $have_v6 = true;
+
 DEBUG($vhost);
 if ($id == 0) {
   title("Neue Subdomain anlegen");
@@ -214,10 +219,7 @@ $ipaddrs = user_ipaddrs();
 $certs = user_certs();
 $available_users = available_suexec_users();
 
-$form .= "
-<h4 style=\"margin-top: 3em;\">Erweiterte Optionen</h4>
-<div style=\"margin-left: 2em;\">
-";
+$extended = '';
   if (count($certs))
   {
     $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen');
@@ -225,7 +227,7 @@ $form .= "
     {
       $certselect[$c['id']] = $c['subject'];
     }
-    $form .= "
+    $extended .= "
       <h5>verwendetes SSL-Zertifikat</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('cert', $certselect, $vhost['certid'])."
@@ -238,7 +240,7 @@ $form .= "
     {
       $ipselect[$i] = $i;
     }
-    $form .= "
+    $extended .= "
       <h5>IP-Adresse</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
@@ -251,19 +253,25 @@ $form .= "
     {
       $userselect[$u['uid']] = $u['username'];
     }
-    $form .= "
+    $extended .= "
       <h5>SuExec-Benutzeraccount</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
       </div>";
   }
-$checked = ($vhost['autoipv6'] == 1) ? ' checked="checked"' : '';
-$form .= '<h5>IPv6</h5>
+if ($have_v6) 
+{
+  $checked = ($vhost['autoipv6'] == 1) ? ' checked="checked"' : '';
+  $extended .= '<h5>IPv6</h5>
 <div style="margin-left: 2em;">
 <input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label> (<strong>Achtung:</strong> Bitte beachten Sie die <a href="http://wiki.schokokeks.org/IPv6">Hinweise zu IPv6 im Wiki</a>.)
 </div>';
-
-$form .= "</div>";
+}
+if ($extended)
+  $form .= "
+<h4 style=\"margin-top: 3em;\">Erweiterte Optionen</h4>
+<div style=\"margin-left: 2em;\">
+".$extended."</div>";
 
 
 

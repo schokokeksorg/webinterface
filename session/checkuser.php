@@ -164,7 +164,7 @@ function get_subuser_info($username)
 function get_user_info($username)
 {
   $username = mysql_real_escape_string($username);
-  $result = db_query("SELECT kunde AS customerno, username, uid, homedir, name
+  $result = db_query("SELECT kunde AS customerno, username, uid, homedir, name, server
                       FROM system.v_useraccounts WHERE username='{$username}' OR uid='{$username}' LIMIT 1");
   if (mysql_num_rows($result) < 1)
   {
@@ -177,6 +177,7 @@ function get_user_info($username)
           'customerno'    => $val->customerno,
           'uid'           => $val->uid,
           'homedir'       => $val->homedir,
+          'server'        => $val->server,
           'name'          => $val->name,
           );
 }
