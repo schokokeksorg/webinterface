@@ -132,7 +132,7 @@ function save_vmail_account($account)
   $account['local'] = filter_input_username($account['local']);
   if ($account['local'] == '')
   {
-    input_error('Die E-Mail-Adresse braucht eine Angabe vor dem »@«!');
+    system_failure('Die E-Mail-Adresse braucht eine Angabe vor dem »@«!');
     return false;
   }
   $account['domain'] = (int) $account['domain'];
@@ -150,7 +150,7 @@ function save_vmail_account($account)
   }
   if (($account['domain'] == 0) || (! $valid_domain))
   {
-    input_error('Bitte wählen Sie eine Ihrer Domains aus!');
+    system_failure('Bitte wählen Sie eine Ihrer Domains aus!');
     return false;
   }
   
@@ -174,7 +174,7 @@ function save_vmail_account($account)
     $crack = strong_password($account['password']);
     if ($crack !== true)
     {
-      input_error('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
+      system_failure('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
       return false;
     }
     $password = "'".encrypt_mail_password($account['password'])."'";
@@ -242,6 +242,7 @@ function save_vmail_account($account)
     # notify the vmail subsystem of this new account
     mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
   }
+  return true;
 }
 
 
