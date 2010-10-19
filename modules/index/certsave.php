@@ -24,7 +24,8 @@ elseif ($_GET['action'] == 'delete')
   $cert = get_cert_by_id($_GET['id']);
   if (! $cert)
     system_failure('no ID');
-  if ($cert['username'] != $_SESSION['userinfo']['username'])
+  if (!((!isset($_SESSION['subuser']) && $cert['username'] == $_SESSION['userinfo']['username']) ||
+        (isset($_SESSION['subuser']) && $cert['username'] == $_SESSION['subuser'])))
     system_failure('Das Zertifikat ist nicht für Ihren Zugang eingerichtet');
   $sure = user_is_sure();
   if ($sure === NULL)

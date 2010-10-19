@@ -83,6 +83,8 @@ function delete_clientcert($id)
 {
   $id = (int) $id;
   $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
+  if (isset($_SESSION['subuser']))
+    $username = mysql_real_escape_string($_SESSION['subuser']);
   db_query("DELETE FROM system.clientcert WHERE id={$id} AND username='{$username}' LIMIT 1");
 }
 
