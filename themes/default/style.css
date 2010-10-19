@@ -68,7 +68,7 @@ p.addnew a {
   padding: 5px;
   min-height: 18px;
   padding-left: 25px;
-  background-image: url('../images/add.png');
+  background-image: url('../../images/add.png');
   background-position: 0 5px;
   background-repeat: no-repeat;
 }
