@@ -4,7 +4,7 @@ $role = $_SESSION['role'];
 
 if ($role & ROLE_CUSTOMER)
 {
-  $menu["systemuser_account"] = array("label" => "Benutzeraccounts", "file" => "accounts", "weight" => 30);
+  $menu["systemuser_account"] = array("label" => "Benutzeraccounts", "file" => "account", "weight" => 30);
 }
 elseif ($role & ROLE_SYSTEMUSER)
 {
