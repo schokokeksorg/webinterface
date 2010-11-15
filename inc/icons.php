@@ -10,10 +10,10 @@ function icon_warning($title = '')
 
 
 
-function icon_enabled_php53($title = '')
+function icon_enabled_warning($title = '')
 {
   global $prefix;
-  return "<img src=\"{$prefix}images/ok-php53.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
+  return "<img src=\"{$prefix}images/ok-warning.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
 function icon_enabled($title = '')
