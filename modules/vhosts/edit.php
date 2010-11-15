@@ -135,21 +135,33 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 </div>
 ";
 
-$options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "fastcgi" => "Kompatibilitätsmodus: PHP 5.2");
 
-if ($vhost['php'] == 'mod_php')
+$have_php = ($vhost['php'] == 'php53' ? ' checked="checked" ' : '');
+
+$phpoptions = "<h5>PHP</h5>
+  <div style=\"margin-left: 2em;\">
+    <input type=\"checkbox\" name=\"php\" id=\"php\" value=\"php53\" {$have_php}/>&#160;<label for=\"php\">PHP einschalten</label>
+  </div>
+";
+
+/*
+ * Zeige ein Auswahlmenü, wenn bisher PHP 5.2 eingestellt war!
+ */
+if ($vhost['php'] == 'fastcgi')
 {
-  $options['mod_php'] = 'PHP als Apache-Modul (veraltet)';
+  $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "fastcgi" => "Kompatibilitätsmodus: PHP 5.2");
+  $phpoptions = "
+  <h5>PHP</h5>
+  <div style=\"margin-left: 2em;\">
+    ".html_select("php", $options, $vhost['php'])."
+  </div>";
 }
 
 $have_cgi = ($vhost['cgi'] == 1 ? ' checked="checked" ' : '');
 
 $form .= "
 <div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
-  <h5>PHP</h5>
-  <div style=\"margin-left: 2em;\">
-    ".html_select("php", $options, $vhost['php'])."
-  </div>
+  ".$phpoptions."
   <h5>CGI</h5>
   <div style=\"margin-left: 2em;\">
     <input type=\"checkbox\" name=\"cgi\" id=\"cgi\" value=\"yes\" {$have_cgi}/>&#160;<label for=\"cgi\">Erlaube CGI-Nutzung</label><br /><em>(Wenn Sie dies ausschalten, werden einige andere Dinge auch nicht mehr erlaubt.)</em>
