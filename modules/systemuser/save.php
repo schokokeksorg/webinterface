@@ -28,7 +28,7 @@ if ($_GET['action'] == 'new')
   {
     create_jabber_account($_POST['local'], $_POST['domain'], $_POST['password']);
     if (! $debugmode)
-      header('Location: accounts');
+      header('Location: account');
   }
   */
 }
@@ -57,7 +57,7 @@ elseif ($_GET['action'] == 'pwchange')
     set_systemuser_password($user['uid'], $_POST['newpass1']);
   }
   if (! ($debugmode || $error))
-    header('Location: accounts');
+    header('Location: account');
 }
 elseif ($_GET['action'] == 'edit')
 {
@@ -92,11 +92,8 @@ elseif ($_GET['action'] == 'edit')
       system_failure('Ungültige Shell');
 
   set_account_details($account);
-  $target = 'accounts';
-  if (! ($role & ROLE_CUSTOMER))
-    $target = 'myaccount';
   if (! ($debugmode || $error))
-    header('Location: '.$target);
+    header('Location: account');
   
 }
 elseif ($_GET['action'] == 'delete')
@@ -113,12 +110,12 @@ elseif ($_GET['action'] == 'delete')
   {
     delete_jabber_account($account['id']);
     if (! $debugmode)
-      header("Location: accounts");
+      header("Location: account");
   }
   elseif ($sure === false)
   {
     if (! $debugmode)
-      header("Location: accounts");
+      header("Location: account");
   }
   */
 }
