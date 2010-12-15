@@ -78,7 +78,9 @@ function filter_input_hostname( $input, $wildcard=false )
   $input = ltrim($input, "\t\n\r\x00 .");
   if (preg_replace("/[^[:alnum:]äöü*\.\-]/", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
-  if (! $wildcard && preg_replace("/\*/", "", $input ) != $input)
+  if (preg_match("/^.+\*/", $input ))
+    system_failure("Ihre Daten enthielten ungültige Zeichen (Wildcard-Stern muss ganz vorne stehen)!");
+  if (! $wildcard && preg_replace("/^\*/", "", $input ) != $input)
     system_failure("Ihre Daten enthielten ungültige Zeichen (Keine Wildcards erlaubt)!");
   if (strstr($input, '..'))
     system_failure("Ungültiger Hostname");

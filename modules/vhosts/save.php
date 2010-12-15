@@ -22,7 +22,7 @@ if ($_GET['action'] == 'edit')
     $vhost = get_vhost_details( $id );
   DEBUG($vhost);
 
-  $hostname = filter_input_hostname($_POST['hostname']);
+  $hostname = filter_input_hostname($_POST['hostname'], true);
 
   $domain_id = (int) $_POST['domain'];
   if ($domain_id != -1) {
@@ -201,7 +201,7 @@ elseif ($_GET['action'] == 'addalias')
   $alias['vhost'] = $vhost['id'];
 
   
-  $hostname = filter_input_hostname($_POST['hostname']);
+  $hostname = filter_input_hostname($_POST['hostname'], true);
   $domainid = (int) $_POST['domain'];
   if ($domainid != -1) {
     $domain = new Domain( (int) $_POST['domain'] );
