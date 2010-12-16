@@ -9,6 +9,21 @@ require_once('class/domain.php');
 require_once("certs.php");
 
 
+function autoipv6_address($vhost_id)
+{
+  $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id={$vhost_id}");
+  $data = mysql_fetch_assoc($result);
+  if (!$data['v6_prefix'])
+  {
+    warning("IPv6-Adresse nicht verfügbar, Server unterstützt kein IPv6");
+    return "";
+  }
+  $vh = implode(':', str_split(sprintf("%08x", $vhost_id), 4));
+  $ipv6 = $data['v6_prefix'] . sprintf("%04s", $data['uid']) . ':' . $vh;
+  return $ipv6;
+}
+
+
 function list_vhosts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
@@ -53,7 +68,7 @@ function empty_vhost()
   $vhost['cert'] = NULL;
   $vhost['certid'] = NULL;
   $vhost['ipv4'] = NULL;
-  $vhost['autoipv6'] = 0;
+  $vhost['autoipv6'] = 1;
 
   $vhost['options'] = '';
   $vhost['stats'] = NULL;
