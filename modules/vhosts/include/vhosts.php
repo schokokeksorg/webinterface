@@ -18,8 +18,9 @@ function autoipv6_address($vhost_id)
     warning("IPv6-Adresse nicht verfügbar, Server unterstützt kein IPv6");
     return "";
   }
+  list($prefix, $null) = explode('/', $data['v6_prefix']);
   $vh = implode(':', str_split(sprintf("%08x", $vhost_id), 4));
-  $ipv6 = $data['v6_prefix'] . sprintf("%04s", $data['uid']) . ':' . $vh;
+  $ipv6 = $prefix . sprintf("%04s", $data['uid']) . ':' . $vh;
   return $ipv6;
 }
 
