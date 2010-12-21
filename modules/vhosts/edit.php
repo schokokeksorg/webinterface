@@ -274,12 +274,14 @@ $extended = '';
 if ($have_v6) 
 {
   $ipv6_address = '';
-  if ($vhost['id'] && ($vhost['autoipv6'] == 1))
-    $ipv6_address = '<strong>IPv6-Adresse dieser Subdomain:</strong> '.autoipv6_address($vhost['id']);
-  $checked = ($vhost['autoipv6'] == 1) ? ' checked="checked"' : '';
+  if ($vhost['id'] && ($vhost['autoipv6'] >0 ))
+    $ipv6_address = '<strong>IPv6-Adresse dieser Subdomain:</strong> '.autoipv6_address($vhost['id'], $vhost['autoipv6']);
+  $checked = ($vhost['autoipv6'] > 0) ? ' checked="checked"' : '';
+  $checked2 = ($vhost['autoipv6'] == 2) ? ' checked="checked"' : '';
   $extended .= '<h5>IPv6</h5>
 <div style="margin-left: 2em;">
 <input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label><br />
+<input type="checkbox" name="ipv6_separate" id="ipv6_separate" value="yes" '.$checked2.'/>&#160;<label for="ipv6_separate">Für diese Website eine eigene IPv6-Adresse reservieren</label><br />
 '.$ipv6_address.'
 </div>';
 }

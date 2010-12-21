@@ -122,6 +122,10 @@ if ($_GET['action'] == 'edit')
   if (isset($_POST['ipv6']) && $_POST['ipv6'] == 'yes')
   {
     $vhost['autoipv6'] = 1;
+    if (isset($_POST['ipv6_separate']) && $_POST['ipv6_separate'] = 'yes')
+    {
+      $vhost['autoipv6'] = 2;
+    }
   } else {
     $vhost['autoipv6'] = 0;
   }

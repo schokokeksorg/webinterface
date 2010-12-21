@@ -9,7 +9,7 @@ require_once('class/domain.php');
 require_once("certs.php");
 
 
-function autoipv6_address($vhost_id)
+function autoipv6_address($vhost_id, $mode = 1)
 {
   $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id={$vhost_id}");
   $data = mysql_fetch_assoc($result);
@@ -19,7 +19,10 @@ function autoipv6_address($vhost_id)
     return "";
   }
   list($prefix, $null) = explode('/', $data['v6_prefix']);
-  $vh = implode(':', str_split(sprintf("%08x", $vhost_id), 4));
+  $vh = ':1';
+  if ($mode == 2) {
+    $vh = implode(':', str_split(sprintf("%08x", $vhost_id), 4));
+  }
   $ipv6 = $prefix . sprintf("%04s", $data['uid']) . ':' . $vh;
   return $ipv6;
 }
@@ -269,7 +272,10 @@ function save_vhost($vhost)
     $ipv4 = maybe_null($vhost['ipv4']);
   }
 
-  $autoipv6 = ( $vhost['autoipv6'] == 1) ? '1' : '0';
+  $autoipv6 = 1;
+  if ($vhost['autoipv6'] == 0 ||  $vhost['autoipv6'] == 2) {
+    $autoipv6 = $vhost['autoipv6'];
+  }
 
   $stats = maybe_null($vhost['stats']);
 
