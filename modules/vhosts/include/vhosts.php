@@ -72,7 +72,7 @@ function empty_vhost()
   $vhost['cert'] = NULL;
   $vhost['certid'] = NULL;
   $vhost['ipv4'] = NULL;
-  $vhost['autoipv6'] = 1;
+  $vhost['autoipv6'] = 2; // 1 => Eine IP pro User, 2 => Eine IP pro VHost
 
   $vhost['options'] = '';
   $vhost['stats'] = NULL;
