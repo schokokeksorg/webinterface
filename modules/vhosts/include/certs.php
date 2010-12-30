@@ -81,6 +81,16 @@ function get_chain($cert)
 
 function validate_certificate($cert, $key)
 {  
+  $certinfo = openssl_pkey_get_details(openssl_get_publickey($cert));
+  DEBUG($certinfo);
+  if ($certinfo['bits'] < 2048) {
+    warning("Dieser Schlüssel hat eine sehr geringe Bitlänge und ist daher als nicht besonders sicher einzustufen!");
+  }
+  if ($certinfo['type'] != OPENSSL_KEYTYPE_RSA && $certinfo['type'] != OPENSSL_KEYTYPE_DSA) {
+    system_failure("Dieser Schlüssel nutzt einen nicht unterstützten Algorithmus.");
+  }
+    
+  
   if (openssl_x509_check_private_key($cert, $key) !== true)
   {
     DEBUG("Zertifikat und Key passen nicht zusammen");
@@ -114,7 +124,7 @@ validTo_time_t => 1267190790
 
 
   */
- 
+  DEBUG($certdata);
   //return array('subject' => $certdata['name'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']));
   return array('subject' => $certdata['subject']['CN'].' / '.$certdata['issuer']['O'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN']);
 }
