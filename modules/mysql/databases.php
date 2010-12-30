@@ -134,7 +134,8 @@ if ($output_something)
 
   foreach ($users as $user)
   {
-    $username = str_replace('_', '_ ', $user['username']);
+    $username = $user["username"];
+    //$username = str_replace('_', '_ ', $user['username']);
     $desc = ($user['description'] ? $user['description'].' (Erstellt: '.$user['created'].')' : 'Erstellt: '.$user['created']);
     $form .= "<th><span title=\"{$desc}\">{$username}</span><br />".internal_link("", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}")."</th>";
   }
@@ -145,8 +146,9 @@ if ($output_something)
 
   foreach($dbs as $db)
   {
+    $phpmyadmin = "https://mysql." . server_for_database($db['id']) . "/";
     $desc = ($db['description'] ? $db['description'].' (Erstellt: '.$db['created'].')' : 'Erstellt: '.$db['created']);
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"{$desc}\">{$db['name']}</span>&#160;".internal_link("", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}")."</td>";
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"{$desc}\">{$db['name']}</span>&#160;".internal_link("", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}")."&#160;<a href=\"".$phpmyadmin."\">".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")."</a></td>";
     foreach ($users as $user)
       $form .= '<td style="text-align: center;"><input type="checkbox" id="'.$db['name'].'_'.$user['username'].'" name="access['.$db['name'].'][]" value="'.$user['username'].'" '.(get_mysql_access($db['name'], $user['username']) ? 'checked="checked" ' : '')." /></td>";
     $form .= "</tr>\n";

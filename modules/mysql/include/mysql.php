@@ -17,7 +17,7 @@ function get_mysql_accounts($UID)
 function get_mysql_databases($UID)
 {
   $UID = (int) $UID;
-  $result = db_query("SELECT name, description, created FROM misc.mysql_database WHERE useraccount=$UID");
+  $result = db_query("SELECT id, name, description, created FROM misc.mysql_database WHERE useraccount=$UID");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
@@ -26,6 +26,18 @@ function get_mysql_databases($UID)
     $list[] = $item;
   }
   return $list;
+}
+
+
+function server_for_database($id)
+{
+  $id = (int) $id;
+  
+  $result = db_query("SELECT hostname FROM misc.mysql_database AS db LEFT JOIN system.useraccounts AS u ON (db.useraccount=u.uid) LEFT JOIN system.servers ON (COALESCE(db.server, u.server) = servers.id) WHERE db.id={$id}");
+  if (mysql_num_rows($result) != 1)
+    system_failure("Fehler beim auslesen des zuständigen Servers");
+  $s = mysql_fetch_assoc($result);
+  return $s["hostname"];
 }
 
 
