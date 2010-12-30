@@ -80,10 +80,12 @@ if (isset($_POST['accesseditor']))
     if (isset($_POST['access']['new']))
     {
       $_POST['access'][$_POST['new_db']] = array();
-      foreach ($users as $user)
+      foreach ($users as $user) {
         $user = $user['username'];
-        if (in_array($user, $_POST['access']['new']))
+        if (in_array($user, $_POST['access']['new'])) {
           array_push($_POST['access'][$_POST['new_db']], $user);
+        }
+      }
       if (($_POST['new_user'] != '') and (in_array('new', $_POST['access']['new'])))
         array_push($_POST['access'][$_POST['new_db']], $_POST['new_user']);
     }
@@ -93,10 +95,12 @@ if (isset($_POST['accesseditor']))
   if ($_POST['new_user'] != '')
   {
     create_mysql_account($_POST['new_user']);
-    foreach ($dbs as $db)
+    foreach ($dbs as $db) {
       $db = $db['name'];
-      if (isset($_POST['access'][$db]) and (in_array('new', $_POST['access'][$db])))
+      if (isset($_POST['access'][$db]) and (in_array('new', $_POST['access'][$db]))) {
         array_push($_POST['access'][$db], $_POST['new_user']);
+      }
+    }
   }
   
   if (($_POST['new_user'] != '') or ($_POST['new_db'] != ''))

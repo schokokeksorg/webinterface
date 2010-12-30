@@ -63,6 +63,7 @@ function set_mysql_access($db, $account, $status)
   $uid = $_SESSION['userinfo']['uid'];
   $db = mysql_real_escape_string($db);
   $account = mysql_real_escape_string($account);
+  DEBUG("User »{$account}« soll ".($status ? "" : "NICHT ")."auf die Datenbank »{$db}« zugreifen");
   $query = '';
   if ($status)
   {
