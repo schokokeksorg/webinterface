@@ -67,6 +67,12 @@ function get_available_CAs()
 function get_chain($cert)
 {
   $certdata = openssl_x509_parse($cert, true);
+  if ($certdata === FALSE) {
+    system_failure("Das Zertifikat konnte nicht gelesen werden");
+  }
+  if (! isset($certdata['issuer']['CN'])) {
+    return NULL;
+  }
   $issuer = mysql_real_escape_string($certdata['issuer']['CN']);
   $result = db_query("SELECT id FROM vhosts.certchain WHERE cn='{$issuer}'");
   if (mysql_num_rows($result) > 0)
@@ -80,17 +86,35 @@ function get_chain($cert)
 
 
 function validate_certificate($cert, $key)
-{  
-  $certinfo = openssl_pkey_get_details(openssl_get_publickey($cert));
-  DEBUG($certinfo);
-  if ($certinfo['bits'] < 2048) {
-    warning("Dieser Schlüssel hat eine sehr geringe Bitlänge und ist daher als nicht besonders sicher einzustufen!");
+{ 
+  // Lade private key 
+  $seckey = openssl_get_privatekey($key);
+  if ($seckey === FALSE) {
+    system_failure("Der private Schlüssel konnte (ohne Passwort) nicht gelesen werden.");
   }
-  if ($certinfo['type'] != OPENSSL_KEYTYPE_RSA && $certinfo['type'] != OPENSSL_KEYTYPE_DSA) {
+  // Lade public key
+  $pubkey = openssl_get_publickey($cert);
+  if ($pubkey === FALSE) {
+    system_failure("In dem eingetragenen Zertifikat wurde kein öffentlicher Schlüssel gefunden.");
+  }
+  // Parse Details über den pubkey
+  $certinfo = openssl_pkey_get_details($pubkey);
+  DEBUG($certinfo);
+  if ($certinfo === FALSE) {
+    system_failure("Der öffentliche Schlüssel des Zertifikats konnte nicht gelesen werden");
+  }
+
+  // Apache unterstützt nur Schlüssel vom Typ RSA oder DSA
+  if (! in_array($certinfo['type'], array(OPENSSL_KEYTYPE_RSA, OPENSSL_KEYTYPE_DSA))) {
     system_failure("Dieser Schlüssel nutzt einen nicht unterstützten Algorithmus.");
   }
     
-  
+  // Bei ECC-Keys treten kürzere Schlüssellängen auf, die können wir aktuell aber sowieso nicht unterstützen
+  if ($certinfo['bits'] < 2048) {
+    warning("Dieser Schlüssel hat eine sehr geringe Bitlänge und ist daher als nicht besonders sicher einzustufen!");
+  }
+
+  // Prüfe ob Key und Zertifikat zusammen passen
   if (openssl_x509_check_private_key($cert, $key) !== true)
   {
     DEBUG("Zertifikat und Key passen nicht zusammen");
