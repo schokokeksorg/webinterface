@@ -174,14 +174,14 @@ function save_cert($info, $cert, $key)
 function refresh_cert($id, $info, $cert, $key = NULL)
 {
   openssl_x509_export($cert, $cert);
+  $chain = maybe_null( get_chain($cert) );
+
   $id = (int) $id;
   $oldcert = cert_details($id);
   $cert = mysql_real_escape_string($cert);
   
   $valid_from = mysql_real_escape_string($info['valid_from']);
   $valid_until = mysql_real_escape_string($info['valid_until']);
-
-  $chain = maybe_null( get_chain($cert) );
 
   $keyop = '';
   if ($key) {
@@ -255,7 +255,7 @@ commonName_default = *.{$cn}
   DEBUG($retval);
   if ($retval != 0)
   {
-    system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: ".$output);
+    system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: ".print_r($output, true));
   }
   
   $csr = file_get_contents($csrfile);
@@ -313,7 +313,7 @@ commonName_default = {$cn}
   DEBUG($retval);
   if ($retval != 0)
   {
-    system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: ".$output);
+    system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: ".print_r($output, true));
   }
   
   $csr = file_get_contents($csrfile);
