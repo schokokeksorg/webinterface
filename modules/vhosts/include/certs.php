@@ -330,6 +330,9 @@ commonName_default = {$cn}
 
 function save_csr($cn, $bits, $wildcard=true)
 {
+  if (! $cn) {
+    system_failure("Sie müssen einen Domainname eingeben!");
+  }
   $csr = NULL;
   $key = NULL;
   if ($wildcard)
