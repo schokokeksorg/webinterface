@@ -127,7 +127,7 @@ if (isset($_POST['accesseditor']))
 if ($output_something)
 {
   title("MySQL-Datenbanken");
-  output('<p>Hier können Sie Ihre MySQL-Datenbanken verwalten. Die Einstellungen werden mit einer leichten Verzögerung (maximal 1 Minute) in das System übertragen. Bitte beachten Sie, dass neue Zugänge also nicht umgehend funktionieren.</p>
+  output('<p>Hier können Sie Ihre MySQL-Datenbanken verwalten. Die Einstellungen werden mit einer leichten Verzögerung (maximal 5 Minuten) in das System übertragen. Bitte beachten Sie, dass neue Zugänge also nicht umgehend funktionieren.</p>
   <p><strong>Hinweis:</strong> In dieser Matrix sehen Sie links die Datenbanken und oben die Benutzer, die Sie eingerichtet haben.
   In die leeren Eingabefelder können Sie den Namen eines neuen Benutzers bzw. einer neuen Datenbank eintragen. Sofern Sie noch keine Datenbank(en) oder Benutzer eingerichtet haben, erscheinen nur die Eingabefelder. Vergessen Sie nicht, nach der Erstellung eines neuen Benutzerkontos dem betreffenden Benutzer ein Passwort zu setzen (s. unten auf dieser Seite). Der Name von Datenbanken und Datenbank-Benutzern muss mit dem Namen des System-Benutzeraccounts übereinstimmen oder mit diesem und einem nachfolgenden Unterstrich beginnen. Z.B. kann der System-Benutzer <em>bernd</em> die MySQL-Accounts <em>bernd</em> und <em>bernd_2</em> erzeugen. Aufgrund einer Beschränkung des MySQL-Servers dürfen Benutzernamen allerdings zur Zeit nur 16 Zeichen lang sein.</p>');
 
@@ -148,9 +148,11 @@ if ($output_something)
 
   array_push($users, array('username' => "new", 'description' => NULL));
 
+  $servers = servers_for_databases();
+
   foreach($dbs as $db)
   {
-    $phpmyadmin = "https://mysql." . server_for_database($db['id']) . "/";
+    $phpmyadmin = "https://mysql.{$servers[$db['name']]}/";
     $desc = ($db['description'] ? $db['description'].' (Erstellt: '.$db['created'].')' : 'Erstellt: '.$db['created']);
     $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"{$desc}\">{$db['name']}</span>&#160;".internal_link("", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}")."&#160;<a href=\"".$phpmyadmin."\">".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")."</a></td>";
     foreach ($users as $user)
@@ -168,6 +170,23 @@ if ($output_something)
 
   
   output(html_form('mysql_databases', 'databases', '', $form));
+
+  $myservers = array();
+  foreach ($servers as $s) {
+    if (! in_array($s, $myservers)) {
+      $myservers[] = $s;
+    }
+  }
+
+  output("<h4>Verwaltung der Datenbanken (phpMyAdmin)</h4>
+  <p><img src=\"{$prefix}images/phpmyadmin.png\" style=\"width: 120px; height: 70px; float: right;\" />Zur Verwaltung der Datenbank-Inhalte stellen wir Ihnen eine stets aktualisierte Version von phpMyAdmin zur Verfügung.</p>");
+  if (count($myservers) == 1) {
+    output("<p><strong><a href=\"https://mysql.{$myservers[0]}/\">phpMyAdmin aufrufen</a></strong></p>");
+  }
+  else {
+    output("<p><em>Ihre Datenbanken befinden sich auf unterschiedlichen Servern, daher müssen Sie die jeweils passende Adresse für phpMyAdmin benutzen. Klicken Sie auf das Symbol ".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")." oben neben der jeweiligen Datenbank.</em></p>");
+  }
+
 
   $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 

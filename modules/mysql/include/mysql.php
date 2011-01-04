@@ -29,15 +29,17 @@ function get_mysql_databases($UID)
 }
 
 
-function server_for_database($id)
+function servers_for_databases()
 {
-  $id = (int) $id;
+  $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = db_query("SELECT hostname FROM misc.mysql_database AS db LEFT JOIN system.useraccounts AS u ON (db.useraccount=u.uid) LEFT JOIN system.servers ON (COALESCE(db.server, u.server) = servers.id) WHERE db.id={$id}");
-  if (mysql_num_rows($result) != 1)
-    system_failure("Fehler beim auslesen des zuständigen Servers");
-  $s = mysql_fetch_assoc($result);
-  return $s["hostname"];
+  $result = db_query("SELECT db.name AS db, hostname FROM misc.mysql_database AS db LEFT JOIN system.useraccounts AS u ON (db.useraccount=u.uid) LEFT JOIN system.servers ON (COALESCE(db.server, u.server) = servers.id) WHERE db.useraccount={$uid}");
+  $ret = array();
+  while ($line = mysql_fetch_assoc($result)) {
+    $ret[$line['db']] = $line['hostname'];
+  }
+  DEBUG($ret);
+  return $ret;
 }
 
 
