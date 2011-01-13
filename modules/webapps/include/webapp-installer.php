@@ -51,6 +51,11 @@ function upgradeable($appname, $version)
       DEBUG("found Drupal-6.*!");
       return 'drupal6';
     }
+    if (substr($version, 0, 2) == '7.')
+    {
+      DEBUG("found Drupal-7.*!");
+      return 'drupal7';
+    }
     DEBUG("Version: ".substr($version, 0, 2));
   }
   elseif ($appname == 'MediaWiki')
