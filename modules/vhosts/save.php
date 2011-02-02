@@ -69,10 +69,10 @@ if ($_GET['action'] == 'edit')
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }
   }
-  $cgi = 0;
-  if (isset($_POST['cgi']) && isset($_POST['cgi']) && $_POST['cgi'] == 'yes')
+  $cgi = 1;
+  if (isset($_POST['safemode']) && $_POST['safemode'] == 'yes')
   {
-    $cgi = 1;
+    $cgi = 0;
   }
 
   if (isset($_POST['suexec_user']))

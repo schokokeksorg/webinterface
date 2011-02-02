@@ -157,14 +157,14 @@ if ($vhost['php'] == 'fastcgi')
   </div>";
 }
 
-$have_cgi = ($vhost['cgi'] == 1 ? ' checked="checked" ' : '');
+$safemode = ($vhost['cgi'] == 1 ? '' : ' checked="checked" ');
 
 $form .= "
 <div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
   ".$phpoptions."
-  <h5>CGI</h5>
+  <h5>Abgesicherter Modus</h5>
   <div style=\"margin-left: 2em;\">
-    <input type=\"checkbox\" name=\"cgi\" id=\"cgi\" value=\"yes\" {$have_cgi}/>&#160;<label for=\"cgi\">Erlaube CGI-Nutzung</label><br /><em>(Wenn Sie dies ausschalten, werden einige andere Dinge auch nicht mehr erlaubt.)</em>
+    <input type=\"checkbox\" name=\"safemode\" id=\"safemode\" value=\"yes\" {$safemode}/>&#160;<label for=\"safemode\">Abgesicherter Modus</label><br /><em>(Deaktiviert CGI, mod_rewrite und einige weitere Funktionen mit denen die Website auf andere Orte des Home-Verzeichnisses zugreifen könnte.)</em>
   </div>
 </div>
 ";
