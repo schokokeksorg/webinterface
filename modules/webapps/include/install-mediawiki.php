@@ -16,10 +16,12 @@ function validate_data($post)
 
   $dbdata = create_webapp_mysqldb('mediawiki', $post['wikiname']);
 
+  $adminuser =  ucfirst(chop($post['adminuser']));
+
   $salt = random_string(8);
   $salthash = ':B:' . $salt . ':' . md5( $salt . '-' . md5( $post['adminpassword'] ));
   
-  $data = "adminuser={$post['adminuser']}
+  $data = "adminuser={$adminuser}
 adminpassword={$salthash}
 adminemail={$post['adminemail']}
 wikiname={$post['wikiname']}
