@@ -258,7 +258,9 @@ function setup_session($role, $useridentity)
   {
     $info = get_customer_info($useridentity);
     $_SESSION['customerinfo'] = $info;
-    set_customer_lastlogin($info['customerno']);
+    if (!isset($_SESSION['admin_user'])) {
+      set_customer_lastlogin($info['customerno']);
+    }
     logger(LOG_INFO, "session/start", "login", "logged in customer no »{$info['customerno']}«");
   }
   if ($role & ROLE_MAILACCOUNT)
