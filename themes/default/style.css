@@ -1,7 +1,7 @@
 @charset "utf-8";
                          
 html {
-        font-family: Verdana, Arial, Helvetica;
+        font-family: "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
         font-size: 12px;
         color: #000000;
         background-color: #fff;
@@ -9,7 +9,7 @@ html {
 
 
 body {
-        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-family: "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
         font-size: 12px;
         color: #000000;
         background-color: #fff;
