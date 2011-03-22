@@ -324,8 +324,7 @@ function change_domain($id, $type)
     db_query("UPDATE kundendaten.domains SET mail='none', lastchange=NOW() WHERE id={$id} LIMIT 1;");
   }
   elseif ($type == 'virtual') {
-    $result = mysql_fetch_assoc(db_query("SELECT id FROM system.servers WHERE hostname='".config('vmail_server')."'"));
-    $vmailserver = $result['id'];
+    $vmailserver = (int) $_SESSION['userinfo']['server'];
     db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
     db_query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
     db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES ({$id}, {$vmailserver});");

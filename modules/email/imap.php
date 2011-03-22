@@ -216,6 +216,8 @@ else
     output('<div class="error"><strong>Achtung:</strong> Es scheint als hätten Sie einen (manuellen) IMAP-Account mittels einer Domain angelegt, die für Webinterface-Verwaltung konfiguriert ist. Sollten Sie nicht genau wissen was Sie tun, ist das vermutlich falsch und wird zu Fehlfunktionen führen.</div>');
   }
   addnew("imap", "Neuen Account anlegen", "action=create");
+
+  output('<p>'.other_icon('information.png', 'Zugangsdaten anzeigen').' <strong>'.internal_link('logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($_SESSION['userinfo']['server']).'&type=manual').'</strong></p>');
 }
 
 ?>

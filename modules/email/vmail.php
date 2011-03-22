@@ -1,6 +1,7 @@
 <?php
 
 require_once('inc/base.php');
+require_once('inc/icons.php');
 require_once('inc/security.php');
 require_role(ROLE_SYSTEMUSER);
 
@@ -54,7 +55,8 @@ if (count($sorted_by_domains) > 0)
 ');
   foreach ($sorted_by_domains as $accounts_on_domain)
   {
-	    output('<h4>'.$accounts_on_domain[0]['domainname'].'</h4>');
+	    output('<h4>'.$accounts_on_domain[0]['domainname'].' <small>('.other_icon('information.png', 'Zugangsdaten anzeigen').' '.internal_link('logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($accounts_on_domain[0]['server']).'&type=vmail').')</small></h4>');
+
 	    foreach ($accounts_on_domain AS $this_account)
 	    {
 	      $acc = get_account_details($this_account['id']);

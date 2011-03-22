@@ -299,6 +299,12 @@ th {
   padding: 0px 1em;
 }
 
+
+dt {
+  font-weight: bold;
+}
+
+
 a {
   text-decoration: none;
   /*font-weight: bold;*/

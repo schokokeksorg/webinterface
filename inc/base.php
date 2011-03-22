@@ -38,6 +38,12 @@ function config($key)
     return NULL;
 }
 
+function get_server_by_id($id) {
+  $id = (int) $id;
+  $result = mysql_fetch_assoc(db_query("SELECT hostname FROM system.servers WHERE id='{$id}'"));
+  return $result['hostname'];
+}
+
 
 function redirect($target)
 {
