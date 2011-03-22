@@ -24,7 +24,10 @@ if ($type == 'manual') {
 }
 
 output('<h3>Abruf mit einem E-Mail-Programm</h3>
+<p>Ihre E-Mails befinden auf dem Server</p>
+<p style="margin-left: 2em; font-size: 130%; font-weight: bold;">'.$servername.'.</p>
 <p>Wenn Sie ein E-Mail-Programm auf Ihrem Computer (wie z.B. Mozilla Thunderbird) zum Abruf benutzen möchten, haben Sie die Wahl zwischen POP3 und IMAP. Ihre Zugangsdaten lassen sich mit beiden Technologien benutzen.</p>
+
 <div style="width: 20%; margin-right: 2em; float: left;">
 <h3 style="text-align: center;">IMAP</h3>
 <p style="text-align: justify;">Bei IMAP werden die E-Mails dauerhaft <strong>auf dem Server gespeichert</strong>. Das E-Mail-Programm läd (je nach Einstellung) nur die Kopfzeilen und die jeweils angeschaute E-Mail herunter. Bei IMAP können Sie <strong>Unterordner</strong> in Ihrem Postfach haben. Da die Mails auf dem Server gespeichert sind, können Sie jederzeit mit einem <strong>Web-Mail-System</strong> auch auf gelesene E-Mails zugreifen. Die gespeicherten E-Mails können allerdings dazu führen, dass Ihr Speicherplatz schneller verbraucht ist.</p>
