@@ -5,7 +5,7 @@ require_once("inc/base.php");
 title("Newsletter");
 
 output("<p>Mit unserem Newsletter informieren wir Sie unregelmäßig (typischer Weise maximal einmal im Monat) über Änderungen und neue Möglichkeiten bei schokokeks.org. Es handelt sich in der Regel um techniche Änderungen, geplante Wartungsarbeiten oder neue Möglichkeiten, die Ihren Benutzeraccount bei schokokeks.org betreffen.</p>");
-output("<p>Mehrere Adressen trennen Sie bitte durch Kommata voneinander.</p>");
+//output("<p>Mehrere Adressen trennen Sie bitte durch Kommata voneinander.</p>");
 
 $oldaddr = get_newsletter_address();
 
