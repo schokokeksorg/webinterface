@@ -12,7 +12,7 @@ require_once('common.php');
 function mailaccounts($uid)
 {
   $uid = (int) $uid;
-  $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid");
+  $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid ORDER BY if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`), local");
   DEBUG("Found ".@mysql_num_rows($result)." rows!");
   $accounts = array();
   if (@mysql_num_rows($result) > 0)
