@@ -1,6 +1,7 @@
 <?php
 require_once("includes/newsletter.php");
 require_once("inc/base.php");
+require_role(ROLE_CUSTOMER);
 
 title("Newsletter");
 
