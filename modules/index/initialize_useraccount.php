@@ -41,7 +41,7 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
   }
   else
   {
-    input_error("Der eingegebene Code war nicht korrekt. Bitte benutzen Sie die Kopieren & Einfügen-Operation!");
+    input_error("Der eingegebene Code war nicht korrekt. Eventuell haben Sie die Adresse nicht vollständig übernommen oder die Gültigkeit des Sicherheitscodes ist abgelaufen.");
   }
 }
 
