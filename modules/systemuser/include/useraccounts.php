@@ -73,7 +73,7 @@ function get_account_details($uid, $customerno=0)
 function get_used_quota($uid)
 {
   $uid = (int) $uid;
-  $result = db_query("SELECT s.hostname AS server, used, COALESCE(us.quota, u.quota) AS quota FROM system.usedquota AS uq LEFT JOIN system.useraccounts AS u USING (uid) LEFT JOIN system.servers AS s ON (s.id=uq.server) LEFT JOIN system.user_server AS us ON (us.uid=uq.uid AND us.server=uq.server) WHERE uq.uid='{$uid}'");
+  $result = db_query("SELECT s.hostname AS server, systemquota, systemquota_used, mailquota, mailquota_used FROM system.v_quota AS q LEFT JOIN system.servers AS s ON (s.id=q.server) WHERE uid='{$uid}'");
   $ret = array();
   while ($line = mysql_fetch_assoc($result))
     $ret[] = $line;

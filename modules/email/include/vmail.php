@@ -15,6 +15,7 @@ function empty_account()
 		'password' => NULL,
 		'spamfilter' => 'folder',
 		'spamexpire' => 7,
+                'quota' => 256,
 		'forwards' => array()
 		);
 	return $account;
@@ -197,6 +198,8 @@ function save_vmail_account($account)
       break;
   }
 
+  $account['quota'] = max((int) config('vmail_basequota'), (int) $account['quota']);
+
   $account['local'] = mysql_real_escape_string($account['local']);
   $account['password'] = mysql_real_escape_string($account['password']);
   $account['spamexpire'] = (int) $account['spamexpire'];
@@ -204,8 +207,8 @@ function save_vmail_account($account)
   $query = '';
   if ($id == NULL)
   {
-    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password) VALUES ";
-    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password});";
+    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota) VALUES ";
+    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password}, {$account['quota']});";
   }
   else
   {
@@ -214,7 +217,7 @@ function save_vmail_account($account)
     else
       $password='';
     $query = "UPDATE mail.vmail_accounts SET local='{$account['local']}', domain={$account['domain']}{$password}, ";
-    $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']} ";
+    $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']}, quota={$account['quota']} ";
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
@@ -237,11 +240,20 @@ function save_vmail_account($account)
     }
     db_query($forward_query);
   }
-  if ($account['password'] != 'NULL')
+  if ($password != 'NULL')
   {
     # notify the vmail subsystem of this new account
     mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
   }
+
+  // Update Mail-Quota-Cache
+  $result = db_query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts GROUP BY useraccount, server");
+  while ($line = mysql_fetch_assoc($result)) {
+    if ($line['quota'] !== NULL) {
+      db_query("REPLACE INTO mail.vmailquota (uid, server, quota, used) VALUES ('{$line['useraccount']}', '{$line['server']}', '{$line['quota']}', '{$line['used']}')");
+    }
+  }
+
   return true;
 }
 

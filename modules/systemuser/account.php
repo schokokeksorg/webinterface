@@ -26,11 +26,23 @@ else
     $quota = array();
     foreach ($usedquota as $q)
     {
-      $percent = round(( $q["used"] / $q["quota"] ) * 100 );
+      $mailbar = '';
+      $mailstring = '';
+      $mailpercent = round(( $q['mailquota'] / $q["systemquota"]) * 100);
+      $mailwidth = 2 * min($mailpercent, 100);
+
+      if ($q["mailquota"] > 0) {
+	$mailstring = "<br />(davon {$q["mailquota"]} MB für Postfächer reserviert)";
+        $mailbar = "<div style=\"font-size: 1px; background-color: blue; height: 10px; width: {$mailwidth}px; margin: 0; padding: 0; float: left;\">&#160;</div>";
+      }  
+
+      $percent = round(( ($q["systemquota_used"]+$q["mailquota"]) / $q["systemquota"] ) * 100 );
       $color = ( $percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green" ));
-      $width = 2 * min($percent, 100);
-      $quota[] = "<p>Server <strong>{$q['server']}</strong><br />{$percent}%: {$q['used']} MB von {$q['quota']} MB belegt.</p> 
-        <div style=\"margin: 0; padding: 0; width: 200px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; padding: 0;\">&#160;</div></div>";
+      $width = 2 * min($percent, 100) - $mailwidth;
+     
+      $used_space = $q['systemquota_used'] + $q['mailquota'];
+      $quota[] = "<p>Server <strong>{$q['server']}</strong><br />{$percent}%: {$used_space} MB von {$q['systemquota']} MB belegt{$mailstring}.</p> 
+        <div style=\"margin: 0; padding: 0; width: 200px; border: 1px solid black;\">{$mailbar}<div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; margin-left: {$mailwidth}px; padding: 0;\">&#160;</div></div>";
 
     }
     $realname = $acc['name'] ? $acc['name'] : $_SESSION['customerinfo']['name'];

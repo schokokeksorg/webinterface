@@ -32,6 +32,9 @@ if ($_GET['action'] == 'edit')
     $account['password'] = NULL;
     $account['spamfilter'] = 'none';
   }
+  if (isset($_POST['quota'])) {
+    $account['quota'] = $_POST['quota'];
+  }
 
   if ($_POST['forward'] == 'yes')
   {
