@@ -26,7 +26,7 @@ function get_account_details($id, $checkuid = true)
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$uid_check = ($checkuid ? "useraccount='{$uid}' AND " : "");
-	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
+	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, quota, quota_used from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();

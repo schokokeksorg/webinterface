@@ -64,6 +64,10 @@ if (count($sorted_by_domains) > 0)
 	      DEBUG($acc);
 	      if ($acc['password'] != '')
 	      {
+                $percent = round(( $acc["quota_used"] / $acc["quota"] ) * 100 );
+                $color = ( $percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green" ));
+                $width = 2 * min($percent, 100);
+                $quotachart = "<div style=\"margin: 2px 0; padding: 0; width: 200px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; padding: 0;\">&#160;</div></div> {$acc['quota_used']} MB von {$acc['quota']} MB belegt";
 	      	$spam = 'ohne Spamfilter';
 	        switch ($acc['spamfilter'])
 	  	{
@@ -74,7 +78,7 @@ if (count($sorted_by_domains) > 0)
 			case 'delete':	$spam = 'Spam nicht zustellen';
 					break;
 	        }
-	        array_push($actions, "Ablegen in Mailbox ({$spam})");
+	        array_push($actions, "Ablegen in Mailbox ({$spam})<br />".$quotachart);
 	      }
 	      foreach ($acc['forwards'] AS $fwd)
 	      {
