@@ -16,7 +16,7 @@ output("<p>Sie können bei schokokeks.org Hosting Ihre E-Mails wahlweise direkt 
 
 output('<h3>Lesen per Web-Mail</h3>
 <p>Die Anmeldung zu unseren Web-Mail-Systemen erfolgt unter</p>
-<p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="https://mail.schokokeks.org/">mail.schokokeks.org</a></p>');
+<p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="https://webmail.schokokeks.org/">webmail.schokokeks.org</a></p>');
 if ($type == 'manual') {
   output('<p>Dort geben Sie bitte im Feld für die E-Mail-Adresse Ihren Account-Namen ein.</p>');
 } else {
