@@ -15,7 +15,7 @@ function empty_account()
 		'password' => NULL,
 		'spamfilter' => 'folder',
 		'spamexpire' => 7,
-                'quota' => 256,
+                'quota' => config('vmail_basequota'),
 		'forwards' => array()
 		);
 	return $account;
