@@ -12,11 +12,12 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'manual') {
   $type = 'manual';
 }
 
-output("<p>Sie können bei schokokeks.org Hosting Ihre E-Mails wahlweise direkt im Browser mit einem Web-Mail-System lesen oder mit einem E-Mail-Programm auf Ihrem Rechner per POP3 oder IMAP abrufen. Im folgenden möchten wir Ihnen erklären, wie Sie diese Möglichkeiten nutzen können.</p>");
+output("<p>Sie können bei ".config('company_name')." Ihre E-Mails wahlweise direkt im Browser mit einem Web-Mail-System lesen oder mit einem E-Mail-Programm auf Ihrem Rechner per POP3 oder IMAP abrufen. Im folgenden möchten wir Ihnen erklären, wie Sie diese Möglichkeiten nutzen können.</p>");
 
+$webmail_host = str_replace('https://', '', config('webmail_url'));
 output('<h3>Lesen per Web-Mail</h3>
 <p>Die Anmeldung zu unseren Web-Mail-Systemen erfolgt unter</p>
-<p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="https://webmail.schokokeks.org/">webmail.schokokeks.org</a></p>');
+<p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="'.config('webmail_url').'">'.$webmail_host.'</a></p>');
 if ($type == 'manual') {
   output('<p>Dort geben Sie bitte im Feld für die E-Mail-Adresse Ihren Account-Namen ein.</p>');
 } else {
