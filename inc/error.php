@@ -37,8 +37,7 @@ function we_have_an_error()
 {
   global $input_error;
 
-  return ((count($input_error) + count($_SESSION['warning'])) > 0);
-
+  return (count($input_error) > 0);
 }
 
 

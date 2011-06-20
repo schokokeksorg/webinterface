@@ -15,7 +15,7 @@ function empty_account()
 		'password' => NULL,
 		'spamfilter' => 'folder',
 		'spamexpire' => 7,
-                'quota' => config('vmail_basequota'),
+    'quota' => config('vmail_basequota'),
 		'forwards' => array()
 		);
 	return $account;
@@ -27,7 +27,7 @@ function get_account_details($id, $checkuid = true)
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$uid_check = ($checkuid ? "useraccount='{$uid}' AND " : "");
-	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, quota, quota_used from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
+	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, server, quota, quota_used from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -64,7 +64,7 @@ function get_vmail_accounts()
 function get_vmail_domains()
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT id, domainname FROM mail.v_vmail_domains WHERE useraccount='{$uid}'");
+	$result = db_query("SELECT id, domainname, server FROM mail.v_vmail_domains WHERE useraccount='{$uid}'");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Sie haben keine Domains für virtuelle Mail-Verarbeitung');
 	$ret = array();
@@ -116,6 +116,16 @@ function domainselect($selected = NULL, $selectattribute = '')
 }
 
 
+function get_max_mailboxquota($server, $oldquota) {
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $server = (int) $server;
+  $result = db_query("SELECT systemquota - (systemquota_used + mailquota) AS free FROM system.v_quota WHERE uid='{$uid}' AND server='{$server}'");
+  $item = mysql_fetch_assoc($result);
+  DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
+  return $item['free'] + ($oldquota - config('vmail_basequota'));
+}
+
+
 
 
 function save_vmail_account($account)
@@ -140,11 +150,13 @@ function save_vmail_account($account)
   $domainlist = get_vmail_domains();
   $valid_domain = false;
   $domainname = NULL;
+  $server = NULL;
   foreach ($domainlist as $dom)
   {
     if ($dom->id == $account['domain'])
     {
       $domainname = $dom->domainname;
+      $server = $dom->server;
       $valid_domain = true;
       break;
     }
@@ -197,8 +209,22 @@ function save_vmail_account($account)
       $spam = "'delete'";
       break;
   }
-
-  $account['quota'] = max((int) config('vmail_basequota'), (int) $account['quota']);
+  
+  $free = config('vmail_basequota');
+  if ($id == NULL) {
+    // Neues Postfach
+    $free = get_max_mailboxquota($server, config('vmail_basequota'));
+  } else {
+    $free = get_max_mailboxquota($oldaccount['server'], $oldaccount['quota']);
+  }
+  
+  $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
+  if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
+    $newquota = $free + config('vmail_basequota');
+    warning("Ihr Speicherplatz reicht für diese Postfach-Größe nicht mehr aus. Ihr Postfach wurde auf {$newquota} MB reduziert. Bitte beachten Sie, dass damit Ihr Benutzerkonto keinen freien Speicherplatz mehr aufweist!");
+  }
+  
+  $account['quota'] = $newquota;
 
   $account['local'] = mysql_real_escape_string($account['local']);
   $account['password'] = mysql_real_escape_string($account['password']);

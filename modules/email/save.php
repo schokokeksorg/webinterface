@@ -36,7 +36,7 @@ if ($_GET['action'] == 'edit')
     $account['quota'] = $_POST['quota'];
   }
 
-  if ($_POST['forward'] == 'yes')
+  if (isset($_POST['forward']) && $_POST['forward'] == 'yes')
   {
     $num = 1;
     while (true)
@@ -52,7 +52,7 @@ if ($_GET['action'] == 'edit')
     if ($num == 1) system_failure("Bitte mindestens eine Weiterleitungsadresse angeben.");
   }
 
-  if (($_POST['forward']!='yes') && ($_POST['mailbox']!='yes'))
+  if ((isset($_POST['forward']) && $_POST['forward']!='yes') && ($_POST['mailbox']!='yes'))
     system_failure("Entweder eine Mailbox oder eine Weiterleitung muss angegeben werden!");
 
   DEBUG($account);
