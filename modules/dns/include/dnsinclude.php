@@ -102,7 +102,7 @@ function get_dyndns_records($id)
   return $data;
 }
 
-$valid_record_types = array('a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw');
+$valid_record_types = array('a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp');
 
 
 function blank_dns_record($type)
@@ -171,7 +171,7 @@ function get_domain_auto_records($domainname)
 }
 
 
-$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns');
+$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp');
 
 function save_dns_record($id, $record)
 {
@@ -239,6 +239,15 @@ function save_dns_record($id, $record)
       if (! $record['data'] )
         system_failure('text entry missing');
       break;
+
+    case 'sshfp':
+      $record['dyndns'] = '';
+      $record['spec'] = max( (int) $record['spec'], 1);
+      $record['ip'] = '';
+      if (! $record['data'] )
+        system_failure('text entry missing');
+      break;
+
 
     case 'srv':
       system_failure('not implemented yet');

@@ -36,9 +36,13 @@ foreach ($records AS $rec)
   {
     $data .= ' ('.$rec['spec'].')';
   }
+  if ($rec['type'] == 'sshfp')
+  {
+    $data = $rec['spec'] . ' 1 ' . $data;
+  }
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
   $link = $rec['fqdn'];
-  if (in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr'))) {
+  if (in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp'))) {
       $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
   }
   output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
@@ -74,6 +78,7 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <li>'.internal_link('dns_record_edit', 'NS (Nameserver)', 'id=new&type=ns&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'SPF (sender policy framework)', 'id=new&type=spf&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'TXT', 'id=new&type=txt&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'SSHFP', 'id=new&type=sshfp&domain='.$domain->id).'</li>
 </ul>
 
 <h4>Automatische DNS-Records</h4>
