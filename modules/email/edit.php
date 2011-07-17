@@ -97,6 +97,9 @@ if ($is_mailbox and $account['quota']) {
 
 $form .= "<p style=\"margin-left: 2em;\" class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von ".config('vmail_basequota')." MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
 
+$quota_notify = ($account['quota_threshold'] >= 0) ? ' checked="checked" ' : '';
+$quota_threshold = ($account['quota_threshold'] >= 0) ? $account['quota_threshold'] : '';
+$form .= "<p style=\"margin-left: 2em;\" class=\"quota_options\"><input type=\"checkbox\" id=\"quota_notify\" name=\"quota_notify\" value=\"1\" {$quota_notify} /><label for=\"quota_notify\">Benachrichtigung wenn weniger als</label> <input type=\"text\" name=\"quota_threshold\" id=\"quota_threshold\" value=\"{$quota_threshold}\" /> MB Speicherplatz zur Verfügung stehen.</p>";
 
 
 $form .= "<p><input type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";

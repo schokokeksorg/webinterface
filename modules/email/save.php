@@ -36,6 +36,11 @@ if ($_GET['action'] == 'edit')
     $account['quota'] = $_POST['quota'];
   }
 
+  $account['quota_threshold'] = -1;
+  if (isset($_POST['quota_notify']) && isset($_POST['quota_threshold']) && $_POST['quota_notify'] == 1) {
+    $account['quota_threshold'] = $_POST['quota_threshold'];
+  }
+
   if (isset($_POST['forward']) && $_POST['forward'] == 'yes')
   {
     $num = 1;

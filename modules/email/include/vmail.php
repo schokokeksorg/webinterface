@@ -16,6 +16,7 @@ function empty_account()
 		'spamfilter' => 'folder',
 		'spamexpire' => 7,
     'quota' => config('vmail_basequota'),
+    'quota_threshold' => 20,
 		'forwards' => array()
 		);
 	return $account;
@@ -27,7 +28,7 @@ function get_account_details($id, $checkuid = true)
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$uid_check = ($checkuid ? "useraccount='{$uid}' AND " : "");
-	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, server, quota, quota_used from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
+	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, server, quota, quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -43,6 +44,9 @@ function get_account_details($id, $checkuid = true)
 	    array_push($acc['forwards'], array("id" => $item['id'], 'spamfilter' => $item['spamfilter'], 'destination' => $item['destination']));
 	  }
 	}
+  if ($acc['quota_threshold'] === NULL) {
+    $acc['quota_threshold'] = -1;
+  }
 	return $acc;
 }
 
@@ -226,6 +230,13 @@ function save_vmail_account($account)
   
   $account['quota'] = $newquota;
 
+  if ($account['quota_threshold'] == -1) {
+    $account['quota_threshold'] = 'NULL';
+  }
+  else {
+    $account['quota_threshold'] = min( (int) $account['quota_threshold'], (int) $account['quota'] );
+  }
+  
   $account['local'] = mysql_real_escape_string($account['local']);
   $account['password'] = mysql_real_escape_string($account['password']);
   $account['spamexpire'] = (int) $account['spamexpire'];
@@ -233,8 +244,8 @@ function save_vmail_account($account)
   $query = '';
   if ($id == NULL)
   {
-    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota) VALUES ";
-    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password}, {$account['quota']});";
+    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota, quota_threshold) VALUES ";
+    $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password}, {$account['quota']}, {$account['quota_threshold']});";
   }
   else
   {
@@ -243,7 +254,7 @@ function save_vmail_account($account)
     else
       $password='';
     $query = "UPDATE mail.vmail_accounts SET local='{$account['local']}', domain={$account['domain']}{$password}, ";
-    $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']}, quota={$account['quota']} ";
+    $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']}, quota={$account['quota']}, quota_threshold={$account['quota_threshold']} ";
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
