@@ -116,7 +116,7 @@ div.confirmation p.buttons input {
 }
 
 
-span.login_label {
+.login_label {
         display: block;
         float: left;
         width: 130px;
