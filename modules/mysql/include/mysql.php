@@ -3,7 +3,7 @@
 function get_mysql_accounts($UID)
 {
   $UID = (int) $UID;
-  $result = db_query("SELECT username, description, created FROM misc.mysql_accounts WHERE useraccount=$UID");
+  $result = db_query("SELECT username, description, created FROM misc.mysql_accounts WHERE useraccount=$UID ORDER BY username");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
@@ -17,7 +17,7 @@ function get_mysql_accounts($UID)
 function get_mysql_databases($UID)
 {
   $UID = (int) $UID;
-  $result = db_query("SELECT id, name, description, created FROM misc.mysql_database WHERE useraccount=$UID");
+  $result = db_query("SELECT id, name, description, created FROM misc.mysql_database WHERE useraccount=$UID ORDER BY name");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
