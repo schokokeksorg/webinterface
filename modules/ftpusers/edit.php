@@ -64,7 +64,7 @@ output(html_form('ftpusers_edit', 'save', 'id='.$ftpuser['id'], '
   </table>
   <p><input type="submit" name="save" value="Speichern" /></p>
   
-  <p><sup>*</sup>) Wenn die Verschlüsselung nicht erforderlich ist, können Sie mit diesen Zugangsdaten eine ungesicherte Verbindung auf TCP-port 1021 aufbauen. Auf dem Standard-Port 21 wird grundsätzlich eine Verschlüsselung benötigt.</p>
+  <p><sup>*</sup>) Wenn die Verschlüsselung nicht erforderlich ist, können Sie mit diesen Zugangsdaten eine ungesicherte Verbindung auf TCP-Port 1021 aufbauen. Auf dem Standard-Port 21 wird grundsätzlich eine Verschlüsselung benötigt.</p>
 '));
 
 
