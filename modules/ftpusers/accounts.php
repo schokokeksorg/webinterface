@@ -23,8 +23,9 @@ if (count($ftpusers) > 0)
 
   foreach ($ftpusers AS $f)
   {
+    $sslwarning = ($f['forcessl'] == 0 ? icon_warning('Unverschlüsselte Verbindungen werden erlaubt') : '');
     $active = ($f['active'] == 1 ? icon_enabled('Ja') : '-');
-    output("<tr><td>".internal_link("edit?id={$f['id']}", $f['username'])."</td><td>{$f['homedir']}</td><td style=\"text-align: center;\">{$active}</td><td>".internal_link("save?delete={$f['id']}", icon_delete("{$f['username']} löschen"))."</td></tr>");
+    output("<tr><td>".internal_link("edit?id={$f['id']}", $f['username'])."</td><td>{$f['homedir']}</td><td style=\"text-align: center;\">{$active} {$sslwarning}</td><td>".internal_link("save?delete={$f['id']}", icon_delete("{$f['username']} löschen"))."</td></tr>");
   }
   output('</table>');
 }

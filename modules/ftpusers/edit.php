@@ -26,7 +26,8 @@ $user_home = $_SESSION['userinfo']['homedir'];
 $homedir = substr($ftpuser['homedir'], strlen($user_home)+1);
 DEBUG($user_home.' / '.$homedir.' / '.$ftpuser['homedir']);
 
-$checked = ($ftpuser['active'] == 1 ? 'checked="checked" ' : '');
+$active = ($ftpuser['active'] == 1 ? 'checked="checked" ' : '');
+$forcessl = ($ftpuser['forcessl'] == 1 ? 'checked="checked" ' : '');
 
 $servers = server_names();
 $available_servers = array_merge(array(my_server_id()), additional_servers());
@@ -58,11 +59,13 @@ output(html_form('ftpusers_edit', 'save', 'id='.$ftpuser['id'], '
   </tr>
   <tr>
     <td>Zugang aktivieren:</td>
-    <td><input type="checkbox" id="active" name="active" value="1" '.$checked.'/> auf Server '.$whichserver.'</td>
+    <td><input type="checkbox" id="active" name="active" value="1" '.$active.'/> auf Server '.$whichserver.'<br/><input type="checkbox" id="forcessl" name="forcessl" value="1" '.$forcessl.'/>&#160;<label for="forcessl">SSL-Verschlüsselung erforderlich<sup>*</sup></label></td>
   </tr>
   </table>
   <p><input type="submit" name="save" value="Speichern" /></p>
-  '));
+  
+  <p><sup>*</sup>) Wenn die Verschlüsselung nicht erforderlich ist, können Sie mit diesen Zugangsdaten eine ungesicherte Verbindung auf TCP-port 1021 aufbauen. Auf dem Standard-Port 21 wird grundsätzlich eine Verschlüsselung benötigt.</p>
+'));
 
 
 

@@ -5,7 +5,7 @@ require_once('inc/base.php');
 function list_ftpusers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, username, homedir, active FROM system.ftpusers WHERE uid=$uid");
+  $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=$uid");
   $ftpusers = array();
   while ($u = mysql_fetch_assoc($result)) {
     $ftpusers[] = $u;
@@ -16,7 +16,7 @@ function list_ftpusers()
 function empty_ftpuser()
 {
   $myserver = my_server_id();
-  return array("id" => "0", "username" => "", "password" => "", "homedir" => "", "active" => "1", "server" => $myserver);
+  return array("id" => "0", "username" => "", "password" => "", "homedir" => "", "active" => "1", "forcessl" => "1", "server" => $myserver);
 }
 
 function load_ftpuser($id)
@@ -25,7 +25,7 @@ function load_ftpuser($id)
     return empty_ftpuser();
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = (int) $id;
-  $result = db_query("SELECT id, username, password, homedir, active, server FROM system.ftpusers WHERE uid={$uid} AND id='{$id}' LIMIT 1");
+  $result = db_query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid={$uid} AND id='{$id}' LIMIT 1");
   if (mysql_num_rows($result) != 1)
     system_failure("Fehler beim auslesen des Accounts");
   $account = mysql_fetch_assoc($result);
@@ -49,6 +49,8 @@ function save_ftpuser($data)
   if (! in_homedir($homedir))
     system_failure('Pfad scheint nicht in Ihrem Home zu sein oder enthielt ungültige Zeichen.');
   $active = ($data['active'] == 1 ? '1' : '0');
+
+  $forcessl = ($data['forcessl'] == 0 ? '0' : '1');
 
   $server = NULL;
   if ($data['server'] == my_server_id())
@@ -85,9 +87,9 @@ function save_ftpuser($data)
     
   
   if ($id)
-    db_query("UPDATE system.ftpusers SET username='{$username}', {$password_query} homedir='{$homedir}', active='{$active}', server={$server} WHERE id={$id} AND uid={$uid} LIMIT 1");
+    db_query("UPDATE system.ftpusers SET username='{$username}', {$password_query} homedir='{$homedir}', active='{$active}', forcessl='{$forcessl}', server={$server} WHERE id={$id} AND uid={$uid} LIMIT 1");
   else
-    db_query("INSERT INTO system.ftpusers (username, password, homedir, uid, active, server) VALUES ('{$username}', '{$password_hash}', '{$homedir}', '{$uid}', '{$active}', {$server})");
+    db_query("INSERT INTO system.ftpusers (username, password, homedir, uid, active, forcessl, server) VALUES ('{$username}', '{$password_hash}', '{$homedir}', '{$uid}', '{$active}', '{$forcessl}', {$server})");
 }
 
 

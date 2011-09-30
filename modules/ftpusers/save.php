@@ -48,6 +48,11 @@ if (isset($_REQUEST['active']))
 else
   $ftpuser['active'] = 0;
 
+if (isset($_REQUEST['forcessl']))
+  $ftpuser['forcessl'] = $_REQUEST['forcessl'];
+else
+  $ftpuser['forcessl'] = 0;
+
 if (isset($_REQUEST['server']))
   $ftpuser['server'] = $_REQUEST['server'];
 
