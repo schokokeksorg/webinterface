@@ -100,8 +100,8 @@ function find_role($login, $password, $i_am_admin = False)
   {
     $entry = mysql_fetch_object($result);
     $db_password = $entry->password;
-    $hash = sha1($password);
-    if ($hash == $db_password || $i_am_admin)
+    // SHA1 für alte Subuser (kaylee), SHA256 für neue Subuser
+    if (hash("sha1", $password) == $db_password || hash("sha256", $password) == $db_password || $i_am_admin)
     {
       logger(LOG_INFO, "session/checkuser", "login", "logged in virtual subuser »{$login}«.");
       return ROLE_SUBUSER;

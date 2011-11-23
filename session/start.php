@@ -23,9 +23,9 @@ if (!session_start())
 
 DEBUG("<pre>POST-DATA: ".htmlspecialchars(print_r($_POST, true))."\nSESSION_DATA: ".htmlspecialchars(print_r($_SESSION, true))."</pre>");
 
-if (isset($_POST['username']) && isset($_POST['password']))
+if (isset($_POST['webinterface_username']) && isset($_POST['webinterface_password']))
 {
-  $role = find_role($_POST['username'], $_POST['password']);
+  $role = find_role($_POST['webinterface_username'], $_POST['webinterface_password']);
   if ($role === NULL)
   {
     $_SESSION['role'] = ROLE_ANONYMOUS;
@@ -34,10 +34,10 @@ if (isset($_POST['username']) && isset($_POST['password']))
   }
   else
   {
-    setup_session($role, $_POST['username']);
+    setup_session($role, $_POST['webinterface_username']);
   }
-  unset($_POST['username']);
-  unset($_POST['password']);
+  unset($_POST['webinterface_username']);
+  unset($_POST['webinterface_password']);
 }
 
 elseif (isset($_SESSION['role']))

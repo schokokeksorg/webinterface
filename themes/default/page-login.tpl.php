@@ -41,8 +41,8 @@ if ($messages) {
 <h3>schokokeks.org Hosting Webinterface</h3>
 <p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org Hosting festlegen. Sofern Sie noch kein Kunde von schokokeks.org Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="http://www.schokokeks.org">öffentliche Seite</a>.</p>
 <form action="" method="post">
-<p><label for="username" class="login_label">Benutzername oder E-Mail-Adresse<sup>*</sup>:</label> <input type="text" id="username" name="username" size="30" /></p>
-<p><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="password" size="30" /></p>
+<p><label for="username" class="login_label">Benutzername oder E-Mail-Adresse<sup>*</sup>:</label> <input type="text" id="username" name="webinterface_username" size="30" /></p>
+<p><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="webinterface_password" size="30" /></p>
 <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
 </form>
 <p><sup>*</sup> Sie können sich hier mit Ihrem System-Benutzernamen, Ihrer E-Mail-Adresse oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
