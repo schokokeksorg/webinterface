@@ -242,7 +242,9 @@ function setup_session($role, $useridentity)
     $info = get_subuser_info($useridentity);
     $_SESSION['userinfo'] = $info;
     $_SESSION['subuser'] = $useridentity;
-    $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_SUBUSER;
+    $customer = get_customer_info($_SESSION['userinfo']['username']);
+    $_SESSION['customerinfo'] = $customer;
+    $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_CUSTOMER | ROLE_SUBUSER;
     $_SESSION['restrict_modules'] = explode(',', $info['modules']);
     logger(LOG_INFO, "session/start", "login", "logged in user »{$info['username']}«");
   }

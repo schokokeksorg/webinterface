@@ -25,7 +25,7 @@ if (isset($_GET['subuser'])) {
 // Username davor entfernen
 $subuser['username'] = str_replace($_SESSION['userinfo']['username'].'_', '', $subuser['username']);
 
-output('Ein zusätzlicher Admin-Zugang darf die hier bestimmten Module dieses Webinterfaces mit den selben Möglichkeiten wie Sie selbst benutzen. Erlauben sie den Zugriff nur vertrauenswürdigen Dritten!');
+output('<p>Ein zusätzlicher Admin-Zugang darf die hier bestimmten Module dieses Webinterfaces mit den selben Möglichkeiten wie Sie selbst benutzen. Erlauben sie den Zugriff nur vertrauenswürdigen Dritten!</p>');
 
 
 $form = '<table>
@@ -36,7 +36,7 @@ foreach ($modinfo as $key => $desc) {
   $checked = in_array($key, $subuser['modules']) ? 'checked="checked "' : '';
   $form .= '<input type="checkbox" name="modules[]" id="'.$key.'" value="'.$key.'" '.$checked.'/> <label for="'.$key.'">'.$desc.'</label><br />';
 }
-$form .= '</td></tr>
+$form .= '<br /><em>(Nicht alle Berechtigungen haben alleinstehend eine Wirkung. Eventuell müssen Sie mehrere Berechtigungen erlauben um einen Effekt zu erhalten.)</em></td></tr>
 <tr><td colspan="2"><input type="submit" value="Speichern" /></td></tr>
 
 </table>';

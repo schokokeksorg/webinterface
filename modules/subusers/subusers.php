@@ -1,5 +1,4 @@
 <?php
-require_role(ROLE_SYSTEMUSER);
 require_once('inc/icons.php');
 
 include("subuser.php");
