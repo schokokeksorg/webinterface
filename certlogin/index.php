@@ -81,7 +81,9 @@ elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
 }
 else
 {
-  if (isset($_SERVER['REDIRECT_SSL_CLIENT_CERT']) && $_SERVER['REDIRECT_SSL_CLIENT_S_DN'] != '' && $_SERVER['REDIRECT_SSL_CLIENT_I_DN'] != '') {
+  if (isset($_SERVER['REDIRECT_SSL_CLIENT_CERT']) && 
+      isset($_SERVER['REDIRECT_SSL_CLIENT_S_DN']) && $_SERVER['REDIRECT_SSL_CLIENT_S_DN'] != '' && 
+      isset($_SERVER['REDIRECT_SSL_CLIENT_I_DN']) && $_SERVER['REDIRECT_SSL_CLIENT_I_DN'] != '') {
     $ret = get_logins_by_cert($_SERVER['REDIRECT_SSL_CLIENT_CERT']);
     if ($ret === NULL) {
       system_failure('Ihr Browser hat ein Client-Zertifikat gesendet, dieses ist aber noch nicht für den Zugang hinterlegt. Gehen Sie bitte zurück und melden Sie sich bitte per Benutzername und Passwort an.');
@@ -118,7 +120,9 @@ else
     }
     output('</ul>');
   } else {
-    system_failure('Ihr Browser hat kein Client-Zertifikat gesendet.');
+    title('Kein Client-Zertifikat');
+    output('<p>Ihr Browser hat kein Client-Zertifikat gesendet. Eventuell müssen Sie in den Einstellungen des Browsers diese Funktion einschalten.</p>');
+    output('<p>Bitte verwenden Sie <a href="/">die reguläre Anmeldung mit Benutzername und Passwort</a>.</p>');
   }
 }
 
