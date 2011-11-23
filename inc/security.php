@@ -5,6 +5,11 @@ require_once('inc/error.php');
 
 function strong_password($password)
 {
+  if ($password == '' || strlen($password) < 4) {
+    DEBUG("Passwort zu kurz!");
+    return "Passwort ist zu kurz!";
+  }
+
   if (! function_exists("crack_opendict"))
   {
     DEBUG("cracklib not available!");
