@@ -88,9 +88,18 @@ function list_repos()
   foreach ($lines as $line) {
     DEBUG("LINE: ".$line);
     $m = array();
-    if (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
+    if (preg_match('/^(\S+) "[^"]+" = "([^"]+)"$/', $line, $m) != 0) {
+      if (!array_key_exists($m[1], $repos)) {
+        $repos[$m[1]] = array('users' => NULL, 'description' => '');
+      }
+      DEBUG("found description: {$m[1]} = \"{$m[2]}\"");
+      $repos[$m[1]]['description'] = $m[2];
+    } elseif (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
+      if (!array_key_exists($m[1], $repos)) {
+        $repos[$m[1]] = array('users' => NULL, 'description' => '');
+      }
       if ($current_repo) {
-        $repos[$current_repo] = $current_repo_users;
+        $repos[$current_repo]['users'] = $current_repo_users;
       }
       DEBUG("found repo ".$m[1]);
       $current_repo = chop($m[1]);
@@ -101,7 +110,7 @@ function list_repos()
     }
   }
   if ($current_repo) {
-    $repos[$current_repo] = $current_repo_users;
+    $repos[$current_repo]['users'] = $current_repo_users;
   }
   DEBUG($repos);
   return $repos;
@@ -241,12 +250,17 @@ function remove_repo_from_array($data, $repo) {
   DEBUG("Request to remove repo »{$repo}«...");
   $inside = false;
   $outdata = array();
+  $blank = true;
   foreach ($data as $line) {
+    if ($blank && chop($line) == '') {
+      continue;
+    }
+    $blank = (chop($line) == '');
     $m = array();
     if (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
       $inside = ($m[1] == $repo);
     }
-    if (! $inside) {
+    if (! $inside && ! preg_match('/^'.$repo.'\s.*/', $line)) {
       $outdata[] = $line;
     }
   }
@@ -293,7 +307,7 @@ function delete_repo($repo)
   git_wrapper('push');
 }
 
-function save_repo($repo, $permissions) 
+function save_repo($repo, $permissions, $description) 
 {
   if (!validate_name($repo)) {
     system_failure("Der gewählte name entspricht nicht den Konventionen!");
@@ -318,6 +332,10 @@ function save_repo($repo, $permissions)
   }
 
   $data[] = "\n";
+  if ($description) {
+    $realname = $_SESSION['userinfo']['name'];
+    $data[] = "{$repo} \"{$realname}\" = \"{$description}\"\n";
+  }
   $data[] = 'repo '.$repo."\n";
   foreach ($permissions as $user => $perm) {
     $data[] = '  '.$perm.' = '.$user."\n";

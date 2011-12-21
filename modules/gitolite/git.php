@@ -18,10 +18,11 @@ if (count($repos) == 0) {
   output("<h3>Ihre GIT-Repositories</h3>"); 
 }
 
-foreach ($repos as $repo => $access) {
+foreach ($repos as $repo => $settings) {
+  $description = $settings['description'] ? '<br /><em>"'.$settings['description'].'"</em>' : '';
   $url = get_git_url($repo);
-  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."<br />{$url}</p><ul>");
-  foreach ($access as $user => $rights) {
+  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />{$url}</p><ul>");
+  foreach ($settings['users'] as $user => $rights) {
     $grant = '';
     switch ($rights) {
       case 'R': $grant = 'Lesezugriff';
