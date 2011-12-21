@@ -169,9 +169,18 @@ function newkey($pubkey, $handle)
     system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich, Binderstrich und Punkt benutzen.");
   }
 
-  // FIXME: Muss man den SSH-Key auf Plausibilität prüfen? Aus Sicherheitsgründen vermutlich nicht.
   $keyfile = $key_dir.'/'.$handle.'.pub';
   file_put_contents($keyfile, $pubkey);
+  
+  $proc = popen("/usr/bin/ssh-keygen -l -f '{$keyfile}'", 'r');
+  $output = fread($proc, 512);
+  pclose($proc);
+  if (preg_match('/.* is not a public key file.*/', $output)) {
+    unlink($keyfile);
+    system_failure('Der angegebene SSH-Key scheint ungültig zu sein.');
+  }
+  
+
   git_wrapper('add '.$keyfile);
 
   $userconfig = $config_dir . '/' . $username . '.conf';
