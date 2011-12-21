@@ -27,7 +27,7 @@ foreach ($repos as $repo => $settings) {
   if ($public) {
     $public_url = 'http://git.schokokeks.org/'.$repo.'.git';
     $git_url = 'git://git.schokokeks.org/'.$repo.'.git';
-    $public_string = '(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a> und '.$git_url.')';
+    $public_string = '<br />(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a> und '.$git_url.')';
   }
   output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />push-Adresse: {$url} {$public_string}</p><ul>");
   foreach ($settings['users'] as $user => $rights) {
