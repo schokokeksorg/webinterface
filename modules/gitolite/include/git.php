@@ -9,6 +9,7 @@ DEBUG("gitolite-data_dir: ".$data_dir);
 $git_wrapper = $data_dir . '/git-wrapper.sh';
 
 
+
 function check_env() 
 {
   global $git_wrapper, $data_dir, $config_file, $config_dir, $key_dir;
@@ -76,15 +77,16 @@ function list_repos()
   $current_repo = NULL;
   $current_repo_users = array();
   foreach ($lines as $line) {
+    DEBUG("LINE: ".$line);
     $m = array();
-    if (preg_match('_^[ \t]*repo ([^]]+)_', $line, $m) != 0) {
+    if (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
       if ($current_repo) {
         $repos[$current_repo] = $current_repo_users;
       }
       DEBUG("found repo ".$m[1]);
       $current_repo = chop($m[1]);
       $current_repo_users = array();
-    } else if (preg_match('/^\s*(R|RW|RW+)\s*=\s*([[:alnum:]][[:alnum:]._-]*)\s*/', $line, $m) != 0) {
+    } else if (preg_match('/^\s*(R|RW|RW\+)\s*=\s*([[:alnum:]][[:alnum:]._-]*)\s*$/', $line, $m) != 0) {
       DEBUG("found access rule: ".$m[1]." for ".$m[2]);
       $current_repo_users[chop($m[2])] = chop($m[1]);
     }
@@ -224,3 +226,97 @@ function delete_key($handle)
 
 
 }
+
+
+function remove_repo_from_array($data, $repo) {
+  DEBUG("Request to remove repo »{$repo}«...");
+  $inside = false;
+  $outdata = array();
+  foreach ($data as $line) {
+    $m = array();
+    if (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
+      $inside = ($m[1] == $repo);
+    }
+    if (! $inside) {
+      $outdata[] = $line;
+    }
+  }
+  DEBUG($outdata);
+  return $outdata;
+}
+
+
+function repo_exists_globally($repo) 
+{
+  global $config_dir;
+  $files = scandir($config_dir);
+  foreach ($files as $f) {
+    if (is_file(realpath($config_dir.'/'.$f))) {
+      $data = file(realpath($config_dir.'/'.$f));
+      foreach ($data as $line) {
+        if (preg_match('/^\s*repo '.$repo.'\s*$/', $line) != 0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+
+function delete_repo($repo) 
+{
+  $repos = list_repos();
+  if (!array_key_exists($repo, $repos)) {
+    system_failure("Ein solches Repository existiert nicht!");
+  }
+  
+  global $config_dir;
+  $username = $_SESSION['userinfo']['username'];
+  $userconfig = $config_dir . '/' . $username . '.conf';
+  DEBUG("using config file ".$userconfig);
+  $data = file($userconfig);
+  $data = remove_repo_from_array($data, $repo);
+  file_put_contents($userconfig, implode('', $data));
+  git_wrapper('add '.$userconfig);
+  
+  git_wrapper('commit --allow-empty -m "deleted repo '.$repo.'"');
+  git_wrapper('push');
+}
+
+function save_repo($repo, $permissions) 
+{
+  if (!validate_name($repo)) {
+    system_failure("Der gewählte name entspricht nicht den Konventionen!");
+  }
+  if (!array_key_exists($repo, list_repos()) && repo_exists_globally($repo)) {
+    system_failure("Der gewählte Name existiert bereits auf diesem Server. Bitte wählen Sie einen spezifischeren Namen.");
+  } 
+  global $config_dir;
+  $username = $_SESSION['userinfo']['username'];
+  $userconfig = $config_dir . '/' . $username . '.conf';
+  DEBUG("using config file ".$userconfig);
+  $data = array();
+  if (! is_file($userconfig)) {
+    DEBUG("user-config does not exist, creating new one");
+  } else {
+    $data = file($userconfig);
+  }
+
+  $repos = list_repos();
+  if (array_key_exists($repo, $repos)) {
+    $data = remove_repo_from_array($data, $repo);
+  }
+
+  $data[] = "\n";
+  $data[] = 'repo '.$repo."\n";
+  foreach ($permissions as $user => $perm) {
+    $data[] = '  '.$perm.' = '.$user."\n";
+  }
+  file_put_contents($userconfig, implode('', $data));
+  git_wrapper('add '.$userconfig);
+  
+  git_wrapper('commit --allow-empty -m "written repo '.$repo.'"');
+  git_wrapper('push');
+}
+

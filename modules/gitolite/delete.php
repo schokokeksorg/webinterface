@@ -19,7 +19,7 @@ if (isset($_GET['repo'])) {
   }
   elseif ($sure === true)
   {
-    delete_repository($_GET['repo']);
+    delete_repo($_GET['repo']);
     if (! $debugmode)
       header('Location: git');
     die();

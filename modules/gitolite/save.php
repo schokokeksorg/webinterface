@@ -4,6 +4,7 @@ require_role(ROLE_SYSTEMUSER);
 include('git.php');
 
 if ($_GET['action'] == 'newuser') {
+  check_form_token('git_newkey');
   $handle = $_POST['handle'];
   if ($handle == '') {
     system_failure("Leere Benutzerbezeichnung!");
@@ -17,6 +18,7 @@ if ($_GET['action'] == 'newuser') {
     header('Location: git');
   die();
 } elseif ($_GET['action'] == 'newkey') {
+  check_form_token('git_newkey');
   $handle = $_POST['handle'];
   if ($handle == '') {
     system_failure("Leere Benutzerbezeichnung!");
@@ -25,6 +27,27 @@ if ($_GET['action'] == 'newuser') {
   if (! $debugmode)
     header('Location: git');
   die();
+} elseif ($_GET['action'] == 'newrepo' || $_GET['action'] == 'editrepo') {
+  check_form_token('git_edit');
+  $permissions = array();
+  $users = list_users();
+  foreach ($users as $u) {  
+    if (isset($_POST[$u])) {
+      switch ($_POST[$u]) {
+        case 'rwplus': $permissions[$u] = 'RW+';
+          break;
+        case 'rw': $permissions[$u] = 'RW';
+          break;
+        case 'r': $permissions[$u] = 'R';
+          break;
+      }
+    }
+  }
+  save_repo($_POST['repo'], $permissions);
+  if (! $debugmode)
+    header('Location: git');
+  die();
+  
 }
 
 
