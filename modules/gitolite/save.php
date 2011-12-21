@@ -44,7 +44,7 @@ if ($_GET['action'] == 'newuser') {
       }
     }
   }
-  if (isset($_POST['gitweb']) && ($_POST['gitweb'] == 'r') {
+  if (isset($_POST['gitweb']) && ($_POST['gitweb'] == 'r')) {
     $permissions['gitweb'] = 'R';
     $permissions['daemon'] = 'R';
     $description = $_POST['description'];
