@@ -21,8 +21,17 @@ if (count($repos) == 0) {
 foreach ($repos as $repo => $settings) {
   $description = $settings['description'] ? '<br /><em>"'.$settings['description'].'"</em>' : '';
   $url = get_git_url($repo);
-  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />{$url}</p><ul>");
+  $public = isset($settings['users']['gitweb']) && $settings['users']['gitweb'] == 'R';
+  $public_string = '';
+  if ($public) {
+    $public_url = 'http://git.schokokeks.org/'.$repo.'.git';
+    $public_string = '(Öffentlich abrufbar über <a href="'.$public_url.'">'.$public_url.'</a>)';
+  }
+  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />{$url} {$public_string}</p><ul>");
   foreach ($settings['users'] as $user => $rights) {
+    if ($user == 'gitweb') {
+      continue;
+    }
     $grant = '';
     switch ($rights) {
       case 'R': $grant = 'Lesezugriff';

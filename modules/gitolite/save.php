@@ -45,8 +45,10 @@ if ($_GET['action'] == 'newuser') {
   }
   if ($_POST['gitweb'] == 'r') {
     $permissions['gitweb'] = 'R';
+    $description = $_POST['description'];
+  } else {
+    $description = NULL;
   }
-  $description = $_POST['description'];
   save_repo($_POST['repo'], $permissions, $description);
   if (! $debugmode)
     header('Location: git');

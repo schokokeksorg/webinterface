@@ -11,6 +11,15 @@ $users = list_users();
 $action = '';
 $form = '';
 
+html_header("<script type=\"text/javascript\">
+  function showDescription( ) {
+    var do_it = (document.getElementById('gitweb').checked == false);
+    var inputfield = document.getElementById('description');
+    inputfield.disabled = do_it;
+    }
+</script>
+");
+
 if (isset($_GET['repo']) && isset($repos[$_GET['repo']])) {
   $action = 'editrepo';
   title("Zugriff auf GIT-Repository ändern");
@@ -43,8 +52,9 @@ foreach ($users as $user) {
 }
 $checked = (isset($_GET['repo']) && isset($repos[$_GET['repo']]) && isset($repos[$_GET['repo']]['users']['gitweb']) && $repos[$_GET['repo']]['users']['gitweb'] == 'R') ? ' checked="checked"' : '';
 $description = (isset($_GET['repo']) && isset($repos[$_GET['repo']])) ? $repos[$_GET['repo']]['description'] : '';
-$form .= '<p><input type="checkbox" name="gitweb" id="gitweb" value="r"'.$checked.' /> <label for="gitweb">Öffentlicher Lesezugriff via gitweb</label><br />
-<label for="description">Beschreibung des Repository:</label> <input type="text" name="description" id="description" value="'.$description.'" /></p>';
+$disabled = $checked ? '' : ' disabled="disabled"';
+$form .= '<p><input type="checkbox" name="gitweb" id="gitweb" value="r"'.$checked.' onclick="showDescription()" /> <label for="gitweb">Öffentlicher Lesezugriff via gitweb</label><br />
+<label for="description">Beschreibung des Repository:</label> <input type="text" name="description" id="description" value="'.$description.'"'.$disabled.' /></p>';
 $form .= '</td></tr></table>';
 $form .= '<p><input type="submit" value="Speichern" /></p>';
 
