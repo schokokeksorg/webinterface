@@ -35,6 +35,14 @@ function validate_name($name) {
   return (preg_match('/^[[:alnum:]][[:alnum:]._-]*$/', $name));
 }
 
+function get_git_url($repo) {
+  $remote = git_wrapper('remote --verbose');
+  DEBUG('gitolite-admin repo: '.$remote[0]);
+  $url = preg_replace('#^.*\s+(\S+):gitolite-admin.*#', '$1', $remote[0]);
+  DEBUG('URL: '.$url);
+  return $url.':'.$repo;
+}
+
 
 function git_wrapper($commandline)
 {
@@ -51,6 +59,7 @@ function git_wrapper($commandline)
     system_failure('Interner Fehler!');
     // FIXME: Hier sollte auf jeden Fall ein Logging angeworfen werden!
   }
+  return $output;
 }
 
 function refresh_gitolite() 

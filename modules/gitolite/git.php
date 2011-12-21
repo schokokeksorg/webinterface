@@ -19,7 +19,8 @@ if (count($repos) == 0) {
 }
 
 foreach ($repos as $repo => $access) {
-  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."</p><ul>");
+  $url = get_git_url($repo);
+  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."<br />{$url}</p><ul>");
   foreach ($access as $user => $rights) {
     $grant = '';
     switch ($rights) {
