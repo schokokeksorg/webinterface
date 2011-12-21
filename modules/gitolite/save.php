@@ -1,6 +1,7 @@
 <?php
 require_role(ROLE_SYSTEMUSER);
 
+$section = 'git_git';
 include('git.php');
 
 if ($_GET['action'] == 'newuser') {
@@ -45,6 +46,7 @@ if ($_GET['action'] == 'newuser') {
   }
   if ($_POST['gitweb'] == 'r') {
     $permissions['gitweb'] = 'R';
+    $permissions['daemon'] = 'R';
     $description = $_POST['description'];
   } else {
     $description = NULL;

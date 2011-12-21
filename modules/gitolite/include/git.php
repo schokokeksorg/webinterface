@@ -344,7 +344,7 @@ function save_repo($repo, $permissions, $description)
 
   $data[] = "\n";
   if ($description) {
-    $description = preg_replace('/[\'"\r\n/', '', $description);
+    $description = preg_replace('/\[\'"\r\n/', '', $description);
     $realname = $_SESSION['userinfo']['name'];
     $data[] = "{$repo} \"{$realname}\" = \"{$description}\"\n";
   }

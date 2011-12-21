@@ -4,6 +4,7 @@ require_once('inc/icons.php');
 include('git.php');
 require_role(ROLE_SYSTEMUSER);
 
+$section = 'git_git';
 title("GIT-Zugänge");
 
 output("<p>Das verteilte Versionskontrollsystem <a href=\"http://www.git-scm.org\">GIT</a> ist ein populäres Werkzeug um Programmcode zu verwalten. Mit dieser Oberfläche können Sie GIT-repositories erstellen und den Zugriff für mehrere Benutzer festlegen.</p>");
@@ -25,11 +26,12 @@ foreach ($repos as $repo => $settings) {
   $public_string = '';
   if ($public) {
     $public_url = 'http://git.schokokeks.org/'.$repo.'.git';
-    $public_string = '(Öffentlich abrufbar über <a href="'.$public_url.'">'.$public_url.'</a>)';
+    $git_url = 'git://git.schokokeks.org/'.$repo.'.git';
+    $public_string = '(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a> und '.$git_url.')';
   }
   output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />push-Adresse: {$url} {$public_string}</p><ul>");
   foreach ($settings['users'] as $user => $rights) {
-    if ($user == 'gitweb') {
+    if ($user == 'gitweb' || $user == 'daemon') {
       continue;
     }
     $grant = '';
