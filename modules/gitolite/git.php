@@ -27,7 +27,7 @@ foreach ($repos as $repo => $settings) {
     $public_url = 'http://git.schokokeks.org/'.$repo.'.git';
     $public_string = '(Öffentlich abrufbar über <a href="'.$public_url.'">'.$public_url.'</a>)';
   }
-  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />{$url} {$public_string}</p><ul>");
+  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />push-Adresse: {$url} {$public_string}</p><ul>");
   foreach ($settings['users'] as $user => $rights) {
     if ($user == 'gitweb') {
       continue;

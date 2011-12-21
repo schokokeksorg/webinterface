@@ -112,6 +112,7 @@ function list_repos()
   if ($current_repo) {
     $repos[$current_repo]['users'] = $current_repo_users;
   }
+  ksort($repos);
   DEBUG($repos);
   return $repos;
 }
@@ -139,6 +140,7 @@ function list_users() {
       break;
     }
   }
+  sort($users);
   DEBUG($users);
   return $users;
 }
@@ -333,6 +335,7 @@ function save_repo($repo, $permissions, $description)
 
   $data[] = "\n";
   if ($description) {
+    $description = preg_replace('/[\'"\r\n/', '', $description);
     $realname = $_SESSION['userinfo']['name'];
     $data[] = "{$repo} \"{$realname}\" = \"{$description}\"\n";
   }
