@@ -18,10 +18,10 @@ $form = '<h4>Anwendung auswählen</h4>
 <div style="margin-left: 2em;">
   <p><input checked="checked" type="radio" name="application" id="application_mediawiki" value="mediawiki" /> <label for="application_mediawiki">MediaWiki</label></p>
   <p style="margin-left: 2em;">MediaWiki ist eine Wiki-Software, mit der Seiteninhalte von Besuchern geändert werden können. MediaWiki ist u.A. die Grundlage der Online-Enzyklopädie »Wikipedia«.</p>
-  <p><input type="radio" name="application" id="application_drupal6" value="drupal6" /> <label for="application_drupal6">Drupal (Version 6.x)</label></p>
-  <p style="margin-left: 2em;">Drupal ist ein verbreitetes Content-Management-System. Als solches bietet es die Möglichkeit, Seiten-Inhalte im Web-Browser zu ändern, einzelne Seiten nur angemeldeten Benutzern freizugeben oder z.B. das kommentieren einzelner Seiten.</p>
   <p><input type="radio" name="application" id="application_drupal7" value="drupal7" /> <label for="application_drupal7">Drupal (Version 7.x)</label></p>
   <p style="margin-left: 2em;">Drupal ist ein verbreitetes Content-Management-System. Als solches bietet es die Möglichkeit, Seiten-Inhalte im Web-Browser zu ändern, einzelne Seiten nur angemeldeten Benutzern freizugeben oder z.B. das kommentieren einzelner Seiten.</p>
+  <p><input type="radio" name="application" id="application_owncloud" value="owncloud" /> <label for="application_owncloud">OwnCloud</label></p>
+  <p style="margin-left: 2em;">Mit OwnCloud können Sie Ihre Dateien, Adressbücher oder Kalenderdaten zentral ablegen und von überall nutzen.</p>
 </div>
 ';
 
