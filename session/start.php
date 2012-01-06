@@ -29,7 +29,7 @@ if (isset($_POST['webinterface_username']) && isset($_POST['webinterface_passwor
   if ($role === NULL)
   {
     $_SESSION['role'] = ROLE_ANONYMOUS;
-    logger(LOG_WARNING, "session/start", "login", "wrong user data (username: »{$_POST['username']}«)");
+    logger(LOG_WARNING, "session/start", "login", "wrong user data (username: »{$_POST['webinterface_username']}«)");
     login_screen('Ihre Anmeldung konnte nicht durchgeführt werden. Vermutlich haben Sie falsche Zugangsdaten eingegeben.');
   }
   else
