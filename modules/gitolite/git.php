@@ -8,7 +8,7 @@ $section = 'git_git';
 title("GIT-Zugänge");
 
 output("<p>Das verteilte Versionskontrollsystem <a href=\"http://www.git-scm.org\">GIT</a> ist ein populäres Werkzeug um Programmcode zu verwalten. Mit dieser Oberfläche können Sie GIT-repositories erstellen und den Zugriff für mehrere Benutzer festlegen.</p>");
-output("<p>Wir verwenden das beliebte System »gitolite« um diese Funktionalität anzubieten. Gitolite erlaubt bei Bedarf weitaus feingliedrigere Kontrolle als dieser Webinterface. Fragen Sie bitte den Support, wenn Sie Interesse daran haben zusätzliche Berechtigungen einzurichten.</p>");
+output("<p>Wir verwenden das beliebte System »gitolite« um diese Funktionalität anzubieten. Gitolite erlaubt bei Bedarf weitaus feingliedrigere Kontrolle als dieses Webinterface. Fragen Sie bitte den Support, wenn Sie Interesse daran haben zusätzliche Berechtigungen einzurichten.</p>");
 
 $repos = list_repos();
 $users = list_users();
