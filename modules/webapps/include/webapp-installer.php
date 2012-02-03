@@ -38,6 +38,10 @@ function directory_in_use($directory)
 function upgradeable($appname, $version)
 {
   DEBUG("Is {$appname}-{$version} upgradeable?");
+  if ($appname == 'Drupal6') 
+  {
+    return 'drupal6';
+  }
   if ($appname == 'Drupal')
   {
     DEBUG("found Drupal!");
