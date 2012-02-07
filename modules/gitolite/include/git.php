@@ -188,6 +188,7 @@ function newkey($pubkey, $handle)
   if (! is_file($userconfig)) {
     DEBUG("user-config does not exist, creating new one");
     file_put_contents($userconfig, '# user '.$handle."\n");
+    set_user_include();
   } elseif (in_array($handle, list_users())) {
     # user ist schon eingetragen, nur neuer Key
   } else {
@@ -318,6 +319,34 @@ function delete_repo($repo)
   git_wrapper('push');
 }
 
+
+function set_user_include()
+{
+  global $config_file, $userconfig;
+  $username = $_SESSION['userinfo']['username'];
+  if (!file_exists($userconfig))
+  {
+    // Erzeuge eine leere Konfiguration damit das Include auf jeden Fall funktionieren kann
+    file_put_contents($userconfig, '');
+    git_wrapper('add '.$userconfig);
+  }
+  $found = false;
+  $data = file($config_file);
+  foreach ($data as $line) {
+    if (preg_match('#webinterface/'.$username.'\.conf#', $line)) {
+      $found = true;
+    }
+  }
+  if (!$found) {
+    $includeline = 'include  "webinterface/'.$username.'.conf"';
+    $data = chop(file_get_contents($config_file));
+    $data = $data."\n".$includeline."\n";
+    file_put_contents($config_file, $data);
+    git_wrapper('add '.$config_file);
+  }
+}
+
+
 function save_repo($repo, $permissions, $description) 
 {
   if (!validate_name($repo)) {
@@ -333,6 +362,7 @@ function save_repo($repo, $permissions, $description)
   $data = array();
   if (! is_file($userconfig)) {
     DEBUG("user-config does not exist, creating new one");
+    set_user_include();
   } else {
     $data = file($userconfig);
   }
