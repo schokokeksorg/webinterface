@@ -9,11 +9,11 @@ require_once('class/domain.php');
 function get_jabber_accounts() {
   require_role(ROLE_CUSTOMER);
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT id, created, local, domain FROM jabber.accounts WHERE customerno='$customerno' AND `delete`=0;");
+  $result = db_query("SELECT id, `create`, created, lastactivity, local, domain FROM jabber.accounts WHERE customerno='$customerno' AND `delete`=0;");
   $accounts = array();
   if (@mysql_num_rows($result) > 0)
-    while ($acc = @mysql_fetch_object($result))
-      array_push($accounts, array('id'=> $acc->id, 'created' => $acc->created, 'local' => $acc->local, 'domain' => $acc->domain));
+    while ($acc = @mysql_fetch_assoc($result))
+      array_push($accounts, $acc);
   return $accounts;
 }
 

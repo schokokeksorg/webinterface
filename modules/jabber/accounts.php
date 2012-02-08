@@ -18,6 +18,18 @@ output("<table>");
 
 foreach ($jabberaccounts as $acc)
 {
+  $not_ready = '';
+  if ($acc['create'] == 1) {
+    $not_ready = " ".icon_warning('Dieser Account wird in Kürze auf dem Server eingerichtet.');
+  }
+  $lastactivity = $acc['lastactivity'];
+  // Innerhalb der letzten Woche verwendet
+  if ($lastactivity > strftime('%Y-%m-%d', time()-7*24*60*60)) {
+    $lastactivity = 'Kürzlich';
+  }
+  if (! $lastactivity) {
+    $lastactivity = 'Bisher nie verwendet';
+  }
   $local = filter_input_general($acc['local']);
   $domain = new Domain( (int) $acc['domain']  );
   if ($domain->id == NULL)
@@ -25,7 +37,7 @@ foreach ($jabberaccounts as $acc)
     $domain = new Domain();
     $domain->fqdn = config('masterdomain');
   }
-  output("<tr><td>{$local}@{$domain->fqdn}</td><td>".internal_link('chpass', icon_pwchange('Passwort ändern'), 'account='.$acc['id'])."&#160;&#160;&#160;".internal_link('save', icon_delete("»{$local}@{$domain->fqdn}« löschen"), 'action=delete&account='.$acc['id']).'</td></tr>');
+  output("<tr><td>{$local}@{$domain->fqdn}{$not_ready}<br /><span style=\"font-size: 80%; font-style: italic;\">Letzte Nutzung: {$lastactivity}</span></td><td>".internal_link('chpass', icon_pwchange('Passwort ändern'), 'account='.$acc['id'])."&#160;&#160;&#160;".internal_link('save', icon_delete("»{$local}@{$domain->fqdn}« löschen"), 'action=delete&account='.$acc['id']).'</td></tr>');
 }
 
 output('</table>');
