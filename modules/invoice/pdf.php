@@ -10,8 +10,9 @@ if (! $pdfdata)
 }
 else
 {
+  $filename = sprintf('rechnung%05s.pdf', $_GET['id']);
 	header('Content-type: application/pdf');
-	header('Content-disposition: attachment; filename=rechnung.pdf');
+	header('Content-disposition: attachment; filename='.$filename);
 	echo $pdfdata;
 	die();
 }
