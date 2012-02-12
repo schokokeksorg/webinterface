@@ -8,7 +8,7 @@ require_once('inc/security.php');
 function get_lists()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, status, listname, fqdn, admin FROM mail.v_mailman_lists WHERE owner={$uid};");
+  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner={$uid};");
   $ret = array();
   while ($list = mysql_fetch_assoc($result))
     $ret[] = $list;
@@ -21,7 +21,7 @@ function get_list($id)
 {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, status, listname, fqdn, admin FROM mail.v_mailman_lists WHERE owner={$uid} AND id={$id};");
+  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner={$uid} AND id={$id};");
   if (mysql_num_rows($result) < 1)
     system_failure('Die gewünschte Mailingliste konnte nicht gefunden werden');
   $list = mysql_fetch_assoc($result);

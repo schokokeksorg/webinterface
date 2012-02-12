@@ -15,9 +15,19 @@ $lists = get_lists();
 
 if (! empty($lists))
 {
-  output("<table>\n<tr><th>Listenname</th><th>Verwalter</th><th>Status</th><th>&nbsp;</th></tr>\n");
+  output("<table>\n<tr><th>Listenname</th><th>Verwalter</th><th>Status</th><th>Archivgröße</th><th>&nbsp;</th></tr>\n");
   foreach ($lists AS $list)
   {
+    $size = $list['archivesize'];
+    $sizestr = $size.' Bytes';
+    if (! $size) {
+      $sizestr = '<em>Kein Archiv</em>';
+    }
+    else {
+      $sizestr = sprintf('%.2f', $size/(1024*1024)).' MB';
+    }
+
+
     $style = '';
     $status = 'In Betrieb';
     if ($list['status'] == 'delete')
@@ -36,7 +46,7 @@ if (! empty($lists))
       $status = 'Fehler bei der Erstellung';
     }
 
-    output("<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$list['admin']}</td><td>{$status}</td>");
+    output("<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$list['admin']}</td><td>{$status}</td><td style=\"text-align: right;\">{$sizestr}</td>");
     if ($list['status'] == 'running')
       output("<td>".internal_link('save', "<img src=\"{$prefix}images/delete.png\" />", "action=delete&id={$list['id']}")."</td></tr>\n");
     else
