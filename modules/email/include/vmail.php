@@ -143,7 +143,11 @@ function save_vmail_account($account)
     // Erzeugt einen system_error() wenn ID ungültig
   }
   // Ab hier ist $id sicher, entweder NULL oder eine gültige ID des aktuellen users
-
+  
+  $newaccount = false;
+  if ($id === NULL) {
+    $newaccount = true;
+  }
   $account['local'] = filter_input_username($account['local']);
   if ($account['local'] == '')
   {
@@ -215,7 +219,7 @@ function save_vmail_account($account)
   }
   
   $free = config('vmail_basequota');
-  if ($id == NULL) {
+  if ($newaccount) {
     // Neues Postfach
     $free = get_max_mailboxquota($server, config('vmail_basequota'));
   } else {
@@ -242,10 +246,11 @@ function save_vmail_account($account)
   $account['spamexpire'] = (int) $account['spamexpire'];
 
   $query = '';
-  if ($id == NULL)
+  if ($newaccount)
   {
     $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota, quota_threshold) VALUES ";
     $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password}, {$account['quota']}, {$account['quota_threshold']});";
+    $id = mysql_insert_id();
   }
   else
   {
@@ -258,10 +263,8 @@ function save_vmail_account($account)
     $query .= "WHERE id={$id} LIMIT 1;";
   }
   db_query($query); 
-  if ($id)
+  if (! $newaccount)
     db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
-  else
-    $id = mysql_insert_id();
 
   if (count($account['forwards']) > 0)
   {
@@ -277,10 +280,33 @@ function save_vmail_account($account)
     }
     db_query($forward_query);
   }
-  if ($password != 'NULL')
+  if ($newaccount && $password != 'NULL')
   {
+    $emailaddr = $account['local'].'@'.$domainname;
+    $webmailurl = config('webmail_url');
+    $server = get_server_by_id($account['server']);
+    $message = 'Ihr neues E-Mail-Postfach '.$emailaddr.' ist einsatzbereit!
+
+Wenn Sie diese Nachricht sehen, haben Sie das Postfach erfolgreich 
+abgerufen. Sie können diese Nachricht nach Kenntnisnahme löschen.
+
+Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
+
+- Für unterwegs: Webmail
+  Rufen Sie dazu einfach die Seite '.$webmailurl.' auf und 
+  geben Sie Ihre E-Mail-Adresse und das Passwort ein.
+
+- Mit Ihrem Computer oder Smartphone: IMAP oder POP3
+  Tragen Sie bitte folgende Zugangsdaten in Ihrem Programm ein:
+    Server-Name: '.$server.'
+    Benutzername: '.$emailaddr.'
+  (Achten Sie bitte darauf, dass die Verschlüsselung mit SSL oder TLS 
+  aktiviert ist.)
+';
+    # send welcome message
+    mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "X-schokokeks-org-message: welcome\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
     # notify the vmail subsystem of this new account
-    mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
+    #mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
   }
 
   // Update Mail-Quota-Cache
