@@ -284,7 +284,7 @@ function save_vmail_account($account)
   {
     $emailaddr = $account['local'].'@'.$domainname;
     $webmailurl = config('webmail_url');
-    $server = get_server_by_id($account['server']);
+    $servername = get_server_by_id($server);
     $message = 'Ihr neues E-Mail-Postfach '.$emailaddr.' ist einsatzbereit!
 
 Wenn Sie diese Nachricht sehen, haben Sie das Postfach erfolgreich 
@@ -298,7 +298,7 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
 
 - Mit Ihrem Computer oder Smartphone: IMAP oder POP3
   Tragen Sie bitte folgende Zugangsdaten in Ihrem Programm ein:
-    Server-Name: '.$server.'
+    Server-Name: '.$servername.'
     Benutzername: '.$emailaddr.'
   (Achten Sie bitte darauf, dass die Verschlüsselung mit SSL oder TLS 
   aktiviert ist.)
