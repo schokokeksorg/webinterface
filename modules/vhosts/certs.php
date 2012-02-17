@@ -18,7 +18,14 @@ if (count($certs) > 0)
   output("<table><tr><th>Name/Details</th><th>CommonName</th><th>Gültig ab</th><th>Gültig bis</th><th>&#160;</th></tr>");
   foreach ($certs as $c)
   {
-    output("<tr><td>".internal_link('showcert', $c['subject'], "mode=cert&id={$c['id']}")."</td><td>{$c['cn']}</td><td>{$c['valid_from']}</td><td>{$c['valid_until']}</td><td>".internal_link('refreshcert', '<img src="'.$prefix.'images/refresh.png" title="Neue Version des Zertifikats einspielen" />', 'id='.$c['id'])." &#160; ".internal_link('savecert', '<img src="'.$prefix.'images/delete.png" />', 'action=delete&id='.$c['id'])."</td></tr>");
+    $style="";
+    if ($c['valid_until'] <= date('Y-m-d')) {
+      $style=' style="background-color: #f88;" ';
+    }
+    elseif ($c['valid_until'] <= date('Y-m-d', time()+(30*24*3600))) {
+      $style=' style="background-color: #ff8;" ';
+    }
+    output("<tr><td{$style}>".internal_link('showcert', $c['subject'], "mode=cert&id={$c['id']}")."</td><td{$style}>{$c['cn']}</td><td{$style}>{$c['valid_from']}</td><td{$style}>{$c['valid_until']}</td><td>".internal_link('refreshcert', '<img src="'.$prefix.'images/refresh.png" title="Neue Version des Zertifikats einspielen" />', 'id='.$c['id'])." &#160; ".internal_link('savecert', '<img src="'.$prefix.'images/delete.png" />', 'action=delete&id='.$c['id'])."</td></tr>");
   } 
   output("</table>");
 }
