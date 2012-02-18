@@ -250,6 +250,7 @@ function save_vmail_account($account)
   {
     $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota, quota_threshold) VALUES ";
     $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password}, {$account['quota']}, {$account['quota_threshold']});";
+    db_query($query); 
     $id = mysql_insert_id();
   }
   else
@@ -261,8 +262,8 @@ function save_vmail_account($account)
     $query = "UPDATE mail.vmail_accounts SET local='{$account['local']}', domain={$account['domain']}{$password}, ";
     $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']}, quota={$account['quota']}, quota_threshold={$account['quota_threshold']} ";
     $query .= "WHERE id={$id} LIMIT 1;";
+    db_query($query); 
   }
-  db_query($query); 
   if (! $newaccount)
     db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
 
