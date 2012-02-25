@@ -23,6 +23,7 @@ else {
 }
 
 
+$is_autoresponder = is_array($account['autoresponder']);
 $is_forward = (count($account['forwards']) > 0);
 $is_mailbox = ($account['password'] != NULL  ||  $id == 0);
 $numforwards = max(count($account['forwards']), 1);
@@ -70,6 +71,16 @@ output("<script type=\"text/javascript\">
     parent = document.getElementById('forward_config');
     parent.appendChild(DIV);
   }
+
+  function toggleDisplay(checkbox_id, item_id) 
+  {
+    if (document.getElementById(checkbox_id).checked == true) {
+      document.getElementById(item_id).style.display = 'block';
+    } else {
+      document.getElementById(item_id).style.display = 'none';
+    }
+  }
+
 </script>
 ");
 
@@ -85,27 +96,108 @@ if ($is_mailbox and ($account['password'] != ''))
 } 
 
 $form .= "
-    <p><input type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
-    <p style=\"margin-left: 2em;\" id=\"mailbox_options\">Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
+    <p><input onchange=\"toggleDisplay('mailbox', 'mailbox_options')\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
+    <div style=\"margin-left: 2em;".($is_mailbox ? '' : ' display: none;')."\" id=\"mailbox_options\">
+    <p>Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
 
-$form.= "<p style=\"margin-left: 2em;\" class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
+$form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 
 $quota = config('vmail_basequota');
 if ($is_mailbox and $account['quota']) {
   $quota = $account['quota'];
 }
 
-$form .= "<p style=\"margin-left: 2em;\" class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von ".config('vmail_basequota')." MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
+$form .= "<p class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von ".config('vmail_basequota')." MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
 
 $quota_notify = ($account['quota_threshold'] >= 0) ? ' checked="checked" ' : '';
 $quota_threshold = ($account['quota_threshold'] >= 0) ? $account['quota_threshold'] : '';
-$form .= "<p style=\"margin-left: 2em;\" class=\"quota_options\"><input type=\"checkbox\" id=\"quota_notify\" name=\"quota_notify\" value=\"1\" {$quota_notify} /><label for=\"quota_notify\">Benachrichtigung wenn weniger als</label> <input type=\"text\" name=\"quota_threshold\" id=\"quota_threshold\" value=\"{$quota_threshold}\" /> MB Speicherplatz zur Verfügung stehen.</p>";
+$form .= "<p class=\"quota_options\"><input type=\"checkbox\" id=\"quota_notify\" name=\"quota_notify\" value=\"1\" {$quota_notify} /><label for=\"quota_notify\">Benachrichtigung wenn weniger als</label> <input type=\"text\" name=\"quota_threshold\" id=\"quota_threshold\" value=\"{$quota_threshold}\" /> MB Speicherplatz zur Verfügung stehen.</p>";
+
+$form .= "</div>";
 
 
-$form .= "<p><input type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";
 
 
-$form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\">";
+$form .= "<p><input onchange=\"toggleDisplay('autoresponder', 'autoresponder_config')\" type=\"checkbox\" id=\"autoresponder\" name=\"autoresponder\" value=\"yes\" ".($is_autoresponder ? 'checked="checked" ' : '')." /><label for=\"autoresponder\">&#160;<strong>Automatische Antwort versenden</strong></label></p>";
+
+$form .= "<div style=\"margin-left: 2em;".($is_autoresponder ? '' : ' display: none;')."\" id=\"autoresponder_config\">";
+
+$ar = $account['autoresponder'];
+if (! $ar) {
+  $ar = empty_autoresponder_config();
+}
+
+if ($ar['valid_until'] != NULL && $ar['valid_until'] < date('Y-m-d')) {
+  // Daten sind Restbestand von einem früheren Einsatz des Autoresponders
+  $ar['valid_from'] = NULL;
+  $ar['valid_until'] = NULL;
+}
+$valid_from_now_checked = ($ar['valid_from'] <= date('Y-m-d H:i:s') || $ar['valid_from'] == NULL) ? ' checked="checked"' : '';
+$valid_from_future_checked = ($ar['valid_from'] > date('Y-m-d H:i:s')) ? ' checked="checked"' : '';
+$startdate = $ar['valid_from'];
+if (! $startdate) {
+  $startdate = date('Y-m-d', time() + 1*24*60*60);
+}
+$form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".
+  "<input type=\"radio\" name=\"ar_valid_from\" value=\"future\" id=\"ar_valid_from_future\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_future\">Erst ab dem </label>".
+  html_datepicker("ar_valid_from", strtotime($startdate))."</p>";
+
+$valid_until_infinity_checked = ($ar['valid_until'] == NULL) ? ' checked="checked"' : '';
+$valid_until_date_checked = ($ar['valid_until'] != NULL) ? ' checked="checked"' : '';
+$enddate = $ar['valid_until'];
+if (! $enddate) {
+  $enddate = date('Y-m-d', time() + 7*24*60*60);
+}
+$form .= "<h4>Deaktivierung</h4>";
+$form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id=\"ar_valid_until_infinity\"{$valid_until_infinity_checked} /> <label for=\"ar_valid_until_infinity\">Unbefristet</label><br />".
+  "<input type=\"radio\" name=\"ar_valid_until\" value=\"date\" id=\"ar_valid_until_date\"{$valid_until_date_checked} /> <label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
+  html_datepicker("ar_valid_until", strtotime($enddate))."</p>";
+
+
+$subject = $ar['subject'];
+if ($subject == NULL)
+  $subject = '';
+$ar_subject_default_checked = ($subject == NULL) ? ' checked="checked"' : '';
+$ar_subject_custom_checked = ($subject) ? ' checked="checked"' : '';
+$form .= "<h4>Betreffzeile der automatischen Antwort</h4>".
+  "<p><input type=\"radio\" name=\"ar_subject\" value=\"default\" id=\"ar_subject_default\"{$ar_subject_default_checked} /> ".
+  "<label for=\"ar_subject_default\">Automatisch (Re: <em>&lt;Betreff der Originalnachricht&gt;</em>)</label><br />".
+  "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked} /> ".
+  "<label for=\"ar_subject_custom\">Anderer Betreff:</label> <input type=\"text\" name=\"ar_subject_value\" id=\"ar_subject_value\" value=\"{$subject}\"/></p>";
+
+$message = $ar['message'];
+$form .= "<h4>Inhalt der automatischen Antwort</h4>".
+  "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">".$ar['message']."</textarea></p>";
+$quote = $ar['quote'];
+if (! $quote) 
+  $quote = 'none';
+$form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
+  html_select('ar_quote', array("none" => 'nicht in Antwort einschließen', 
+                                "inline" => 'zitieren (max. 50 Zeilen)', 
+                                "attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
+
+
+$ar_from_default_checked = ($ar['fromname'] == NULL) ? ' checked="checked"' : '';
+$ar_from_custom_checked = ($ar['fromname'] != NULL) ? ' checked="checked"' : '';
+$fromname = $ar['fromname'];
+$form .= "<h4>Absender der automatischen Antwort</h4>".
+  "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked} /> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br />".
+  "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked} /> <label for=\"ar_from_custom\">Mit Name: </label> ".
+  "<input type=\"text\" name=\"ar_fromname\" id=\"ar_fromname\" value=\"{$fromname}\"/></p>";
+
+
+
+
+$form .= '</div>';
+
+
+
+
+
+$form .= "<p><input onchange=\"toggleDisplay('forward', 'forward_config')\" type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";
+
+
+$form .= "<div style=\"margin-left: 2em;".($is_forward ? '' : ' display: none;')."\" id=\"forward_config\">";
 
 if ($is_forward)
 {
@@ -126,10 +218,10 @@ else
     </div>\n";
 }
 
-$form .= '</div>';
+$form .= '<p>[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
+</div>';
 
-$form .= '<p style="margin-left: 2em;">[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
-  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vmail', 'Abbrechen').'</p>';
+$form .= '<p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vmail', 'Abbrechen').'</p>';
 
 output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 

@@ -80,6 +80,23 @@ if (count($sorted_by_domains) > 0)
 	        }
 	        array_push($actions, "Ablegen in Mailbox ({$spam})<br />".$quotachart);
 	      }
+        if ($acc['autoresponder']) {
+            $now = date( 'Y-m-d H:i:s' );
+            $valid_from = $acc['autoresponder']['valid_from'];
+            $valid_until = $acc['autoresponder']['valid_until'];
+            if ($valid_from == NULL) {
+              // Autoresponder abgeschaltet
+              array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
+            } elseif ($valid_from > $now) {
+              array_push($actions, "<strike>Automatische Antwort versenden</strike> (Wird aktiviert am {$valid_from})");
+            } elseif ($valid_until == NULL) {
+              array_push($actions, "Automatische Antwort versenden (Unbefristet)");
+            } elseif ($valid_until > $now) {
+              array_push($actions, "Automatische Antwort versenden (Wird deaktiviert am {$valid_until})");
+            } elseif ($valid_until < $now) {
+              array_push($actions, "<strike>Automatische Antwort versenden</strike> (Automatisch abgeschaltet seit {$valid_until})");
+            }
+        }
 	      foreach ($acc['forwards'] AS $fwd)
 	      {
 	      	$spam = 'ohne Spamfilter';

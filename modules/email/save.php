@@ -41,6 +41,54 @@ if ($_GET['action'] == 'edit')
     $account['quota_threshold'] = $_POST['quota_threshold'];
   }
 
+
+
+  $ar = empty_autoresponder_config();
+  $valid_from_date = time();
+  $valid_until_date = NULL;
+  if (isset($_POST['ar_valid_from_day']) && isset($_POST['ar_valid_from_month']) && isset($_POST['ar_valid_from_year'])) {
+    $valid_from_date = strtotime($_POST['ar_valid_from_year'].'-'.$_POST['ar_valid_from_month'].'-'.$_POST['ar_valid_from_day']);
+  }
+  if (isset($_POST['ar_valid_until_day']) && isset($_POST['ar_valid_until_month']) && isset($_POST['ar_valid_until_year'])) {
+    $valid_until_date = strtotime($_POST['ar_valid_until_year'].'-'.$_POST['ar_valid_until_month'].'-'.$_POST['ar_valid_until_day']);
+  }
+  if (isset($_POST['ar_valid_from']) && ($_POST['ar_valid_from'] == 'now' || $valid_from_date < time())) {
+    $valid_from_date = time();
+  }
+  $ar['valid_from'] = date('Y-m-d', $valid_from_date);
+  $ar['valid_until'] = date('Y-m-d', $valid_until_date);
+  if (!isset($_POST['autoresponder']) || $_POST['autoresponder'] != 'yes') {
+    $ar['valid_from'] = NULL;
+  }
+  if (isset($_POST['ar_valid_until']) && ($_POST['ar_valid_until'] == 'infinity' || $valid_until_date < time())) {
+    $ar['valid_until'] = NULL;
+  }
+
+  if (isset($_POST['ar_subject']) && $_POST['ar_subject'] == 'custom' && isset($_POST['ar_subject_value']) && chop($_POST['ar_subject_value']) != '') {
+    $ar['subject'] = filter_input_general( chop($_POST['ar_subject_value']) );
+  }
+
+  if (isset($_POST['ar_message'])) {
+    $ar['message'] = filter_input_general( $_POST['ar_message'] );
+  }
+
+  if (isset($_POST['ar_quote'])) {
+    if ($_POST['ar_quote'] == 'inline') {
+      $ar['quote'] = 'inline';
+    }
+    if ($_POST['ar_quote'] == 'attach') {
+      $ar['quote'] = 'attach';
+    }
+  }
+
+  if (isset($_POST['ar_from']) && $_POST['ar_from'] == 'custom' && isset($_POST['ar_fromname'])) {
+    $ar['fromname'] = filter_input_general( $_POST['ar_fromname']);
+  }
+    
+  $account['autoresponder'] = $ar;
+
+
+
   if (isset($_POST['forward']) && $_POST['forward'] == 'yes')
   {
     $num = 1;

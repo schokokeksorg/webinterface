@@ -17,18 +17,36 @@ function empty_account()
 		'spamexpire' => 7,
     'quota' => config('vmail_basequota'),
     'quota_threshold' => 20,
-		'forwards' => array()
+		'forwards' => array(),
+		'autoresponder' => NULL
 		);
 	return $account;
 
 }
+
+function empty_autoresponder_config()
+{
+  $ar = array(
+    'valid_from' => date( 'Y-m-d H:i:s' ),
+    'valid_until' => NULL,
+    'fromname' => NULL,
+    'fromaddr' => NULL,
+    'subject' => NULL,
+    'message' => 'Danke für Ihre E-Mail.
+Ich bin aktuell nicht im Büro und werde Ihre Nachricht erst nach meiner Rückkehr beantworten.
+Ihre E-Mail wird nicht weitergeleitet.',
+    'quote' => NULL
+    );
+  return $ar;
+}
+
 
 function get_account_details($id, $checkuid = true)
 {
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$uid_check = ($checkuid ? "useraccount='{$uid}' AND " : "");
-	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, server, quota, quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
+	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -44,6 +62,14 @@ function get_account_details($id, $checkuid = true)
 	    array_push($acc['forwards'], array("id" => $item['id'], 'spamfilter' => $item['spamfilter'], 'destination' => $item['destination']));
 	  }
 	}
+  if ($acc['autoresponder'] > 0) {
+    $result = db_query("SELECT id, IF(valid_from IS NULL OR valid_from > NOW() OR valid_until < NOW(), 0, 1) AS active, valid_from, valid_until, fromname, fromaddr, subject, message, quote FROM mail.vmail_autoresponder WHERE account={$acc['id']}");
+    $item = mysql_fetch_assoc($result);
+    DEBUG($item);
+    $acc['autoresponder'] = $item;
+  } else {
+    $acc['autoresponder'] = NULL;
+  }
   if ($acc['quota_threshold'] === NULL) {
     $acc['quota_threshold'] = -1;
   }
@@ -187,6 +213,27 @@ function save_vmail_account($account)
         system_failure('Das Weiterleitungs-Ziel »'.$account['forwards'][$i]['destination'].'« ist keine E-Mail-Adresse!');
     }
   }
+
+  if (is_array($account['autoresponder'])) {
+    $ar = $account['autoresponder'];
+    $valid_from = maybe_null($ar['valid_from']);
+    $valid_until = maybe_null($ar['valid_until']);
+    $fromname = maybe_null( mysql_real_escape_string($ar['fromname']) );
+    $fromaddr = NULL;
+    if ($ar['fromaddr']) {
+      $fromaddr = mysql_real_escape_string(check_emailaddr($ar['fromaddr']));
+    }
+    $fromaddr = maybe_null( $fromaddr );
+    $subject = maybe_null( mysql_real_escape_string($ar['subject']));
+    $message = mysql_real_escape_string($ar['message']);
+    $quote = "'inline'";
+    if ($ar['quote'] == 'attach')
+      $quote = "'attach'";
+    elseif ($ar['quote'] == NULL)
+      $quote = 'NULL';
+    db_query("REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
+             "VALUES ({$account['id']}, {$valid_from}, {$valid_until}, {$fromname}, {$fromaddr}, {$subject}, '{$message}', {$quote})");
+  }
     
   $password='NULL';
   if ($account['password'] != '')
@@ -311,7 +358,7 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
   }
 
   // Update Mail-Quota-Cache
-  $result = db_query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts GROUP BY useraccount, server");
+  $result = db_query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts WHERE useraccount=".$uid." GROUP BY useraccount, server");
   while ($line = mysql_fetch_assoc($result)) {
     if ($line['quota'] !== NULL) {
       db_query("REPLACE INTO mail.vmailquota (uid, server, quota, used) VALUES ('{$line['useraccount']}', '{$line['server']}', '{$line['quota']}', '{$line['used']}')");
