@@ -86,7 +86,7 @@ if (count($sorted_by_domains) > 0)
             $valid_until = $acc['autoresponder']['valid_until'];
             if ($valid_from == NULL) {
               // Autoresponder abgeschaltet
-              array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
+              //array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
             } elseif ($valid_from > $now) {
               array_push($actions, "<strike>Automatische Antwort versenden</strike> (Wird aktiviert am {$valid_from})");
             } elseif ($valid_until == NULL) {

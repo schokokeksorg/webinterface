@@ -214,27 +214,6 @@ function save_vmail_account($account)
     }
   }
 
-  if (is_array($account['autoresponder'])) {
-    $ar = $account['autoresponder'];
-    $valid_from = maybe_null($ar['valid_from']);
-    $valid_until = maybe_null($ar['valid_until']);
-    $fromname = maybe_null( mysql_real_escape_string($ar['fromname']) );
-    $fromaddr = NULL;
-    if ($ar['fromaddr']) {
-      $fromaddr = mysql_real_escape_string(check_emailaddr($ar['fromaddr']));
-    }
-    $fromaddr = maybe_null( $fromaddr );
-    $subject = maybe_null( mysql_real_escape_string($ar['subject']));
-    $message = mysql_real_escape_string($ar['message']);
-    $quote = "'inline'";
-    if ($ar['quote'] == 'attach')
-      $quote = "'attach'";
-    elseif ($ar['quote'] == NULL)
-      $quote = 'NULL';
-    db_query("REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
-             "VALUES ({$account['id']}, {$valid_from}, {$valid_until}, {$fromname}, {$fromaddr}, {$subject}, '{$message}', {$quote})");
-  }
-    
   $password='NULL';
   if ($account['password'] != '')
   {
@@ -311,6 +290,30 @@ function save_vmail_account($account)
     $query .= "WHERE id={$id} LIMIT 1;";
     db_query($query); 
   }
+
+  if (is_array($account['autoresponder'])) {
+    $ar = $account['autoresponder'];
+    $valid_from = maybe_null($ar['valid_from']);
+    $valid_until = maybe_null($ar['valid_until']);
+    $fromname = maybe_null( mysql_real_escape_string($ar['fromname']) );
+    $fromaddr = NULL;
+    if ($ar['fromaddr']) {
+      $fromaddr = mysql_real_escape_string(check_emailaddr($ar['fromaddr']));
+    }
+    $fromaddr = maybe_null( $fromaddr );
+    $subject = maybe_null( mysql_real_escape_string($ar['subject']));
+    $message = mysql_real_escape_string($ar['message']);
+    $quote = "'inline'";
+    if ($ar['quote'] == 'attach')
+      $quote = "'attach'";
+    elseif ($ar['quote'] == NULL)
+      $quote = 'NULL';
+    db_query("REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
+             "VALUES ({$id}, {$valid_from}, {$valid_until}, {$fromname}, {$fromaddr}, {$subject}, '{$message}', {$quote})");
+  }
+    
+
+
   if (! $newaccount)
     db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
 
