@@ -323,5 +323,27 @@ function html_select($name, $options, $default='', $free='')
 }
 
 
+function html_datepicker($nameprefix, $timestamp)
+{
+  $valid_days = array( 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
+                       6 =>  6,  7 =>  7,  8 =>  8,  9 =>  9, 10 => 10,
+                      11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15,
+                      16 => 16, 17 => 17, 18 => 18, 19 => 19, 20 => 20,
+                      21 => 21, 22 => 22, 23 => 23, 24 => 24, 25 => 25,
+                      26 => 26, 27 => 27, 28 => 28, 29 => 29, 30 => 30,
+                      31 => 31);
+  $valid_months = array( 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
+                         6 =>  6,  7 =>  7,  8 =>  8,  9 =>  9, 10 => 10,
+                        11 => 11, 12 => 12);
+  $selected_day = date('d', $timestamp);
+  $selected_month = date('m', $timestamp);
+  $selected_year = date('Y', $timestamp);
+  $ret = '';
+  $ret .= html_select($nameprefix.'_day', $valid_days, $selected_day, 'style="text-align: right;"').". ";
+  $ret .= html_select($nameprefix.'_month', $valid_months, $selected_month, 'style="text-align: right;"').". ";
+  $ret .= '<input type="text" name="'.$nameprefix.'_year" value="'.$selected_year.'" size="5" />';
+  return $ret;
+}
+
 
 ?>
