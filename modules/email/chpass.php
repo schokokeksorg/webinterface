@@ -12,7 +12,7 @@ title("Passwort ändern");
 
 
 
-if ($_POST['password1'] != '')
+if (isset($_POST['password1']) && $_POST['password1'] != '')
 {
   $accname = $_SESSION['mailaccount'];
   check_form_token('email_chpass');

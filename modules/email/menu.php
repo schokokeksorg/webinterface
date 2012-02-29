@@ -8,6 +8,10 @@ require_once('include/hasaccount.php');
 if ($role & ROLE_SYSTEMUSER) {
   $menu["email_vmail"] = array("label" => "E-Mail", "file" => "vmail", "weight" => 3);
 }
+if ($role & ROLE_VMAIL_ACCOUNT)
+{
+  $menu['email_edit'] = array("label" => "Einstellungen", "file" => "edit", "weight" => 10);
+}
 if ($role & (ROLE_VMAIL_ACCOUNT | ROLE_MAILACCOUNT))
 {
   $menu['email_chpass'] = array("label" => "Passwort ändern", "file" => "chpass", "weight" => 15);

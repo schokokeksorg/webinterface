@@ -228,12 +228,16 @@ div.content {
 }
 /*        overflow: hidden; */
 
-div.overview {
-  margin: 2em;
-  max-width: 50em;
+div.vmailoverview {
 }
 
-div.overview div.block {
+.overview {
+  margin: 2em;
+  overflow: auto;
+  width: 100%;
+  max-width: 50em;
+}
+.overview div.block {
   float: left;
   margin: 1em;
   padding: 1em;
@@ -244,7 +248,7 @@ div.overview div.block {
   background-color: #eee;
 }
 
-div.overview div.block img {
+.overview div.block img {
   display: block;
   margin: 0 auto;
   margin-bottom: 1em;
@@ -252,7 +256,7 @@ div.overview div.block img {
 }
 
 /*
-div.overview div.block a {
+.overview div.block a {
   color: #000;
 }
 */

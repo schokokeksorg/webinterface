@@ -41,12 +41,24 @@ Ihre E-Mail wird nicht weitergeleitet.',
 }
 
 
+function get_vmail_id_by_emailaddr($emailaddr) 
+{
+  $emailaddr = mysql_real_escape_string( $emailaddr );
+  $result = db_query("SELECT id FROM mail.v_vmail_accounts WHERE CONCAT(local, '@', domainname) = '{$emailaddr}'");
+  $entry = mysql_fetch_assoc($result);
+  return (int) $entry['id'];
+}
+
 function get_account_details($id, $checkuid = true)
 {
 	$id = (int) $id;
-	$uid = (int) $_SESSION['userinfo']['uid'];
-	$uid_check = ($checkuid ? "useraccount='{$uid}' AND " : "");
-	$result = db_query("SELECT id, local, domain, password, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
+  $uid_check = '';
+  DEBUG("checkuid: ".$checkuid);
+  if ($checkuid) {
+    $uid = (int) $_SESSION['userinfo']['uid'];
+    $uid_check = "useraccount='{$uid}' AND ";
+  }
+  $result = db_query("SELECT id, local, domain, password, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -160,45 +172,56 @@ function get_max_mailboxquota($server, $oldquota) {
 
 function save_vmail_account($account)
 {
-  $uid = (int) $_SESSION['userinfo']['uid'];
+  $accountlogin = ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT);
   $id = $account['id'];
   if ($id != NULL)
   {
     $id = (int) $id;
-    $oldaccount = get_account_details($id);
+    $oldaccount = get_account_details($id, !$accountlogin);
     // Erzeugt einen system_error() wenn ID ungültig
   }
   // Ab hier ist $id sicher, entweder NULL oder eine gültige ID des aktuellen users
-  
+
   $newaccount = false;
   if ($id === NULL) {
     $newaccount = true;
   }
-  $account['local'] = filter_input_username($account['local']);
-  if ($account['local'] == '')
-  {
-    system_failure('Die E-Mail-Adresse braucht eine Angabe vor dem »@«!');
-    return false;
-  }
-  $account['domain'] = (int) $account['domain'];
-  $domainlist = get_vmail_domains();
-  $valid_domain = false;
-  $domainname = NULL;
-  $server = NULL;
-  foreach ($domainlist as $dom)
-  {
-    if ($dom->id == $account['domain'])
+
+  if ($accountlogin) {
+    if ($account['domain'] != $oldaccount['domain'])
+      system_failure('Sie können die E-Mail-Adresse nicht ändern!');
+    if ($account['local'] != $oldaccount['local'])
+      system_failure('Sie können die E-Mail-Adresse nicht ändern!');
+    if ($account['quota'] != $oldaccount['quota'])
+      system_failure('Sie können Ihren eigenen Speicherplatz nicht verändern.');
+  } else {
+  
+    $account['local'] = filter_input_username($account['local']);
+    if ($account['local'] == '')
     {
-      $domainname = $dom->domainname;
-      $server = $dom->server;
-      $valid_domain = true;
-      break;
+      system_failure('Die E-Mail-Adresse braucht eine Angabe vor dem »@«!');
+      return false;
     }
-  }
-  if (($account['domain'] == 0) || (! $valid_domain))
-  {
-    system_failure('Bitte wählen Sie eine Ihrer Domains aus!');
-    return false;
+    $account['domain'] = (int) $account['domain'];
+    $domainlist = get_vmail_domains();
+    $valid_domain = false;
+    $domainname = NULL;
+    $server = NULL;
+    foreach ($domainlist as $dom)
+    {
+      if ($dom->id == $account['domain'])
+      {
+        $domainname = $dom->domainname;
+        $server = $dom->server;
+        $valid_domain = true;
+        break;
+      }
+    }
+    if (($account['domain'] == 0) || (! $valid_domain))
+    {
+      system_failure('Bitte wählen Sie eine Ihrer Domains aus!');
+      return false;
+    }
   }
   
   $forwards = array();
@@ -214,21 +237,26 @@ function save_vmail_account($account)
     }
   }
 
-  $password='NULL';
-  if ($account['password'] != '')
-  {
-    $account['password'] = stripslashes($account['password']);
-    $crack = strong_password($account['password']);
-    if ($crack !== true)
+  if ($accountlogin) {
+    $password = NULL; 
+    $set_password = false;
+  } else {
+    $password='NULL';
+    if ($account['password'] != '')
     {
-      system_failure('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
-      return false;
+      $account['password'] = stripslashes($account['password']);
+      $crack = strong_password($account['password']);
+      if ($crack !== true)
+      {
+        system_failure('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
+        return false;
+      }
+      $password = "'".encrypt_mail_password($account['password'])."'";
     }
-    $password = "'".encrypt_mail_password($account['password'])."'";
-  }
-  $set_password = ($id == NULL || $password != 'NULL');
-  if ($account['password'] === NULL)
-    $set_password=true;
+    $set_password = ($id == NULL || $password != 'NULL');
+    if ($account['password'] === NULL)
+      $set_password=true;
+  }  
 
   $spam = 'NULL';
   switch ($account['spamfilter'])
@@ -244,21 +272,23 @@ function save_vmail_account($account)
       break;
   }
   
-  $free = config('vmail_basequota');
-  if ($newaccount) {
-    // Neues Postfach
-    $free = get_max_mailboxquota($server, config('vmail_basequota'));
-  } else {
-    $free = get_max_mailboxquota($oldaccount['server'], $oldaccount['quota']);
-  }
+  if (!$accountlogin) {
+    $free = config('vmail_basequota');
+    if ($newaccount) {
+      // Neues Postfach
+      $free = get_max_mailboxquota($server, config('vmail_basequota'));
+    } else {
+      $free = get_max_mailboxquota($oldaccount['server'], $oldaccount['quota']);
+    }
   
-  $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
-  if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
-    $newquota = $free + config('vmail_basequota');
-    warning("Ihr Speicherplatz reicht für diese Postfach-Größe nicht mehr aus. Ihr Postfach wurde auf {$newquota} MB reduziert. Bitte beachten Sie, dass damit Ihr Benutzerkonto keinen freien Speicherplatz mehr aufweist!");
-  }
+    $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
+    if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
+      $newquota = $free + config('vmail_basequota');
+      warning("Ihr Speicherplatz reicht für diese Postfach-Größe nicht mehr aus. Ihr Postfach wurde auf {$newquota} MB reduziert. Bitte beachten Sie, dass damit Ihr Benutzerkonto keinen freien Speicherplatz mehr aufweist!");
+    }
   
-  $account['quota'] = $newquota;
+    $account['quota'] = $newquota;
+  }  
 
   if ($account['quota_threshold'] == -1) {
     $account['quota_threshold'] = 'NULL';
@@ -361,10 +391,13 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
   }
 
   // Update Mail-Quota-Cache
-  $result = db_query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts WHERE useraccount=".$uid." GROUP BY useraccount, server");
-  while ($line = mysql_fetch_assoc($result)) {
-    if ($line['quota'] !== NULL) {
-      db_query("REPLACE INTO mail.vmailquota (uid, server, quota, used) VALUES ('{$line['useraccount']}', '{$line['server']}', '{$line['quota']}', '{$line['used']}')");
+  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+    $uid = (int) $_SESSION['userinfo']['uid'];
+    $result = db_query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts WHERE useraccount=".$uid." GROUP BY useraccount, server");
+    while ($line = mysql_fetch_assoc($result)) {
+      if ($line['quota'] !== NULL) {
+        db_query("REPLACE INTO mail.vmailquota (uid, server, quota, used) VALUES ('{$line['useraccount']}', '{$line['server']}', '{$line['quota']}', '{$line['used']}')");
+      }
     }
   }
 

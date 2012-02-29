@@ -6,7 +6,7 @@ require_once('inc/security.php');
 require_once('vmail.php');
 
 $section = 'email_vmail';
-require_role(ROLE_SYSTEMUSER);
+require_role(array(ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT));
 
 $account = empty_account();
 $id = (isset($_GET['id']) ? (int) $_GET['id'] : 0);
@@ -14,12 +14,25 @@ $id = (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 if ($id != 0)
   $account = get_account_details($id);
 
+$accountlogin = false;
+if ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+  $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
+  $account = get_account_details($id, false);
+  $accountlogin = true;
+  $accountname = filter_input_general($_SESSION['mailaccount']);
+}
+
+
 DEBUG($account);
 if ($id == 0) {
   title("E-Mail-Adresse anlegen");
 }
 else {
-  title("E-Mail-Adresse bearbeiten");
+  if ($accountlogin) {
+    title("Einstellungen für {$accountname}");
+  } else {
+    title("E-Mail-Adresse bearbeiten");
+  }
 }
 
 
@@ -84,37 +97,41 @@ output("<script type=\"text/javascript\">
 </script>
 ");
 
-$form = "
+$form = '';
+
+if ($accountlogin) {
+  $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
+} else {
+  $form .= "
     <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"{$account['local']}\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($account['domain'])."</p>";
 
-$password_message = '';
-$password_value = '';
-if ($is_mailbox and ($account['password'] != ''))
-{
-  $password_message = '<span style="font-size: 80%"><br /><em>Sie haben bereits ein Passwort gesetzt. Wenn Sie dieses Feld nicht ändern, wird das bisherige Passwort beibehalten.</em></span>';
-  $password_value = '**********';
-} 
-
-$form .= "
+  $password_message = '';
+  $password_value = '';
+  if ($is_mailbox and ($account['password'] != ''))
+  {
+    $password_message = '<span style="font-size: 80%"><br /><em>Sie haben bereits ein Passwort gesetzt. Wenn Sie dieses Feld nicht ändern, wird das bisherige Passwort beibehalten.</em></span>';
+    $password_value = '**********';
+  } 
+  
+  $form .= "
     <p><input onchange=\"toggleDisplay('mailbox', 'mailbox_options')\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
     <div style=\"margin-left: 2em;".($is_mailbox ? '' : ' display: none;')."\" id=\"mailbox_options\">
     <p>Passwort für Abruf:&#160;<input type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
 
-$form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
+  $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 
-$quota = config('vmail_basequota');
-if ($is_mailbox and $account['quota']) {
-  $quota = $account['quota'];
+  $quota = config('vmail_basequota');
+  if ($is_mailbox and $account['quota']) {
+    $quota = $account['quota'];
+  }
+  $form .= "<p class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von ".config('vmail_basequota')." MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
+
+  $quota_notify = ($account['quota_threshold'] >= 0) ? ' checked="checked" ' : '';
+  $quota_threshold = ($account['quota_threshold'] >= 0) ? $account['quota_threshold'] : '';
+  $form .= "<p class=\"quota_options\"><input type=\"checkbox\" id=\"quota_notify\" name=\"quota_notify\" value=\"1\" {$quota_notify} /><label for=\"quota_notify\">Benachrichtigung wenn weniger als</label> <input type=\"text\" name=\"quota_threshold\" id=\"quota_threshold\" value=\"{$quota_threshold}\" /> MB Speicherplatz zur Verfügung stehen.</p>";
+
+  $form .= "</div>";
 }
-
-$form .= "<p class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von ".config('vmail_basequota')." MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
-
-$quota_notify = ($account['quota_threshold'] >= 0) ? ' checked="checked" ' : '';
-$quota_threshold = ($account['quota_threshold'] >= 0) ? $account['quota_threshold'] : '';
-$form .= "<p class=\"quota_options\"><input type=\"checkbox\" id=\"quota_notify\" name=\"quota_notify\" value=\"1\" {$quota_notify} /><label for=\"quota_notify\">Benachrichtigung wenn weniger als</label> <input type=\"text\" name=\"quota_threshold\" id=\"quota_threshold\" value=\"{$quota_threshold}\" /> MB Speicherplatz zur Verfügung stehen.</p>";
-
-$form .= "</div>";
-
 
 
 

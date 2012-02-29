@@ -60,6 +60,10 @@ if (have_module('email') && ($_SESSION['role'] & ROLE_MAILACCOUNT || $_SESSION['
   output("<div class=\"block\">".internal_link("../email/chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
 }
 
+if (have_module('email') && ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT)) {
+  output("<div class=\"block\">".internal_link("../email/edit", "<img src=\"{$prefix}images/cog.png\" alt=\"\" /> E-Mail-Einstellungen ")."</div>");
+}
+
 if ($_SESSION['role'] & ROLE_CUSTOMER || $_SESSION['role'] & ROLE_SYSTEMUSER) {
   output("<div class=\"block\">".internal_link("chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
 }
@@ -92,5 +96,11 @@ if (have_module('jabber') && $_SESSION['role'] & ROLE_CUSTOMER) {
 }
 
 output("</div>");
+
+if (have_module('email') && $_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
+  include('modules/email/vmailoverview.php');
+  output("<div class=\"vmailoverview\">".$content."</div>");
+}
+
 
 ?>

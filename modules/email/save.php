@@ -4,7 +4,7 @@ require_once('session/start.php');
 
 require_once('vmail.php');
 
-require_role(ROLE_SYSTEMUSER);
+require_role(array(ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT));
 
 require_once("inc/debug.php");
 global $debugmode;
@@ -13,34 +13,43 @@ global $debugmode;
 if ($_GET['action'] == 'edit')
 {
   check_form_token('vmail_edit_mailbox');
-  $id = (int) $_GET['id'];
+  $accountlogin = ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT);
 
-  $account = empty_account();
-  $account['id'] = NULL;
-  if ($id)
-    $account['id'] = $id;
-  $account['local'] = $_POST['local'];
-  $account['domain'] = (int) $_POST['domain'];
+  if ($accountlogin) {
+    $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
+    $account = get_account_details($id, false);
+    // Leere das, sonst werden die vervielfacht
+    $account['forwards'] = array();
+  } else {
+    $id = (int) $_GET['id'];
+  
+    $account = empty_account();
+    $account['id'] = NULL;
+    if ($id)
+      $account['id'] = $id;
+    $account['local'] = $_POST['local'];
+    $account['domain'] = (int) $_POST['domain'];
+    $account['password'] = $_POST['password'];
+    if (($account['password'] == '') && ($_POST['mailbox'] == 'yes'))
+      system_failure("Sie haben ein leeres Passwort eingegeben!");
+    if ($_POST['password'] == '**********')
+      $account['password'] = '';
+    if ($_POST['mailbox'] != 'yes')
+    {
+      $account['password'] = NULL;
+      $account['spamfilter'] = 'none';
+    }
+    if (isset($_POST['quota'])) {
+      $account['quota'] = $_POST['quota'];
+    }
+  
+    $account['quota_threshold'] = -1;
+    if (isset($_POST['quota_notify']) && isset($_POST['quota_threshold']) && $_POST['quota_notify'] == 1) {
+      $account['quota_threshold'] = $_POST['quota_threshold'];
+    }
+
+  }
   $account['spamfilter'] = $_POST['spamfilter_action'];
-  $account['password'] = $_POST['password'];
-  if (($account['password'] == '') && ($_POST['mailbox'] == 'yes'))
-    system_failure("Sie haben ein leeres Passwort eingegeben!");
-  if ($_POST['password'] == '**********')
-    $account['password'] = '';
-  if ($_POST['mailbox'] != 'yes')
-  {
-    $account['password'] = NULL;
-    $account['spamfilter'] = 'none';
-  }
-  if (isset($_POST['quota'])) {
-    $account['quota'] = $_POST['quota'];
-  }
-
-  $account['quota_threshold'] = -1;
-  if (isset($_POST['quota_notify']) && isset($_POST['quota_threshold']) && $_POST['quota_notify'] == 1) {
-    $account['quota_threshold'] = $_POST['quota_threshold'];
-  }
-
 
 
   $ar = empty_autoresponder_config();
@@ -113,7 +122,11 @@ if ($_GET['action'] == 'edit')
   save_vmail_account($account);
 
   if (! ($debugmode || we_have_an_error()))
-    header('Location: vmail');
+    if ($accountlogin) {
+      header('Location: ../index/index');
+    } else {
+      header('Location: vmail');
+    }
 }
 elseif ($_GET['action'] == 'delete')
 {
