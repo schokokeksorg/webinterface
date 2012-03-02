@@ -335,13 +335,20 @@ function html_datepicker($nameprefix, $timestamp)
   $valid_months = array( 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
                          6 =>  6,  7 =>  7,  8 =>  8,  9 =>  9, 10 => 10,
                         11 => 11, 12 => 12);
+  $current_year = (int) date('Y');
+  $valid_years = array($current_year => $current_year, 
+                       $current_year+1 => $current_year+1,
+                       $current_year+2 => $current_year+2,
+                       $current_year+3 => $current_year+3,
+                       $current_year+4 => $current_year+4);
+              
   $selected_day = date('d', $timestamp);
   $selected_month = date('m', $timestamp);
   $selected_year = date('Y', $timestamp);
   $ret = '';
   $ret .= html_select($nameprefix.'_day', $valid_days, $selected_day, 'style="text-align: right;"').". ";
   $ret .= html_select($nameprefix.'_month', $valid_months, $selected_month, 'style="text-align: right;"').". ";
-  $ret .= '<input type="text" name="'.$nameprefix.'_year" value="'.$selected_year.'" size="5" />';
+  $ret .= html_select($nameprefix.'_year', $valid_years, $selected_year);
   return $ret;
 }
 

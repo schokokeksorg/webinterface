@@ -27,7 +27,7 @@ function empty_account()
 function empty_autoresponder_config()
 {
   $ar = array(
-    'valid_from' => date( 'Y-m-d H:i:s' ),
+    'valid_from' => date( 'Y-m-d' ),
     'valid_until' => NULL,
     'fromname' => NULL,
     'fromaddr' => NULL,
@@ -75,7 +75,7 @@ function get_account_details($id, $checkuid = true)
 	  }
 	}
   if ($acc['autoresponder'] > 0) {
-    $result = db_query("SELECT id, IF(valid_from IS NULL OR valid_from > NOW() OR valid_until < NOW(), 0, 1) AS active, valid_from, valid_until, fromname, fromaddr, subject, message, quote FROM mail.vmail_autoresponder WHERE account={$acc['id']}");
+    $result = db_query("SELECT id, IF(valid_from IS NULL OR valid_from > NOW() OR valid_until < NOW(), 0, 1) AS active, DATE(valid_from) AS valid_from, DATE(valid_until) AS valid_until, fromname, fromaddr, subject, message, quote FROM mail.vmail_autoresponder WHERE account={$acc['id']}");
     $item = mysql_fetch_assoc($result);
     DEBUG($item);
     $acc['autoresponder'] = $item;

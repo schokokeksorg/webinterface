@@ -38,18 +38,20 @@ $content .= '<p>'.other_icon('go.png')." Ablegen in Ihrer Mailbox ({$spam})</p>"
 if ($acc['autoresponder']) {
   $now = date( 'Y-m-d H:i:s' );
   $valid_from = $acc['autoresponder']['valid_from'];
+  $valid_from_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_from']));
   $valid_until = $acc['autoresponder']['valid_until'];
+  $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
   if ($valid_from == NULL) {
     // Autoresponder abgeschaltet
     //$content .= '<p>'.other_icon('go.png')." Es wird keine automatische Antwort versendet</p>"; 
   } elseif ($valid_from > $now) {
-    $content .= '<p>'.other_icon('go.png')." Es wird ab dem {$valid_from} eine automatische Antwort versendet</p>"; 
+    $content .= '<p>'.other_icon('go.png')." Es wird ab dem {$valid_from_string} eine automatische Antwort versendet</p>"; 
   } elseif ($valid_until == NULL) {
     $content .= '<p>'.other_icon('go.png')." Es wird eine automatische Antwort versendet</p>"; 
   } elseif ($valid_until > $now) {
-    $content .= '<p>'.other_icon('go.png')." Es wird eine automatische Antwort versendet, jedoch nicht mehr ab dem {$valid_until}</p>"; 
+    $content .= '<p>'.other_icon('go.png')." Es wird eine automatische Antwort versendet, jedoch nicht mehr ab dem {$valid_until_string}</p>"; 
   } elseif ($valid_until < $now) {
-    $content .= '<p>'.other_icon('go.png')." Es wird seit dem {$valid_until} keine automatische Antwort mehr versendet</p>"; 
+    $content .= '<p>'.other_icon('go.png')." Es wird seit dem {$valid_until_string} keine automatische Antwort mehr versendet</p>"; 
   }
 }
 

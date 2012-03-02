@@ -152,7 +152,7 @@ if ($ar['valid_until'] != NULL && $ar['valid_until'] < date('Y-m-d')) {
 $valid_from_now_checked = ($ar['valid_from'] <= date('Y-m-d H:i:s') || $ar['valid_from'] == NULL) ? ' checked="checked"' : '';
 $valid_from_future_checked = ($ar['valid_from'] > date('Y-m-d H:i:s')) ? ' checked="checked"' : '';
 $startdate = $ar['valid_from'];
-if (! $startdate) {
+if (! $startdate || $startdate <= date('Y-m-d')) {
   $startdate = date('Y-m-d', time() + 1*24*60*60);
 }
 $form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".

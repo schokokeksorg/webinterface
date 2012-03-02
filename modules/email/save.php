@@ -9,6 +9,8 @@ require_role(array(ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT));
 require_once("inc/debug.php");
 global $debugmode;
 
+$section = 'email_vmail';
+
 
 if ($_GET['action'] == 'edit')
 {
@@ -21,7 +23,7 @@ if ($_GET['action'] == 'edit')
     // Leere das, sonst werden die vervielfacht
     $account['forwards'] = array();
   } else {
-    $id = (int) $_GET['id'];
+    $id = isset($_GET['id']) ? (int) $_GET['id'] : NULL;
   
     $account = empty_account();
     $account['id'] = NULL;
@@ -55,21 +57,52 @@ if ($_GET['action'] == 'edit')
   $ar = empty_autoresponder_config();
   $valid_from_date = time();
   $valid_until_date = NULL;
-  if (isset($_POST['ar_valid_from_day']) && isset($_POST['ar_valid_from_month']) && isset($_POST['ar_valid_from_year'])) {
-    $valid_from_date = strtotime($_POST['ar_valid_from_year'].'-'.$_POST['ar_valid_from_month'].'-'.$_POST['ar_valid_from_day']);
-  }
-  if (isset($_POST['ar_valid_until_day']) && isset($_POST['ar_valid_until_month']) && isset($_POST['ar_valid_until_year'])) {
-    $valid_until_date = strtotime($_POST['ar_valid_until_year'].'-'.$_POST['ar_valid_until_month'].'-'.$_POST['ar_valid_until_day']);
-  }
-  if (isset($_POST['ar_valid_from']) && ($_POST['ar_valid_from'] == 'now' || $valid_from_date < time())) {
+  if (isset($_POST['ar_valid_from']) && ($_POST['ar_valid_from'] == 'now')) {
     $valid_from_date = time();
+  } else {
+    if (isset($_POST['ar_valid_from_day']) && isset($_POST['ar_valid_from_month']) && isset($_POST['ar_valid_from_year'])) {
+      $tmpdate = $_POST['ar_valid_from_year'].'-'.$_POST['ar_valid_from_month'].'-'.$_POST['ar_valid_from_day'];
+      if (date('Y-n-j', strtotime($tmpdate)) != $tmpdate) {
+        system_failure('Das Aktivierungs-Datum scheint ungültig zu sein.');
+      } else {
+        $valid_from_date = strtotime($tmpdate);
+      }
+    }
   }
-  $ar['valid_from'] = date('Y-m-d', $valid_from_date);
-  $ar['valid_until'] = date('Y-m-d', $valid_until_date);
+  if ($valid_from_date < time()) {
+    $valid_from_date = time();
+    warning('Das Aktivierungs-Datum liegt in der Vergangenheit. Die Funktion wird ab sofort aktiviert.');
+  }
+  if ($valid_from_date > time() + 365*24*60*60) {
+    warning('Das Aktivierungs-Datum liegt mehr als ein Jahr in der Zukunft. Bitte prüfen Sie ob Sie das korrekte Jahr gewählt haben.');
+  }
+  if (isset($_POST['ar_valid_until']) && ($_POST['ar_valid_until'] == 'infinity')) {
+    $valid_until_date = NULL;
+  } else {
+    if (isset($_POST['ar_valid_until_day']) && isset($_POST['ar_valid_until_month']) && isset($_POST['ar_valid_until_year'])) {
+      $tmpdate = $_POST['ar_valid_until_year'].'-'.$_POST['ar_valid_until_month'].'-'.$_POST['ar_valid_until_day'];
+      if (date('Y-n-j', strtotime($tmpdate)) != $tmpdate) {
+        system_failure('Das Deaktivierungs-Datum scheint ungültig zu sein.');
+      } else {
+        $valid_until_date = strtotime($tmpdate);
+      }
+    }
+  }
   if (!isset($_POST['autoresponder']) || $_POST['autoresponder'] != 'yes') {
+    $valid_from_date = NULL;
+  }
+  if ($valid_until_date && $valid_until_date < time()) {
+    warning('Das Deaktivierungs-Datum liegt in der Vergangenheit, eine automatische Deaktivierung wird nicht stattfinden.');
+    $valid_until_date = NULL;
+  }
+  if ($valid_from_date) {
+    $ar['valid_from'] = date('Y-m-d', $valid_from_date);
+  } else {
     $ar['valid_from'] = NULL;
   }
-  if (isset($_POST['ar_valid_until']) && ($_POST['ar_valid_until'] == 'infinity' || $valid_until_date < time())) {
+  if ($valid_until_date) {
+    $ar['valid_until'] = date('Y-m-d', $valid_until_date);
+  } else {
     $ar['valid_until'] = NULL;
   }
 
@@ -121,12 +154,13 @@ if ($_GET['action'] == 'edit')
 
   save_vmail_account($account);
 
-  if (! ($debugmode || we_have_an_error()))
+  if (! ($debugmode || we_have_an_error())) {
     if ($accountlogin) {
       header('Location: ../index/index');
     } else {
       header('Location: vmail');
     }
+  }
 }
 elseif ($_GET['action'] == 'delete')
 {
