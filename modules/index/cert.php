@@ -3,7 +3,7 @@
 require_once('inc/base.php');
 require_once('x509.php');
 
-require_role(ROLE_SYSTEMUSER);
+require_role(array(ROLE_SYSTEMUSER, ROLE_SUBUSER, ROLE_VMAIL_ACCOUNT));
 
 title('Anmeldung über Client-Zertifikat');
 output('<p>Sie können Sie an diesem Webinterface wahlweise auch über ein SSL-Client-Zertifikat anmelden. Dazu muss das gewünschte Zertifikat <em>vorher</em> in Ihrem Browser installiert werden und kann dann hier hinzugefügt werden.</p>
@@ -19,6 +19,15 @@ if (isset($_GET['clear']))
   unset($_SESSION['clientcert_issuer']);
 }
 
+$username = NULL;
+if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+  $username = $_SESSION['userinfo']['username'];
+  if (isset($_SESSION['subuser']))
+    $username = $_SESSION['subuser'];
+} elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+  $username = $_SESSION['mailaccount'];
+}
+
 if (isset($_SESSION['clientcert_cert']))
 {
   // FIXME: Es gibt keine Duplikaterkennung.
@@ -27,15 +36,12 @@ if (isset($_SESSION['clientcert_cert']))
   output('<p>Es wurde folgendes Client-Zertifikat von Ihrem Browser gesendet:</p>
 <div style="margin-left: 2em;"><strong>DN:</strong> '.filter_input_general($_SESSION['clientcert_dn']).'<br />
 <strong>Aussteller-DN:</strong> '.filter_input_general($_SESSION['clientcert_issuer']).'</div>
-<p>Soll dieses Zertifikat für den Zugang zum Benutzerkonto <strong>'.$_SESSION['userinfo']['username'].'</strong> verwendet werden?</p>');
+<p>Soll dieses Zertifikat für den Zugang für <strong>'.$username.'</strong> verwendet werden?</p>');
   output(html_form('clientcert_add', 'certsave.php', 'action=new', '<p><input type="submit" name="submit" value="Ja, dieses Zertifikat einrichten" /> &#160; '.internal_link('cert', 'Nein', 'clear').'</p>'));
   output('</div>');
 }
 
 
-$username = $_SESSION['userinfo']['username'];
-if (isset($_SESSION['subuser']))
-  $username = $_SESSION['subuser'];
 $certs = get_certs_by_username($username);
 if ($certs != NULL) {
   output('<p>Sie haben bereits Zertifikate für den Zugang eingerichtet.</p>

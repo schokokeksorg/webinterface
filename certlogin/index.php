@@ -63,8 +63,10 @@ elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
     system_failure('Ihr Browser hat kein Client-Zertifikat gesendet');
 
   $ret = get_logins_by_cert($_SERVER['REDIRECT_SSL_CLIENT_CERT']);
+  DEBUG($ret);
   foreach ($ret as $account) {
-    if (($account['type'] == $_REQUEST['type']) && ($account['username'] == $_REQUEST['username'])) {
+    DEBUG('/'.$account['type'].'/'.$_REQUEST['type'].'/    /'.$account['username'].'/'.$_REQUEST['username'].'/    =>');
+    if (($account['type'] == urldecode($_REQUEST['type'])) && ($account['username'] == urldecode($_REQUEST['username']))) {
       $uid = $account['username'];
       $role = find_role($uid, '', True);
       setup_session($role, $uid);
@@ -114,7 +116,7 @@ else
         $type = 'Kundenaccount';
       }
       $destination = 'go/index/index';
-      if (check_path($account['startpage']))
+      if ($account['startpage'] && check_path($account['startpage']))
         $destination = $account['startpage'];
       output('<li>'.internal_link('', $type.': <strong>'.$account['username'].'</strong>', 'type='.$account['type'].'&username='.urlencode($account['username']).'&destination='.urlencode($destination)).'</li>');
     }

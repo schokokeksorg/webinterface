@@ -51,21 +51,27 @@ function get_certs_by_username($username)
 
 function add_clientcert($certdata, $dn, $issuer, $startpage='')
 {
-  $type = 'user';
-  if (isset($_SESSION['subuser']))
-    $type = 'subuser';
+  $type = NULL;
+  $username = NULL;
+  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+    $type = 'user';
+    $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
+    if (isset($_SESSION['subuser']))
+      $username = mysql_real_escape_string($_SESSION['subuser']);
+      $type = 'subuser';
+  } elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+    $type = 'email';
+    $username = mysql_real_escape_string($_SESSION['mailaccount']);
+  }
+  if (! $type || ! $username) {
+    system_failure('cannot get type or username of login');
+  }
   $certdata = mysql_real_escape_string($certdata);
   $dn = maybe_null(mysql_real_escape_string($dn));
   $issuer = maybe_null(mysql_real_escape_string($issuer));
   if ($startpage &&  ! check_path($startpage))
     system_failure('Startseite kaputt');
   $startpage = maybe_null(mysql_real_escape_string($startpage));
-
-  $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-  if ($type == 'subuser')
-    $username = $_SESSION['subuser'];
-  if ($username == '')
-    system_failure('Kein Username');
 
   if ($certdata == '')
     system_failure('Kein Zertifikat');
@@ -82,9 +88,21 @@ VALUES ({$dn}, {$issuer}, '{$certdata}', '{$type}', '{$username}', {$startpage})
 function delete_clientcert($id)
 {
   $id = (int) $id;
-  $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-  if (isset($_SESSION['subuser']))
-    $username = mysql_real_escape_string($_SESSION['subuser']);
-  db_query("DELETE FROM system.clientcert WHERE id={$id} AND username='{$username}' LIMIT 1");
+  $type = NULL;
+  $username = NULL;
+  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+    $type = 'user';
+    $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
+    if (isset($_SESSION['subuser']))
+      $username = mysql_real_escape_string($_SESSION['subuser']);
+      $type = 'subuser';
+  } elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+    $type = 'email';
+    $username = mysql_real_escape_string($_SESSION['mailaccount']);
+  }
+  if (! $type || ! $username) {
+    system_failure('cannot get type or username of login');
+  }
+  db_query("DELETE FROM system.clientcert WHERE id={$id} AND type='{$type}' AND username='{$username}' LIMIT 1");
 }
 
