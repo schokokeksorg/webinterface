@@ -2,6 +2,7 @@
 
 require_once('inc/debug.php');
 require_once('inc/security.php');
+require_once('inc/icons.php');
 
 require_once('vmail.php');
 
@@ -44,10 +45,16 @@ $numforwards = max(count($account['forwards']), 1);
 output("<script type=\"text/javascript\">
   
   var numForwards = {$numforwards};
+  var forwardsCounter = {$numforwards};
 
   function moreForward()
   {
     numForwards += 1;
+    forwardsCounter += 1;
+
+    if ( document.getElementById('vmail_forward_' + forwardsCounter) ) {
+      document.getElementById('vmail_forward_' + forwardsCounter).style.display = ''
+    }
 
     P1 = document.createElement('p');
 
@@ -55,7 +62,8 @@ output("<script type=\"text/javascript\">
 
     INPUT = document.createElement('input');
     INPUT.type = 'text';
-    INPUT.name = 'forward_to_' + numForwards;
+    INPUT.name = 'forward_to_' + forwardsCounter;
+    INPUT.id = 'forward_to_' + forwardsCounter;
     INPUT.value = '';
 
     P1.appendChild(TXT1);
@@ -66,7 +74,8 @@ output("<script type=\"text/javascript\">
     TXT2 = document.createTextNode('Spam-Mails an diese Adresse ');
 
     SELECT = document.createElement('select');
-    SELECT.name = 'spamfilter_action_' + numForwards;
+    SELECT.id = 'spamfilter_action_' + forwardsCounter;
+    SELECT.name = 'spamfilter_action_' + forwardsCounter;
 
     SELECT.options[0] = new Option('nicht filtern', 'none', 1);
     SELECT.options[1] = new Option('markieren und zustellen', 'tag', 0);
@@ -77,12 +86,33 @@ output("<script type=\"text/javascript\">
 
     DIV = document.createElement('div');
     DIV.className = 'vmail-forward';
+    DIV.id = 'vmail_forward_' + forwardsCounter;
 
+    DELETE = document.getElementById('vmail_forward_1').getElementsByTagName('div')[0].cloneNode(true);
+
+    DIV.appendChild(DELETE);
     DIV.appendChild(P1);
     DIV.appendChild(P2);
 
-    parent = document.getElementById('forward_config');
+    parent = document.getElementById('forward_entries');
     parent.appendChild(DIV);
+  }
+
+  function removeForward(elem) 
+  {
+    div_id = elem.parentNode.parentNode.id;
+    div = document.getElementById(div_id);
+    input = div.getElementsByTagName('input')[0];
+    input.value = '';
+    select = div.getElementsByTagName('select')[0];
+    select.options[0].selected = 'selected';
+    if (numForwards >= 1) {
+      numForwards -= 1;
+    }
+    if (numForwards >= 1) {
+      div.style.display = 'none';
+      document.getElementById('forward_entries').removeChild(div);
+    }
   }
 
   function toggleDisplay(checkbox_id, item_id) 
@@ -216,26 +246,23 @@ $form .= "<p><input onchange=\"toggleDisplay('forward', 'forward_config')\" type
 
 $form .= "<div style=\"margin-left: 2em;".($is_forward ? '' : ' display: none;')."\" id=\"forward_config\">";
 
-if ($is_forward)
-{
-  for ($i = 0 ; $i < $numforwards ; $i++)
-  {
-    $num = $i+1;
-    $form .= "<div class=\"vmail-forward\">
-    <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
-    <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_'.$num, array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), $account['forwards'][$i]['spamfilter'])."</p>
-    </div>\n";
-  }
+$form .= '<div id="forward_entries">
+';
+if (! isset($account['forwards'][0])) {
+  $account['forwards'][0] = array('destination' => '', 'spamfilter' => 'none');
 }
-else
+for ($i = 0 ; $i < $numforwards ; $i++)
 {
-    $form .= "<div class=\"vmail-forward\">
-    <p>Weiterleiten an <input type=\"text\" id=\"forward_to_1\" name=\"forward_to_1\" value=\"\" /></p>
-    <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_1', array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), "none")."</p>
-    </div>\n";
+  $num = $i+1;
+  $form .= "<div class=\"vmail-forward\" id=\"vmail_forward_{$num}\">
+  <div style=\"float: right;\"><a href=\"#\" onclick=\"removeForward(this);\">".icon_delete("Diese Weiterleitung entfernen")."</a></div>
+  <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
+  <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_'.$num, array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), $account['forwards'][$i]['spamfilter'])."</p>
+  </div>\n";
 }
+$form .= '</div>';
 
-$form .= '<p>[ <a href="#" onclick="moreForward();">mehr Empfänger</a> ]</p>
+$form .= '<p><a href="#" onclick="moreForward();">'.icon_add().' Weiteren Empfänger hinzufügen</a></p>
 </div>';
 
 $form .= '<p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vmail', 'Abbrechen').'</p>';

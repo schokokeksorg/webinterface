@@ -205,6 +205,7 @@ div#beta h3 {
 }
 
 div.vmail-forward {
+  width: 40em;
   border: 1px solid black;
   padding: 0.5em;
   margin-bottom: 0.5em;

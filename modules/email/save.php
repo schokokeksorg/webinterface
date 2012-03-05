@@ -136,15 +136,16 @@ if ($_GET['action'] == 'edit')
     $num = 1;
     while (true)
     {
-      if (! isset($_POST['forward_to_'.$num]))
+      // Die ersten 50 Einträge in jedem Fall prüfen, danach nur so lange zusätzliche Einträge vorhanden
+      if (! isset($_POST['forward_to_'.$num]) && ! isset($_POST['spamfilter_action_'.$num]) && $num > 50)
         break;
-      if ($_POST['forward_to_'.$num] == '')
-        break;
-      $fwd = array("spamfilter" => $_POST['spamfilter_action_'.$num], "destination" => chop($_POST['forward_to_'.$num]));
-      array_push($account['forwards'], $fwd);
+      if (isset($_POST['forward_to_'.$num]) && chop($_POST['forward_to_'.$num]) != '') {
+        $fwd = array("spamfilter" => $_POST['spamfilter_action_'.$num], "destination" => chop($_POST['forward_to_'.$num]));
+        array_push($account['forwards'], $fwd);
+      }
       $num++;
     }
-    if ($num == 1) system_failure("Bitte mindestens eine Weiterleitungsadresse angeben.");
+    if (count($account['forwards']) == 0) system_failure("Bitte mindestens eine Weiterleitungsadresse angeben.");
   }
 
   if ((isset($_POST['forward']) && $_POST['forward']!='yes') && ($_POST['mailbox']!='yes'))
