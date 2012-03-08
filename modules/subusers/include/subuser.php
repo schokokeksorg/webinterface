@@ -4,26 +4,6 @@ require_once("inc/base.php");
 require_once("inc/security.php");
 require_once("inc/debug.php");
 
-// FIXME: Das sollten die Module selbst irgendwo anbieten!
-$modinfo = array(
-	"index" => "An- und Abmelden",
-	"domains" => "Liste der Domains anzeigen",
-	"dns" => "DNS-Einträge verändern",
-	"mysql" => "MySQL-Datenbanken verwalten",
-	"jabber" => "Jabber-Accouns verwalten",
-	"vhosts" => "Webserver-Konfiguration verwalten",
-	"systemuser" => "Daten des System-Benutzeraccounts einsehen/ändern",
-//	"su" => "Das Webinterface unter einem beliebigen anderen Account ausführen",
-	"email" => "E-Mail-Adressen und/oder IMAP-Accounts verwalten",
-	"webapps" => "Automatische Installation von Web-Anwendungen",
-	"greylisting" => "Ausnahmeliste für Greylisting verwalten",
-	"invoice" => "Fällige und kommende Rechnungen anzeigen",
-	"mailman" => "Mailinglisten verwalten",
-	"ftpusers" => "Zugriff per FTP verwalten",
-	"subusers" => "Zusätzliche Admin-Zugänge verwalten");
-// FIXME: Dependancies der Module sollte man auch irgendwo speichern.
-
-
 
 function list_subusers()
 {
@@ -53,12 +33,16 @@ function load_subuser($id) {
 
 function available_modules()
 {
-  global $modinfo;
   $modules = array();
-  foreach (config('modules') as $mod)
+  $allmodules = get_modules_info();
+
+  // Das su-Modul ist hierfuer unwichtig
+  unset($allmodules['su']);
+
+  foreach ($allmodules as $modname => $modinfo)
   {
-    if (isset($modinfo[$mod]))
-      $modules[$mod] = $modinfo[$mod];
+    if (isset($modinfo['permission']))
+      $modules[$modname] = $modinfo['permission'];
   }
   return $modules;
 }
