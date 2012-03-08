@@ -40,7 +40,7 @@ if (isset($_POST['password1']) && $_POST['password1'] != '')
       change_mailaccount(get_mailaccount_id($accname), array('password' => $_POST['password1']));
     }
     if (! $debugmode)
-      header('Location: chpass');
+      header('Location: /');
     else
       output('');
   }

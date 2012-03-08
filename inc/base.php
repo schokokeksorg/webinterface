@@ -352,5 +352,19 @@ function html_datepicker($nameprefix, $timestamp)
   return $ret;
 }
 
+function get_modules_info() 
+{
+  $modules = config('modules');
+  $modconfig = array();
+  foreach ($modules AS $name) {
+    $modconfig[$name] = NULL;
+    if (file_exists('modules/'.$name.'/module.info')) {
+      $modconfig[$name] = parse_ini_file('modules/'.$name.'/module.info');
+    }
+  }
+  return $modconfig;
+}
+
+
 
 ?>

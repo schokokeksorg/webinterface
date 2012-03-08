@@ -1,0 +1,3 @@
+name = email
+description = Verwaltung von E-Mail-Adressen und POP3/IMAP-Accounts
+permission = Verwaltung von E-Mail-Einstellungen

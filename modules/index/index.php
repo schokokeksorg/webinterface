@@ -54,48 +54,38 @@ output('<p>Herzlich willkommen, '.$role.".</p>\n");
 output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>
 <p>Nachfolgend sehen Sie eine Auswahl typischer Aufgaben.</p>\n");
 
-output("<div class=\"overview\">");
+$modules = get_modules_info();
 
-if (have_module('email') && ($_SESSION['role'] & ROLE_MAILACCOUNT || $_SESSION['role'] & ROLE_VMAIL_ACCOUNT)) {
-  output("<div class=\"block\">".internal_link("../email/chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
-}
-
-if (have_module('email') && ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT)) {
-  output("<div class=\"block\">".internal_link("../email/edit", "<img src=\"{$prefix}images/cog.png\" alt=\"\" /> E-Mail-Einstellungen ")."</div>");
-}
-
-if ($_SESSION['role'] & ROLE_CUSTOMER || $_SESSION['role'] & ROLE_SYSTEMUSER) {
-  output("<div class=\"block\">".internal_link("chpass", "<img src=\"{$prefix}images/pwchange.png\" alt=\"\" /> Passwort ändern ")."</div>");
-}
-
-if (have_module('invoice') && $_SESSION['role'] & ROLE_CUSTOMER) {
-  require_once('modules/invoice/include/invoice.php');
-  $unpayed_invoices = 0;
-  $my_invoices = my_invoices();
-  foreach($my_invoices AS $inv) {
-    if ($inv['bezahlt'] == 0)
-      $unpayed_invoices++;
+$my_shortcuts = array();
+foreach ($modules as $modname => $info) {
+  if (file_exists('modules/'.$modname.'/shortcuts.php')) {
+    $shortcuts = array();
+    include('modules/'.$modname.'/shortcuts.php');
+    foreach ($shortcuts as $shortcut) {
+      $shortcut['module'] = $modname;
+      $my_shortcuts[$shortcut['weight']] = $shortcut;
+    }
   }
-  $extra = '';
-  if ($unpayed_invoices > 0)
-    $extra = '<span style="color: red;">('.$unpayed_invoices.' unbezahlt)</span>';
-  output("<div class=\"block\">".internal_link("../invoice/current", "<img src=\"{$prefix}images/invoice.png\" alt=\"\" /> Ihre Rechnungen {$extra}")."</div>");
 }
+krsort($my_shortcuts);
+DEBUG($my_shortcuts);
 
-if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
-  if (have_module('email'))
-    output("<div class=\"block\">".internal_link("../email/vmail", "<img src=\"{$prefix}images/email.png\" alt=\"\" /> E-Mail-Adressen verwalten ")."</div>");
-  if (have_module('vhosts'))
-    output("<div class=\"block\">".internal_link("../vhosts/vhosts", "<img src=\"{$prefix}images/webserver.png\" alt=\"\" /> Webserver-Einstellungen ")."</div>");
-  if (have_module('mysql'))
-    output("<div class=\"block\">".internal_link("../mysql/databases", "<img src=\"{$prefix}images/mysql.png\" alt=\"\" /> MySQL-Datenbanken ")."</div>");
-}
- 
-if (have_module('jabber') && $_SESSION['role'] & ROLE_CUSTOMER) {
-  output("<div class=\"block\">".internal_link("../jabber/accounts", "<img src=\"{$prefix}images/jabber.png\" alt=\"\" /> Jabber-Accounts ")."</div>");
-}
 
-output("</div>");
+output("<div class=\"overview\">");
+foreach ($my_shortcuts as $shortcut) {
+    $icon = "images/default.png";
+    if (file_exists("images/".$shortcut['icon'])) {
+      $icon = "images/".$shortcut['icon'];
+    }
+    $alert = '';
+    if (isset($shortcut['alert']) && $shortcut['alert']) {
+      $alert = '<br /><span style="color: red;">('.$shortcut['alert'].')</span>';
+    }
+    output("<div class=\"block\">".internal_link($prefix.'go/'.$shortcut['module'].'/'.$shortcut['file'], "<img src=\"{$prefix}{$icon}\" alt=\"\" /> {$shortcut['title']} {$alert}")."</div>");
+  
+}
+output('</div>');
+
 
 if (have_module('email') && $_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
   include('modules/email/vmailoverview.php');

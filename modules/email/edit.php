@@ -17,6 +17,7 @@ if ($id != 0)
 
 $accountlogin = false;
 if ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+  $section = 'email_edit';
   $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
   $account = get_account_details($id, false);
   $accountlogin = true;

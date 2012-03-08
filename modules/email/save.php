@@ -18,6 +18,7 @@ if ($_GET['action'] == 'edit')
   $accountlogin = ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT);
 
   if ($accountlogin) {
+    $section = 'email_edit';
     $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
     $account = get_account_details($id, false);
     // Leere das, sonst werden die vervielfacht
@@ -157,7 +158,7 @@ if ($_GET['action'] == 'edit')
 
   if (! ($debugmode || we_have_an_error())) {
     if ($accountlogin) {
-      header('Location: ../index/index');
+      header('Location: /');
     } else {
       header('Location: vmail');
     }
