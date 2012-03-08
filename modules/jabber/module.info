@@ -1,0 +1,4 @@
+name = jabber
+description = Jabber-Verwaltung
+permission = Jabber-Accounts verwalten
+

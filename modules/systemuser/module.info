@@ -1,0 +1,4 @@
+name = systemuser
+description = Benutzeraccount
+permission = Den eigenen Benutzeraccount verwalten
+

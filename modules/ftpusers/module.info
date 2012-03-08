@@ -1,0 +1,3 @@
+name = ftpusers
+description = FTP-Benutzer
+permission = FTP-Benutzer verwalten

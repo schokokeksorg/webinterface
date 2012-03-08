@@ -1,0 +1,3 @@
+name = dns
+description = DNS-Administration
+permission = DNS-Records verwalten

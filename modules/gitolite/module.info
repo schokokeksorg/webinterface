@@ -1,0 +1,3 @@
+name = gitolite
+description = Gitolite-Administration
+permission = GIT-Repositories verwalten

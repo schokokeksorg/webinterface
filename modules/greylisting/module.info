@@ -1,0 +1,4 @@
+name = greylisting
+description = Steuerung des Greylisting
+permission = Ausnahmen für Greylisting festlegen
+

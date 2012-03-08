@@ -1,0 +1,4 @@
+name = subusers
+description = Zusätzliche Administratoren
+permission = Rechte zusätzlicher Admins verwalten
+

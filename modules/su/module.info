@@ -1,0 +1,4 @@
+name = su
+description = SU-Modul
+permission = Das Webinterface mit den Rechten eines anderen Benutzers nutzen
+

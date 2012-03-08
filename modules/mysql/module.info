@@ -1,0 +1,4 @@
+name = mysql
+description = MySQL-Datenbank-Verwaltung
+permission = MySQL-Datenbanken verwalten
+

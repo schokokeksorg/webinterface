@@ -1,0 +1,4 @@
+name = vhosts
+description = Webserver-Verwaltung
+permission = Websites / Subdomains verwalten
+
