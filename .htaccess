@@ -3,6 +3,11 @@
   Deny from all
 </Files>
 
+<Files config.sample.php >
+  Order allow,deny
+  Deny from all
+</Files>
+
 RewriteEngine On
 RewriteRule ^go/(.*)$  dispatch.php?go=$1&%{QUERY_STRING}
 
