@@ -1,0 +1,45 @@
+This file belongs to the Webinterface of schokokeks.org Hosting.
+Please see http://source.schokokeks.org for the newest source files.
+
+Written 2008-2012 by schokokeks.org Hosting, namely
+  Bernd Wurst <bernd@schokokeks.org>
+  Hanno Böck <hanno@schokokeks.org>
+
+To the extent possible under law, the author(s) have dedicated all 
+copyright and related and neighboring rights to this software to 
+the public domain worldwide. This software is distributed without 
+any warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication 
+along with this software. If not, see 
+http://creativecommons.org/publicdomain/zero/1.0/
+
+Nevertheless, in case you use a significant part of this code, we
+ask (but not require, see the license) that you keep the authors' 
+names in place and return your changes to the public. We would be 
+especially happy if you tell us what you're going to do with this 
+code.
+
+
+This software is in production use as customer self-service 
+webinterface operated on https://config.schokokeks.org/ for use
+by the customers of schokokeks.org Hosting. We are a small web 
+hosting company in Germany and operate our servers with free 
+software.
+
+We release the source code of this software to the public in 
+hope it will be useful for someone. Possibly it will be not 
+because the underlaying database is not well documented and 
+to have an effect, there is a need for a bunch of shell-/
+python-Scripts. For the moment, those scripts are not released
+because they may contain confidential information and we have 
+to triple-check this before we can do so.
+If you think you have a need for this software and you have 
+trouble fiddeling out the database scheme or want to have some 
+of our scripts as well, please contact us. 
+
+If you have improvements, bugreports or just comments on 
+our code, we would like to hear from you! 
+
+
+                    March 2012, Bernd Wurst <bernd@schokokeks.org>  
