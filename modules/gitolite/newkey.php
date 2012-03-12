@@ -38,7 +38,7 @@ if ($handle) {
 } else {
   $action = 'newuser';
   title('Neuer GIT-Benutzer');
-  output('<p>Tragen Sie hier einen eindeutigen Namen für den neuen Benutzer fest und hinterlegen Sie einen SSH-Public-Key.</p>');
+  output('<p>Tragen Sie hier einen eindeutigen Namen für den neuen Benutzer fest und hinterlegen Sie einen SSH-Public-Key.</p><p><strong>Hinweis:</strong> Es wird nicht funktionieren, mehrere GIT-Zugänge mit dem selben Public-Key einzurichten. Soll ein Entwickler auf GIT-Repositories mehrerer unserer Kunden zugreifen, dann darf der Benutzer nur einmal angelegt werden und muss bei den übrigen Kunden als "GIT-Benutzer eines anderern Kunden" freigeschaltet werden.</p>');
 }
 
 $userprefix = $_SESSION['userinfo']['username'].'-';

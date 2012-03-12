@@ -50,7 +50,7 @@ if (isset($_GET['repo'])) {
 if (isset($_GET['handle'])) {
   $users = list_users();
   if (!in_array($_GET['handle'], $users)) {
-    system_failure("Es sollte ein unbekannter SSH-Key gelöscht werden!");
+    system_failure("Es sollte ein unbekannter Benutzer gelöscht werden!");
   }
 
   $sure = user_is_sure();
@@ -61,6 +61,32 @@ if (isset($_GET['handle'])) {
   elseif ($sure === true)
   {
     delete_key($_GET['handle']);
+    if (! $debugmode)
+      header('Location: git');
+    die();
+  }
+  elseif ($sure === false)
+  {
+    if (! $debugmode)
+      header("Location: git");
+    die();
+  }
+}
+
+if (isset($_GET['foreignhandle'])) {
+  $users = list_foreign_users();
+  if (!in_array($_GET['foreignhandle'], $users)) {
+    system_failure("Es sollte ein unbekannter Benutzer gelöscht werden!");
+  }
+
+  $sure = user_is_sure();
+  if ($sure === NULL)
+  {
+    are_you_sure("foreignhandle={$_GET['foreignhandle']}", '<p>Soll der GIT-Benutzer »'.$_GET['foreignhandle'].'« wirklich aus Ihrer Konfiguration werden?</p>');
+  }
+  elseif ($sure === true)
+  {
+    delete_foreign_user($_GET['foreignhandle']);
     if (! $debugmode)
       header('Location: git');
     die();

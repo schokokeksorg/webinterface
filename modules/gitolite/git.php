@@ -27,6 +27,7 @@ output("<p>Wir verwenden das beliebte System »gitolite« um diese Funktionalit�
 
 $repos = list_repos();
 $users = list_users();
+$foreign_users = list_foreign_users();
 
 if (count($repos) == 0) {
   output("<p><em>bisher haben Sie keine GIT-Repositories</em></p>");
@@ -83,4 +84,18 @@ foreach ($users as $handle) {
 
 addnew('newkey', 'Neuen SSH-Key eintragen');
 
-output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: Die hier gezeigten Berechtigungen können unter Umständen nicht aktuell sein. Bei Bearf können Sie '.internal_link('refresh', 'die Berechtigungen neu einlesen lassen').'</p>');
+
+if (count($foreign_users) == 0) {
+  output('<p><em>Es sind bisher keine GIT-Benutzer anderer Kunden eingetragen.</em></p>');
+} else {
+  output('<h3>GIT-Benutzer anderer Kunden</h3>');
+}
+
+foreach ($foreign_users as $handle) {
+  output('<p><strong>'.$handle.'</strong> '.internal_link('delete', icon_delete('Benutzer aus diesem Kundenaccount entfernen'), 'foreignhandle='.$handle)."</p>");
+}
+
+addnew('newforeignuser', 'GIT-Benutzer anderer Kunden freischalten');
+
+
+output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: Die hier gezeigten Berechtigungen können unter Umständen nicht aktuell sein. Bei Fehlfunktionen sollten Sie '.internal_link('refresh', 'die Berechtigungen neu einlesen lassen').'</p>');

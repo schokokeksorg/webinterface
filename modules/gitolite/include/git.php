@@ -133,7 +133,6 @@ function list_repos()
 }
 
 
-
 function list_users() {
   global $config_file, $config_dir;
   $username = $_SESSION['userinfo']['username'];
@@ -160,6 +159,32 @@ function list_users() {
   return $users;
 }
 
+function list_foreign_users() {
+  global $config_file, $config_dir;
+  $username = $_SESSION['userinfo']['username'];
+  $userconfig = $config_dir . '/' . $username . '.conf';
+  DEBUG("using config file ".$userconfig);
+  if (! is_file($userconfig)) {
+    DEBUG("user-config does not exist");
+    return array();
+  }
+  
+  $lines = file($userconfig);
+  $users = array();
+  foreach ($lines as $line) {
+    $m = array();
+    if (preg_match('_# foreign user ([^]]+)_', $line, $m) != 0) {
+      $users[] = chop($m[1]);
+    }
+    if (preg_match('_^\s*repo .*_', $line) != 0) {
+      break;
+    }
+  }
+  sort($users);
+  DEBUG($users);
+  return $users;
+}
+
 function get_pubkey($handle) {
   global $key_dir;
   if (! validate_name($handle)) {
@@ -172,6 +197,80 @@ function get_pubkey($handle) {
   return file_get_contents($keyfile);
 }
 
+
+
+function new_foreign_user($handle) 
+{
+  global $key_dir, $config_dir;
+  $username = $_SESSION['userinfo']['username'];
+
+  if (! validate_name($handle)) {
+    system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich, Binderstrich und Punkt benutzen.");
+  }
+
+  if (in_array($handle, list_users())) {
+    system_failure('Dieser GIT-Benutzer gehört zu diesem Kundenaccount.');
+  }
+
+  $keyfile = $key_dir.'/'.$handle.'.pub';
+  if (! file_exists($keyfile) ) {
+    system_failure('Diesen GIT-Benutzer gibt es nicht');
+  }
+
+  $userconfig = $config_dir . '/' . $username . '.conf';
+  DEBUG("using config file ".$userconfig);
+  if (! is_file($userconfig)) {
+    DEBUG("user-config does not exist, creating new one");
+    file_put_contents($userconfig, '# user '.$handle."\n");
+    set_user_include();
+  } elseif (in_array($handle, list_foreign_users())) {
+    # user ist schon eingetragen
+  } else {
+    $content = file_get_contents($userconfig);
+    file_put_contents($userconfig, "# foreign user {$handle}\n".$content);
+  }
+  git_wrapper('add '.$userconfig);
+
+  git_wrapper('commit --allow-empty -m "added new key for '.$handle.'"');
+  git_wrapper('push');
+}
+
+function delete_foreign_user($handle)
+{
+  global $config_dir;
+  $username = $_SESSION['userinfo']['username'];
+
+  $userconfig = $config_dir . '/' . $username . '.conf';
+  DEBUG("using config file ".$userconfig);
+  if (! is_file($userconfig)) {
+    DEBUG("user-config does not exist, wtf?");
+    system_failure("Es gibt für diesen Benutzer noch keine Konfiguration. Das sollte nicht sein!");
+  } else {
+    $content = file($userconfig);
+    DEBUG("Old file:");
+    DEBUG($content);
+    $newcontent = array();
+    foreach ($content as $line) {
+      if (preg_match('/^# foreign user '.$handle.'$/', $line)) {
+        DEBUG("delete1: ".$line);
+        continue;
+      }
+      if (preg_match('/^\s*(R|RW|RW+)\s*=\s*'.$handle.'\s*$/', $line)) {
+        DEBUG("delete2: ".$line);
+        continue;
+      }
+      $newcontent[] = $line;
+    }
+    DEBUG("Modified file:");
+    DEBUG($newcontent);
+    file_put_contents($userconfig, implode('', $newcontent));
+  }
+  git_wrapper('add '.$userconfig);
+
+  git_wrapper('commit -m "deleted foreign user '.$handle.' for '.$username.'"');
+  git_wrapper('push');
+  
+}
 
 
 function newkey($pubkey, $handle)
@@ -231,7 +330,6 @@ function delete_key($handle)
     system_failure("Den angegebenen Key scheint es nicht zu geben");
   }
 
-  // FIXME: Muss man den SSH-Key auf Plausibilität prüfen? Aus Sicherheitsgründen vermutlich nicht.
   $keyfile = $key_dir.'/'.$handle.'.pub';
   if (! file_exists($keyfile)) {
     system_failure("Der angegebene Schlüssel scheint nicht mehr vorhanden zu sein. Bitte manuelle Korrektur anfordern!");

@@ -22,6 +22,7 @@ $section = 'git_git';
 
 $repos = list_repos();
 $users = list_users();
+$foreign_users = list_foreign_users();
 
 $action = '';
 $form = '';
@@ -49,6 +50,23 @@ if (isset($_GET['repo']) && isset($repos[$_GET['repo']])) {
 
 $form .= '<tr><td>Berechtigungen</td><td>';
 foreach ($users as $user) {
+  $r = $rw = $rwplus = '';
+  if (isset($_GET['repo']) && isset($repos[$_GET['repo']])) {
+    $permissions = $repos[$_GET['repo']]['users'];
+    if (isset($permissions[$user])) {
+      switch ($permissions[$user]) {
+        case 'RW+': $rwplus = ' selected="selected"';
+                    break;
+        case 'RW': $rw = ' selected="selected"';
+                   break;
+        case 'R': $r = ' selected="selected"';
+                  break;
+      }
+    }
+  }
+  $form .= '<p>'.$user.': <select name="'.$user.'"><option value="-">Zugriff verweigern</option><option value="r"'.$r.'>Lesezugriff erlauben</option><option value="rw"'.$rw.'>Lese- und Schreibzugriff</option><option value="rwplus"'.$rwplus.'>erweiterter Lese- und Schreibzugriff (inkl. &quot;rewind&quot;)</option></select></p>';
+}
+foreach ($foreign_users as $user) {
   $r = $rw = $rwplus = '';
   if (isset($_GET['repo']) && isset($repos[$_GET['repo']])) {
     $permissions = $repos[$_GET['repo']]['users'];

@@ -33,6 +33,20 @@ if ($_GET['action'] == 'newuser') {
   if (! $debugmode)
     header('Location: git');
   die();
+} elseif ($_GET['action'] == 'newforeignuser') {
+  check_form_token('git_newforeignuser');
+  $handle = $_POST['handle'];
+  if ($handle == '') {
+    system_failure("Leere Benutzerbezeichnung!");
+  }
+  $users = list_foreign_users();
+  if (in_array($handle, $users)) {
+    system_failure("Diesen Benutzer haben Sie bereits hinzugefügt.");
+  }
+  new_foreign_user($handle);
+  if (! $debugmode)
+    header('Location: git');
+  die();
 } elseif ($_GET['action'] == 'newkey') {
   check_form_token('git_newkey');
   $handle = $_POST['handle'];
@@ -46,7 +60,7 @@ if ($_GET['action'] == 'newuser') {
 } elseif ($_GET['action'] == 'newrepo' || $_GET['action'] == 'editrepo') {
   check_form_token('git_edit');
   $permissions = array();
-  $users = list_users();
+  $users = array_merge(list_users(), list_foreign_users());
   foreach ($users as $u) {  
     if (isset($_POST[$u])) {
       switch ($_POST[$u]) {
