@@ -149,7 +149,9 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 </div>
 ";
 
-
+/*
+ * Boolean option, to be used when only one PHP version is available
+ */
 $have_php = ($vhost['php'] == 'php53' ? ' checked="checked" ' : '');
 
 $phpoptions = "<h5>PHP</h5>
@@ -157,13 +159,12 @@ $phpoptions = "<h5>PHP</h5>
     <input type=\"checkbox\" name=\"php\" id=\"php\" value=\"php53\" {$have_php}/>&#160;<label for=\"php\">PHP einschalten</label>
   </div>
 ";
-
 /*
- * Zeige ein Auswahlmenü, wenn bisher PHP 5.2 eingestellt war!
+ * Choose what PHP version to use
  */
-if ($vhost['php'] == 'fastcgi')
+if ($vhost['php'] == 'php54')
 {
-  $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "fastcgi" => "Kompatibilitätsmodus: PHP 5.2");
+  $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "php54" => "Vorabversion: PHP 5.4");
   $phpoptions = "
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">

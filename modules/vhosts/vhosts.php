@@ -110,6 +110,9 @@ if (count($vhosts) > 0)
         case 'fastcgi':
           $php = icon_enabled_warning('PHP in veralteter Version aktiviert');
           break;
+        case 'php54':
+          $php = icon_enabled_warning('PHP in experimenteller Version');
+          break;
         case 'php53':
           $php = icon_enabled('PHP eingeschaltet');
           break;
