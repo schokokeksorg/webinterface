@@ -14,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_role(ROLE_SYSTEMUSER | ROLE_CUSTOMER);
+require_role(ROLE_SYSTEMUSER);
 require_once("inc/base.php");
 require_once("inc/security.php");
 require_once("inc/debug.php");

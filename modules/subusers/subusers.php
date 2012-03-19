@@ -16,6 +16,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/icons.php');
 
+require_role(ROLE_SYSTEMUSER);
+
 include("subuser.php");
 
 title("Zusätzliche Admin-Zugänge");
