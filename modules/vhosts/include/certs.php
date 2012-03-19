@@ -136,13 +136,24 @@ function validate_certificate($cert, $key)
   }
 
   $cacerts = array('/etc/ssl/certs');
-  $chain = get_chain($cert);
+  $chain = (int) get_chain($cert);
   if ($chain)
   {
-    $cacerts[] = '/etc/apache2/certs/chains/'.$chain.'.pem';
+    $result = db_query("SELECT content FROM vhosts.certchain WHERE id={$chain}");
+    $tmp = mysql_fetch_assoc($result);
+    $chaincert = $tmp['content'];
+    $chainfile = tempnam(sys_get_temp_dir(), 'webinterface');
+    $f = fopen($chainfile, "w");
+    fwrite($f, $chaincert);
+    fclose($f);
+    $cacerts[] = $chainfile;
   }
 
-  if (openssl_x509_checkpurpose($cert, X509_PURPOSE_SSL_SERVER, $cacerts) !== true)
+  $valid = openssl_x509_checkpurpose($cert, X509_PURPOSE_SSL_SERVER, $cacerts);
+  if ($chain) {
+    unlink($chainfile);
+  }
+  if ($valid !== true)
   { 
     DEBUG('certificate was not validated as a server certificate with the available chain');
     return CERT_NOCHAIN;
