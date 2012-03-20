@@ -154,23 +154,25 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
  */
 $have_php = ($vhost['php'] == 'php53' ? ' checked="checked" ' : '');
 
+/*
 $phpoptions = "<h5>PHP</h5>
   <div style=\"margin-left: 2em;\">
     <input type=\"checkbox\" name=\"php\" id=\"php\" value=\"php53\" {$have_php}/>&#160;<label for=\"php\">PHP einschalten</label>
   </div>
 ";
+*/
 /*
  * Choose what PHP version to use
  */
-if ($vhost['php'] == 'php54')
-{
+//if ($vhost['php'] == 'php54')
+//{
   $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "php54" => "Experimentell: PHP 5.4");
   $phpoptions = "
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">
     ".html_select("php", $options, $vhost['php'])."
   </div>";
-}
+//}
 
 $safemode = ($vhost['cgi'] == 1 ? '' : ' checked="checked" ');
 
