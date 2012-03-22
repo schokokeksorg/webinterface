@@ -24,7 +24,7 @@ define("CERT_NOCHAIN", 2);
 function user_certs()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=${uid}");
+  $result = db_query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=${uid} ORDER BY cn");
   $ret = array();
   while ($i = mysql_fetch_assoc($result))
     $ret[] = $i;
@@ -35,7 +35,7 @@ function user_certs()
 function user_csr()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=${uid}");
+  $result = db_query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=${uid} ORDER BY hostname");
   $ret = array();
   while ($i = mysql_fetch_assoc($result))
     $ret[] = $i;
