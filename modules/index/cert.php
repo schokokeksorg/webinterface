@@ -34,11 +34,11 @@ if (isset($_GET['clear']))
 }
 
 $username = NULL;
-if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
   $username = $_SESSION['userinfo']['username'];
   if (isset($_SESSION['subuser']))
     $username = $_SESSION['subuser'];
-} elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+} elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
   $username = $_SESSION['mailaccount'];
 }
 
@@ -56,6 +56,7 @@ if (isset($_SESSION['clientcert_cert']))
 }
 
 
+DEBUG($username);
 $certs = get_certs_by_username($username);
 if ($certs != NULL) {
   output('<p>Sie haben bereits Zertifikate für den Zugang eingerichtet.</p>
