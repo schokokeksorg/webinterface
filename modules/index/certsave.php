@@ -40,11 +40,11 @@ elseif ($_GET['action'] == 'delete')
   if (! $cert)
     system_failure('no ID');
   $username = NULL;
-  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+  if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $username = $_SESSION['userinfo']['username'];
     if (isset($_SESSION['subuser']))
       $username = $_SESSION['subuser'];
-  } elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+  } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $username = $_SESSION['mailaccount'];
   }
   if (! ($cert['username'] == $username))

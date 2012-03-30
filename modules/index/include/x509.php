@@ -67,13 +67,13 @@ function add_clientcert($certdata, $dn, $issuer, $startpage='')
 {
   $type = NULL;
   $username = NULL;
-  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+  if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $type = 'user';
     $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
     if (isset($_SESSION['subuser']))
       $username = mysql_real_escape_string($_SESSION['subuser']);
       $type = 'subuser';
-  } elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+  } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $type = 'email';
     $username = mysql_real_escape_string($_SESSION['mailaccount']);
   }
@@ -104,13 +104,13 @@ function delete_clientcert($id)
   $id = (int) $id;
   $type = NULL;
   $username = NULL;
-  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+  if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $type = 'user';
     $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
     if (isset($_SESSION['subuser']))
       $username = mysql_real_escape_string($_SESSION['subuser']);
       $type = 'subuser';
-  } elseif ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
+  } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $type = 'email';
     $username = mysql_real_escape_string($_SESSION['mailaccount']);
   }
