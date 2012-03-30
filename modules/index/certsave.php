@@ -42,8 +42,9 @@ elseif ($_GET['action'] == 'delete')
   $username = NULL;
   if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $username = $_SESSION['userinfo']['username'];
-    if (isset($_SESSION['subuser']))
+    if (isset($_SESSION['subuser'])) {
       $username = $_SESSION['subuser'];
+    }
   } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $username = $_SESSION['mailaccount'];
   }

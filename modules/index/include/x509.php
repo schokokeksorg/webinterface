@@ -70,9 +70,10 @@ function add_clientcert($certdata, $dn, $issuer, $startpage='')
   if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $type = 'user';
     $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-    if (isset($_SESSION['subuser']))
+    if (isset($_SESSION['subuser'])) {
       $username = mysql_real_escape_string($_SESSION['subuser']);
       $type = 'subuser';
+    }
   } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $type = 'email';
     $username = mysql_real_escape_string($_SESSION['mailaccount']);
@@ -107,9 +108,10 @@ function delete_clientcert($id)
   if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $type = 'user';
     $username = mysql_real_escape_string($_SESSION['userinfo']['username']);
-    if (isset($_SESSION['subuser']))
+    if (isset($_SESSION['subuser'])) {
       $username = mysql_real_escape_string($_SESSION['subuser']);
       $type = 'subuser';
+    }
   } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $type = 'email';
     $username = mysql_real_escape_string($_SESSION['mailaccount']);
