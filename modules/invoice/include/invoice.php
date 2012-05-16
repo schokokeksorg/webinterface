@@ -54,7 +54,7 @@ function invoice_items($id)
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
-  $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer={$id} AND kunde={$c}");
+  $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer={$id} AND kunde={$c}");
   if (mysql_num_rows($result) == 0)
 	system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
   $ret = array();
@@ -67,7 +67,7 @@ function invoice_items($id)
 function upcoming_items()
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT anzahl, beschreibung, startdatum, enddatum, betrag, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde={$c} ORDER BY startdatum ASC");
+  $result = db_query("SELECT anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde={$c} ORDER BY startdatum ASC");
   $ret = array();
   while($line = mysql_fetch_assoc($result))
 	  array_push($ret, $line);

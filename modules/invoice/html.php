@@ -58,10 +58,11 @@ foreach($items AS $item)
 	$epreis = $item['betrag'];
 	if ($item['brutto'] == 0)
 		$epreis = $epreis * (1 + ($item['mwst'] / 100));
+  $einheit = ($item['einheit'] ? $item['einheit'] : '');
 	$gesamt = round($epreis * $item['anzahl'], 2);
 	$epreis = round($epreis, 2);
 	$summe += $gesamt;
-	output("<tr><td>{$anzahl}</td>");
+	output("<tr><td>{$anzahl} {$einheit}</td>");
 	output("<td>{$desc}</td>");
 	output("<td>{$epreis} €</td><td>{$gesamt} €</td></tr>\n");
 }

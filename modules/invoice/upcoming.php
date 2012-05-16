@@ -54,7 +54,8 @@ foreach($items AS $item)
 	$gesamt = round($epreis * $item['anzahl'], 2);
 	$epreis = round($epreis, 2);
 	$summe += $gesamt;
-	output("<tr><td>{$item['anzahl']}</td>");
+  $einheit = ($item['einheit'] ? $item['einheit'] : '');
+	output("<tr><td>{$item['anzahl']} {$einheit}</td>");
 	output("<td>{$item['beschreibung']}</td><td>{$desc}</td>");
 	output("<td>{$epreis} €</td><td>{$gesamt} €</td></tr>\n");
 }
