@@ -362,3 +362,10 @@ div.freewvs p {
 }
 
 
+tr.unpaid td {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  font-weight: bold;
+  background-color: #fdd;
+}
+
