@@ -21,7 +21,6 @@ require_once('invoice.php');
 require_role(ROLE_CUSTOMER);
 
 title('Rechnungen');
-output('<p>Hier können Sie Ihre bisherigen Rechnungen einsehen und herunterladen.</p>');
 
 $show_paid = (isset($_GET['paid']) && $_GET['paid'] == '1');
 
@@ -46,14 +45,22 @@ if (count($invoices_to_show) == 0) {
 
   output('<p><em>'.$error.'</em></p>');
 } else {
+  if ($show_paid) {
+    output('<p>Hier können Sie Ihre bisherigen Rechnungen einsehen und herunterladen.</p>');
+  } else {
+    output('<p>Hier sehen Sie Ihre momentan offenen Rechnungen. Ältere, bereits bezahlte Rechnungen können sie über den untenstehenden Link einblenden.</p>');
+  }
   output('<table><tr><th>Nr.</th><th>Datum</th><th>Gesamtbetrag</th><th>bezahlt?</th><th>Herunterladen</th></tr>');
 
   foreach($invoices_to_show AS $invoice)
   {
 	  $bezahlt = 'Nein';
-  	if ($invoice['bezahlt'] == 1)
+    $class = 'unpaid';
+  	if ($invoice['bezahlt'] == 1) {
 	  	$bezahlt = 'Ja';
-  	output("<tr><td>".internal_link("html", $invoice['id'], "id={$invoice['id']}")."</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "PDF", "id={$invoice['id']}").' &#160; '.internal_link("html", "HTML", "id={$invoice['id']}")."</td></tr>\n");
+      $class = 'paid';
+    }
+  	output("<tr class=\"{$class}\"><td>".internal_link("html", $invoice['id'], "id={$invoice['id']}")."</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "PDF", "id={$invoice['id']}").' &#160; '.internal_link("html", "HTML", "id={$invoice['id']}")."</td></tr>\n");
   }
 
   output('</table><br />');
