@@ -23,21 +23,47 @@ require_role(ROLE_CUSTOMER);
 title('Rechnungen');
 output('<p>Hier können Sie Ihre bisherigen Rechnungen einsehen und herunterladen.</p>');
 
+$show_paid = (isset($_GET['paid']) && $_GET['paid'] == '1');
+
 $invoices = my_invoices();
 
-output('<table><tr><th>Nr.</th><th>Datum</th><th>Gesamtbetrag</th><th>bezahlt?</th><th>Herunterladen</th></tr>');
-
-foreach($invoices AS $invoice)
-{
-	$bezahlt = 'Nein';
-	if ($invoice['bezahlt'] == 1)
-		$bezahlt = 'Ja';
-	output("<tr><td>{$invoice['id']}</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "PDF", "id={$invoice['id']}").' &#160; '.internal_link("html", "HTML", "id={$invoice['id']}")."</td></tr>\n");
+$invoices_to_show = array();
+foreach ($invoices as $i) {
+  if ($show_paid || $i['bezahlt'] == 0) {
+    array_push($invoices_to_show, $i);
+  }
 }
 
-output('</table><br />
+if (count($invoices_to_show) == 0) {
+  $error = 'Keine Rechnungen gefunden.';
+  if (count($invoices) == 0) {
+    $error = 'Bisher keine Rechnungen vorhanden.';
+  } else {
+    $error = 'Keine offenen Rechnungen vorhanden. Klicken Sie auf den nachstehenden Link um bereits bezahlte Rechnungen zu sehen.';
+  }
+  if ($show_paid) {
+  }
 
-<p>'.internal_link('upcoming', 'Zukünftige Rechnungsposten anzeigen').'</p>');
+  output('<p><em>'.$error.'</em></p>');
+} else {
+  output('<table><tr><th>Nr.</th><th>Datum</th><th>Gesamtbetrag</th><th>bezahlt?</th><th>Herunterladen</th></tr>');
+
+  foreach($invoices_to_show AS $invoice)
+  {
+	  $bezahlt = 'Nein';
+  	if ($invoice['bezahlt'] == 1)
+	  	$bezahlt = 'Ja';
+  	output("<tr><td>".internal_link("html", $invoice['id'], "id={$invoice['id']}")."</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "PDF", "id={$invoice['id']}").' &#160; '.internal_link("html", "HTML", "id={$invoice['id']}")."</td></tr>\n");
+  }
+
+  output('</table><br />');
+}
+
+if (! $show_paid) {
+  output('<p>'.internal_link('', 'Bereits bezahlte Rechnungen zeigen', 'paid=1').'</p>');
+}
+output('<p>'.internal_link('upcoming', 'Zukünftige Rechnungsposten anzeigen').'</p>');
+
 
 
 ?>
