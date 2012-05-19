@@ -36,15 +36,21 @@ $today = date('Y-m-d');
 
 output('<table><tr><th>Anzahl</th><th>Beschreibung</th><th>Zeitraum</th><th>Einzelpreis</th><th>Gesamtbetrag</th></tr>');
 
+$counter = 0;
+
 foreach($items AS $item)
 {
 	if ($flip && $item['startdatum'] > $today)
 	{
+    if ($counter == 0) {
+      output("<tr><td colspan=\"5\"><em>Aktuell keine fälligen Posten</em></td></tr>");
+    }
 		$flip = false;
 		output("<tr><td colspan=\"4\" style=\"text-align: right; font-weight: bold; border: none;\">Summe bisher fällige Posten:</td>");
 		output("<td style=\"font-weight: bold;\">{$summe} €</td></tr>\n");
 		output("<tr><td colspan=\"5\" style=\"border: none;\"> </td></tr>\n");
 	}
+  $counter++;
 	$desc = $item['startdatum'];
 	if ($item['enddatum'] != NULL)
 		$desc = $item['startdatum'].' - '.$item['enddatum'];
