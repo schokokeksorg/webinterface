@@ -106,8 +106,13 @@ elseif ($_GET['action'] == 'edit')
       system_failure('Ungültige Shell');
 
   set_account_details($account);
-  if (! ($debugmode || $error))
-    header('Location: account');
+  if (! ($debugmode || $error)) {
+    $location = 'myaccount';
+    if ($_SESSION['role'] & ROLE_CUSTOMER) {
+      $location = 'account';
+    }
+    header('Location: '.$location);
+  }
   
 }
 elseif ($_GET['action'] == 'delete')
