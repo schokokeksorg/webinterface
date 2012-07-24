@@ -147,9 +147,20 @@ $form = '';
 if ($accountlogin) {
   $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 } else {
-  $form .= "
+  if ($is_mailbox) {
+    $domainlist = get_vmail_domains();
+    $domain = NULL;
+    foreach ($domainlist as $dom) {
+      if ($dom->id == $account['domain']) {
+        $domain = $dom->domainname;
+      }
+    }
+    $form .= "
+    <p><strong style=\"font-size: 1.5em;\">{$account['local']}@{$domain}</strong></p>";
+  } else {
+    $form .= "
     <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"{$account['local']}\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($account['domain'])."</p>";
-
+  }
   $password_message = '';
   $password_value = '';
   if ($is_mailbox and ($account['password'] != ''))

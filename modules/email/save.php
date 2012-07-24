@@ -39,13 +39,24 @@ if ($_GET['action'] == 'edit')
     $account['forwards'] = array();
   } else {
     $id = isset($_GET['id']) ? (int) $_GET['id'] : NULL;
-  
+
     $account = empty_account();
     $account['id'] = NULL;
-    if ($id)
+    if ($id) {
       $account['id'] = $id;
-    $account['local'] = $_POST['local'];
-    $account['domain'] = (int) $_POST['domain'];
+  
+      $oldaccount = get_account_details($id);
+      if ($oldaccount['password'] != NULL ) { // Account war vorher eine Mailbox
+        $account['local'] = $oldaccount['local'];
+        $account['domain'] = $oldaccount['domain'];
+      } else {
+        $account['local'] = $_POST['local'];
+        $account['domain'] = (int) $_POST['domain'];
+      }
+    } else {
+      $account['local'] = $_POST['local'];
+      $account['domain'] = (int) $_POST['domain'];
+    }
     $account['password'] = $_POST['password'];
     if (($account['password'] == '') && ($_POST['mailbox'] == 'yes'))
       system_failure("Sie haben ein leeres Passwort eingegeben!");
