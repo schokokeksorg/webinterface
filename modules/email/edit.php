@@ -147,7 +147,7 @@ $form = '';
 if ($accountlogin) {
   $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 } else {
-  if ($is_mailbox) {
+  if ($id != 0 && $is_mailbox) {
     $domainlist = get_vmail_domains();
     $domain = NULL;
     foreach ($domainlist as $dom) {
