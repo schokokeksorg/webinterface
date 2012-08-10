@@ -43,7 +43,7 @@ function find_role($login, $password, $i_am_admin = False)
   if (@mysql_num_rows($result) > 0)
   {
     $entry = mysql_fetch_object($result);
-    if ($entry->username != $login) {
+    if (strcasecmp($entry->username, $login) == 0 && $entry->username != $login) {
       // MySQL matched (warum auch immer) ohne Beachtung der Schreibweise. Wir wollen aber case-sensitive sein.
       logger(LOG_WARNING, "session/checkuser", "login", "denying login to wrong cased username »{$login}«.");
       warning('Beachten Sie bei der Eingabe Ihrer Zugangsdaten bitte die Groß- und Kleinschreibung.');
