@@ -325,5 +325,13 @@ function disable_autorecords($domainid)
 }
 
 
+function domain_is_maildomain($domain)
+{
+  $domain = (int) $domain;
+  $result = db_query("SELECT mail FROM kundendaten.domains WHERE id={$domain}");
+  $dom = mysql_fetch_assoc($result);
+  return ($dom['mail'] != 'none');
+}
+
 
 ?>
