@@ -37,7 +37,10 @@ function strong_password($password)
   if (! ($dict = crack_opendict(config('cracklib_dict'))))
   {
     logger(LOG_ERR, "inc/security", "cracklib", "could not open cracklib-dictionary »".config('cracklib_dict')."«");
-    system_failure("Kann Crack-Lib-Wörterbuch nicht öffnen: ".config('cracklib_dict'));
+    #system_failure("Kann Crack-Lib-Wörterbuch nicht öffnen: ".config('cracklib_dict'));
+    DEBUG('cracklib tut nicht, dann wird das PW akzeptiert');
+    warning('Das Passwort konnte aufgrund eines internen Fehlers nicht auf die Passwortstärke geprüft werden.');
+    return true;
   }
   // Führe eine Überprüfung des Passworts durch
   $check = crack_check($dict, $password);
