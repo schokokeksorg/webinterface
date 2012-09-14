@@ -289,9 +289,9 @@ function encode_querystring($querystring)
 }
 
 
-function addnew($file, $label, $querystring = '')
+function addnew($file, $label, $querystring = '', $attribs = '')
 {
-  output('<p class="addnew">'.internal_link($file, $label, $querystring).'</p>');
+  output('<p class="addnew">'.internal_link($file, $label, $querystring, $attribs).'</p>');
 }
 
 
