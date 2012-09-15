@@ -20,32 +20,38 @@ require_role(ROLE_SYSTEMUSER);
 
 require_once('googleauth.php');
 
-$username = $_REQUEST['username'];
-$webmailpw = $_REQUEST['webmailpass'];
-$ga_code = $_REQUEST['ga_code'];
-
-$success = true;
-
-if (! check_webmail_password($username, $webmailpw)) {
-  input_error('Das Webmail-Passwort hat nicht gestimmt.');
-  $success = false;
-}
-
-if (! check_googleauth($username, $ga_code)) {
-  input_error('Der Google-Authenticator-Code wurde nicht akzeptiert.');
-  $success = false;
-}
-
+$section='googleauth_overview';
 title('Test der Zwei-Faktor-authentifizierung');
 
-if ($success) {
-  output('<p>'.icon_ok().' Der Test war erfolgreich!');
+if (isset($_REQUEST['username'])) {
+  $username = $_REQUEST['username'];
+  $webmailpw = $_REQUEST['webmailpass'];
+  $ga_code = $_REQUEST['ga_code'];
+  
+  $success = true;
+  
+  if (! check_webmail_password($username, $webmailpw)) {
+    input_error('Das Webmail-Passwort hat nicht gestimmt.');
+    $success = false;
+  }
+
+  if (! check_googleauth($username, $ga_code)) {
+    input_error('Der Google-Authenticator-Code wurde nicht akzeptiert.');
+    $success = false;
+  }
+
+  if ($success) {
+    output('<p>'.icon_ok().' Der Test war erfolgreich!');
+  } else {
+    output('<p>'.icon_error().' Der Test war leider nicht erfolgreich.');
+  }
+
+
+  output('<h3>Weiterer Test</h3>');
 } else {
-  output('<p>'.icon_error().' Der Test war leider nicht erfolgreich.');
+  $username = '';
+  output('<p>Geben Sie hier die Login-Daten ein um Ihren Zugang zu testen.</p>');
 }
-
-
-output('<h3>Weiterer Test</h3>');
 
 $form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_input_general($username).'" /></p>
 <p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass" /></p>

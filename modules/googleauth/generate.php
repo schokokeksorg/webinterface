@@ -31,6 +31,7 @@ if (! validate_password($username, $oldpw)) {
 store_webmail_password($username, $oldpw, $newpw);
 $secret = generate_secret($username);
 
+$section='googleauth_overview';
 title("Sicherer Zugang zum Webmailer");
 
 output('<p>Bitte geben Sie den folgenden Initialisierungs-Code in Ihre Google-Authenticator-Software ein oder Scannen Sie den QR-Code mit der Google-Authenticator-App Ihres Mobiltelefons.</p>');

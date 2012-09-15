@@ -70,7 +70,7 @@ if (count($sorted_by_domains) > 0)
         output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$username.'</strong></p>');
         $id = account_has_googleauth($username);
         if ($id) {
-          output(addnew('delete', 'Sicheren Zugang für dieses Postfach abschalten', 'username='.urlencode($username), 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+          output(addnew('delete', 'Sicheren Zugang für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
         } else {
           output(addnew('setup', 'Sicheren Zugang für dieses Postfach aktivieren', 'username='.urlencode($username)));
         }

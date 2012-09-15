@@ -62,8 +62,9 @@ function store_webmail_password($username, $oldpw, $newpw)
   $code = base64_encode($code);
   DEBUG(array($oldpw, $newpw, $code));
 
+  $uid = (int) $_SESSION['userinfo']['uid'];
 
-  db_query("REPLACE INTO mail.webmail_googleauth (email, webmailpass) VALUES ('{$username}', '{$code}')");
+  db_query("REPLACE INTO mail.webmail_googleauth (useraccount, email, webmailpass) VALUES ({$uid}, '{$username}', '{$code}')");
 }
 
 
@@ -117,7 +118,7 @@ function generate_secret($username)
 function check_googleauth($username, $code) {
   $username = mysql_real_escape_string($username);
 
-  $result = db_query("SELECT ga_secret FROM mail.webmail_googleauth WHERE email='{$username}'");
+  $result = db_query("SELECT ga_secret, failures FROM mail.webmail_googleauth WHERE email='{$username}' AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())");
   $tmp = mysql_fetch_assoc($result);
   $secret = $tmp['ga_secret'];
 
@@ -126,8 +127,15 @@ function check_googleauth($username, $code) {
   
   $checkResult = $ga->verifyCode($secret, $code, 2);    // 2 = 2*30sec clock tolerance
   if ($checkResult) {
+    db_query("UPDATE mail.webmail_googleauth SET failures = 0, unlock_timestamp=NULL WHERE email='{$username}'");
     DEBUG('OK');
   } else {
+    if ($tmp['failures'] > 0 && $tmp['failures'] % 5 == 0) {
+      db_query("UPDATE mail.webmail_googleauth SET failures = failures+1, unlock_timestamp = NOW() + INTERVAL 5 MINUTE WHERE email='{$username}'");
+    } else {
+      db_query("UPDATE mail.webmail_googleauth SET failures = failures+1 WHERE email='{$username}'");
+    }
+    
     DEBUG('FAILED');
   }
   return $checkResult;
@@ -161,8 +169,29 @@ function generate_qrcode_image($secret) {
     $return_value = proc_close($process);
   
     return $pngdata;
+  } else {
+    warning('Es ist ein interner Fehler im Webinterface aufgetreten, aufgrund dessen kein QR-Code erstellt werden kann. Sollte dieser Fehler mehrfach auftreten, kontaktieren Sie bitte die Administratoren.');
   }
   
   
+}
+
+function accountname($id) 
+{
+  $id = (int) $id;
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT email FROM mail.webmail_googleauth WHERE id={$id} AND useraccount={$uid}");
+  if ($tmp = mysql_fetch_assoc($result)) {
+    return $tmp['email'];
+  }
+}
+
+
+function delete_googleauth($id) 
+{
+  $id = (int) $id;
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  
+  db_query("DELETE FROM mail.webmail_googleauth WHERE id={$id} AND useraccount={$uid}");
 }
 

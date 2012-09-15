@@ -20,6 +20,7 @@ require_role(ROLE_SYSTEMUSER);
 
 $username = urldecode($_REQUEST['username']);
 
+$section='googleauth_overview';
 title("Sicherer Zugang zum Webmailer");
 
 output('<p><strong>Hinweise:</strong></p><ul><li>Nach Einrichtung der Zwei-Faktor-Authentifizierung funktioniert bei der Anmeldung über <a href="'.config('webmail_url').'">die zentrale Webmail-Login-Seite</a> nur noch dieses Passwort zusammen mit dem Einmal-Code, der mit dem Google-Authenticator erzeugt wird.</li>
