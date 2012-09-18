@@ -115,7 +115,19 @@ function generate_secret($username)
   return $secret;
 }
 
+function check_locked($username) 
+{
+  $username = mysql_real_escape_string($username);
+  $result = db_query("SELECT 1 FROM mail.webmail_googleauth WHERE unlock_timestamp IS NOT NULL and unlock_timestamp > NOW() AND email='{$username}'");
+  return (mysql_num_rows($result) > 0);
+}
+
 function check_googleauth($username, $code) {
+  if (check_blacklist($username, $code)) {
+    DEBUG('Replay-Attack');
+    return false;
+  }
+
   $username = mysql_real_escape_string($username);
 
   $result = db_query("SELECT ga_secret, failures FROM mail.webmail_googleauth WHERE email='{$username}' AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())");
@@ -128,6 +140,7 @@ function check_googleauth($username, $code) {
   $checkResult = $ga->verifyCode($secret, $code, 2);    // 2 = 2*30sec clock tolerance
   if ($checkResult) {
     db_query("UPDATE mail.webmail_googleauth SET failures = 0, unlock_timestamp=NULL WHERE email='{$username}'");
+    blacklist_token($username, $code);
     DEBUG('OK');
   } else {
     if ($tmp['failures'] > 0 && $tmp['failures'] % 5 == 0) {
@@ -193,5 +206,22 @@ function delete_googleauth($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   
   db_query("DELETE FROM mail.webmail_googleauth WHERE id={$id} AND useraccount={$uid}");
+}
+
+
+function blacklist_token($email, $token)
+{
+  $email = mysql_real_escape_string($email);
+  $token = mysql_real_escape_string($token);
+  db_query("INSERT INTO mail.webmail_googleauth_blacklist (timestamp, email, token) VALUES (NOW(), '{$email}', '{$token}')");
+}
+
+function check_blacklist($email, $token)
+{
+  $email = mysql_real_escape_string($email);
+  $token = mysql_real_escape_string($token);
+  db_query("DELETE FROM mail.webmail_googleauth_blacklist WHERE timestamp < NOW() - INTERVAL 10 MINUTE");
+  $result = db_query("SELECT id FROM mail.webmail_googleauth_blacklist WHERE email='{$email}' AND token='{$token}'");
+  return (mysql_num_rows($result) > 0);
 }
 

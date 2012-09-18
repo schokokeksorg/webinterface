@@ -35,10 +35,14 @@ if (isset($_REQUEST['username'])) {
     $success = false;
   }
 
-  if (! check_googleauth($username, $ga_code)) {
+  if (check_locked($username)) {
+    input_error('Aufgrund einiger Fehlversuche wurde dieses Konto übergangsweise deaktiviert. Bitte warten Sie ein paar Minuten.');
+    $success = false;
+  } elseif (! check_googleauth($username, $ga_code)) {
     input_error('Der Google-Authenticator-Code wurde nicht akzeptiert.');
     $success = false;
   }
+
 
   if ($success) {
     output('<p>'.icon_ok().' Der Test war erfolgreich!');
