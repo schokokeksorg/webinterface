@@ -23,6 +23,29 @@ if (!session_start())
 
 DEBUG("<pre>POST-DATA: ".htmlspecialchars(print_r($_POST, true))."\nSESSION_DATA: ".htmlspecialchars(print_r($_SESSION, true))."</pre>");
 
+if (have_module('googleauth') && isset($_POST['webinterface_googlecode']) && isset($_SESSION['googleauth']) && isset($_SESSION['googleauth_username'])) {
+  require_once('modules/googleauth/include/googleauth.php');
+  $role = NULL;
+  if (check_googleauth($_SESSION['googleauth_username'], $_POST['webinterface_googlecode'])) {
+    $role = find_role($_SESSION['googleauth_username'], '', true);
+  }
+  if ($role === NULL)
+  {
+    $_SESSION['role'] = ROLE_ANONYMOUS;
+    logger(LOG_WARNING, "session/start", "login", "wrong googleauth code (username: »{$_SESSION['googleauth_username']}«)");
+    warning('Ihre Anmeldung konnte nicht durchgeführt werden. Geben Sie bitte einen neuen Code ein.');
+    show_page('googleauth-login');
+    die();
+  }
+  else
+  {
+    setup_session($role, $_SESSION['googleauth_username']);
+  }
+  unset($_POST['webinterface_googlecode']);
+  unset($_SESSION['googleauth']);
+  unset($_SESSION['googleauth_username']);
+}
+
 if (isset($_POST['webinterface_username']) && isset($_POST['webinterface_password']))
 {
   $role = find_role($_POST['webinterface_username'], $_POST['webinterface_password']);

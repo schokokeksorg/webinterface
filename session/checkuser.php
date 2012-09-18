@@ -77,10 +77,40 @@ function find_role($login, $password, $i_am_admin = False)
     return ROLE_CUSTOMER;
   }
 
+  // Sub-User
+
+  $result = db_query("SELECT password FROM system.subusers WHERE username='{$login}'");
+  if (@mysql_num_rows($result) > 0)
+  {
+    $entry = mysql_fetch_object($result);
+    $db_password = $entry->password;
+    // SHA1 für alte Subuser (kaylee), SHA256 für neue Subuser
+    if (hash("sha1", $password) == $db_password || hash("sha256", $password) == $db_password || $i_am_admin)
+    {
+      logger(LOG_INFO, "session/checkuser", "login", "logged in virtual subuser »{$login}«.");
+      return ROLE_SUBUSER;
+    }
+    logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing subuser »{$login}«.");
+  }
+
+
   // Mail-Account
   $account = $login;
   if (! strstr($account, '@')) {
     $account .= '@'.config('masterdomain');
+  }
+  if (!$i_am_admin && have_module('googleauth')) {
+    require_once('modules/googleauth/include/googleauth.php');
+    if (account_has_googleauth($account)) {
+      if (check_webmail_password($account, $password)) {
+        $_SESSION['googleauth_username'] = $account;
+        $_SESSION['googleauth'] = True;
+        show_page('googleauth-login');
+        die();
+      } else {
+        return NULL;
+      }
+    }
   }
   $result = db_query("SELECT cryptpass FROM mail.courier_mailaccounts WHERE account='{$account}' LIMIT 1;");
   if (@mysql_num_rows($result) > 0)
@@ -112,22 +142,6 @@ function find_role($login, $password, $i_am_admin = False)
     logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing virtual e-mail-account »{$account}«.");
   }
   
-
-  // Sub-User
-
-  $result = db_query("SELECT password FROM system.subusers WHERE username='{$login}'");
-  if (@mysql_num_rows($result) > 0)
-  {
-    $entry = mysql_fetch_object($result);
-    $db_password = $entry->password;
-    // SHA1 für alte Subuser (kaylee), SHA256 für neue Subuser
-    if (hash("sha1", $password) == $db_password || hash("sha256", $password) == $db_password || $i_am_admin)
-    {
-      logger(LOG_INFO, "session/checkuser", "login", "logged in virtual subuser »{$login}«.");
-      return ROLE_SUBUSER;
-    }
-    logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing subuser »{$login}«.");
-  }
 
 
   // Nothing?
