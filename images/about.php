@@ -37,6 +37,10 @@ us what you're going to do with this code.
 
 <h3>Lizenzinformationen</h3>
 <p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webhosting. Der Source-Code ist unter <a href="http://source.schokokeks.org/">source.schokokeks.org</a> erhältlich und wurde unter der Lizenz CC0 / Public Domain freigegeben.</p>
+<p>Folgende Bestandteile wurden von anderen Autoren übernommen und unterliegen einer abweichenden Lizenz:</p>
+<ul>
+  <li>Eine <a href="https://github.com/PHPGangsta/GoogleAuthenticator">Bibliothek zur Abwicklung der Google-Authenticator-Anmeldung</a> wurde von <a href="http://www.phpgangsta.de/2-faktor-authentifizierung-mit-dem-google-authenticator">Michael Kliewe (PHPGangsta)</a> übernommen und ist unter der BSD-Lizenz freigegeben</li>
+</ul>
 <p>Einzelne Grafiken wurden aus freien Projekten entnommen oder es wurden freie Grafiken verwendet.</p>
 <p>Der Ursprung von Grafiken ist:</p>
 <ul>

@@ -86,8 +86,7 @@ function decode_webmail_password($crypted, $webmailpw)
 }
 
 
-function check_webmail_password($username, $webmailpass)
-{
+function get_imap_password($username, $webmailpass) {
   $username = mysql_real_escape_string($username);
   $result = db_query("SELECT webmailpass FROM mail.webmail_googleauth WHERE email='{$username}'");
   $tmp = mysql_fetch_assoc($result);
@@ -95,9 +94,14 @@ function check_webmail_password($username, $webmailpass)
   $crypted = $tmp['webmailpass'];
     
   $clear = decode_webmail_password($crypted, $webmailpass);
+  return $clear;
+}
 
+
+function check_webmail_password($username, $webmailpass)
+{
+  $clear = get_imap_password($username, $webmailpass);
   return validate_password($username, $clear);
-  
 }
 
 

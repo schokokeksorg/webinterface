@@ -95,7 +95,13 @@ if (count($sorted_by_domains) > 0) {
 foreach ($accounts AS $acc) {
   if ($acc['mailbox']) {
     output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$acc['account'].'</strong></p>');
-    output(addnew('setup', 'Sicheren Zugang für dieses Postfach aktivieren', 'username='.urlencode($acc['account'])));
+    $username = $acc['account'];
+    $id = account_has_googleauth($username);
+    if ($id) {
+      output(addnew('delete', 'Sicheren Zugang für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+    } else {
+      output(addnew('setup', 'Sicheren Zugang für dieses Postfach aktivieren', 'username='.urlencode($username)));
+    }
     output('</div>');
   }
 }
