@@ -14,16 +14,16 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('googleauth.php');
+require_once('totp.php');
 require_role(ROLE_SYSTEMUSER);
 
-title("Sicherer Zugang zum Webmailer");
+title("Zwei-Faktor-Anmeldung am Webmailer");
 
 output('<p>Sie können bei '.config('company_name').' den Zugang zum Webmailer mit einem Zwei-Faktor-Prozess mit abweichendem Passwort schützen.</p>
 <p>Dieses System schützt Sie vor mitgelesenen Tastatureingaben in nicht vertrauenswürdiger Umgebung z.B. in einem Internet-Café.</p>
-<p>Beim Zwei-Faktor-Prozess müssen Sie zum Login ein festes Webmail-Passwort und zusätzlich ein variabler Code, den beispielsweise Ihr Smartphone erzeugen kann, eingeben. Da sich dieser Code alle 30 Sekunden ändert, kann ein Angreifer sich nicht später mit einem abgehörten Passwort noch einmal anmelden. Zum Erzeugen des Einmal-Codes benötigen Sie ein Gerät, das <strong>Google-Authenticator</strong>-Codes erzeugen kann. Meist ist dies ein Smartphne mit einer entsprechenden App.</p>
-<p><strong>Beachten Sie:</strong> Die Zwei-Faktor-Authentifizierung funktioniert nur für Webmail, beim Login via IMAP wird weiterhin nur das Passwort Ihres Postfachs benötigt. Damit dieses Passwort von einem Angreifer nicht mitgelesen werden kann, müssen Sie zur Zwei-Faktor-Authentifizierung unbedingt ein separates Passwort festlegen.</p>
-<h3>Fügen Sie Zwei-Faktor-Authentifizierung zu Ihren bestehenden Postfächern hinzu</h3>
+<p>Beim Zwei-Faktor-Prozess müssen Sie zum Login ein festes Webmail-Passwort und zusätzlich ein variabler Code, den beispielsweise Ihr Smartphone erzeugen kann, eingeben. Da sich dieser Code alle 30 Sekunden ändert, kann ein Angreifer sich nicht später mit einem abgehörten Passwort noch einmal anmelden. Zum Erzeugen des Einmal-Codes benötigen Sie ein Gerät, das <strong>TOTP-Einmalcodes nach RFC 6238</strong> erzeugt. Beispiele dafür sind <a href="https://code.google.com/p/google-authenticator/">Google-Authenticator</a> oder <a href="http://f-droid.org/repository/browse/?fdfilter=motp&fdid=org.cry.otp&fdpage=1">mOTP</a>. Meist ist dies ein Smartphone mit einer entsprechenden App.</p>
+<p><strong>Beachten Sie:</strong> Die Zwei-Faktor-Anmeldung funktioniert nur für Webmail, beim Login via IMAP wird weiterhin nur das Passwort Ihres Postfachs benötigt. Damit dieses Passwort von einem Angreifer nicht mitgelesen werden kann, müssen Sie zur Zwei-Faktor-Anmeldung unbedingt ein separates Passwort festlegen.</p>
+<h3>Fügen Sie Zwei-Faktor-Anmeldung zu Ihren bestehenden Postfächern hinzu</h3>
 ');
 
 
@@ -68,11 +68,11 @@ if (count($sorted_by_domains) > 0)
 	    {
         $username = $this_account['local'].'@'.$this_account['domainname'];  
         output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$username.'</strong></p>');
-        $id = account_has_googleauth($username);
+        $id = account_has_totp($username);
         if ($id) {
-          output(addnew('delete', 'Sicheren Zugang für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+          output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
         } else {
-          output(addnew('setup', 'Sicheren Zugang für dieses Postfach aktivieren', 'username='.urlencode($username)));
+          output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
         }
         output('</div>');
 	    }
@@ -96,11 +96,11 @@ foreach ($accounts AS $acc) {
   if ($acc['mailbox']) {
     output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$acc['account'].'</strong></p>');
     $username = $acc['account'];
-    $id = account_has_googleauth($username);
+    $id = account_has_totp($username);
     if ($id) {
-      output(addnew('delete', 'Sicheren Zugang für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+      output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
     } else {
-      output(addnew('setup', 'Sicheren Zugang für dieses Postfach aktivieren', 'username='.urlencode($username)));
+      output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
     }
     output('</div>');
   }

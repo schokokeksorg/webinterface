@@ -23,27 +23,27 @@ if (!session_start())
 
 DEBUG("<pre>POST-DATA: ".htmlspecialchars(print_r($_POST, true))."\nSESSION_DATA: ".htmlspecialchars(print_r($_SESSION, true))."</pre>");
 
-if (have_module('googleauth') && isset($_POST['webinterface_googlecode']) && isset($_SESSION['googleauth']) && isset($_SESSION['googleauth_username'])) {
-  require_once('modules/googleauth/include/googleauth.php');
+if (have_module('webmailtotp') && isset($_POST['webinterface_totpcode']) && isset($_SESSION['totp']) && isset($_SESSION['totp_username'])) {
+  require_once('modules/webmailtotp/include/totp.php');
   $role = NULL;
-  if (check_googleauth($_SESSION['googleauth_username'], $_POST['webinterface_googlecode'])) {
-    $role = find_role($_SESSION['googleauth_username'], '', true);
+  if (check_totp($_SESSION['totp_username'], $_POST['webinterface_totpcode'])) {
+    $role = find_role($_SESSION['totp_username'], '', true);
   }
   if ($role === NULL)
   {
     $_SESSION['role'] = ROLE_ANONYMOUS;
-    logger(LOG_WARNING, "session/start", "login", "wrong googleauth code (username: »{$_SESSION['googleauth_username']}«)");
+    logger(LOG_WARNING, "session/start", "login", "wrong totp code (username: »{$_SESSION['totp_username']}«)");
     warning('Ihre Anmeldung konnte nicht durchgeführt werden. Geben Sie bitte einen neuen Code ein.');
-    show_page('googleauth-login');
+    show_page('webmailtotp-login');
     die();
   }
   else
   {
-    setup_session($role, $_SESSION['googleauth_username']);
+    setup_session($role, $_SESSION['totp_username']);
   }
-  unset($_POST['webinterface_googlecode']);
-  unset($_SESSION['googleauth']);
-  unset($_SESSION['googleauth_username']);
+  unset($_POST['webinterface_totpcode']);
+  unset($_SESSION['totp']);
+  unset($_SESSION['totp_username']);
 }
 
 if (isset($_POST['webinterface_username']) && isset($_POST['webinterface_password']))

@@ -14,10 +14,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-function account_has_googleauth($username)
+function account_has_totp($username)
 {
   $username = mysql_real_escape_string($username);
-  $result = db_query("SELECT id FROM mail.webmail_googleauth WHERE email='{$username}'");
+  $result = db_query("SELECT id FROM mail.webmail_totp WHERE email='{$username}'");
   if (mysql_num_rows($result) > 0) {
     $tmp = mysql_fetch_assoc($result);
     $id = $tmp['id'];
@@ -63,7 +63,7 @@ function store_webmail_password($username, $oldpw, $newpw)
 
   $uid = (int) $_SESSION['userinfo']['uid'];
 
-  db_query("REPLACE INTO mail.webmail_googleauth (useraccount, email, webmailpass) VALUES ({$uid}, '{$username}', '{$code}')");
+  db_query("REPLACE INTO mail.webmail_totp (useraccount, email, webmailpass) VALUES ({$uid}, '{$username}', '{$code}')");
 }
 
 
@@ -88,7 +88,7 @@ function decode_webmail_password($crypted, $webmailpw)
 
 function get_imap_password($username, $webmailpass) {
   $username = mysql_real_escape_string($username);
-  $result = db_query("SELECT webmailpass FROM mail.webmail_googleauth WHERE email='{$username}'");
+  $result = db_query("SELECT webmailpass FROM mail.webmail_totp WHERE email='{$username}'");
   $tmp = mysql_fetch_assoc($result);
   
   $crypted = $tmp['webmailpass'];
@@ -114,18 +114,18 @@ function generate_secret($username)
   $secret = $ga->createSecret();
   DEBUG('GA-Secret: '.$secret);
   DEBUG('QrCode: '.$ga->getQRCodeGoogleUrl('Blog', $secret));
-  db_query("UPDATE mail.webmail_googleauth SET ga_secret='{$secret}' WHERE email='{$username}'");
+  db_query("UPDATE mail.webmail_totp SET totp_secret='{$secret}' WHERE email='{$username}'");
   return $secret;
 }
 
 function check_locked($username) 
 {
   $username = mysql_real_escape_string($username);
-  $result = db_query("SELECT 1 FROM mail.webmail_googleauth WHERE unlock_timestamp IS NOT NULL and unlock_timestamp > NOW() AND email='{$username}'");
+  $result = db_query("SELECT 1 FROM mail.webmail_totp WHERE unlock_timestamp IS NOT NULL and unlock_timestamp > NOW() AND email='{$username}'");
   return (mysql_num_rows($result) > 0);
 }
 
-function check_googleauth($username, $code) {
+function check_totp($username, $code) {
   if (check_blacklist($username, $code)) {
     DEBUG('Replay-Attack');
     return false;
@@ -133,23 +133,23 @@ function check_googleauth($username, $code) {
 
   $username = mysql_real_escape_string($username);
 
-  $result = db_query("SELECT ga_secret, failures FROM mail.webmail_googleauth WHERE email='{$username}' AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())");
+  $result = db_query("SELECT totp_secret, failures FROM mail.webmail_totp WHERE email='{$username}' AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())");
   $tmp = mysql_fetch_assoc($result);
-  $secret = $tmp['ga_secret'];
+  $secret = $tmp['totp_secret'];
 
   require_once('external/googleauthenticator/GoogleAuthenticator.php');
   $ga = new PHPGangsta_GoogleAuthenticator();
   
   $checkResult = $ga->verifyCode($secret, $code, 2);    // 2 = 2*30sec clock tolerance
   if ($checkResult) {
-    db_query("UPDATE mail.webmail_googleauth SET failures = 0, unlock_timestamp=NULL WHERE email='{$username}'");
+    db_query("UPDATE mail.webmail_totp SET failures = 0, unlock_timestamp=NULL WHERE email='{$username}'");
     blacklist_token($username, $code);
     DEBUG('OK');
   } else {
     if ($tmp['failures'] > 0 && $tmp['failures'] % 5 == 0) {
-      db_query("UPDATE mail.webmail_googleauth SET failures = failures+1, unlock_timestamp = NOW() + INTERVAL 5 MINUTE WHERE email='{$username}'");
+      db_query("UPDATE mail.webmail_totp SET failures = failures+1, unlock_timestamp = NOW() + INTERVAL 5 MINUTE WHERE email='{$username}'");
     } else {
-      db_query("UPDATE mail.webmail_googleauth SET failures = failures+1 WHERE email='{$username}'");
+      db_query("UPDATE mail.webmail_totp SET failures = failures+1 WHERE email='{$username}'");
     }
     
     DEBUG('FAILED');
@@ -196,19 +196,19 @@ function accountname($id)
 {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT email FROM mail.webmail_googleauth WHERE id={$id} AND useraccount={$uid}");
+  $result = db_query("SELECT email FROM mail.webmail_totp WHERE id={$id} AND useraccount={$uid}");
   if ($tmp = mysql_fetch_assoc($result)) {
     return $tmp['email'];
   }
 }
 
 
-function delete_googleauth($id) 
+function delete_totp($id) 
 {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  db_query("DELETE FROM mail.webmail_googleauth WHERE id={$id} AND useraccount={$uid}");
+  db_query("DELETE FROM mail.webmail_totp WHERE id={$id} AND useraccount={$uid}");
 }
 
 
@@ -216,15 +216,15 @@ function blacklist_token($email, $token)
 {
   $email = mysql_real_escape_string($email);
   $token = mysql_real_escape_string($token);
-  db_query("INSERT INTO mail.webmail_googleauth_blacklist (timestamp, email, token) VALUES (NOW(), '{$email}', '{$token}')");
+  db_query("INSERT INTO mail.webmail_totp_blacklist (timestamp, email, token) VALUES (NOW(), '{$email}', '{$token}')");
 }
 
 function check_blacklist($email, $token)
 {
   $email = mysql_real_escape_string($email);
   $token = mysql_real_escape_string($token);
-  db_query("DELETE FROM mail.webmail_googleauth_blacklist WHERE timestamp < NOW() - INTERVAL 10 MINUTE");
-  $result = db_query("SELECT id FROM mail.webmail_googleauth_blacklist WHERE email='{$email}' AND token='{$token}'");
+  db_query("DELETE FROM mail.webmail_totp_blacklist WHERE timestamp < NOW() - INTERVAL 10 MINUTE");
+  $result = db_query("SELECT id FROM mail.webmail_totp_blacklist WHERE email='{$email}' AND token='{$token}'");
   return (mysql_num_rows($result) > 0);
 }
 

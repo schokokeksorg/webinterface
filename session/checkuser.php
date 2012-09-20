@@ -99,13 +99,13 @@ function find_role($login, $password, $i_am_admin = False)
   if (! strstr($account, '@')) {
     $account .= '@'.config('masterdomain');
   }
-  if (!$i_am_admin && have_module('googleauth')) {
-    require_once('modules/googleauth/include/googleauth.php');
-    if (account_has_googleauth($account)) {
+  if (!$i_am_admin && have_module('webmailtotp')) {
+    require_once('modules/webmailtotp/include/totp.php');
+    if (account_has_totp($account)) {
       if (check_webmail_password($account, $password)) {
-        $_SESSION['googleauth_username'] = $account;
-        $_SESSION['googleauth'] = True;
-        show_page('googleauth-login');
+        $_SESSION['totp_username'] = $account;
+        $_SESSION['totp'] = True;
+        show_page('webmailtotp-login');
         die();
       } else {
         return NULL;

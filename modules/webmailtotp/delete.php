@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_role(ROLE_SYSTEMUSER);
 
-require_once('googleauth.php');
+require_once('totp.php');
 
 $id = (int) $_REQUEST['id'];
 
@@ -25,13 +25,13 @@ $account = accountname($id);
 $sure = user_is_sure();
 if ($sure === NULL)
 {
-  $section='googleauth_overview';
-  title("Sicherer Zugang zum Webmailer");
-  are_you_sure("id={$id}", "Möchten Sie den Google-Authenticator-Schutz für das Postfach »{$account}« wirklich entfernen?");
+  $section='webmailtotp_overview';
+  title("Zwei-Faktor-Anmeldung am Webmailer");
+  are_you_sure("id={$id}", "Möchten Sie die Zwei-Faktor-Anmeldung für das Postfach »{$account}« wirklich entfernen?");
 }
 elseif ($sure === true)
 {
-  delete_googleauth($id);
+  delete_totp($id);
   if (! $debugmode)
     header("Location: overview");
 }

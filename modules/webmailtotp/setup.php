@@ -20,11 +20,11 @@ require_role(ROLE_SYSTEMUSER);
 
 $username = urldecode($_REQUEST['username']);
 
-$section='googleauth_overview';
-title("Sicherer Zugang zum Webmailer");
+$section='webmailtotp_overview';
+title("Zwei-Faktor-Anmeldung am Webmailer");
 
-output('<p><strong>Hinweise:</strong></p><ul><li>Nach Einrichtung der Zwei-Faktor-Authentifizierung funktioniert bei der Anmeldung über <a href="'.config('webmail_url').'">die zentrale Webmail-Login-Seite</a> nur noch dieses Passwort zusammen mit dem Einmal-Code, der mit dem Google-Authenticator erzeugt wird.</li>
-<li>Ihr bestehendes IMAP-Passwort wird mit dem neuen Passwort verschlüsselt.</li><li>Über IMAP bzw. POP3 kann weiterhin nur mit dem bisherigen Passwort zugegriffen werden.</li><li>Wenn Sie ihr IMAP-Passwort ändern, wird diese Zwei-Faktor-Authentifizierung automatisch abgeschaltet.</li></ul>');
+output('<p><strong>Hinweise:</strong></p><ul><li>Nach Einrichtung der Zwei-Faktor-Anmeldung funktioniert bei der Anmeldung über <a href="'.config('webmail_url').'">die zentrale Webmail-Login-Seite</a> nur noch dieses Passwort zusammen mit dem Einmal-Code, der mit dem TOTP-Generator erzeugt wird.</li>
+<li>Ihr bestehendes IMAP-Passwort wird mit dem neuen Passwort verschlüsselt.</li><li>Über IMAP bzw. POP3 kann weiterhin nur mit dem bisherigen Passwort zugegriffen werden.</li><li>Wenn Sie ihr IMAP-Passwort ändern, wird diese Zwei-Faktor-Anmeldung automatisch abgeschaltet.</li></ul>');
 
 $form = '<p>Geben Sie zunächst bitte das bestehende Passwort des Postfachs <strong>'.filter_input_general($username).'</strong> ein:</p>
 <p>Postfach-Passwort: <input type="password" name="oldpw" /></p>';
@@ -34,6 +34,6 @@ $form .= '<p>Geben sie hier bitte das neue Passwort ein, mit dem sich der Benutz
 
 $form .= '<p><input type="submit" value="Einrichten" /></p>';
 
-output(html_form('googleauth_setup', 'generate', 'username='.urlencode($username), $form));
+output(html_form('webmailtotp_setup', 'generate', 'username='.urlencode($username), $form));
 
 ?>

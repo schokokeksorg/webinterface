@@ -18,15 +18,15 @@ require_once('inc/base.php');
 require_once('inc/icons.php');
 require_role(ROLE_SYSTEMUSER);
 
-require_once('googleauth.php');
+require_once('totp.php');
 
-$section='googleauth_overview';
-title('Test der Zwei-Faktor-authentifizierung');
+$section='webmailtotp_overview';
+title('Test der Zwei-Faktor-Anmeldung');
 
 if (isset($_REQUEST['username'])) {
   $username = $_REQUEST['username'];
   $webmailpw = $_REQUEST['webmailpass'];
-  $ga_code = $_REQUEST['ga_code'];
+  $ga_code = $_REQUEST['totp_code'];
   
   if (! strstr($username, '@')) {
     // Default-Domainname
@@ -43,8 +43,8 @@ if (isset($_REQUEST['username'])) {
   if (check_locked($username)) {
     input_error('Aufgrund einiger Fehlversuche wurde dieses Konto übergangsweise deaktiviert. Bitte warten Sie ein paar Minuten.');
     $success = false;
-  } elseif (! check_googleauth($username, $ga_code)) {
-    input_error('Der Google-Authenticator-Code wurde nicht akzeptiert.');
+  } elseif (! check_totp($username, $ga_code)) {
+    input_error('Der TOTP-Code wurde nicht akzeptiert.');
     $success = false;
   }
 
@@ -64,11 +64,11 @@ if (isset($_REQUEST['username'])) {
 
 $form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_input_general($username).'" /></p>
 <p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass" /></p>
-<p>Der aktuellste Einmal-Code von Google-Authenticator: <input type="text" name="ga_code" /></p>
+<p>Der aktuellste Einmal-Code: <input type="text" name="totp_code" /></p>
 <p><input type="submit" value="Prüfen!" /></p>';
 
 
-output(html_form('googleauth_test', 'test', '', $form));
+output(html_form('webmailtotp_test', 'test', '', $form));
 
 
 ?>
