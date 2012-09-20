@@ -28,6 +28,11 @@ if (isset($_REQUEST['username'])) {
   $webmailpw = $_REQUEST['webmailpass'];
   $ga_code = $_REQUEST['ga_code'];
   
+  if (! strstr($username, '@')) {
+    // Default-Domainname
+    $username = $username.'@'.config('masterdomain');
+  }
+
   $success = true;
   
   if (! check_webmail_password($username, $webmailpw)) {
