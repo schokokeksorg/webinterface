@@ -77,15 +77,6 @@ else
 $backurl = 'go/index/cert';
 
 addnew('../../certlogin/index.php', 'Neues Client-Zertifikat hinzufügen', 'record&backto='.$backurl);
-output('
-<div class="error"><strong>Hinweis:</strong><br />
-Sie benötigen für den Login per Zertifikat einen Browser, der die so genannte
-TLS-Renegotiation nach dem Standard RFC 5746 unterstützt. Firefox kann dies
-ab Version 3.6.2.
-<a href="http://www.phonefactor.com/sslgap/ssl-tls-authentication-patches">Hier</a>
-finden Sie weitere Informationen zur Unterstützung in anderen Browsern.
-</div>');
-
 
 
 
