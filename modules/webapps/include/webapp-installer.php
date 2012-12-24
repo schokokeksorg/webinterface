@@ -54,7 +54,13 @@ function upgradeable($appname, $version)
   DEBUG("Is {$appname}-{$version} upgradeable?");
   if ($appname == 'Drupal6') 
   {
+    DEBUG("found Drupal-6.*!");
     return 'drupal6';
+  }
+  if ($appname == 'Drupal7') 
+  {
+    DEBUG("found Drupal-7.*!");
+    return 'drupal7';
   }
   if ($appname == 'Drupal')
   {
