@@ -166,7 +166,7 @@ $phpoptions = "<h5>PHP</h5>
  */
 //if ($vhost['php'] == 'php54')
 //{
-  $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "php54" => "Experimentell: PHP 5.4");
+  $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3' , "php54" => "PHP 5.4");
   $phpoptions = "
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">

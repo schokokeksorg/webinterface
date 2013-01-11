@@ -111,10 +111,10 @@ if (count($vhosts) > 0)
           $php = icon_enabled_warning('PHP in veralteter Version aktiviert');
           break;
         case 'php54':
-          $php = icon_enabled_warning('PHP in experimenteller Version');
+          $php = icon_enabled_php54('PHP in Version 5.4 eingeschaltet');
           break;
         case 'php53':
-          $php = icon_enabled('PHP eingeschaltet');
+          $php = icon_enabled_php53('PHP in Version 5.3 eingeschaltet');
           break;
       }
       output("<td>{$php}</td>");
