@@ -138,6 +138,8 @@ function get_vhost_details($id)
     system_failure('Interner Fehler beim Auslesen der Daten');
 
   $ret = mysql_fetch_assoc($result);
+
+  $ret['server'] = $ret['server_id'];
   DEBUG($ret);
   return $ret;
 }
