@@ -95,6 +95,9 @@ if ($_GET['action'] == 'edit')
   if (isset($_POST['suexec_user']))
     $vhost['suexec_user'] = $_POST['suexec_user'];
 
+  if (isset($_POST['server']))
+    $vhost['server'] = $_POST['server'];
+
   if ($_POST['vhost_type'] == 'regular') {
     $vhost['is_dav'] = 0;
     $vhost['is_svn'] = 0;

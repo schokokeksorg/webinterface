@@ -36,6 +36,10 @@ $vhosts = list_vhosts();
 
 if (count($vhosts) > 0)
 {
+  if (count($vhosts) > 10) {
+    addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
+    addnew('../webapps/install', 'Neue Domain bzw. Subdomain mit vorinstallierter Web-Anwendung einrichten');
+  }
   output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>SSL</th><th>PHP</th><th>Lokaler Pfad<sup>*</sup></th></tr>\n");
 
   $even = True;

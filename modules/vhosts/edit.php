@@ -247,6 +247,20 @@ $form .= "
 $ipaddrs = user_ipaddrs();
 $certs = user_certs();
 $available_users = available_suexec_users();
+$available_servers = additional_servers();
+$available_servers[] = my_server_id();
+$available_servers = array_unique($available_servers);
+
+$selectable_servers = array();
+$all_servers = server_names();
+foreach ($all_servers as $id => $fqdn) {
+  if (in_array($id, $available_servers)) {
+    $selectable_servers[$id] = $fqdn;
+  }
+}
+if (!$vhost['server']) {
+  $vhost['server'] = my_server_id();
+}
 
 $extended = '';
   if (count($certs))
@@ -287,6 +301,15 @@ $extended = '';
       <div style=\"margin-left: 2em;\">
       ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
       </div>";
+  }
+  if (count($available_servers))
+  {
+    $extended .= "
+      <h5>Einrichten auf Server</h5>
+      <div style=\"margin-left: 2em;\">
+      ".html_select('server', $selectable_servers, $vhost['server'])."
+      </div>";
+
   }
 if ($have_v6) 
 {

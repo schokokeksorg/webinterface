@@ -76,6 +76,7 @@ function empty_vhost()
   $vhost['cgi'] = 1;
   $vhost['ssl'] = NULL;
   $vhost['suexec_user'] = NULL;
+  $vhost['server'] = NULL;
   $vhost['logtype'] = NULL;
   $vhost['errorlog'] = 0;
   $vhost['is_dav'] = 0;
@@ -263,6 +264,15 @@ function save_vhost($vhost)
     if ($u['uid'] == $vhost['suexec_user'])
       $suexec_user = $u['uid'];
 
+  $server = 'NULL';
+  $available_servers = additional_servers();
+  if (in_array($vhost['server'], $available_servers)) {
+    $server = (int) $vhost['server'];
+  }
+  if ($server == my_server_id()) {
+    $server = 'NULL';
+  }
+
   $logtype = maybe_null($vhost['logtype']);
   $errorlog = (int) $vhost['errorlog'];
   if ($vhost['is_svn']) {
@@ -295,11 +305,11 @@ function save_vhost($vhost)
 
   if ($id != 0) {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, cgi={$cgi}, `ssl`={$ssl}, `suexec_user`={$suexec_user}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, autoipv6={$autoipv6}, options='{$options}', stats={$stats} WHERE id={$id} LIMIT 1");
+    db_query("UPDATE vhosts.vhost SET hostname={$hostname}, domain={$domain}, docroot={$docroot}, php={$php}, cgi={$cgi}, `ssl`={$ssl}, `suexec_user`={$suexec_user}, `server`={$server}, logtype={$logtype}, errorlog={$errorlog}, certid={$cert}, ipv4={$ipv4}, autoipv6={$autoipv6}, options='{$options}', stats={$stats} WHERE id={$id} LIMIT 1");
   }
   else {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, `suexec_user`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$cgi}, {$ssl}, {$suexec_user}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, {$autoipv6}, '{$options}', {$stats})");
+    $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$cgi}, {$ssl}, {$suexec_user}, {$server}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, {$autoipv6}, '{$options}', {$stats})");
     $id = mysql_insert_id();
   }
   $oldvhost = get_vhost_details($id);
