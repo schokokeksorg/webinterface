@@ -302,7 +302,7 @@ $extended = '';
       ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
       </div>";
   }
-  if (count($available_servers))
+  if (count($available_servers) > 1)
   {
     $extended .= "
       <h5>Einrichten auf Server</h5>
