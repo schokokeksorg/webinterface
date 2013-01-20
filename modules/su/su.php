@@ -22,18 +22,22 @@ require_once('su.php');
 
 require_role(ROLE_SYSADMIN);
 
-if (isset($_GET['type']))
+if (isset($_GET['do']))
 {
-  check_form_token('su_su_ajax', $_GET['formtoken']);
+  if ($_SESSION['su_ajax_timestamp'] < time() - 30) {
+    system_failure("Die su-Auswahl ist schon abgelaufen!");
+  }
+  $type = $_GET['do'][0];
+  $id = (int) substr($_GET['do'], 1);
   $role = NULL;
   $admin_user = $_SESSION['userinfo']['username'];
   $_SESSION['admin_user'] = $admin_user;
-  if ($_GET['type'] == 'customer') {
-    $role = find_role($_GET['id'], '', True);
-    setup_session($role, $_GET['id']);
-  } elseif ($_GET['type'] == 'systemuser') {
-    $role = find_role($_GET['uid'], '', True);
-    setup_session($role, $_GET['uid']);
+  if ($type == 'c') {
+    $role = find_role($id, '', True);
+    setup_session($role, $id);
+  } elseif ($type == 'u') {
+    $role = find_role($id, '', True);
+    setup_session($role, $id);
   } else {
     system_failure('unknown type');
   }
@@ -62,32 +66,26 @@ $debug = '';
 if ($debugmode)
   $debug = 'debug&amp;';
 
-html_header('<script type="text/javascript" src="'.$prefix.'js/ajax.js" ></script>
-<script type="text/javascript">
-
-function doRequest() {
-  ajax_request(\'su_ajax\', \''.$debug.'q=\'+document.getElementById(\'query\').value, got_response)
-}
-
-function keyPressed() {
-  if(window.mytimeout) window.clearTimeout(window.mytimeout);
-  window.mytimeout = window.setTimeout(doRequest, 500);
-  return true;
-}
-
-function got_response() {
-  if (xmlHttp.readyState == 4) {
-    document.getElementById(\'response\').innerHTML = xmlHttp.responseText;
-  }
-}
-
-</script>
+html_header('
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.js" ></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.0/jquery-ui.js" ></script>
 ');
 
-output(html_form('su_su_ajax', '', '', '<strong>Suchtext:</strong> <input type="text" id="query" onkeyup="keyPressed()" />
-'));
-output('<div id="response"></div>
-<div style="height: 3em;">&#160;</div>');
+output('<label for="query"><strong>Suchtext:</strong></label> <input type="text" id="query" />
+<input type="hidden" id="query_id" name="query_id" />
+');
+output('
+<script>
+$("#query").autocomplete({
+    source: "su_ajax",
+    select: function( event, ui ) {
+      if (ui.item) {
+        window.location.href = "?do="+ui.item.id;
+      }
+}
+ });
+</script>');
 
 /*
 
