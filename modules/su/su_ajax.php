@@ -66,7 +66,7 @@ ksort($ret);
 $lines = array();
 foreach ($ret as $group) {
   foreach ($group as $entry) {
-    $lines[] = "  { \"id\": \"{$entry['id']}\", \"value\": \"{$entry['value']}\" }";
+    $lines[] = "  { \"id\": \"".filter_input_general($entry['id'])."\", \"value\": \"".filter_input_general($entry['value'])."\" }";
   }
 }
 
