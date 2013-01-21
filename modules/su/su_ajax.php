@@ -59,7 +59,7 @@ foreach ($result as $val) {
       add(15, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
     } elseif (strstr($u['username'], $term)) {
       add(20, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
-    } elseif (strstr($u['name'], $term)) {
+    } elseif (stristr($u['name'], $term)) {
       add(25, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
     } else {
       add(85, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
