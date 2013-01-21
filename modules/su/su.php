@@ -22,6 +22,36 @@ require_once('su.php');
 
 require_role(ROLE_SYSADMIN);
 
+
+function su($type, $id) {
+  $role = NULL;
+  $admin_user = $_SESSION['userinfo']['username'];
+  $_SESSION['admin_user'] = $admin_user;
+  $role = find_role($id, '', True);
+  if (!$role) {
+    unset($_SESSION['admin_user']);
+    return;
+  }
+  setup_session($role, $id);
+  if ($type == 'c') {
+    if (! (ROLE_CUSTOMER & $_SESSION['role'])) {
+      session_destroy();
+      system_failure('Es wurde ein "su" zu einem Kundenaccount angefordert, das war aber kein Kundenaccount!');
+    }
+  } elseif ($type == 'u') {
+    if (! (ROLE_SYSTEMUSER & $_SESSION['role'])) {
+      session_destroy();
+      system_failure('Es wurde ein "su" zu einem Benutzeraccount angefordert, das war aber kein Benutzeraccount!');
+    }
+  } elseif ($type) {
+    // wenn type leer ist, dann ist es auch egal
+    system_failure('unknown type');
+  }
+
+  redirect('../../go/index/index');
+  die();
+}
+
 if (isset($_GET['do']))
 {
   if ($_SESSION['su_ajax_timestamp'] < time() - 30) {
@@ -29,32 +59,14 @@ if (isset($_GET['do']))
   }
   $type = $_GET['do'][0];
   $id = (int) substr($_GET['do'], 1);
-  $role = NULL;
-  $admin_user = $_SESSION['userinfo']['username'];
-  $_SESSION['admin_user'] = $admin_user;
-  if ($type == 'c') {
-    $role = find_role($id, '', True);
-    setup_session($role, $id);
-  } elseif ($type == 'u') {
-    $role = find_role($id, '', True);
-    setup_session($role, $id);
-  } else {
-    system_failure('unknown type');
-  }
-
-  header('Location: ../../go/index/index');
-  die();
+  su($type, $id);
 }
 
-if (isset($_POST['submit']))
+if (isset($_POST['query']))
 {
   check_form_token('su_su');
-  $id = (int) $_POST['destination'];
-  $role = find_role($id, '', True);
-  setup_session($role, $id);
-
-  header('Location: ../../go/index/index');
-  die();
+  $id = filter_input_general($_POST['query']);
+  su(NULL, $id);
 }
 
 title("Benutzer wechseln");
@@ -72,9 +84,8 @@ html_header('
 <script type="text/javascript" src="http://code.jquery.com/ui/1.10.0/jquery-ui.js" ></script>
 ');
 
-output('<label for="query"><strong>Suchtext:</strong></label> <input type="text" id="query" />
-<input type="hidden" id="query_id" name="query_id" />
-');
+output(html_form('su_su', '', '', '<label for="query"><strong>Suchtext:</strong></label> <input type="text" name="query" id="query" />
+'));
 output('
 <script>
 $("#query").autocomplete({
