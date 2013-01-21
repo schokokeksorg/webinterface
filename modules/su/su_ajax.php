@@ -27,20 +27,55 @@ require_role(ROLE_SYSADMIN);
 # Save the timestamp of this request to the session, so we accept only actions performed some seconds after this
 $_SESSION['su_ajax_timestamp'] = time();
 
-header("Content-Type: text/javascript");
-echo "[\n";
+$term = $_GET['term'];
+$ret = array();
 
-$result = array_unique(find_customers($_GET['term']));
+function add($val, $id, $value) {
+  global $ret;
+  if (isset($ret[$val]) && is_array($ret[$val])) {
+    array_push($ret[$val], array("id" => $id, "value" => $value));
+  } else {
+    $ret[$val] = array( array("id" => $id, "value" => $value) );
+  }
+}
+
+
+$result = array_unique(find_customers($term));
 sort($result);
 foreach ($result as $val) {
   $c = new Customer((int) $val);
-  echo " {\"id\": \"c{$c->id}\", \"value\": \"Kunde {$c->id}: {$c->fullname}\"},\n";
+  if ($c->id == $term) {
+    add(10, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
+  } else {
+    add(90, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
+  }
   $users = find_users_for_customer($c->id);
   foreach ($users as $uid => $username) {
-    echo " {\"id\": \"u{$uid}\", \"label\": \"User {$uid}: {$username}\"},\n";
+    if ($uid == $term || $username == $term) {
+      add(15, "u{$uid}", "User {$uid}: {$username}");
+    } elseif (strstr($username, $term)) {
+      add(20, "u{$uid}", "User {$uid}: {$username}");
+    } else {
+      add(85, "u{$uid}", "User {$uid}: {$username}");
+    }
   }
 }
-echo ' {}
+
+ksort($ret);
+
+$lines = array();
+foreach ($ret as $group) {
+  foreach ($group as $entry) {
+    $lines[] = "  { \"id\": \"{$entry['id']}\", \"value\": \"{$entry['value']}\" }";
+  }
+}
+
+
+
+header("Content-Type: text/javascript");
+echo "[\n";
+echo implode(",\n", $lines);
+echo '
 ]';
 die();
 
