@@ -72,10 +72,10 @@ function find_users_for_customer($id)
 {
   $id = (int) $id;
   $return = array();
-  $result = db_query("SELECT uid, username FROM system.useraccounts WHERE ".
+  $result = db_query("SELECT uid, username, name FROM system.useraccounts WHERE ".
                      "kunde='{$id}';");
   while ($entry = mysql_fetch_assoc($result))
-    $return[$entry['uid']] = $entry['username'];
+    $return[] = $entry;
 
   return $return;
 }

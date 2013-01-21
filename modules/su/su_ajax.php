@@ -50,13 +50,19 @@ foreach ($result as $val) {
     add(90, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
   }
   $users = find_users_for_customer($c->id);
-  foreach ($users as $uid => $username) {
-    if ($uid == $term || $username == $term) {
-      add(15, "u{$uid}", "User {$uid}: {$username}");
-    } elseif (strstr($username, $term)) {
-      add(20, "u{$uid}", "User {$uid}: {$username}");
+  foreach ($users as $u) {
+    $realname = $c->fullname;
+    if ($u['name']) {
+      $realname = $u['name'];
+    }
+    if ($u['uid'] == $term || $u['username'] == $term) {
+      add(15, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
+    } elseif (strstr($u['username'], $term)) {
+      add(20, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
+    } elseif (strstr($u['name'], $term)) {
+      add(25, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
     } else {
-      add(85, "u{$uid}", "User {$uid}: {$username}");
+      add(85, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
     }
   }
 }
