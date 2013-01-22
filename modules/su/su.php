@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
+require_once('inc/security.php');
 require_once('inc/debug.php');
 
 require_once('session/start.php');
@@ -30,7 +31,7 @@ function su($type, $id) {
   $role = find_role($id, '', True);
   if (!$role) {
     unset($_SESSION['admin_user']);
-    return;
+    return False;
   }
   setup_session($role, $id);
   if ($type == 'c') {
@@ -62,11 +63,14 @@ if (isset($_GET['do']))
   su($type, $id);
 }
 
+$search = NULL;
 if (isset($_POST['query']))
 {
   check_form_token('su_su');
   $id = filter_input_general($_POST['query']);
-  su(NULL, $id);
+  if (! su(NULL, $id)) {
+    $search = $_POST['query'];
+  }
 }
 
 title("Benutzer wechseln");
@@ -99,6 +103,13 @@ $("#query").autocomplete({
 }
  });
 </script>');
+
+if ($search) {
+  $allentries = build_results($search);
+  foreach ($allentries as $entry) {
+    output("  <p><a href=\"?do=".filter_input_general($entry['id'])."\">".filter_input_general($entry['value'])."</a></p>");
+  }
+}
 
 /*
 

@@ -15,12 +15,12 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
+require_once('inc/security.php');
 require_once('inc/debug.php');
 
 require_once('session/start.php');
 require_once('su.php');
 
-require_once('class/customer.php');
 
 require_role(ROLE_SYSADMIN);
 

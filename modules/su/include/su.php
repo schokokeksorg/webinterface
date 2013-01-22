@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
+require_once('class/customer.php');
 
 function list_system_users()
 {
