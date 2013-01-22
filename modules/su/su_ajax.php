@@ -28,55 +28,12 @@ require_role(ROLE_SYSADMIN);
 $_SESSION['su_ajax_timestamp'] = time();
 
 $term = $_GET['term'];
-$ret = array();
 
-function add($val, $id, $value) {
-  global $ret;
-  if (isset($ret[$val]) && is_array($ret[$val])) {
-    array_push($ret[$val], array("id" => $id, "value" => $value));
-  } else {
-    $ret[$val] = array( array("id" => $id, "value" => $value) );
-  }
-}
-
-
-$result = array_unique(find_customers($term));
-sort($result);
-foreach ($result as $val) {
-  $c = new Customer((int) $val);
-  if ($c->id == $term) {
-    add(10, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
-  } else {
-    add(90, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
-  }
-  $users = find_users_for_customer($c->id);
-  foreach ($users as $u) {
-    $realname = $c->fullname;
-    if ($u['name']) {
-      $realname = $u['name'];
-    }
-    if ($u['uid'] == $term || $u['username'] == $term) {
-      add(15, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
-    } elseif (strstr($u['username'], $term)) {
-      add(20, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
-    } elseif (stristr($u['name'], $term)) {
-      add(25, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
-    } else {
-      add(85, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
-    }
-  }
-}
-
-ksort($ret);
+$allentries = build_results($term);
 
 $lines = array();
-foreach ($ret as $group) {
-  usort($group, function ($a, $b) {
-    return strnatcmp($a['value'], $b['value']); 
-  });
-  foreach ($group as $entry) {
-    $lines[] = "  { \"id\": \"".filter_input_general($entry['id'])."\", \"value\": \"".filter_input_general($entry['value'])."\" }";
-  }
+foreach ($allentries as $entry) {
+  $lines[] = "  { \"id\": \"".filter_input_general($entry['id'])."\", \"value\": \"".filter_input_general($entry['value'])."\" }";
 }
 
 
