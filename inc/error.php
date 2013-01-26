@@ -125,6 +125,12 @@ function require_role($roles)
 
 function login_screen($why)
 {
+  if (have_module('index')) {
+    if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
+      require_once('modules/index/include/x509.php');
+      do_ajax_cert_login();
+    }
+  }
   require_once('inc/theme.php');
   if ($why) {
     warning($why);

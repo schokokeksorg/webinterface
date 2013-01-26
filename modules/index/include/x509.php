@@ -16,6 +16,26 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/security.php');
 
+function do_ajax_cert_login() {
+  global $prefix;
+  $path = config('jquery_ui_path');
+  html_header('
+<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css" />
+<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
+<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
+<script type="text/javascript">
+  function redirect(status) {
+    if (status == "ok") {
+      window.location.reload();
+    } else {
+      window.location.href="../../certlogin/";
+    }
+  }
+  $.get("'.$prefix.'certlogin/ajax.php", redirect);
+</script>
+');
+}
+
 function get_logins_by_cert($cert) 
 {
 	$cert = mysql_real_escape_string(str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert));

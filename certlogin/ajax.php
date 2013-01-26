@@ -70,6 +70,7 @@ if (isset($_SERVER['REDIRECT_SSL_CLIENT_CERT']) &&
     $uid = $ret[0]['username'];
     $role = find_role($uid, '', True);
     setup_session($role, $uid);
+    setcookie('CLIENTCERT_AUTOLOGIN', '1', time()+3600*24*365, '/');
     echo 'ok';
     die();
   }

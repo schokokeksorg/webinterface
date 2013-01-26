@@ -18,6 +18,9 @@ require_once('session/start.php');
 
 require_once('inc/error.php');
 
+if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN'])) {
+  setcookie('CLIENTCERT_AUTOLOGIN', FALSE, 0, '/');
+}
 if (!session_destroy())
 {
   logger(LOG_INFO, "modules/index/logout", "logout", "session timed out.");

@@ -14,24 +14,15 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+require_once('x509.php');
+
 title('Login über SSL-Client-Zertifikat');
 
-$path = config('jquery_ui_path');
-html_header('
-<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css">
-<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
-<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
-<script>
-  function redirect(status) {
-    if (status == "ok") {
-      window.location.href="../../go/index/index";
-    } else {
-      window.location.href="../../certlogin/";
-    }
-  }
-  $.get("../../certlogin/ajax.php", redirect);
-</script>
-');
+if ($_SESSION['role'] == ROLE_ANONYMOUS) {
+  do_ajax_cert_login();
+} else {
+  redirect('index');
+}
 
 output('<p>Sie werden nun über Ihr SSL-Client-Zertifikat eingeloggt. Möglicherweise werden Sie von Ihrem Browser zunächst gebeten, ein Zertifkkat auszuwählen.</p>');
 
