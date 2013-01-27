@@ -39,7 +39,7 @@ if (count($certs) > 0)
     elseif ($c['valid_until'] <= date('Y-m-d', time()+(30*24*3600))) {
       $style=' style="background-color: #ff8;" ';
     }
-    output("<tr><td{$style}>".internal_link('showcert', $c['subject'], "mode=cert&id={$c['id']}")."</td><td{$style}>{$c['cn']}</td><td{$style}>{$c['valid_from']}</td><td{$style}>{$c['valid_until']}</td><td>".internal_link('refreshcert', '<img src="'.$prefix.'images/refresh.png" title="Neue Version des Zertifikats einspielen" />', 'id='.$c['id'])." &#160; ".internal_link('savecert', '<img src="'.$prefix.'images/delete.png" />', 'action=delete&id='.$c['id'])."</td></tr>");
+    output("<tr><td{$style}>".internal_link('showcert', $c['subject'], "mode=cert&id={$c['id']}")."</td><td{$style}>{$c['cn']}</td><td{$style}>{$c['valid_from']}</td><td{$style}>{$c['valid_until']}</td><td>".internal_link('newcert', '<img src="'.$prefix.'images/refresh.png" title="Neue Version des Zertifikats einspielen" />', 'replace='.$c['id'])." &#160; ".internal_link('savecert', '<img src="'.$prefix.'images/delete.png" />', 'action=delete&id='.$c['id'])."</td></tr>");
   } 
   output("</table>");
 }
@@ -48,13 +48,14 @@ else
   output('<p><em>Bisher haben Sie keine Zertifikate eingetragen</em></p>');
 }
 
-addnew('newcert', 'Neues Zertifikat eintragen');
+addnew('newcert', 'Neues Zertifikat erzeugen / eintragen');
 
-output('<h3>offene CSRs</h3>');
+
 
 $csr = user_csr();
 if (count($csr) > 0)
 {
+  output('<h3>offene CSRs</h3>');
   output("<table><tr><th>Host-/Domainname</th><th>Bitlänge</th><th>Erzeugt am</th><th>&#160;</th></tr>");
   foreach ($csr AS $c)
   {
@@ -62,17 +63,7 @@ if (count($csr) > 0)
   }
   output("</table>");
 }
-else
-{
-  output('<p><em>Es gibt keine offenen CSRs</em></p>');
-}
 
-
-output('
-<p>Wenn Sie ein einfaches Zertifikat benötigen, können Sie mit Hilfe dieser Funktion einen CSR (»certificate signing request«) 
-erstellen, mit dem Sie Ihr endgültiges Zertifikat beantragen können.</p>');
-
-addnew('newcsr', 'Neuen CSR erzeugen');
 
 
 

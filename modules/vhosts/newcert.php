@@ -23,10 +23,10 @@ if (isset($_REQUEST['replace']))
 {
   $cert = cert_details($_REQUEST['replace']);
   $oldcert = $cert['id'];
-  $hint = "<p class=\"warning\"><strong>Hinweis:</strong> Dieses Zertifkkat soll als Ersatz für ein bestehendes Zertifikat eingetragen werden. Dabei wird jede Benutzung des alten Zertifikats durch das neue ersetzt. Das alte Zertifikat wird dann umgehend gelöscht.<p>
+  $hint = "<div style=\"border: 2px solid red; padding: 1em; margin: 1em;\"<p><strong>Hinweis:</strong> Dieses Zertifikat soll als Ersatz für ein bestehendes Zertifikat eingetragen werden. Dabei wird jede Benutzung des alten Zertifikats durch das neue ersetzt. Das alte Zertifikat wird dann umgehend gelöscht.<p>
 
 <p><strong>Daten des alten Zertifikats:</strong></p>
-<p><strong>CN:</strong> {$cert['cn']}<br /><strong>Gültigkeit:</strong> {$cert['valid_from']} - {$cert['valid_until']}</p>";
+<p><strong>CN:</strong> {$cert['cn']}<br /><strong>Gültigkeit:</strong> {$cert['valid_from']} - {$cert['valid_until']}</p></div>";
 
 }
 
@@ -35,13 +35,26 @@ $section = 'vhosts_certs';
 title('Neues Server-Zertifikat hinzufügen');
 
 
-output('<p>Sie können Ihr eigenes SSL-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
+output($hint.'
+<h4>CSR automatisch erzeugen</h4>
+<p>Mit unserem CSR-Generator können Sie einen Certificate-signing-request (CSR) automatisch erzeugen lassen. Nutzen Sie diese Möglichkeit bitte nur, wenn Sie ein so genanntes "Domain validated"-Zertifikat beantragen werden, das keine persönlichen Daten bzw. Firmendaten enthält. Kostenlose Zertifikate von CAcert oder StartSSL können Sie mit dieser Funktion erzeugen.</p>');
+
+if ($oldcert) {
+  $cn = urlencode($cert['cn']);
+  addnew('savecert', "Einen neuen CSR für {$cert['cn']} erzeugen lassen", "action=newcsr&commonname={$cn}&replace={$oldcert}");
+} else {
+  addnew('newcsr', 'CSR automatisch erzeugen lassen');
+}
+
+
+output('<h4>Vorhandenes Zertifikat eintragen</h4>
+<p>Sie können Ihr eigenes SSL-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
 <p>Sie benötigen dazu mindestens ein <strong>Zertifikat</strong> und einen <strong>privaten Schlüssel</strong> (ohne Passwort!). Alle Daten müssen im <strong>PEM-Format</strong> vorliegen, also in etwa die Form</p>
 <pre>-----BEGIN CERTIFICATE-----
 ...
 -----END CERTIFICATE-----</pre>
 <p>aufweisen. Sind die genannten Vorausetzungen erfüllt, können Sie Ihre Zertifikats-Daten einfach in untenstehendes Formular eingeben.</p>
-'.$hint);
+');
 
 
 $form = '

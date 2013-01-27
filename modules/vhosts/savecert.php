@@ -149,11 +149,18 @@ elseif ($_GET['action'] == 'deletecsr')
 }
 elseif ($_GET['action'] == 'newcsr')
 {
-  $cn = $_POST['commonname'];
-  $bitlength = $_POST['bitlength'];
+  $replace = NULL;
+  if (isset($_REQUEST['replace'])) {
+    $replace = $_REQUEST['replace'];
+  }
+  $cn = $_REQUEST['commonname'];
+  $bitlength = 4096;
+  if (isset($_REQUEST['bitlength'])) {
+    $bitlength = $_REQUEST['bitlength'];
+  }
   
   $wildcard = ! (count(explode('.', $cn)) > 2);
-  $id = save_csr($cn, $bitlength, $wildcard);
+  $id = save_csr($cn, $bitlength, $wildcard, $replace);
 
   header("Location: showcert?mode=csr&id={$id}");
   die();

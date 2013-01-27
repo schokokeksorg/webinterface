@@ -60,7 +60,7 @@ function csr_details($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = db_query("SELECT id, created, hostname, bits, csr, `key` FROM vhosts.csr WHERE uid={$uid} AND id={$id}");
+  $result = db_query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid={$uid} AND id={$id}");
   if (mysql_num_rows($result) != 1)
     system_failure("Ungültiger CSR");
   return mysql_fetch_assoc($result);
@@ -353,7 +353,7 @@ commonName_default = {$cn}
 
 
 
-function save_csr($cn, $bits, $wildcard=true)
+function save_csr($cn, $bits, $wildcard=true, $replace=NULL)
 {
   if (! $cn) {
     system_failure("Sie müssen einen Domainname eingeben!");
@@ -368,9 +368,10 @@ function save_csr($cn, $bits, $wildcard=true)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $cn = mysql_real_escape_string(filter_input_hostname($cn));
   $bits = (int) $bits;
+  $replace = (int) $replace;
   $csr = mysql_real_escape_string($csr);
   $key = mysql_real_escape_string($key);
-  db_query("INSERT INTO vhosts.csr (uid, hostname, bits, csr, `key`) VALUES ({$uid}, '{$cn}', {$bits}, '{$csr}', '{$key}')");
+  db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES ({$uid}, '{$cn}', {$bits}, {$replace}, '{$csr}', '{$key}')");
   $id = mysql_insert_id();
   return $id;  
 }
