@@ -204,6 +204,8 @@ function refresh_cert($id, $info, $cert, $key = NULL)
   $id = (int) $id;
   $oldcert = cert_details($id);
   $cert = mysql_real_escape_string($cert);
+  $subject = mysql_real_escape_string(filter_input_general($info['subject']));
+  $cn = mysql_real_escape_string(filter_input_general($info['cn']));
   
   $valid_from = mysql_real_escape_string($info['valid_from']);
   $valid_until = mysql_real_escape_string($info['valid_until']);
@@ -213,7 +215,7 @@ function refresh_cert($id, $info, $cert, $key = NULL)
     openssl_pkey_export($key, $key);
     $keyop = ", `key`='".mysql_real_escape_string($key)."'";
   }
-  db_query("UPDATE vhosts.certs SET cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}', chain={$chain} WHERE id={$id} LIMIT 1");
+  db_query("UPDATE vhosts.certs SET subject='{$subject}', cn='{$cn}', cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}', chain={$chain} WHERE id={$id} LIMIT 1");
 }
 
 
