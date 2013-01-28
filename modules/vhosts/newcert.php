@@ -21,6 +21,8 @@ $hint = '';
 $oldcert = NULL;
 if (isset($_REQUEST['replace']))
 {
+  title('Zertifikat ersetzen');
+
   $cert = cert_details($_REQUEST['replace']);
   $oldcert = $cert['id'];
   $hint = "<div style=\"border: 2px solid red; padding: 1em; margin: 1em;\"<p><strong>Hinweis:</strong> Dieses Zertifikat soll als Ersatz für ein bestehendes Zertifikat eingetragen werden. Dabei wird jede Benutzung des alten Zertifikats durch das neue ersetzt. Das alte Zertifikat wird dann umgehend gelöscht.<p>
@@ -28,11 +30,12 @@ if (isset($_REQUEST['replace']))
 <p><strong>Daten des alten Zertifikats:</strong></p>
 <p><strong>CN:</strong> {$cert['cn']}<br /><strong>Gültigkeit:</strong> {$cert['valid_from']} - {$cert['valid_until']}</p></div>";
 
+} else {
+  title('Neues Server-Zertifikat hinzufügen');
 }
 
-$section = 'vhosts_certs';
 
-title('Neues Server-Zertifikat hinzufügen');
+$section = 'vhosts_certs';
 
 
 output($hint.'
@@ -49,11 +52,6 @@ if ($oldcert) {
 
 output('<h4>Vorhandenes Zertifikat eintragen</h4>
 <p>Sie können Ihr eigenes SSL-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
-<p>Sie benötigen dazu mindestens ein <strong>Zertifikat</strong> und einen <strong>privaten Schlüssel</strong> (ohne Passwort!). Alle Daten müssen im <strong>PEM-Format</strong> vorliegen, also in etwa die Form</p>
-<pre>-----BEGIN CERTIFICATE-----
-...
------END CERTIFICATE-----</pre>
-<p>aufweisen. Sind die genannten Vorausetzungen erfüllt, können Sie Ihre Zertifikats-Daten einfach in untenstehendes Formular eingeben.</p>
 ');
 
 
@@ -69,3 +67,9 @@ $form = '
 ';
 
 output(html_form('vhosts_certs_new', 'savecert', 'action=new&replace='.$oldcert, $form));
+
+output('<p>Es ist ein <strong>Zertifikat</strong> und ein dazu passender <strong>privater Schlüssel</strong> (ohne Passwort!) nötig. Alle Daten müssen im <strong>PEM-Format</strong> vorliegen, also in etwa die Form</p>
+<pre>-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----</pre>
+<p>aufweisen. Sind die genannten Vorausetzungen erfüllt, können Sie Ihre Zertifikats-Daten einfach in untenstehendes Formular eingeben.</p>');
