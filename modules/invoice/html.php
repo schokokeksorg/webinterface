@@ -26,7 +26,7 @@ output('<p>Detailansicht Ihrer Rechnung. Beachten Sie bitte, dass diese Informat
 
 $invoice_id = (int) filter_input_general($_GET['id']);
 
-output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe ".internal_link("pdf", "als PDF-Datei", "id={$invoice_id}").".</p>
+output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe ".internal_link("pdf", "als PDF-Datei <img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice_id}").".</p>
 <p>&#160;</p>");
 
 
