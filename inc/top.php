@@ -135,12 +135,11 @@ if ($role != ROLE_ANONYMOUS) {
   elseif ($role & ROLE_SYSTEMUSER) {
     $userinfo .= '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
     $userinfo .= '<br />'.$_SESSION['userinfo']['name'];
-    $userinfo .= '<br />(Benutzer'.(($role & ROLE_CUSTOMER) ? ', Kunde' : '').')';
+    $userinfo .= '<br />(UID '.$_SESSION['userinfo']['uid'].(($role & ROLE_CUSTOMER) ? ', Kunde '.$_SESSION['customerinfo']['customerno'] : '').')';
   }
   elseif ($role & ROLE_CUSTOMER) {
-    $userinfo .= '<strong>'.$_SESSION['customerinfo']['customerno'].'</strong>';
-    $userinfo .= '<br />'.$_SESSION['customerinfo']['name'];
-    $userinfo .= '<br />(Kunde)';
+    $userinfo .= '<strong>'.$_SESSION['customerinfo']['name'].'</strong>';
+    $userinfo .= '<br />(Kunde '.$_SESSION['customerinfo']['customerno'].')';
   }
   elseif ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
     $userinfo .= '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
