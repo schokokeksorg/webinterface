@@ -370,7 +370,7 @@ function save_csr($cn, $bits, $wildcard=true, $replace=NULL)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $cn = mysql_real_escape_string(filter_input_hostname($cn));
   $bits = (int) $bits;
-  $replace = (int) $replace;
+  $replace = ($replace ? (int) $replace : 'NULL');
   $csr = mysql_real_escape_string($csr);
   $key = mysql_real_escape_string($key);
   db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES ({$uid}, '{$cn}', {$bits}, {$replace}, '{$csr}', '{$key}')");
