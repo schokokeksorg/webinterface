@@ -176,7 +176,7 @@ function domainselect($selected = NULL, $selectattribute = '')
 function get_max_mailboxquota($server, $oldquota) {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $server = (int) $server;
-  $result = db_query("SELECT systemquota - (systemquota_used + mailquota) AS free FROM system.v_quota WHERE uid='{$uid}' AND server='{$server}'");
+  $result = db_query("SELECT systemquota - (systemquota_used + COALESCE(mailquota,0)) AS free FROM system.v_quota WHERE uid='{$uid}' AND server='{$server}'");
   $item = mysql_fetch_assoc($result);
   DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
   return $item['free'] + ($oldquota - config('vmail_basequota'));
