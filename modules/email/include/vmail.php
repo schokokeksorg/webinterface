@@ -312,7 +312,7 @@ function save_vmail_account($account)
     $account['quota_threshold'] = min( (int) $account['quota_threshold'], (int) $account['quota'] );
   }
   
-  $account['local'] = mysql_real_escape_string($account['local']);
+  $account['local'] = mysql_real_escape_string(strtolower($account['local']));
   $account['password'] = mysql_real_escape_string($account['password']);
   $account['spamexpire'] = (int) $account['spamexpire'];
 
@@ -378,10 +378,12 @@ function save_vmail_account($account)
   }
   if ($newaccount && $password != 'NULL')
   {
-    $emailaddr = $account['local'].'@'.$domainname;
+    $servername = get_server_by_id($server);
+    $emailaddr = 'vmail-'.$account['local'].'%'.$domainname.'@'.$servername;
+    $username = $account['local'].'@'.$domainname;
     $webmailurl = config('webmail_url');
     $servername = get_server_by_id($server);
-    $message = 'Ihr neues E-Mail-Postfach '.$emailaddr.' ist einsatzbereit!
+    $message = 'Ihr neues E-Mail-Postfach '.$username.' ist einsatzbereit!
 
 Wenn Sie diese Nachricht sehen, haben Sie das Postfach erfolgreich 
 abgerufen. Sie können diese Nachricht nach Kenntnisnahme löschen.
@@ -395,7 +397,7 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
 - Mit Ihrem Computer oder Smartphone: IMAP oder POP3
   Tragen Sie bitte folgende Zugangsdaten in Ihrem Programm ein:
     Server-Name: '.$servername.'
-    Benutzername: '.$emailaddr.'
+    Benutzername: '.$username.'
   (Achten Sie bitte darauf, dass die Verschlüsselung mit SSL oder TLS 
   aktiviert ist.)
 ';
