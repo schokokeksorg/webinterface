@@ -199,9 +199,9 @@ elseif ($_GET['action'] == 'delete')
   $domain = NULL;
   $domains = get_vmail_domains();
   foreach ($domains as $dom)
-    if ($dom->id == $account['domain'])
+    if ($dom['id'] == $account['domain'])
     {
-      $domain = $dom->domainname;
+      $domain = $dom['domainname'];
       break;
     }
   $account_string = $account['local'] . "@" . $domain;
