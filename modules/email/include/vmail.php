@@ -125,7 +125,7 @@ function get_vmail_domains()
 	if (mysql_num_rows($result) == 0)
 		system_failure('Sie haben keine Domains für virtuelle Mail-Verarbeitung');
 	$ret = array();
-	while ($tmp = mysql_fetch_object($result))
+	while ($tmp = mysql_fetch_assoc($result))
 		array_push($ret, $tmp);
 	return $ret;
 }
@@ -165,8 +165,8 @@ function domainselect($selected = NULL, $selectattribute = '')
   $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
   foreach ($domainlist as $dom)
   {
-    $s = ($selected == $dom->id) ? ' selected="selected" ': '';
-    $ret .= "<option value=\"{$dom->id}\"{$s}>{$dom->domainname}</option>\n";
+    $s = ($selected == $dom['id']) ? ' selected="selected" ': '';
+    $ret .= "<option value=\"{$dom['id']}\"{$s}>{$dom['domainname']}</option>\n";
   }
   $ret .= '</select>';
   return $ret;
@@ -224,10 +224,10 @@ function save_vmail_account($account)
     $server = NULL;
     foreach ($domainlist as $dom)
     {
-      if ($dom->id == $account['domain'])
+      if ($dom['id'] == $account['domain'])
       {
-        $domainname = $dom->domainname;
-        $server = $dom->server;
+        $domainname = $dom['domainname'];
+        $server = $dom['server'];
         $valid_domain = true;
         break;
       }

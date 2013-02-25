@@ -62,14 +62,21 @@ foreach ($all_accounts AS $account)
 DEBUG($sorted_by_domains);
 
 title('E-Mail-Accounts');
-if (count($sorted_by_domains) > 0)
+
+addnew("edit", "Neue E-Mail-Adresse anlegen");
+
+if (count($domains) > 0)
 {
   output('
-<p>Folgende E-Mail-Konten sind eingerichtet:</p>
+<p>Folgende E-Mail-Konten sind aktuell eingerichtet:</p>
 ');
-  foreach ($sorted_by_domains as $accounts_on_domain)
+  foreach ($domains as $dom) 
   {
-	    output('<h4>'.$accounts_on_domain[0]['domainname'].' <small>('.other_icon('information.png', 'Zugangsdaten anzeigen').' '.internal_link('logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($accounts_on_domain[0]['server']).'&type=vmail').')</small></h4>');
+    output('
+      <h4>'.$dom['domainname'].' <small>('.other_icon('information.png', 'Zugangsdaten anzeigen').' '.internal_link('logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($dom['server']).'&type=vmail').')</small></h4>
+      <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;">');
+    if (array_key_exists($dom['id'], $sorted_by_domains)) {
+      $accounts_on_domain = $sorted_by_domains[$dom['id']];
 
 	    foreach ($accounts_on_domain AS $this_account)
 	    {
@@ -134,18 +141,21 @@ if (count($sorted_by_domains) > 0)
 		  $dest .= "<li>{$a}</li>";
 		$dest .= '</ul>';
 	      }
-              output('
-              <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;"><p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>
-	      <p>'.$dest.'</p></div>');
+              output('<p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>
+	      <p>'.$dest.'</p>');
 	    }
-  }
+    } else {
+      output('<p><em>Bisher keine E-Mail-Adressen unter dieser Domain.</em></p>');
+    }
+    addnew("edit", "Neue E-Mail-Adresse anlegen", "domain={$dom['id']}");
+    output('</div>');
+  } 
 }
 else
 {
-  output('<p><em>Sie haben bisher keine E-Mail-Adressen angelegt</em></p>');
+  output('<p><em>Es sind bisher keine Ihrer Domains für Mail-Empfang eingerichtet.</em></p>');
 }
         
-addnew("edit", "Neue E-Mail-Adresse anlegen");
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
 output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: '.config('company_name').' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
