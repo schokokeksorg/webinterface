@@ -14,20 +14,21 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+require_once('newpass.php');
+require_once('inc/security.php');
+
 title("Passwort setzen");
 $show = 'token';
 
-if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
+if (isset($_REQUEST['token']))
 {
-  $uid = (int) $_REQUEST['uid'];
   $token = $_REQUEST['token'];
+  $uid = get_uid_for_token($token);
   
-  require_once('newpass.php');
-  require_once('inc/security.php');
-  if (validate_uid_token($uid, $token))
+  if ($uid != NULL && validate_uid_token($uid, $token))
   {
     $show = 'agb';
-    if ($_REQUEST['agb'] == '1') {
+    if (isset($_REQUEST['agb']) && $_REQUEST['agb'] == '1') {
       $show = 'password';
     }
     if (isset($_POST['password']))
@@ -47,8 +48,8 @@ if (isset($_REQUEST['uid']) and isset($_REQUEST['token']))
         success_msg('Das Passwort wurde gesetzt!');
         invalidate_systemuser_token($uid);
         $_SESSION['role'] = find_role($uid, '', True);;
-	setup_session($_SESSION['role'], $uid);
-	title("Passwort gesetzt");
+      	setup_session($_SESSION['role'], $uid);
+      	title("Passwort gesetzt");
         output('<p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link('index', 'die Web-Oberfläche sofort benutzen').'.</p>');
         $show = NULL;
       }

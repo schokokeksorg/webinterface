@@ -36,6 +36,18 @@ function validate_token($customerno, $token)
 }
 
 
+function get_uid_for_token($token) 
+{
+  expire_tokens();
+  $token = mysql_real_escape_string($token);
+  $result = db_query("SELECT uid FROM system.usertoken WHERE token='{$token}';");
+  if (mysql_num_rows($result) == 0) {
+    return NULL;
+  }
+  $data = mysql_fetch_assoc($result);
+  return $data['uid'];  
+}
+
 function validate_uid_token($uid, $token)
 {
   expire_tokens();
