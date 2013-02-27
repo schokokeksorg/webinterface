@@ -145,6 +145,8 @@ output("<script type=\"text/javascript\">
       input.value = '';
     }
     input.style.color = '#000';
+    /* FIXME: Keine Ahnung, warum das notwendig ist. Mit dem und dem Aufruf in 'onclick=' tut es was es soll.  */
+    input.focus();
   }
 
   function refillPassword() {
@@ -195,7 +197,7 @@ if ($accountlogin) {
   $form .= "
     <p><input onchange=\"toggleDisplay('mailbox', 'mailbox_options')\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
     <div style=\"margin-left: 2em;".($is_mailbox ? '' : ' display: none;')."\" id=\"mailbox_options\">
-    <p>Passwort für Abruf:&#160;<input onfocus=\"clearPassword()\" onblur=\"refillPassword()\" style=\"color: #aaa;\" type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
+    <p>Passwort für Abruf:&#160;<input onclick=\"clearPassword()\" onfocus=\"clearPassword()\" onblur=\"refillPassword()\" style=\"color: #aaa;\" type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
 
   $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 

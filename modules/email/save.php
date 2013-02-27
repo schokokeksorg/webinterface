@@ -46,13 +46,8 @@ if ($_GET['action'] == 'edit')
       $account['id'] = $id;
   
       $oldaccount = get_account_details($id);
-      if ($oldaccount['password'] != NULL ) { // Account war vorher eine Mailbox
-        $account['local'] = $oldaccount['local'];
-        $account['domain'] = $oldaccount['domain'];
-      } else {
-        $account['local'] = $_POST['local'];
-        $account['domain'] = (int) $_POST['domain'];
-      }
+      $account['local'] = $oldaccount['local'];
+      $account['domain'] = $oldaccount['domain'];
     } else {
       $account['local'] = $_POST['local'];
       $account['domain'] = (int) $_POST['domain'];
