@@ -18,7 +18,7 @@ $role = $_SESSION['role'];
 
 if ($role & ROLE_SYSTEMUSER)
 {
-  $menu["mysql_databases"] = array("label" => "MySQL-Datenbank", "file" => "databases", "weight" => 20);
+  $menu["mysql_overview"] = array("label" => "MySQL-Datenbank", "file" => "overview", "weight" => 20);
     
 }
 ?>

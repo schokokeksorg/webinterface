@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
   $shortcuts[] = array( 'section' => 'Datenbank', 
                         'weight'  => 20, 
-                        'file'    => 'databases', 
+                        'file'    => 'overview', 
                         'icon'    => 'mysql.png', 
                         'title'   => 'MySQL-Datenbanken',
                         'alert'   => NULL );

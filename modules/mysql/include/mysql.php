@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 function get_mysql_accounts($UID)
 {
   $UID = (int) $UID;
-  $result = db_query("SELECT username, description, created FROM misc.mysql_accounts WHERE useraccount=$UID ORDER BY username");
+  $result = db_query("SELECT id, username, description, created FROM misc.mysql_accounts WHERE useraccount=$UID ORDER BY username");
   if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
@@ -42,6 +42,37 @@ function get_mysql_databases($UID)
   return $list;
 }
 
+function set_database_description($dbname, $description) 
+{
+  $dbs = get_mysql_databases($_SESSION['userinfo']['uid']);
+  $thisdb = NULL;
+  foreach ($dbs as $db) {
+    if ($db['name'] == $dbname) {
+      $thisdb = $db;
+    }
+  }
+  if ($thisdb == NULL) {
+    system_failure('Ungültige Datenbank');
+  }
+  $description = maybe_null(filter_input_general($description));
+  db_query("UPDATE misc.mysql_database SET description={$description} WHERE id={$thisdb['id']}");
+}
+
+function set_dbuser_description($username, $description) 
+{
+  $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
+  $thisuser = NULL;
+  foreach ($users as $user) {
+    if ($user['username'] == $username) {
+      $thisuser = $user;
+    }
+  }
+  if ($thisuser == NULL) {
+    system_failure('Ungültiger Benutzer');
+  }
+  $description = maybe_null(filter_input_general($description));
+  db_query("UPDATE misc.mysql_accounts SET description={$description} WHERE id={$thisuser['id']}");
+}
 
 function servers_for_databases()
 {
@@ -136,7 +167,7 @@ function delete_mysql_account($username)
 }
 
 
-function create_mysql_database($dbname, $description = '')
+function create_mysql_database($dbname, $description = '', $server = NULL)
 {
   if (! validate_mysql_dbname($dbname))
   {
@@ -146,9 +177,13 @@ function create_mysql_database($dbname, $description = '')
   }
   $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
-  $description = maybe_null($description);
+  $description = maybe_null($description); 
+  $server = (int) $server;
+  if (! in_array($server, additional_servers()) || ($server == my_server_id())) {
+    $server = 'NULL';
+  }
   logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating database »{$dbname}«");
-  db_query("INSERT INTO misc.mysql_database (name, useraccount, description) VALUES ('$dbname', $uid, $description);");
+  db_query("INSERT INTO misc.mysql_database (name, useraccount, server, description) VALUES ('$dbname', $uid, $server, $description);");
 }
 
 
