@@ -24,15 +24,20 @@ require_once('mysql.php');
 
 $dbs = get_mysql_databases($_SESSION['userinfo']['uid']);
 $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
+$servers = servers_for_databases();
 
-  title("MySQL-Datenbanken");
-  output('<p>Hier können Sie den Zugriff auf Ihre MySQL-Datenbanken verwalten. Die Einstellungen werden mit einer leichten Verzögerung (maximal 5 Minuten) in das System übertragen. Bitte beachten Sie, dass neue Zugänge also nicht umgehend funktionieren.</p>
-  <p><strong>Hinweis:</strong> In dieser Matrix sehen Sie links die Datenbanken und oben die Benutzer, die Sie eingerichtet haben. In der Übersicht ist dargestellt, welcher Benutzer auf welche Datenbank Zugriff erhält. Klicken Sie auf die Symbole um die Zugriffsrechte zu ändern.</p>');
+title("MySQL-Datenbanken");
+output('<p>Hier können Sie den Zugriff auf Ihre MySQL-Datenbanken verwalten. Die Einstellungen werden mit einer leichten Verzögerung (maximal 5 Minuten) in das System übertragen. Bitte beachten Sie, dass neue Zugänge also nicht umgehend funktionieren.</p>');
 
-  $form = '
+
+if (count($dbs) > 0 || count($users) > 0) {
+
+  output('<p><strong>Hinweis:</strong> In dieser Matrix sehen Sie links die Datenbanken und oben die Benutzer, die Sie eingerichtet haben. In der Übersicht ist dargestellt, welcher Benutzer auf welche Datenbank Zugriff erhält. Klicken Sie auf die Symbole um die Zugriffsrechte zu ändern.</p>');
+
+  output('
   <table>
   <tr><th>&#160;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users)+1).'">Benutzerkonten</th></tr>
-  <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>';
+  <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>');
 
   foreach ($users as $user)
   {
@@ -42,12 +47,11 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
     if ($user['description']) {
       $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.$user['description'].'</span>';
     } 
-    $form .= "<th><span title=\"Erstellt: {$user['created']}\">{$username}</span>".$desc;
-    $form .= "<br />".internal_link('description', other_icon("comment.png", 'Beschreibung ändern'), "username={$username}")."&#160;";
-    $form .= internal_link("save", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}")."</th>";
+    output("<th><span title=\"Erstellt: {$user['created']}\">{$username}</span>".$desc);
+    output("<br />".internal_link('description', other_icon("comment.png", 'Beschreibung ändern'), "username={$username}")."&#160;");
+    output(internal_link("save", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}")."</th>");
   }
 
-  $servers = servers_for_databases();
 
   $formtoken = generate_form_token('mysql_permchange');
 
@@ -58,32 +62,33 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
     if ($db['description']) {
       $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.$db['description'].'</span>';
     } 
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>".$desc."<br />";
-    $form .= internal_link('description', other_icon("comment.png", 'Datenbank-Beschreibung ändern'), "db={$db['name']}")."&#160;";
-    $form .= internal_link("save", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}")."&#160;";
-    $form .= "<a href=\"".$phpmyadmin."\">".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")."</a>";
-    $form .= "</td>";
+    output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>".$desc."<br />");
+    output(internal_link('description', other_icon("comment.png", 'Datenbank-Beschreibung ändern'), "db={$db['name']}")."&#160;");
+    output(internal_link("save", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}")."&#160;");
+    output("<a href=\"".$phpmyadmin."\">".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")."</a>");
+    output("</td>");
     foreach ($users as $user) {
-      $form .= '<td style="text-align: center;">';
+      output('<td style="text-align: center;">');
       if (get_mysql_access($db['name'], $user['username'])) {
-        $form .= internal_link('save', icon_enabled('Zugriff erlaubt; Anklicken zum Ändern'), "action=permchange&user={$user['username']}&db={$db['name']}&access=0&formtoken={$formtoken}");
+        output(internal_link('save', icon_enabled('Zugriff erlaubt; Anklicken zum Ändern'), "action=permchange&user={$user['username']}&db={$db['name']}&access=0&formtoken={$formtoken}"));
       } else {
-        $form .= internal_link('save', icon_disabled('Zugriff verweigern; Anklicken zum Ändern'), "action=permchange&user={$user['username']}&db={$db['name']}&access=1&formtoken={$formtoken}");
+        output(internal_link('save', icon_disabled('Zugriff verweigern; Anklicken zum Ändern'), "action=permchange&user={$user['username']}&db={$db['name']}&access=1&formtoken={$formtoken}"));
       }
       
     }
-    $form .= "</tr>\n";
+    output("</tr>\n");
   }
 
-  $form .= '
-  </table>';
-
+  output('</table>');
   
-  output(html_form('mysql_databases', 'databases', '', $form));
+} else {
+  output('<p><em>Sie haben bisher keine Datenbanken erstellt.</em></p>');
+}
 
-  addnew('newdb', 'Neue Datenbank');
-  addnew('newuser', 'Neuer DB-Benutzer');
+addnew('newdb', 'Neue Datenbank');
+addnew('newuser', 'Neuer DB-Benutzer');
 
+if (count($dbs) > 0) {
 
   $myservers = array();
   foreach ($servers as $s) {
@@ -101,6 +106,8 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
     output("<p><em>Ihre Datenbanken befinden sich auf unterschiedlichen Servern, daher müssen Sie die jeweils passende Adresse für phpMyAdmin benutzen. Klicken Sie auf das Symbol ".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")." oben neben der jeweiligen Datenbank.</em></p>");
   }
 
+}
+if (count($users) > 0) {
 
   $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
@@ -125,5 +132,5 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
   '.html_form('mysql_databases', 'save', 'action=change_pw', $form).'<br />');
 
 
-
+}
 ?>
