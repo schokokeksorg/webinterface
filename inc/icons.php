@@ -52,8 +52,8 @@ function icon_enabled($title = '')
 function icon_disabled($title = '')
 {
   global $prefix;
-  return "";
-  //return "<img src=\"{$prefix}images/disabled.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
+  //return "";
+  return "<img src=\"{$prefix}images/disabled.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
 
