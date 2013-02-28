@@ -121,7 +121,7 @@ function get_vmail_accounts()
 function get_vmail_domains()
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = db_query("SELECT id, domainname, server FROM mail.v_vmail_domains WHERE useraccount='{$uid}'");
+	$result = db_query("SELECT id, domainname, server FROM mail.v_vmail_domains WHERE useraccount='{$uid}' ORDER BY domainname");
 	if (mysql_num_rows($result) == 0)
 		system_failure('Sie haben keine Domains für virtuelle Mail-Verarbeitung');
 	$ret = array();
