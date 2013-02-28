@@ -58,11 +58,11 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
     if ($db['description']) {
       $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.$db['description'].'</span>';
     } 
-    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>&#160;";
+    $form .= "<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>".$desc."<br />";
     $form .= internal_link('description', other_icon("comment.png", 'Datenbank-Beschreibung ändern'), "db={$db['name']}")."&#160;";
     $form .= internal_link("save", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}")."&#160;";
     $form .= "<a href=\"".$phpmyadmin."\">".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")."</a>";
-    $form .= "{$desc}</td>";
+    $form .= "</td>";
     foreach ($users as $user) {
       $form .= '<td style="text-align: center;">';
       if (get_mysql_access($db['name'], $user['username'])) {
