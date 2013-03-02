@@ -37,6 +37,8 @@ if (isset($_REQUEST['token']))
         input_error("Die beiden Passwort-Eingaben stimmen nicht überein.");
       elseif ($_POST['password'] == '')
         input_error("Es kann kein leeres Passwort gesetzt werden");
+      elseif (preg_match('/["\'\\\\]/', $_POST['password']) === 1)
+        input_error("Das Passwort enthält problematische Zeichen. Bitte keine Anführungszeichen und kein Backslash benutzen.");
       elseif (($result = strong_password($_POST['password'])) !== true)
         input_error("Das Passwort ist zu einfach (cracklib sagt: {$result})!");
       else
@@ -63,11 +65,12 @@ if (isset($_REQUEST['token']))
 
 if ($show == 'password')
 {
+  $username = get_username_for_uid($uid);
   title("Neues Passwort setzen");
-  output('<p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>
-  <p>Aufgrund einer technischen Einschränkung sollten Sie momentan auf Anführungszeichen (" und \') sowie auf Backslashes (\) im Passwort verzichten.</p>'.
+  output('<p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>'.
   html_form('initialize_useraccount', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
   <input type="hidden" name="token" value="'.$token.'" /><input type="hidden" name="agb" value="1" /></p>
+  <p><span class="login_label">Ihr Benutzername:</span> <strong>'.$username.'</strong></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
   <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" /></p>
   <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort setzen" /></p>

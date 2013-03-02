@@ -48,6 +48,17 @@ function get_uid_for_token($token)
   return $data['uid'];  
 }
 
+function get_username_for_uid($uid) 
+{
+  $uid = (int) $uid;
+  $result = db_query("SELECT username FROM system.useraccounts WHERE uid={$uid}");
+  if (mysql_num_rows($result) != 1) {
+    system_failure("Unexpected number of users with this uid (!= 1)!");
+  }
+  $item = mysql_fetch_assoc($result);
+  return $item['username'];
+}
+
 function validate_uid_token($uid, $token)
 {
   expire_tokens();
