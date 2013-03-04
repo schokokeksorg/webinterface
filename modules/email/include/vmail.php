@@ -439,7 +439,7 @@ function domainsettings($only_domain=NULL) {
   $subdomains = array();
 
   // Domains
-  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NULL) WHERE d.useraccount={$uid} OR m.uid={$uid} ORDER BY CONCAT_WS('.',d.domainname,d.tld);");
+  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, d.mailserver_lock, m.id AS m_id, v.id AS v_id FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NULL) WHERE d.useraccount={$uid} OR m.uid={$uid} ORDER BY CONCAT_WS('.',d.domainname,d.tld);");
 
   while ($mydom = mysql_fetch_assoc($result)) {
     if (! array_key_exists($mydom['id'], $domains)) {
@@ -447,7 +447,8 @@ function domainsettings($only_domain=NULL) {
         $mydom['mail'] = 'virtual';
       $domains[$mydom['id']] = array(
         "name" => $mydom['name'],
-        "type" => $mydom['mail']
+        "type" => $mydom['mail'],
+        "mailserver_lock" => $mydom['mailserver_lock']
         );
       if ($only_domain && $only_domain == $mydom['id'])
         return $domains[$only_domain];

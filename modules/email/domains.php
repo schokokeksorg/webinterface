@@ -39,17 +39,23 @@ beachtet. Subdomains können grundsätzlich nur durch Administratoren eingericht
 <h4>Ihre Domains sind momentan wie folgt konfiguriert:</h4>
 
 <table>
-  <tr><th>Domainname</th><th>Einstellung</th><th></th></tr>
+  <tr><th>Domainname</th><th>Einstellung</th><th></th><th></th></tr>
 ');
 
 foreach ($domains AS $id => $dom) {
+  $trextra = '';
+  $extra = '';
   $type = maildomain_type($dom['type']);
   $edit = html_form('vmail_domainchange', 'domainchange', '', html_select('type', array('virtual' => 'Webinterface-Verwaltung', 'auto' => '.courier-Dateien', 'none' => 'keine E-Mails empfangen'), $dom['type']).' <input type="hidden" name="id" value="'.$id.'" /><input type="submit" value="ändern" />');
   if ($dom['type'] == 'manual')
     $edit = 'Kann nur von Admins geändert werden';
   if (domain_has_vmail_accounts($id))
     $edit = 'Keine Änderung möglich, so lange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
-  output("<tr><td>{$dom['name']}</td><td>{$type}</td><td>{$edit}</td></tr>\n");
+  if ($dom['mailserver_lock']) {
+    $trextra = ' style="background-color: #faa;"';
+    $extra = '<strong>Mailserver-Sperre aktiv!</strong>';
+  }
+  output("<tr{$trextra}><td>{$dom['name']}</td><td>{$type}</td><td>{$edit}</td><td style=\"border: none;\">{$extra}</td></tr>\n");
   if (array_key_exists($id, $subdomains)) {
     foreach ($subdomains[$id] AS $subdom) {
       $type = maildomain_type($subdom['type']);
