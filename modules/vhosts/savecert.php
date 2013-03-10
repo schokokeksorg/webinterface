@@ -159,8 +159,7 @@ elseif ($_GET['action'] == 'newcsr')
     $bitlength = $_REQUEST['bitlength'];
   }
   
-  $wildcard = ! (count(explode('.', $cn)) > 2);
-  $id = save_csr($cn, $bitlength, $wildcard, $replace);
+  $id = save_csr($cn, $bitlength, $replace);
 
   header("Location: showcert?mode=csr&id={$id}");
   die();
