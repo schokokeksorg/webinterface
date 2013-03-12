@@ -142,7 +142,7 @@ if ($role != ROLE_ANONYMOUS) {
     $userinfo .= '<br />(Kunde '.$_SESSION['customerinfo']['customerno'].')';
   }
   elseif ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
-    $userinfo .= '<strong>'.$_SESSION['mailaccount'].'</strong><br />(E-Mail-Account)';
+    $userinfo .= '<strong>'.$_SESSION['mailaccount'].'</strong><br />(Postfach von Benutzer <em>'.$_SESSION['userinfo']['username'].'</em>)';
   }
   $userinfo .= '</p>';
 }
@@ -152,7 +152,6 @@ if (isset($_SESSION['admin_user'])) {
   $userinfo .= '<a href="'.$prefix.'go/su/back_to_admin">Zurück zu »'.$_SESSION['admin_user'].'«</a>';
   $userinfo .= '</p>';
 }
-
 
 $messages = get_messages();
 

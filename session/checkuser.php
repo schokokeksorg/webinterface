@@ -266,6 +266,27 @@ function set_systemuser_password($uid, $newpass)
 }
 
 
+function user_for_mailaccount($account) 
+{
+  $result = db_query("SELECT uid FROM mail.courier_mailaccounts WHERE account='{$account}' LIMIT 1;");
+  if (mysql_num_rows($result) != 1) {
+    system_failure('Diese Adresse ist herrenlos?!');
+  }
+  $tmp = mysql_fetch_assoc($result);
+  return $tmp['uid'];
+}
+
+function user_for_vmail_account($account)
+{
+  $result = db_query("SELECT useraccount FROM mail.v_vmail_accounts WHERE CONCAT_WS('@', local, domainname)='{$account}' LIMIT 1;");
+  if (mysql_num_rows($result) != 1) {
+    system_failure('Diese Adresse ist herrenlos?!');
+  }
+  $tmp = mysql_fetch_assoc($result);
+  return $tmp['useraccount'];
+}
+
+
 function setup_session($role, $useridentity)
 {
   session_regenerate_id();
@@ -304,13 +325,17 @@ function setup_session($role, $useridentity)
     $id = $useridentity;
     if (! strstr($id, '@'))
       $id .= '@'.config('masterdomain');
+    $uid = user_for_mailaccount($id);
     $_SESSION['mailaccount'] = $id;
+    $_SESSION['userinfo'] = get_user_info($uid);
     DEBUG("We are mailaccount: {$_SESSION['mailaccount']}");
   }
   if ($role & ROLE_VMAIL_ACCOUNT)
   {
     $id = $useridentity;
+    $uid = user_for_vmail_account($id);
     $_SESSION['mailaccount'] = $id;
+    $_SESSION['userinfo'] = get_user_info($uid);
     DEBUG("We are virtual mailaccount: {$_SESSION['mailaccount']}");
   }
 

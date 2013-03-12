@@ -316,7 +316,11 @@ $form .= '</div>';
 $form .= '<p><a href="#" onclick="moreForward();">'.icon_add().' Weiteren Empfänger hinzufügen</a></p>
 </div>';
 
-$form .= '<p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vmail', 'Abbrechen').'</p>';
+$target = 'vmail';
+if ($accountlogin) {
+  $target = '../index/index';
+}
+$form .= '<p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link($target, 'Abbrechen').'</p>';
 
 output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 
