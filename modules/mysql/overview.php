@@ -29,6 +29,27 @@ $servers = servers_for_databases();
 title("MySQL-Datenbanken");
 output('<p>Hier können Sie den Zugriff auf Ihre MySQL-Datenbanken verwalten. Die Einstellungen werden mit einer leichten Verzögerung (maximal 5 Minuten) in das System übertragen. Bitte beachten Sie, dass neue Zugänge also nicht umgehend funktionieren.</p>');
 
+html_header('
+<script type="text/javascript">
+
+  function makePasswd() {
+    var passwd = \'\';
+    var chars = \'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\';
+    for (i=0; i<15; i++) {
+      var c = Math.floor(Math.random()*chars.length + 1);
+      passwd += chars.charAt(c)
+    }
+    return passwd;
+  }
+
+  function setRandomPassword() 
+  {
+    pass = makePasswd();
+    document.getElementById(\'newpass\').value = pass;
+    document.getElementById(\'newpass_display\').value = pass;
+    document.getElementById(\'newpass_display\').parentNode.style.display = \'block\';
+  }
+</script>');
 
 if (count($dbs) > 0 || count($users) > 0) {
 
@@ -119,10 +140,10 @@ if (count($users) > 0) {
     $my_users[$u['username']] = $u['username'];
   }
   $form = '<div>
-  <label for="mysql_username">Benutzername:</label>&#160;'.html_select('mysql_username', $my_users).'
-  &#160;&#160;&#160;
-  <label for="password">Passwort:</label>&#160;<input type="password" name="mysql_password" id="password" />
-  &#160;&#160;<input type="submit" value="Setzen" />
+  <p><label for="mysql_username">Benutzername:</label>&#160;'.html_select('mysql_username', $my_users).'</p>
+  <p><label for="newpass">Passwort:</label>&#160;<input onchange="document.getElementById(\'newpass_display\').parentNode.style.display=\'none\'" type="password" name="newpass" id="newpass" value="" /> <button type="button" onclick="setRandomPassword()">Passwort erzeugen</button></p>
+<p style="display: none;">Automatisch erzeugtes Passwort: <input id="newpass_display" type="text" readonly="readonly" /></p>
+  <p><input type="submit" value="Setzen" /></p>
 </div>';
 
 

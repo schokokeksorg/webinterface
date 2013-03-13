@@ -117,7 +117,7 @@ if (isset($_GET['action'])) {
       break;
     case 'change_pw':
       check_form_token('mysql_databases');
-      set_mysql_password($_POST['mysql_username'], $_POST['mysql_password']);
+      set_mysql_password($_POST['mysql_username'], $_POST['newpass']);
       redirect('overview');
       break;
     default:

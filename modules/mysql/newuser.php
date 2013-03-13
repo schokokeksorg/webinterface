@@ -71,7 +71,7 @@ $form = '<h4>Benutzername</h4>
 <p>Aufgrund einer Einschränkung des MySQL-Servers dürfen Benutzernamen nur maximal 16 Zeichen lang sein.</p>
 <p><label for="description">Optionale Beschreibung dieses Benutzers:</label> <input type="text" name="description" id="description" /></p>
 <h4>Passwort</h4>
-<input onchange="document.getElementById(\'newpass_display\').parentNode.style.display=\'none\'" type="password" name="newpass" id="newpass" value="" /> <button type="button" onclick="setRandomPassword()">Passwort erzeugen</button>
+<p><input onchange="document.getElementById(\'newpass_display\').parentNode.style.display=\'none\'" type="password" name="newpass" id="newpass" value="" /> <button type="button" onclick="setRandomPassword()">Passwort erzeugen</button></p>
 <p style="display: none;">Automatisch erzeugtes Passwort: <input id="newpass_display" type="text" readonly="readonly" /></p>
 <h4>Berechtigungen</h4>';
 if (count($dbs) > 0) {
