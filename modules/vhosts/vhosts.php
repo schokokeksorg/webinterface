@@ -33,6 +33,7 @@ output("<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als
 
 
 $vhosts = list_vhosts();
+$traffic_sum = 0;
 
 if (count($vhosts) > 0)
 {
@@ -40,7 +41,7 @@ if (count($vhosts) > 0)
     addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
     addnew('../webapps/install', 'Neue Domain bzw. Subdomain mit vorinstallierter Web-Anwendung einrichten');
   }
-  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>SSL</th><th>PHP</th><th>Lokaler Pfad<sup>*</sup></th></tr>\n");
+  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>SSL</th><th>Traffic<sup>*</sup></th><th>PHP</th><th>Lokaler Pfad<sup>**</sup></th></tr>\n");
 
   $even = True;
 
@@ -64,17 +65,17 @@ if (count($vhosts) > 0)
     }
     output(internal_link('aliases', $tmp, 'vhost='.$vhost['id'], 'title="Aliase verwalten"'));
     output('</td>');
-    $logfiles = 'Kein Protokoll';
+    $logfiles = 'Kein Log';
     if ($vhost['logtype'] == 'default')
-      $logfiles = 'Zugriffe';
+      $logfiles = 'Zugriffe ';
     elseif ($vhost['logtype'] == 'anonymous')
-      $logfiles = 'Zugriffe anonym';
+      $logfiles = 'Anonym';
     if ($vhost['errorlog'] == 1)
     {
       if ($vhost['logtype'] == NULL)
-        $logfiles = 'Nur Fehler';
+        $logfiles = 'Fehler';
       else
-        $logfiles .= ' und Fehler';
+        $logfiles .= ' + Fehler';
     }
     $stats = $vhost['stats'] ? internal_link("showstats", other_icon("chart_bar.png", "Statistiken anzeigen"), "vhost={$vhost['id']}").' ' : '';
     output("<td>{$stats}{$logfiles}</td>");
@@ -91,6 +92,17 @@ if (count($vhosts) > 0)
     {
       output("<td>".icon_enabled('SSL eingeschaltet')."</td>");
     }
+
+    $traffic = traffic_month($vhost['id']);
+    $traffic_sum += (int) $traffic;
+    $traffic_string = $traffic.' MB';
+    if ($traffic > 1024) {
+      $traffic_string = round($traffic / 1024, 2).' GB';
+    }
+    if ($traffic === NULL) {
+      $traffic_string = '--';
+    }
+    output("<td style=\"text-align: right;\">{$traffic_string}</td>");
 
     if ($vhost['is_webapp'] == 1) {
       output('<td colspan="2"><em><strong>Sonderanwendung:</strong> Vorinstallierte Webanwendung</em></td>');
@@ -130,7 +142,15 @@ if (count($vhosts) > 0)
     output("</tr>\n");
   }
   output('</table>');
-  output('<p style="font-size: 90%;"><sup>*</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
+  if ($traffic_sum > 0) {
+    $traffic_string = $traffic_sum.' MB';
+    if ($traffic_sum > 1024) {
+      $traffic_string = round($traffic_sum / 1024, 2).' GB';
+    }
+    output('<p><strong>Traffic insgesamt: '.$traffic_string.'</strong> in den lezten 30 Tagen</p>');
+  }
+  output('<p style="font-size: 90%;"><sup>*</sup>)&#160;Dieser Wert stellt den Datenverkehr dieser Website für die letzten 30 Tage dar.</p>');
+  output('<p style="font-size: 90%;"><sup>**</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
 }
 else // keine VHosts vorhanden
 {

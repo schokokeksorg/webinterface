@@ -23,6 +23,14 @@ require_once('class/domain.php');
 require_once("certs.php");
 
 
+function traffic_month($vhost_id)
+{
+  $vhost_id = (int) $vhost_id;
+  $result = db_query("SELECT sum(mb_in+mb_out) as mb FROM vhosts.traffic where date > CURDATE() - INTERVAL 1 MONTH AND vhost_id = {$vhost_id}");
+  $data = mysql_fetch_assoc($result);
+  return $data['mb'];
+}
+
 function autoipv6_address($vhost_id, $mode = 1)
 {
   $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id={$vhost_id}");
