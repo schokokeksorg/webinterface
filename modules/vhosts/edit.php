@@ -224,9 +224,9 @@ $form .= "
     <h5>SSL-Verschlüsselung</h5>
     <div style=\"margin-left: 2em;\">
     <select name=\"ssl\" id=\"ssl\">
-      <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >SSL optional anbieten</option>
-      <option value=\"http\" ".($vhost['ssl'] == 'http' ? 'selected="selected"' : '')." >kein SSL</option>
-      <option value=\"https\" ".($vhost['ssl'] == 'https' ? 'selected="selected"' : '')." >nur SSL</option>
+      <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >Normal</option>
+      ".($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein SSL</option>" : '')."
+      ".($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">nur SSL</option>" : '')."
       <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Immer auf SSL umleiten</option>
     </select>
     </div>
