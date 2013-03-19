@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/base.php');
 
-require_role(ROLE_SYSTEMUSER);
+# Diese Seiten benötigt keine speziellen Rechte, man darf diese auch unangemeldet anschauen
 
 $section='email_vmail';
 title("Einstellungen zum E-Mail-Abruf");
@@ -51,8 +51,8 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dl>
 <dt>Protokoll</dt><dd>IMAP</dd>
 <dt>Servername</dt><dd>'.$servername.'</dd>
-<dt>Port</dt><dd>993</dd>
-<dt>Verschlüsselung</dt><dd>SSL (nicht STARTTLS, TLS oder ähnliches)</dd>
+<dt>Port</dt><dd>143</dd>
+<dt>Verschlüsselung</dt><dd>STARTTLS</dd>
 <dt>Benutzername</dt><dd><em>'.($type=='manual'? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
@@ -64,8 +64,8 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dl>
 <dt>Protokoll</dt><dd>POP3</dd>
 <dt>Servername</dt><dd>'.$servername.'</dd>
-<dt>Port</dt><dd>995</dd>
-<dt>Verschlüsselung</dt><dd>SSL (nicht STARTTLS, TLS oder ähnliches)</dd>
+<dt>Port</dt><dd>110</dd>
+<dt>Verschlüsselung</dt><dd>STARTTLS</dd>
 <dt>Benutzername</dt><dd><em>'.($type=='manual'? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
