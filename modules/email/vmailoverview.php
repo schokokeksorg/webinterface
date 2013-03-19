@@ -83,4 +83,8 @@ foreach ($acc['forwards'] AS $fwd)
   $content .= '<p>'.other_icon('go.png')." Weiterleitung an <strong>{$fwd['destination']}</strong> ({$spam})</p>"; 
 }
 
+
+$content .= '<h3>Nachrichten-Abruf</h3>
+<p>'.internal_link('/go/email/logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($acc['server']).'&type=vmail').'</p>';
+
 ?>
