@@ -19,7 +19,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
                         'weight'  => 30, 
                         'file'    => 'vhosts', 
                         'icon'    => 'webserver.png', 
-                        'title'   => 'Webserver-Einstellungen',
+                        'title'   => 'Websites verwalten',
                         'alert'   => NULL );
 }
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
