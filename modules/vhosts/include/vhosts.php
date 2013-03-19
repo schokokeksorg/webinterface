@@ -263,6 +263,13 @@ function save_vhost($vhost)
     system_failure('$domain == 0');
   if ($vhost['domain_id'] == -1)
     $domain = 'NULL';
+  if ($id == 0) {
+    # Neuer vhost
+    $result = db_query("SELECT id FROM vhosts.v_vhost WHERE hostname={$hostname} AND domain_id={$domain}");
+    if (mysql_num_rows($result) > 0) {
+      system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
+    }
+  }
   $docroot = maybe_null($vhost['docroot']);
   $php = maybe_null($vhost['php']);
   $cgi = ($vhost['cgi'] == 1 ? 1 : 0);
