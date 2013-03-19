@@ -18,6 +18,7 @@ require_once('session/start.php');
 
 require_once('vhosts.php');
 
+require_once('inc/error.php');
 require_once('inc/security.php');
 require_once('class/domain.php');
 
@@ -209,6 +210,7 @@ if ($_GET['action'] == 'edit')
     
   DEBUG($vhost);
   save_vhost($vhost);
+  success_msg("Ihre Einstellungen wurden gespeichert. Es dauert jedoch einige Minuten bis die Änderungen wirksam werden.");
 
   if (! $debugmode)
     header('Location: vhosts');
