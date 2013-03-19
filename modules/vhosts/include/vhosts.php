@@ -252,6 +252,29 @@ function make_webapp_vhost($id, $webapp)
 }
 
 
+function check_hostname_collision($hostname, $domain) 
+{
+  # Neuer vhost => Prüfe Duplikat
+  $hostnamecheck = "hostname='".mysql_real_escape_string($hostname)."'";
+  if (! $hostname) {
+    $hostnamecheck = "hostname IS NULL";
+  }
+  $domaincheck = "domain=". (int) $domain ;
+  if ($domain == -1) {
+    $domaincheck = "domain IS NULL";
+  }
+  $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck}");
+  if (mysql_num_rows($result) > 0) {
+    system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
+  }
+  $result = db_query("SELECT id, vhost FROM vhosts.alias WHERE {$hostnamecheck} AND {$domaincheck}");
+  if (mysql_num_rows($result) > 0) {
+    $data = mysql_fetch_assoc($result);
+    $vh = get_vhost_details($data['vhost']);
+    system_failure('Dieser Hostname ist bereits als Alias für »'.$vh['fqdn'].'« eingerichtet');
+  }
+}
+
 function save_vhost($vhost)
 {
   if (! is_array($vhost))
@@ -264,11 +287,7 @@ function save_vhost($vhost)
   if ($vhost['domain_id'] == -1)
     $domain = 'NULL';
   if ($id == 0) {
-    # Neuer vhost
-    $result = db_query("SELECT id FROM vhosts.v_vhost WHERE hostname={$hostname} AND domain_id={$domain}");
-    if (mysql_num_rows($result) > 0) {
-      system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
-    }
+    check_hostname_collision($vhost['hostname'], $vhost['domain_id']);
   }
   $docroot = maybe_null($vhost['docroot']);
   $php = maybe_null($vhost['php']);
