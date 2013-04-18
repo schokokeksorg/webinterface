@@ -38,7 +38,8 @@ function mailaccounts($uid)
 function get_mailaccount($id)
 {
   $id = (int) $id;
-  $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id");
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id AND m.uid={$uid}");
   DEBUG("Found ".mysql_num_rows($result)." rows!");
   if (mysql_num_rows($result) != 1)
     system_failure('Dieser Mailaccount existiert nicht oder gehört Ihnen nicht');
@@ -51,6 +52,7 @@ function get_mailaccount($id)
 function change_mailaccount($id, $arr)
 {
   $id = (int) $id;
+  $uid = (int) $_SESSION['userinfo']['uid'];
   $conditions = array();
 
   if (isset($arr['account']))
@@ -89,7 +91,7 @@ function change_mailaccount($id, $arr)
     array_push($conditions, "`aktiv`=".($arr['enabled'] == 'Y' ? "1" : "0"));
 
 
-  db_query("UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id='$id' LIMIT 1");
+  db_query("UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id='$id' AND uid={$uid}");
   logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "updated account »{$arr['account']}«");
 
 }
