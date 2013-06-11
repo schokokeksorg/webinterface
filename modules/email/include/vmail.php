@@ -269,8 +269,9 @@ function save_vmail_account($account)
       $password = "'".encrypt_mail_password($account['password'])."'";
     }
     $set_password = ($id == NULL || $password != 'NULL');
-    if ($account['password'] === NULL)
+    if ($account['password'] === NULL) {
       $set_password=true;
+    }
   }  
 
   $spam = 'NULL';
@@ -405,6 +406,11 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
     mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "X-schokokeks-org-message: welcome\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
     # notify the vmail subsystem of this new account
     #mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
+  }
+
+  // Clean up obsolete quota
+  if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
+    db_query("UPDATE mail.vmail_accounts SET quota_used=NULL, quota=NULL WHERE password IS NULL");
   }
 
   // Update Mail-Quota-Cache
