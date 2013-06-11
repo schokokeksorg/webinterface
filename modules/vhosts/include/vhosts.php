@@ -254,6 +254,7 @@ function make_webapp_vhost($id, $webapp)
 
 function check_hostname_collision($hostname, $domain) 
 {
+  $uid = (int) $_SESSION['userinfo']['uid'];
   # Neuer vhost => Prüfe Duplikat
   $hostnamecheck = "hostname='".mysql_real_escape_string($hostname)."'";
   if (! $hostname) {
@@ -261,11 +262,14 @@ function check_hostname_collision($hostname, $domain)
   }
   $domaincheck = "domain=". (int) $domain ;
   if ($domain == -1) {
-    $domaincheck = "domain IS NULL";
+    $domaincheck = "domain IS NULL AND user={$uid}";
   }
   $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck}");
   if (mysql_num_rows($result) > 0) {
     system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
+  }
+  if ($domain == -1) {
+    return ;
   }
   $result = db_query("SELECT id, vhost FROM vhosts.alias WHERE {$hostnamecheck} AND {$domaincheck}");
   if (mysql_num_rows($result) > 0) {
