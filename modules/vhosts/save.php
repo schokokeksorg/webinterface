@@ -84,6 +84,9 @@ if ($_GET['action'] == 'edit')
       case 'php54':
         $php = 'php54';
         break;
+      case 'php55':
+        $php = 'php55';
+        break;
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }
   }

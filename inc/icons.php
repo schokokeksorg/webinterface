@@ -36,6 +36,12 @@ function icon_enabled_php54($title = '')
   return "<img src=\"{$prefix}images/ok-php54.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
+function icon_enabled_php55($title = '')
+{
+  global $prefix;
+  return "<img src=\"{$prefix}images/ok-php55.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
+}
+
 function icon_enabled_warning($title = '')
 {
   global $prefix;
