@@ -39,7 +39,9 @@ function config($key)
   $options = db_query( "SELECT `key`, value FROM misc.config" );
   
   while( $object = mysql_fetch_assoc( $options ) ) {
-	  $config[$object['key']]=$object['value'];
+    if (!array_key_exists($object['key'], $config)) {
+      $config[$object['key']]=$object['value'];
+    }
   }
   // Sonst wird das Passwort des webadmin-Users mit ausgegeben
   $debug_config = $config;
