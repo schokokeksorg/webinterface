@@ -252,7 +252,7 @@ $form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id
   html_datepicker("ar_valid_until", strtotime($enddate))."</p>";
 
 
-$subject = $ar['subject'];
+$subject = filter_input_general($ar['subject']);
 if ($subject == NULL)
   $subject = '';
 $ar_subject_default_checked = ($subject == NULL) ? ' checked="checked"' : '';
@@ -263,7 +263,7 @@ $form .= "<h4>Betreffzeile der automatischen Antwort</h4>".
   "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked} /> ".
   "<label for=\"ar_subject_custom\">Anderer Betreff:</label> <input type=\"text\" name=\"ar_subject_value\" id=\"ar_subject_value\" value=\"{$subject}\"/></p>";
 
-$message = $ar['message'];
+$message = filter_input_general($ar['message']);
 $form .= "<h4>Inhalt der automatischen Antwort</h4>".
   "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">".$ar['message']."</textarea></p>";
 $quote = $ar['quote'];
@@ -277,7 +277,7 @@ $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
 
 $ar_from_default_checked = ($ar['fromname'] == NULL) ? ' checked="checked"' : '';
 $ar_from_custom_checked = ($ar['fromname'] != NULL) ? ' checked="checked"' : '';
-$fromname = $ar['fromname'];
+$fromname = filter_input_general($ar['fromname']);
 $form .= "<h4>Absender der automatischen Antwort</h4>".
   "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked} /> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br />".
   "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked} /> <label for=\"ar_from_custom\">Mit Name: </label> ".
