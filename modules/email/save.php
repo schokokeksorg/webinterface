@@ -128,11 +128,11 @@ if ($_GET['action'] == 'edit')
   }
 
   if (isset($_POST['ar_subject']) && $_POST['ar_subject'] == 'custom' && isset($_POST['ar_subject_value']) && chop($_POST['ar_subject_value']) != '') {
-    $ar['subject'] = filter_input_general( chop($_POST['ar_subject_value']) );
+    $ar['subject'] = chop($_POST['ar_subject_value']);
   }
 
   if (isset($_POST['ar_message'])) {
-    $ar['message'] = filter_input_general( $_POST['ar_message'] );
+    $ar['message'] = $_POST['ar_message'];
   }
 
   if (isset($_POST['ar_quote'])) {
@@ -145,7 +145,7 @@ if ($_GET['action'] == 'edit')
   }
 
   if (isset($_POST['ar_from']) && $_POST['ar_from'] == 'custom' && isset($_POST['ar_fromname'])) {
-    $ar['fromname'] = filter_input_general( $_POST['ar_fromname']);
+    $ar['fromname'] = $_POST['ar_fromname'];
   }
     
   $account['autoresponder'] = $ar;
