@@ -107,7 +107,7 @@ function maybe_null($value)
     return 'NULL';
 
   if (strlen( (string) $value ) > 0)
-    return "'".$db->escape($value)."'";
+    return "'".DB::escape($value)."'";
   else
     return 'NULL';
 }
