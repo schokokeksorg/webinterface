@@ -39,14 +39,14 @@ function prepare_cert($cert)
 
 function get_logins_by_cert($cert) 
 {
-	$cert = mysql_real_escape_string(prepare_cert($cert));
+	$cert = DB::escape(prepare_cert($cert));
 	$query = "SELECT type,username,startpage FROM system.clientcert WHERE cert='{$cert}'";
-	$result = db_query($query);
-	if (mysql_num_rows($result) < 1)
+	$result = DB::query($query);
+	if ($result->num_rows < 1)
 		return NULL;
 	else {
 		$ret = array();
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = $result->fetch_assoc()) {
 			$ret[] = $row;
 		}
 		return $ret;

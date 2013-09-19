@@ -27,13 +27,13 @@ $uid = (int) $_SESSION['userinfo']['uid'];
 
 if (isset($_POST['freq']) && in_array($_POST['freq'],array("day","week","month"))) {
   check_form_token('freewvs_freq'); 
-	db_query("REPLACE INTO qatools.freewvs (user,freq) VALUES ({$uid},'{$_POST['freq']}');");
+	DB::query("REPLACE INTO qatools.freewvs (user,freq) VALUES ({$uid},'{$_POST['freq']}');");
 	header("Location: freewvs");
 	die();
 }
 
-$result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid={$uid};");
-$result=mysql_fetch_assoc($result);
+$result = DB::query("SELECT freq FROM qatools.v_freewvs WHERE uid={$uid};");
+$result=$result->fetch_assoc();
 $freq=$result['freq'];
 
 headline('Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken');

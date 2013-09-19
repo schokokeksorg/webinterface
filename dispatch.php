@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('config.php');
 require_once('inc/debug.php');
-require_once('inc/db_connect.php');
+require_once('inc/db.php');
 require_once("inc/base.php");
 require_once("inc/theme.php");
 

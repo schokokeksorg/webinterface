@@ -23,10 +23,10 @@ require_once('class/domain.php');
 function get_jabber_accounts() {
   require_role(ROLE_CUSTOMER);
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT id, `create`, created, lastactivity, local, domain FROM jabber.accounts WHERE customerno='$customerno' AND `delete`=0;");
+  $result = DB::query("SELECT id, `create`, created, lastactivity, local, domain FROM jabber.accounts WHERE customerno='$customerno' AND `delete`=0;");
   $accounts = array();
-  if (@mysql_num_rows($result) > 0)
-    while ($acc = @mysql_fetch_assoc($result))
+  if (@$result->num_rows > 0)
+    while ($acc = @$result->fetch_assoc())
       array_push($accounts, $acc);
   return $accounts;
 }
@@ -40,10 +40,10 @@ function get_jabberaccount_details($id)
 
   $id = (int) $id;
 
-  $result = db_query("SELECT id, local, domain FROM jabber.accounts WHERE customerno={$customerno} AND id={$id} LIMIT 1");
-  if (mysql_num_rows($result) != 1)
+  $result = DB::query("SELECT id, local, domain FROM jabber.accounts WHERE customerno={$customerno} AND id={$id} LIMIT 1");
+  if ($result->num_rows != 1)
     system_failure("Invalid account");
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch_assoc();
   if ($data['domain'] == NULL)
     $data['domain'] = config('masterdomain');
   else
@@ -72,19 +72,19 @@ function create_jabber_account($local, $domain, $password)
   require_role(ROLE_CUSTOMER);
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
 
-  $local = mysql_real_escape_string( filter_input_username($local) );
+  $local = DB::escape( filter_input_username($local) );
   $domain = (int) $domain;
   if (! valid_jabber_password($password))
   {
     input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
     return;
   }
-  $password = mysql_real_escape_string( $password );
+  $password = DB::escape( $password );
   
   if ($domain > 0)
   {
-    $result = db_query("SELECT id FROM kundendaten.domains WHERE kunde={$customerno} AND jabber=1 AND id={$domain};");
-    if (mysql_num_rows($result) == 0)
+    $result = DB::query("SELECT id FROM kundendaten.domains WHERE kunde={$customerno} AND jabber=1 AND id={$domain};");
+    if ($result->num_rows == 0)
     {
       logger(LOG_WARNING, "modules/jabber/include/jabberaccounts", "jabber", "attempt to create account for invalid domain »{$domain}«");
       system_failure("Invalid domain!");
@@ -97,14 +97,14 @@ function create_jabber_account($local, $domain, $password)
     $domain = 'NULL';
     $domainquery = 'domain IS NULL'; 
   }
-  $result = db_query("SELECT id FROM jabber.accounts WHERE local='{$local}' AND {$domainquery}");
-  if (mysql_num_rows($result) > 0)
+  $result = DB::query("SELECT id FROM jabber.accounts WHERE local='{$local}' AND {$domainquery}");
+  if ($result->num_rows > 0)
   {
     logger(LOG_WARNING, "modules/jabber/include/jabberaccounts", "jabber", "attempt to create already existing account »{$local}@{$domain}«");
     system_failure("Diesen Account gibt es bereits!");
   }
 
-  db_query("INSERT INTO jabber.accounts (customerno,local,domain,password) VALUES ({$customerno}, '{$local}', {$domain}, '{$password}');");
+  DB::query("INSERT INTO jabber.accounts (customerno,local,domain,password) VALUES ({$customerno}, '{$local}', {$domain}, '{$password}');");
   logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "created account »{$local}@{$domain}«");
 }
 
@@ -120,9 +120,9 @@ function change_jabber_password($id, $password)
     input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
     return;
   }
-  $password = mysql_real_escape_string( $password );
+  $password = DB::escape( $password );
   
-  db_query("UPDATE jabber.accounts SET password='{$password}' WHERE customerno={$customerno} AND id={$id} LIMIT 1");
+  DB::query("UPDATE jabber.accounts SET password='{$password}' WHERE customerno={$customerno} AND id={$id} LIMIT 1");
   logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "changed password for account  »{$id}«");
 }
 
@@ -135,7 +135,7 @@ function delete_jabber_account($id)
 
   $id = (int) $id;
 
-  db_query("UPDATE jabber.accounts SET `delete`=1 WHERE customerno={$customerno} AND id={$id} LIMIT 1");
+  DB::query("UPDATE jabber.accounts SET `delete`=1 WHERE customerno={$customerno} AND id={$id} LIMIT 1");
   logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");
 }
 
@@ -144,7 +144,7 @@ function new_jabber_domain($id)
 {
   $d = new Domain( (int) $id );
   $d->ensure_customerdomain();
-  db_query("UPDATE kundendaten.domains SET jabber=2 WHERE jabber=0 AND id={$d->id} LIMIT 1");
+  DB::query("UPDATE kundendaten.domains SET jabber=2 WHERE jabber=0 AND id={$d->id} LIMIT 1");
 }
 
 

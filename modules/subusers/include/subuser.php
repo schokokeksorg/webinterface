@@ -23,9 +23,9 @@ require_once("inc/debug.php");
 function list_subusers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid}");
+  $result = DB::query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid}");
   $subusers = array();
-  while ($item = mysql_fetch_assoc($result))
+  while ($item = $result->fetch_assoc())
   {
     $item['modules'] = explode(',', $item['modules']);
     $subusers[] = $item;
@@ -39,8 +39,8 @@ function load_subuser($id) {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid} AND id={$id}");
-  $item = mysql_fetch_assoc($result);
+  $result = DB::query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid} AND id={$id}");
+  $item = $result->fetch_assoc();
   $item['modules'] = explode(',', $item['modules']);
   return $item;
 }
@@ -66,7 +66,7 @@ function delete_subuser($id) {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  db_query("DELETE FROM system.subusers WHERE id={$id} AND uid={$uid}");
+  DB::query("DELETE FROM system.subusers WHERE id={$id} AND uid={$uid}");
 }
 
 function empty_subuser()
@@ -79,7 +79,7 @@ function new_subuser($username, $requested_modules, $password)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
 
-  $username = mysql_real_escape_string(filter_input_username($username));
+  $username = DB::escape(filter_input_username($username));
   if (strpos($username, $_SESSION['userinfo']['username']) !== 0) {
     // Username nicht enthalten (FALSE) oder nicht am Anfang (>0)
     system_failure("Ungültiger Benutzername!");
@@ -100,7 +100,7 @@ function new_subuser($username, $requested_modules, $password)
   if (count($modules) == 0) {
     system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
   }
-  $modules = mysql_real_escape_string(implode(',', $modules));
+  $modules = DB::escape(implode(',', $modules));
   
   $result = strong_password($password);
   if ($result !== true) {
@@ -108,7 +108,7 @@ function new_subuser($username, $requested_modules, $password)
   }
   $password = hash("sha256", $password);
 
-  db_query("INSERT INTO system.subusers (uid, username, password, modules) VALUES ({$uid}, '{$username}', '{$password}', '{$modules}')");
+  DB::query("INSERT INTO system.subusers (uid, username, password, modules) VALUES ({$uid}, '{$username}', '{$password}', '{$modules}')");
 }
 
 
@@ -128,7 +128,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
     system_failure("Kann diesen Account nicht finden!");
   }
 
-  $username = mysql_real_escape_string(filter_input_username($username));
+  $username = DB::escape(filter_input_username($username));
   if (strpos($username, $_SESSION['userinfo']['username']) !== 0) {
     // Username nicht enthalten (FALSE) oder nicht am Anfang (>0)
     system_failure("Ungültiger Benutzername!");
@@ -148,7 +148,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
   if (count($modules) == 0) {
     system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
   }
-  $modules = mysql_real_escape_string(implode(',', $modules));
+  $modules = DB::escape(implode(',', $modules));
   
   $pwchange = '';
   if ($password) {
@@ -161,7 +161,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
   }
 
 
-  db_query("UPDATE system.subusers SET username='{$username}', modules='{$modules}'{$pwchange} WHERE id={$id} AND uid={$uid}");
+  DB::query("UPDATE system.subusers SET username='{$username}', modules='{$modules}'{$pwchange} WHERE id={$id} AND uid={$uid}");
 }
 
 

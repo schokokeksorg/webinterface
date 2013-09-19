@@ -24,9 +24,9 @@ define("CERT_NOCHAIN", 2);
 function user_certs()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=${uid} ORDER BY cn");
+  $result = DB::query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=${uid} ORDER BY cn");
   $ret = array();
-  while ($i = mysql_fetch_assoc($result))
+  while ($i = $result->fetch_assoc())
     $ret[] = $i;
   DEBUG($ret);
   return $ret;
@@ -35,9 +35,9 @@ function user_certs()
 function user_csr()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=${uid} ORDER BY hostname");
+  $result = DB::query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=${uid} ORDER BY hostname");
   $ret = array();
-  while ($i = mysql_fetch_assoc($result))
+  while ($i = $result->fetch_assoc())
     $ret[] = $i;
   DEBUG($ret);
   return $ret;
@@ -48,10 +48,10 @@ function cert_details($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, cert, `key` FROM vhosts.certs WHERE uid={$uid} AND id={$id}");
-  if (mysql_num_rows($result) != 1)
+  $result = DB::query("SELECT id, lastchange, valid_from, valid_until, subject, cn, cert, `key` FROM vhosts.certs WHERE uid={$uid} AND id={$id}");
+  if ($result->num_rows != 1)
     system_failure("Ungültiges Zertifikat #{$id}");
-  return mysql_fetch_assoc($result);
+  return $result->fetch_assoc();
 }
 
 
@@ -60,10 +60,10 @@ function csr_details($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = db_query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid={$uid} AND id={$id}");
-  if (mysql_num_rows($result) != 1)
+  $result = DB::query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid={$uid} AND id={$id}");
+  if ($result->num_rows != 1)
     system_failure("Ungültiger CSR");
-  return mysql_fetch_assoc($result);
+  return $result->fetch_assoc();
 }
 
 
@@ -87,11 +87,11 @@ function get_chain($cert)
   if (! isset($certdata['issuer']['CN'])) {
     return NULL;
   }
-  $issuer = mysql_real_escape_string($certdata['issuer']['CN']);
-  $result = db_query("SELECT id FROM vhosts.certchain WHERE cn='{$issuer}'");
-  if (mysql_num_rows($result) > 0)
+  $issuer = DB::escape($certdata['issuer']['CN']);
+  $result = DB::query("SELECT id FROM vhosts.certchain WHERE cn='{$issuer}'");
+  if ($result->num_rows > 0)
   {
-    $c = mysql_fetch_assoc($result);
+    $c = $result->fetch_assoc();
     //$chainfile = '/etc/apache2/certs/chains/'.$c['id'].'.pem';
     DEBUG("identified fitting certificate chain #".$c['id']);
     return $c['id'];
@@ -139,8 +139,8 @@ function validate_certificate($cert, $key)
   $chain = (int) get_chain($cert);
   if ($chain)
   {
-    $result = db_query("SELECT content FROM vhosts.certchain WHERE id={$chain}");
-    $tmp = mysql_fetch_assoc($result);
+    $result = DB::query("SELECT content FROM vhosts.certchain WHERE id={$chain}");
+    $tmp = $result->fetch_assoc();
     $chaincert = $tmp['content'];
     $chainfile = tempnam(sys_get_temp_dir(), 'webinterface');
     $f = fopen($chainfile, "w");
@@ -183,16 +183,16 @@ function save_cert($info, $cert, $key)
 {
   openssl_pkey_export($key, $key);
   openssl_x509_export($cert, $cert);
-  $subject = mysql_real_escape_string(filter_input_general($info['subject']));
-  $cn = mysql_real_escape_string(filter_input_general($info['cn']));
-  $valid_from = mysql_real_escape_string($info['valid_from']);
-  $valid_until = mysql_real_escape_string($info['valid_until']);
+  $subject = DB::escape(filter_input_general($info['subject']));
+  $cn = DB::escape(filter_input_general($info['cn']));
+  $valid_from = DB::escape($info['valid_from']);
+  $valid_until = DB::escape($info['valid_until']);
   $chain = maybe_null( get_chain($cert) );
-  $cert = mysql_real_escape_string($cert);
-  $key = mysql_real_escape_string($key);
+  $cert = DB::escape($cert);
+  $key = DB::escape($key);
   $uid = (int) $_SESSION['userinfo']['uid'];
 
-  db_query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, chain, cert, `key`) VALUES ({$uid}, '{$subject}', '{$cn}', '{$valid_from}', '{$valid_until}', {$chain}, '{$cert}', '{$key}')");
+  DB::query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, chain, cert, `key`) VALUES ({$uid}, '{$subject}', '{$cn}', '{$valid_from}', '{$valid_until}', {$chain}, '{$cert}', '{$key}')");
 }
 
 
@@ -203,19 +203,19 @@ function refresh_cert($id, $info, $cert, $key = NULL)
 
   $id = (int) $id;
   $oldcert = cert_details($id);
-  $cert = mysql_real_escape_string($cert);
-  $subject = mysql_real_escape_string(filter_input_general($info['subject']));
-  $cn = mysql_real_escape_string(filter_input_general($info['cn']));
+  $cert = DB::escape($cert);
+  $subject = DB::escape(filter_input_general($info['subject']));
+  $cn = DB::escape(filter_input_general($info['cn']));
   
-  $valid_from = mysql_real_escape_string($info['valid_from']);
-  $valid_until = mysql_real_escape_string($info['valid_until']);
+  $valid_from = DB::escape($info['valid_from']);
+  $valid_until = DB::escape($info['valid_until']);
 
   $keyop = '';
   if ($key) {
     openssl_pkey_export($key, $key);
-    $keyop = ", `key`='".mysql_real_escape_string($key)."'";
+    $keyop = ", `key`='".DB::escape($key)."'";
   }
-  db_query("UPDATE vhosts.certs SET subject='{$subject}', cn='{$cn}', cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}', chain={$chain} WHERE id={$id} LIMIT 1");
+  DB::query("UPDATE vhosts.certs SET subject='{$subject}', cn='{$cn}', cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}', chain={$chain} WHERE id={$id} LIMIT 1");
 }
 
 
@@ -224,7 +224,7 @@ function delete_cert($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = (int) $id;
   
-  db_query("DELETE FROM vhosts.certs WHERE uid={$uid} AND id={$id} LIMIT 1");
+  DB::query("DELETE FROM vhosts.certs WHERE uid={$uid} AND id={$id} LIMIT 1");
 }
 
 function delete_csr($id)
@@ -232,7 +232,7 @@ function delete_csr($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = (int) $id;
   
-  db_query("DELETE FROM vhosts.csr WHERE uid={$uid} AND id={$id} LIMIT 1");
+  DB::query("DELETE FROM vhosts.csr WHERE uid={$uid} AND id={$id} LIMIT 1");
 }
 
 
@@ -304,13 +304,13 @@ function save_csr($cn, $bits, $replace=NULL)
   list($csr, $key) = create_csr($cn, $bits);
   
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $cn = mysql_real_escape_string(filter_input_hostname($cn, true));
+  $cn = DB::escape(filter_input_hostname($cn, true));
   $bits = (int) $bits;
   $replace = ($replace ? (int) $replace : 'NULL');
-  $csr = mysql_real_escape_string($csr);
-  $key = mysql_real_escape_string($key);
-  db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES ({$uid}, '{$cn}', {$bits}, {$replace}, '{$csr}', '{$key}')");
-  $id = mysql_insert_id();
+  $csr = DB::escape($csr);
+  $key = DB::escape($key);
+  DB::query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES ({$uid}, '{$cn}', {$bits}, {$replace}, '{$csr}', '{$key}')");
+  $id = DB::insert_id();
   return $id;  
 }
 
