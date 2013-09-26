@@ -19,9 +19,9 @@ require_once('inc/base.php');
 function list_ftpusers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = DB::query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=$uid");
+  $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=$uid");
   $ftpusers = array();
-  while ($u = $result->fetch_assoc()) {
+  while ($u = mysql_fetch_assoc($result)) {
     $ftpusers[] = $u;
   }
   return $ftpusers;
@@ -39,10 +39,10 @@ function load_ftpuser($id)
     return empty_ftpuser();
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = (int) $id;
-  $result = DB::query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid={$uid} AND id='{$id}' LIMIT 1");
-  if ($result->num_rows != 1)
+  $result = db_query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid={$uid} AND id='{$id}' LIMIT 1");
+  if (mysql_num_rows($result) != 1)
     system_failure("Fehler beim auslesen des Accounts");
-  $account = $result->fetch_assoc();
+  $account = mysql_fetch_assoc($result);
   DEBUG($account);
   return $account;
 }
@@ -101,9 +101,9 @@ function save_ftpuser($data)
     
   
   if ($id)
-    DB::query("UPDATE system.ftpusers SET username='{$username}', {$password_query} homedir='{$homedir}', active='{$active}', forcessl='{$forcessl}', server={$server} WHERE id={$id} AND uid={$uid} LIMIT 1");
+    db_query("UPDATE system.ftpusers SET username='{$username}', {$password_query} homedir='{$homedir}', active='{$active}', forcessl='{$forcessl}', server={$server} WHERE id={$id} AND uid={$uid} LIMIT 1");
   else
-    DB::query("INSERT INTO system.ftpusers (username, password, homedir, uid, active, forcessl, server) VALUES ('{$username}', '{$password_hash}', '{$homedir}', '{$uid}', '{$active}', '{$forcessl}', {$server})");
+    db_query("INSERT INTO system.ftpusers (username, password, homedir, uid, active, forcessl, server) VALUES ('{$username}', '{$password_hash}', '{$homedir}', '{$uid}', '{$active}', '{$forcessl}', {$server})");
 }
 
 
@@ -111,17 +111,17 @@ function delete_ftpuser($id)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = (int) $id;
-  DB::query("DELETE FROM system.ftpusers WHERE id='{$id}' AND uid={$uid} LIMIT 1");
+  db_query("DELETE FROM system.ftpusers WHERE id='{$id}' AND uid={$uid} LIMIT 1");
 }
 
 
 function get_gid($groupname)
 {
-  $groupname = DB::escape($groupname);
-  $result = DB::query("SELECT gid FROM system.gruppen WHERE name='{$groupname}' LIMIT 1");
-  if ($result->num_rows != 1)
+  $groupname = mysql_real_escape_string($groupname);
+  $result = db_query("SELECT gid FROM system.gruppen WHERE name='{$groupname}' LIMIT 1");
+  if (mysql_num_rows($result) != 1)
     system_failure('cannot determine gid of ftpusers group');
-  $a = $result->fetch_assoc();
+  $a = mysql_fetch_assoc($result);
   $gid = (int) $a['gid'];
   if ($gid == 0)
     system_failure('error on determining gid of ftpusers group');
@@ -133,8 +133,8 @@ function have_regular_ftp()
 {
   $gid = get_gid('ftpusers');
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = DB::query("SELECT * FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
-  return ($result->num_rows > 0);
+  $result = db_query("SELECT * FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
+  return (mysql_num_rows($result) > 0);
 }
 
 
@@ -143,14 +143,14 @@ function enable_regular_ftp()
   require_role(ROLE_SYSTEMUSER);
   $gid = get_gid('ftpusers');
   $uid = (int) $_SESSION['userinfo']['uid'];
-  DB::query("REPLACE INTO system.gruppenzugehoerigkeit (gid, uid) VALUES ('$gid', '$uid')");
+  db_query("REPLACE INTO system.gruppenzugehoerigkeit (gid, uid) VALUES ('$gid', '$uid')");
 }
 
 function disable_regular_ftp()
 {
   $gid = get_gid('ftpusers');
   $uid = (int) $_SESSION['userinfo']['uid'];
-  DB::query("DELETE FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
+  db_query("DELETE FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
 }
 
 

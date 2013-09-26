@@ -17,9 +17,9 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 function whitelist_entries() 
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = DB::query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid={$uid};");
+	$res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid={$uid};");
 	$return = array();
-	while ($line = $result->fetch_assoc())
+	while ($line = mysql_fetch_assoc($res))
 		array_push($return, $line);
 	return $return;
 }
@@ -29,10 +29,10 @@ function get_whitelist_details($id)
 {
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = DB::query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid={$uid} AND id={$id};");
-	if ($res->num_rows != 1)
+	$res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid={$uid} AND id={$id};");
+	if (mysql_num_rows($res) != 1)
 		system_failure('Kann diesen Eintrag nicht finden');
-	return $result->fetch_assoc();
+	return mysql_fetch_assoc($res);
 }
 
 
@@ -42,7 +42,7 @@ function delete_from_whitelist($id)
 	// Check if the ID is valid: This will die if not.
 	$entry = get_whitelist_details($id);
 
-	DB::query("DELETE FROM mail.greylisting_manual_whitelist WHERE id={$id} LIMIT 1;");
+	db_query("DELETE FROM mail.greylisting_manual_whitelist WHERE id={$id} LIMIT 1;");
 }
 
 
@@ -55,9 +55,9 @@ function valid_entry($local, $domain)
 			system_failure('Diese E-Mail-Adresse gehört Ihnen nicht!');
 		return true;
 	}
-	$d = DB::escape($domain);
-	$res = DB::query("SELECT id FROM mail.v_domains WHERE domainname='{$d}' AND user={$_SESSION['userinfo']['uid']} LIMIT 1");
-	if ($res->num_rows != 1)
+	$d = mysql_real_escape_string($domain);
+	$res = db_query("SELECT id FROM mail.v_domains WHERE domainname='{$d}' AND user={$_SESSION['userinfo']['uid']} LIMIT 1");
+	if (mysql_num_rows($res) != 1)
 		system_failure('Diese domain gehört Ihnen nicht!');
 	return true;
 }
@@ -68,14 +68,14 @@ function new_whitelist_entry($local, $domain, $minutes)
 	valid_entry($local, $domain);
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$local = maybe_null($local);
-	$domain = DB::escape($domain);
+	$domain = mysql_real_escape_string($domain);
 	
 	$expire = '';
 	if ($minutes == 'none')
 		$expire = 'NULL';
 	else
 		$expire = "NOW() + INTERVAL ". (int) $minutes ." MINUTE";
-	DB::query("INSERT INTO mail.greylisting_manual_whitelist (local,domain,date,expire,uid) VALUES ".
+	db_query("INSERT INTO mail.greylisting_manual_whitelist (local,domain,date,expire,uid) VALUES ".
 	         "({$local}, '{$domain}', NOW(), {$expire}, $uid);");
 }
 

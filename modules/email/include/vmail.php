@@ -58,9 +58,9 @@ Ihre E-Mail wird nicht weitergeleitet.',
 
 function get_vmail_id_by_emailaddr($emailaddr) 
 {
-  $emailaddr = DB::escape( $emailaddr );
-  $result = DB::query("SELECT id FROM mail.v_vmail_accounts WHERE CONCAT(local, '@', domainname) = '{$emailaddr}'");
-  $entry = $result->fetch_assoc();
+  $emailaddr = mysql_real_escape_string( $emailaddr );
+  $result = db_query("SELECT id FROM mail.v_vmail_accounts WHERE CONCAT(local, '@', domainname) = '{$emailaddr}'");
+  $entry = mysql_fetch_assoc($result);
   return (int) $entry['id'];
 }
 
@@ -73,25 +73,25 @@ function get_account_details($id, $checkuid = true)
     $uid = (int) $_SESSION['userinfo']['uid'];
     $uid_check = "useraccount='{$uid}' AND ";
   }
-  $result = DB::query("SELECT id, local, domain, password, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
-	if ($result->num_rows == 0)
+  $result = db_query("SELECT id, local, domain, password, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id={$id} LIMIT 1");
+	if (mysql_num_rows($result) == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
-	$res = $result->fetch_assoc();
+	$res = mysql_fetch_assoc($result);
 	foreach ($res AS $key => $value) {
 	  if ($key == 'forwards')
 	    continue;
 	  $acc[$key] = $value;
 	}
 	if ($acc['forwards'] > 0) {
-	  $result = DB::query("SELECT id, spamfilter, destination FROM mail.vmail_forward WHERE account={$acc['id']};");
-	  while ($item = $result->fetch_assoc()){
+	  $result = db_query("SELECT id, spamfilter, destination FROM mail.vmail_forward WHERE account={$acc['id']};");
+	  while ($item = mysql_fetch_assoc($result)){
 	    array_push($acc['forwards'], array("id" => $item['id'], 'spamfilter' => $item['spamfilter'], 'destination' => $item['destination']));
 	  }
 	}
   if ($acc['autoresponder'] > 0) {
-    $result = DB::query("SELECT id, IF(valid_from IS NULL OR valid_from > NOW() OR valid_until < NOW(), 0, 1) AS active, DATE(valid_from) AS valid_from, DATE(valid_until) AS valid_until, fromname, fromaddr, subject, message, quote FROM mail.vmail_autoresponder WHERE account={$acc['id']}");
-    $item = $result->fetch_assoc();
+    $result = db_query("SELECT id, IF(valid_from IS NULL OR valid_from > NOW() OR valid_until < NOW(), 0, 1) AS active, DATE(valid_from) AS valid_from, DATE(valid_until) AS valid_until, fromname, fromaddr, subject, message, quote FROM mail.vmail_autoresponder WHERE account={$acc['id']}");
+    $item = mysql_fetch_assoc($result);
     DEBUG($item);
     $acc['autoresponder'] = $item;
   } else {
@@ -106,9 +106,9 @@ function get_account_details($id, $checkuid = true)
 function get_vmail_accounts()
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = DB::query("SELECT * from mail.v_vmail_accounts WHERE useraccount='{$uid}' ORDER BY domainname,local ASC");
+	$result = db_query("SELECT * from mail.v_vmail_accounts WHERE useraccount='{$uid}' ORDER BY domainname,local ASC");
 	$ret = array();
-	while ($line = $result->fetch_assoc())
+	while ($line = mysql_fetch_assoc($result))
 	{
 		array_push($ret, $line);
 	}
@@ -121,11 +121,11 @@ function get_vmail_accounts()
 function get_vmail_domains()
 {
 	$uid = (int) $_SESSION['userinfo']['uid'];
-	$result = DB::query("SELECT id, domainname, server FROM mail.v_vmail_domains WHERE useraccount='{$uid}' ORDER BY domainname");
-	if ($result->num_rows == 0)
+	$result = db_query("SELECT id, domainname, server FROM mail.v_vmail_domains WHERE useraccount='{$uid}' ORDER BY domainname");
+	if (mysql_num_rows($result) == 0)
 		system_failure('Sie haben keine Domains für virtuelle Mail-Verarbeitung');
 	$ret = array();
-	while ($tmp = $result->fetch_assoc())
+	while ($tmp = mysql_fetch_assoc($result))
 		array_push($ret, $tmp);
 	return $ret;
 }
@@ -133,7 +133,7 @@ function get_vmail_domains()
 
 function find_account_id($accname)
 {
-  $accname = DB::escape($accname);
+  $accname = mysql_real_escape_string($accname);
   DEBUG($accname);
   $tmp = explode('@', $accname, 2);
   DEBUG($tmp);
@@ -141,10 +141,10 @@ function find_account_id($accname)
     system_failure("Der Account hat nicht die korrekte Syntax");
   list( $local, $domainname) = $tmp;
 
-  $result = DB::query("SELECT id FROM mail.v_vmail_accounts WHERE local='{$local}' AND domainname='{$domainname}' LIMIT 1");
-  if ($result->num_rows == 0)
+  $result = db_query("SELECT id FROM mail.v_vmail_accounts WHERE local='{$local}' AND domainname='{$domainname}' LIMIT 1");
+  if (mysql_num_rows($result) == 0)
     system_failure("Der Account konnte nicht gefunden werden");
-  $tmp = $result->fetch_array();
+  $tmp = mysql_fetch_array($result);
   return $tmp[0];
 }
 
@@ -152,8 +152,8 @@ function find_account_id($accname)
 function change_vmail_password($accname, $newpass)
 {
   $accid = find_account_id($accname);
-  $encpw = DB::escape(encrypt_mail_password($newpass));
-  DB::query("UPDATE mail.vmail_accounts SET password='{$encpw}' WHERE id={$accid} LIMIT 1;");
+  $encpw = mysql_real_escape_string(encrypt_mail_password($newpass));
+  db_query("UPDATE mail.vmail_accounts SET password='{$encpw}' WHERE id={$accid} LIMIT 1;");
 }
 
 
@@ -176,8 +176,8 @@ function domainselect($selected = NULL, $selectattribute = '')
 function get_max_mailboxquota($server, $oldquota) {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $server = (int) $server;
-  $result = DB::query("SELECT systemquota - (COALESCE(systemquota_used,0) + COALESCE(mailquota,0)) AS free FROM system.v_quota WHERE uid='{$uid}' AND server='{$server}'");
-  $item = $result->fetch_assoc();
+  $result = db_query("SELECT systemquota - (COALESCE(systemquota_used,0) + COALESCE(mailquota,0)) AS free FROM system.v_quota WHERE uid='{$uid}' AND server='{$server}'");
+  $item = mysql_fetch_assoc($result);
   DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
   return $item['free'] + ($oldquota - config('vmail_basequota'));
 }
@@ -313,8 +313,8 @@ function save_vmail_account($account)
     $account['quota_threshold'] = min( (int) $account['quota_threshold'], (int) $account['quota'] );
   }
   
-  $account['local'] = DB::escape(strtolower($account['local']));
-  $account['password'] = DB::escape($account['password']);
+  $account['local'] = mysql_real_escape_string(strtolower($account['local']));
+  $account['password'] = mysql_real_escape_string($account['password']);
   $account['spamexpire'] = (int) $account['spamexpire'];
 
   $query = '';
@@ -322,8 +322,8 @@ function save_vmail_account($account)
   {
     $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota, quota_threshold) VALUES ";
     $query .= "('{$account['local']}', {$account['domain']}, {$spam}, {$account['spamexpire']}, {$password}, {$account['quota']}, {$account['quota_threshold']});";
-    DB::query($query); 
-    $id = DB::insert_id();
+    db_query($query); 
+    $id = mysql_insert_id();
   }
   else
   {
@@ -334,34 +334,34 @@ function save_vmail_account($account)
     $query = "UPDATE mail.vmail_accounts SET local='{$account['local']}', domain={$account['domain']}{$password}, ";
     $query .= "spamfilter={$spam}, spamexpire={$account['spamexpire']}, quota={$account['quota']}, quota_threshold={$account['quota_threshold']} ";
     $query .= "WHERE id={$id} LIMIT 1;";
-    DB::query($query); 
+    db_query($query); 
   }
 
   if (is_array($account['autoresponder'])) {
     $ar = $account['autoresponder'];
     $valid_from = maybe_null($ar['valid_from']);
     $valid_until = maybe_null($ar['valid_until']);
-    $fromname = maybe_null( DB::escape($ar['fromname']) );
+    $fromname = maybe_null( mysql_real_escape_string($ar['fromname']) );
     $fromaddr = NULL;
     if ($ar['fromaddr']) {
-      $fromaddr = DB::escape(check_emailaddr($ar['fromaddr']));
+      $fromaddr = mysql_real_escape_string(check_emailaddr($ar['fromaddr']));
     }
     $fromaddr = maybe_null( $fromaddr );
-    $subject = maybe_null( DB::escape($ar['subject']));
-    $message = DB::escape($ar['message']);
+    $subject = maybe_null( mysql_real_escape_string($ar['subject']));
+    $message = mysql_real_escape_string($ar['message']);
     $quote = "'inline'";
     if ($ar['quote'] == 'attach')
       $quote = "'attach'";
     elseif ($ar['quote'] == NULL)
       $quote = 'NULL';
-    DB::query("REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
+    db_query("REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
              "VALUES ({$id}, {$valid_from}, {$valid_until}, {$fromname}, {$fromaddr}, {$subject}, '{$message}', {$quote})");
   }
     
 
 
   if (! $newaccount)
-    DB::query("DELETE FROM mail.vmail_forward WHERE account={$id}");
+    db_query("DELETE FROM mail.vmail_forward WHERE account={$id}");
 
   if (count($account['forwards']) > 0)
   {
@@ -375,7 +375,7 @@ function save_vmail_account($account)
         $forward_query .= ', ';
       $forward_query .= "({$id}, ".maybe_null($account['forwards'][$i]['spamfilter']).", '{$account['forwards'][$i]['destination']}')";
     }
-    DB::query($forward_query);
+    db_query($forward_query);
   }
   if ($newaccount && $password != 'NULL')
   {
@@ -410,16 +410,16 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
 
   // Clean up obsolete quota
   if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
-    DB::query("UPDATE mail.vmail_accounts SET quota_used=NULL, quota=NULL WHERE password IS NULL");
+    db_query("UPDATE mail.vmail_accounts SET quota_used=NULL, quota=NULL WHERE password IS NULL");
   }
 
   // Update Mail-Quota-Cache
   if ($_SESSION['role'] == ROLE_SYSTEMUSER) {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = DB::query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts WHERE useraccount=".$uid." GROUP BY useraccount, server");
-    while ($line = $result->fetch_assoc()) {
+    $result = db_query("SELECT useraccount, server, SUM(quota-(SELECT value FROM misc.config WHERE `key`='vmail_basequota')) AS quota, SUM(GREATEST(quota_used-(SELECT value FROM misc.config WHERE `key`='vmail_basequota'), 0)) AS used FROM mail.v_vmail_accounts WHERE useraccount=".$uid." GROUP BY useraccount, server");
+    while ($line = mysql_fetch_assoc($result)) {
       if ($line['quota'] !== NULL) {
-        DB::query("REPLACE INTO mail.vmailquota (uid, server, quota, used) VALUES ('{$line['useraccount']}', '{$line['server']}', '{$line['quota']}', '{$line['used']}')");
+        db_query("REPLACE INTO mail.vmailquota (uid, server, quota, used) VALUES ('{$line['useraccount']}', '{$line['server']}', '{$line['quota']}', '{$line['used']}')");
       }
     }
   }
@@ -432,7 +432,7 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
 function delete_account($id)
 {
   $account = get_account_details($id);
-  DB::query("DELETE FROM mail.vmail_accounts WHERE id={$account['id']};");
+  db_query("DELETE FROM mail.vmail_accounts WHERE id={$account['id']};");
 }
 
 
@@ -445,9 +445,9 @@ function domainsettings($only_domain=NULL) {
   $subdomains = array();
 
   // Domains
-  $result = DB::query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, d.mailserver_lock, m.id AS m_id, v.id AS v_id FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NULL) WHERE d.useraccount={$uid} OR m.uid={$uid} ORDER BY CONCAT_WS('.',d.domainname,d.tld);");
+  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, d.mailserver_lock, m.id AS m_id, v.id AS v_id FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NULL) WHERE d.useraccount={$uid} OR m.uid={$uid} ORDER BY CONCAT_WS('.',d.domainname,d.tld);");
 
-  while ($mydom = $result->fetch_assoc()) {
+  while ($mydom = mysql_fetch_assoc($result)) {
     if (! array_key_exists($mydom['id'], $domains)) {
       if ($mydom['v_id'])
         $mydom['mail'] = 'virtual';
@@ -462,8 +462,8 @@ function domainsettings($only_domain=NULL) {
   }      
 
   // Subdomains
-  $result = DB::query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id, IF(ISNULL(v.hostname),m.subdomain,v.hostname) AS hostname FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NOT NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NOT NULL) WHERE (m.id IS NOT NULL OR v.id IS NOT NULL) AND d.useraccount={$uid} OR m.uid={$uid};");
-  while ($mydom = $result->fetch_assoc()) {
+  $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id, IF(ISNULL(v.hostname),m.subdomain,v.hostname) AS hostname FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NOT NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NOT NULL) WHERE (m.id IS NOT NULL OR v.id IS NOT NULL) AND d.useraccount={$uid} OR m.uid={$uid};");
+  while ($mydom = mysql_fetch_assoc($result)) {
     if (! array_key_exists($mydom['id'], $subdomains))
       $subdomains[$mydom['id']] = array();
         
@@ -482,15 +482,15 @@ function domainsettings($only_domain=NULL) {
 function domain_has_vmail_accounts($domid)
 {
   $domid = (int) $domid;
-  $result = DB::query("SELECT dom.id FROM mail.vmail_accounts AS acc LEFT JOIN mail.virtual_mail_domains AS dom ON (dom.id=acc.domain) WHERE dom.domain={$domid}");
-  return ($result->num_rows > 0);
+  $result = db_query("SELECT dom.id FROM mail.vmail_accounts AS acc LEFT JOIN mail.virtual_mail_domains AS dom ON (dom.id=acc.domain) WHERE dom.domain={$domid}");
+  return (mysql_num_rows($result) > 0);
 }
 
 
 function change_domain($id, $type)
 {
   $id = (int) $id;
-  $type = DB::escape($type);
+  $type = mysql_real_escape_string($type);
   if (domain_has_vmail_accounts($id))
     system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
   
@@ -502,20 +502,20 @@ function change_domain($id, $type)
     system_failure('Domain ist bereits so konfiguriert');
 
   if ($type == 'none') {
-    DB::query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
-    DB::query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
-    DB::query("UPDATE kundendaten.domains SET mail='none', lastchange=NOW() WHERE id={$id} LIMIT 1;");
+    db_query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
+    db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='none', lastchange=NOW() WHERE id={$id} LIMIT 1;");
   }
   elseif ($type == 'virtual') {
     $vmailserver = (int) $_SESSION['userinfo']['server'];
-    DB::query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
-    DB::query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
-    DB::query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES ({$id}, {$vmailserver});");
+    db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
+    db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES ({$id}, {$vmailserver});");
   }
   elseif ($type == 'auto') {
-    DB::query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
-    DB::query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
-    DB::query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
+    db_query("DELETE FROM mail.virtual_mail_domains WHERE domain={$id} AND hostname IS NULL LIMIT 1;");
+    db_query("DELETE FROM mail.custom_mappings WHERE domain={$id} AND subdomain IS NULL LIMIT 1;");
+    db_query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id={$id} LIMIT 1;");
   }
 }
 

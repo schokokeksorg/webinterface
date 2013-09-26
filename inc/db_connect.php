@@ -14,29 +14,12 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/base.php');
+require_once('inc/error.php');
 
+if (!@mysql_connect(config('db_host'), config('db_user'), config('db_pass')))
+	die('Konnte nicht zur Datenbank verbinden. Wenn dieser Fehler wiederholt auftritt, beachrichtigen Sie bitte den Administrator.');
+	
+if (!@mysql_query('SET NAMES utf8'))
+	die('Fehler bei der Auswahl der Zeichencodierung. Bitte melden Sie diesen Fehler einem Administrator!');
 
-function load_results()
-{
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT directory, docroot, lastcheck, appname, version, state, safeversion, vulninfo FROM qatools.freewvs_results WHERE uid={$uid}");
-  $ret = array();
-  while ($line = mysql_fetch_assoc($result)) {
-    array_push($ret, $line);
-  }
-  return $ret;
-}
-
-function get_upgradeinstructions($appname) {
-  $appname = mysql_real_escape_string($appname);
-  $result = db_query("SELECT url FROM qatools.freewvs_upgradeinstructions WHERE appname='{$appname}' LIMIT 1");
-  if (mysql_num_rows($result) > 0) {
-    $tmp = mysql_fetch_array($result);
-    return $tmp[0];
-  }
-  return NULL;
-}
-
-
-
+?>

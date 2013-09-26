@@ -8,7 +8,7 @@
 require_once('session/checkuser.php');
 require_once('inc/error.php');
 require_once('inc/debug.php');
-require_once('inc/db.php');
+
 require_once('inc/base.php');
 
 session_name(config('session_name'));

@@ -17,11 +17,11 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 function get_mysql_accounts($UID)
 {
   $UID = (int) $UID;
-  $result = DB::query("SELECT id, username, description, created FROM misc.mysql_accounts WHERE useraccount=$UID ORDER BY username");
-  if ($result->num_rows == 0)
+  $result = db_query("SELECT id, username, description, created FROM misc.mysql_accounts WHERE useraccount=$UID ORDER BY username");
+  if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
-  while ($item = $result->fetch_assoc())
+  while ($item = mysql_fetch_assoc($result))
   {
     $list[] = $item;
   }
@@ -31,11 +31,11 @@ function get_mysql_accounts($UID)
 function get_mysql_databases($UID)
 {
   $UID = (int) $UID;
-  $result = DB::query("SELECT id, name, description, created FROM misc.mysql_database WHERE useraccount=$UID ORDER BY name");
-  if ($result->num_rows == 0)
+  $result = db_query("SELECT id, name, description, created FROM misc.mysql_database WHERE useraccount=$UID ORDER BY name");
+  if (mysql_num_rows($result) == 0)
     return array();
   $list = array();
-  while ($item = $result->fetch_assoc())
+  while ($item = mysql_fetch_assoc($result))
   {
     $list[] = $item;
   }
@@ -55,7 +55,7 @@ function set_database_description($dbname, $description)
     system_failure('Ungültige Datenbank');
   }
   $description = maybe_null(filter_input_general($description));
-  DB::query("UPDATE misc.mysql_database SET description={$description} WHERE id={$thisdb['id']}");
+  db_query("UPDATE misc.mysql_database SET description={$description} WHERE id={$thisdb['id']}");
 }
 
 function set_dbuser_description($username, $description) 
@@ -71,16 +71,16 @@ function set_dbuser_description($username, $description)
     system_failure('Ungültiger Benutzer');
   }
   $description = maybe_null(filter_input_general($description));
-  DB::query("UPDATE misc.mysql_accounts SET description={$description} WHERE id={$thisuser['id']}");
+  db_query("UPDATE misc.mysql_accounts SET description={$description} WHERE id={$thisuser['id']}");
 }
 
 function servers_for_databases()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = DB::query("SELECT db.name AS db, hostname FROM misc.mysql_database AS db LEFT JOIN system.useraccounts AS u ON (db.useraccount=u.uid) LEFT JOIN system.servers ON (COALESCE(db.server, u.server) = servers.id) WHERE db.useraccount={$uid}");
+  $result = db_query("SELECT db.name AS db, hostname FROM misc.mysql_database AS db LEFT JOIN system.useraccounts AS u ON (db.useraccount=u.uid) LEFT JOIN system.servers ON (COALESCE(db.server, u.server) = servers.id) WHERE db.useraccount={$uid}");
   $ret = array();
-  while ($line = $result->fetch_assoc()) {
+  while ($line = mysql_fetch_assoc($result)) {
     $ret[$line['db']] = $line['hostname'];
   }
   DEBUG($ret);
@@ -95,10 +95,10 @@ function get_mysql_access($db, $account)
   if (!is_array($mysql_access))
   {
     $mysql_access = array();
-    $result = DB::query("SELECT db.name AS db, acc.username AS user FROM misc.mysql_access AS access LEFT JOIN misc.mysql_database AS db ON (db.id=access.database) LEFT JOIN misc.mysql_accounts AS acc ON (acc.id = access.user) WHERE acc.useraccount={$uid} OR db.useraccount={$uid};");
-    if ($result->num_rows == 0)
+    $result = db_query("SELECT db.name AS db, acc.username AS user FROM misc.mysql_access AS access LEFT JOIN misc.mysql_database AS db ON (db.id=access.database) LEFT JOIN misc.mysql_accounts AS acc ON (acc.id = access.user) WHERE acc.useraccount={$uid} OR db.useraccount={$uid};");
+    if (mysql_num_rows($result) == 0)
       return false;
-    while ($line = $result->fetch_object())
+    while ($line = mysql_fetch_object($result))
       $mysql_access[$line->db][$line->user] = true;
   }
   return (array_key_exists($db, $mysql_access) && array_key_exists($account, $mysql_access[$db]));
@@ -108,22 +108,22 @@ function get_mysql_access($db, $account)
 function set_mysql_access($db, $account, $status)
 {
   $uid = $_SESSION['userinfo']['uid'];
-  $db = DB::escape($db);
-  $account = DB::escape($account);
+  $db = mysql_real_escape_string($db);
+  $account = mysql_real_escape_string($account);
   DEBUG("User »{$account}« soll ".($status ? "" : "NICHT ")."auf die Datenbank »{$db}« zugreifen");
   $query = '';
   if ($status)
   {
     if (get_mysql_access($db, $account))
       return NULL;
-    $result = DB::query("SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1");
-    if ($result->num_rows != 1)
+    $result = db_query("SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1");
+    if (mysql_num_rows($result) != 1)
     {
       logger(LOG_ERR, "modules/mysql/include/mysql", "mysql", "cannot find database {$db}");
       system_failure("cannot find database »{$db}«");
     }
-    $result = DB::query("SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid} LIMIT 1");
-    if ($result->num_rows != 1)
+    $result = db_query("SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid} LIMIT 1");
+    if (mysql_num_rows($result) != 1)
     {
       logger(LOG_ERR, "modules/mysql/include/mysql", "mysql", "cannot find user {$account}");
       system_failure("cannot find database user »{$account}«");
@@ -138,7 +138,7 @@ function set_mysql_access($db, $account, $status)
     $query = "DELETE FROM misc.mysql_access WHERE `database`=(SELECT id FROM misc.mysql_database WHERE name='{$db}' AND useraccount={$uid} LIMIT 1) AND user=(SELECT id FROM misc.mysql_accounts WHERE username='{$account}' AND useraccount={$uid});";
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "revoking access on »{$db}« from »{$account}«");
   }
-  DB::query($query);
+  db_query($query);
 }
 
 
@@ -151,19 +151,19 @@ function create_mysql_account($username, $description = '')
     return NULL;
   }
   $uid = $_SESSION['userinfo']['uid'];
-  $username = DB::escape($username);
+  $username = mysql_real_escape_string($username);
   $description = maybe_null($description);
   logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating user »{$username}«");
-  DB::query("INSERT INTO misc.mysql_accounts (username, password, useraccount, description) VALUES ('$username', '!', $uid, $description);");
+  db_query("INSERT INTO misc.mysql_accounts (username, password, useraccount, description) VALUES ('$username', '!', $uid, $description);");
 }
 
 
 function delete_mysql_account($username)
 {
-  $username = DB::escape($username);
+  $username = mysql_real_escape_string($username);
   $uid = $_SESSION['userinfo']['uid'];
   logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "deleting user »{$username}«");
-  DB::query("DELETE FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
+  db_query("DELETE FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
 }
 
 
@@ -175,7 +175,7 @@ function create_mysql_database($dbname, $description = '', $server = NULL)
     input_error("Der eingegebene Datenbankname entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
-  $dbname = DB::escape($dbname);
+  $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
   $description = maybe_null($description); 
   $server = (int) $server;
@@ -183,16 +183,16 @@ function create_mysql_database($dbname, $description = '', $server = NULL)
     $server = 'NULL';
   }
   logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating database »{$dbname}«");
-  DB::query("INSERT INTO misc.mysql_database (name, useraccount, server, description) VALUES ('$dbname', $uid, $server, $description);");
+  db_query("INSERT INTO misc.mysql_database (name, useraccount, server, description) VALUES ('$dbname', $uid, $server, $description);");
 }
 
 
 function delete_mysql_database($dbname)
 {
-  $dbname = DB::escape($dbname);
+  $dbname = mysql_real_escape_string($dbname);
   $uid = $_SESSION['userinfo']['uid'];
   logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "removing database »{$dbname}«");
-  DB::query("DELETE FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
+  db_query("DELETE FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
 }
 
 
@@ -212,29 +212,29 @@ function validate_mysql_username($username)
 
 function set_mysql_password($username, $password)
 {
-  $username = DB::escape($username);
-  $password = DB::escape($password);
+  $username = mysql_real_escape_string($username);
+  $password = mysql_real_escape_string($password);
   $uid = $_SESSION['userinfo']['uid'];
   logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "updating password for »{$username}«");
-  DB::query("UPDATE misc.mysql_accounts SET password=PASSWORD('$password') WHERE username='$username' AND useraccount=$uid;");
+  db_query("UPDATE misc.mysql_accounts SET password=PASSWORD('$password') WHERE username='$username' AND useraccount=$uid;");
 }
 
 
 function has_mysql_database($dbname)
 {
   $uid = $_SESSION['userinfo']['uid'];
-  $dbname = DB::escape($dbname);
-  $result = DB::query("SELECT NULL FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
-  return ($result->num_rows == 1);
+  $dbname = mysql_real_escape_string($dbname);
+  $result = db_query("SELECT NULL FROM misc.mysql_database WHERE name='{$dbname}' AND useraccount='{$uid}' LIMIT 1;");
+  return (mysql_num_rows($result) == 1);
 }
 
 
 function has_mysql_user($username)
 {
   $uid = $_SESSION['userinfo']['uid'];
-  $userame = DB::escape($username);
-  $result = DB::query("SELECT NULL FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
-  return ($result->num_rows == 1);
+  $userame = mysql_real_escape_string($username);
+  $result = db_query("SELECT NULL FROM misc.mysql_accounts WHERE username='{$username}' AND useraccount='{$uid}' LIMIT 1;");
+  return (mysql_num_rows($result) == 1);
 }
 
 

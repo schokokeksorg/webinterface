@@ -14,6 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+require_once('inc/db_connect.php');
 require_once('inc/debug.php');
 
 function config($key)
@@ -35,11 +36,11 @@ function config($key)
     return $config[$key];
   
   /* read configuration from database */
-  $options = DB::query( "SELECT `key`, value FROM misc.config" );
+  $options = db_query( "SELECT `key`, value FROM misc.config" );
   
-  while( $object = $options->fetch_assoc() ) {
+  while( $object = mysql_fetch_assoc( $options ) ) {
     if (!array_key_exists($object['key'], $config)) {
-      $config[$object['key']]=$object['value'];
+	    $config[$object['key']]=$object['value'];
     }
   }
   // Sonst wird das Passwort des webadmin-Users mit ausgegeben
@@ -55,9 +56,8 @@ function config($key)
 
 function get_server_by_id($id) {
   $id = (int) $id;
-  $result = DB::query("SELECT hostname FROM system.servers WHERE id='{$id}'");
-  $server = $result->fetch_assoc();
-  return $server['hostname'];
+  $result = mysql_fetch_assoc(db_query("SELECT hostname FROM system.servers WHERE id='{$id}'"));
+  return $result['hostname'];
 }
 
 
@@ -73,8 +73,8 @@ function redirect($target)
 function my_server_id()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = DB::query("SELECT server FROM system.useraccounts WHERE uid={$uid}");
-  $r = $result->fetch_assoc();
+  $result = db_query("SELECT server FROM system.useraccounts WHERE uid={$uid}");
+  $r = mysql_fetch_assoc($result);
   DEBUG($r);
   return $r['server'];
 }
@@ -83,9 +83,9 @@ function my_server_id()
 function additional_servers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = DB::query("SELECT server FROM system.user_server WHERE uid={$uid}");
+  $result = db_query("SELECT server FROM system.user_server WHERE uid={$uid}");
   $servers = array();
-  while ($s = $result->fetch_assoc())
+  while ($s = mysql_fetch_assoc($result))
     $servers[] = $s['server'];
   DEBUG($servers);
   return $servers;
@@ -94,13 +94,32 @@ function additional_servers()
 
 function server_names()
 {
-  $result = DB::query("SELECT id, hostname FROM system.servers");
+  $result = db_query("SELECT id, hostname FROM system.servers");
   $servers = array();
-  while ($s = $result->fetch_assoc())
+  while ($s = mysql_fetch_assoc($result))
     $servers[$s['id']] = $s['hostname'];
   DEBUG($servers);
   return $servers;
 }
+
+
+function db_query($query)
+{
+  DEBUG($query);
+  $result = @mysql_query($query);
+  if (mysql_error())
+  {
+    $error = mysql_error();
+    logger(LOG_ERR, "inc/base", "dberror", "mysql error: {$error}");
+    system_failure('Interner Datenbankfehler: »'.iconv('ISO-8859-1', 'UTF-8', $error).'«.');
+  }
+  $count = @mysql_num_rows($result);
+  if (! $count)
+    $count = 'no';
+  DEBUG("=> {$count} rows");
+  return $result; 
+}
+
 
 
 function maybe_null($value)
@@ -109,7 +128,11 @@ function maybe_null($value)
     return 'NULL';
 
   if (strlen( (string) $value ) > 0)
+<<<<<<< HEAD
     return "'".DB::escape($value)."'";
+=======
+    return "'".mysql_real_escape_string($value)."'";
+>>>>>>> parent of 6108de7... Umstellung auf mysqli
   else
     return 'NULL';
 }
@@ -129,13 +152,13 @@ function logger($severity, $scriptname, $scope, $message)
   elseif ($_SESSION['role'] & ROLE_CUSTOMER)
     $user = "'{$_SESSION['customerinfo']['customerno']}'";
   
-  $remote = DB::escape($_SERVER['REMOTE_ADDR']);
+  $remote = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
 
-  $scriptname = DB::escape($scriptname);
-  $scope = DB::escape($scope);
-  $message = DB::escape($message);
+  $scriptname = mysql_real_escape_string($scriptname);
+  $scope = mysql_real_escape_string($scope);
+  $message = mysql_real_escape_string($message);
 
-  DB::query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');");
+  db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');");
 }
 
 function html_header($arg)

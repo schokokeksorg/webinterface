@@ -19,9 +19,9 @@ require_once('inc/base.php');
 
 function find_customers($string) 
 {
-  $string = DB::escape(chop($string));
+  $string = mysql_real_escape_string(chop($string));
   $return = array();
-  $result = DB::query("SELECT k.id FROM kundendaten.kunden AS k LEFT JOIN kundendaten.kundenkontakt AS kk ".
+  $result = db_query("SELECT k.id FROM kundendaten.kunden AS k LEFT JOIN kundendaten.kundenkontakt AS kk ".
                      "ON (kk.kundennr = k.id) LEFT JOIN system.useraccounts AS u ON (k.id=u.kunde) WHERE ".
                      "firma LIKE '%{$string}%' OR firma2 LIKE '%{$string}%' OR ".
                      "nachname LIKE '%{$string}%' OR vorname LIKE '%{$string}%' OR ".
@@ -30,7 +30,7 @@ function find_customers($string)
                      "notizen LIKE '%{$string}%' OR kk.name LIKE '%{$string}%' OR ".
                      "kk.wert LIKE '%{$string}%' OR u.name LIKE '%{$string}%' OR ".
                      "u.username LIKE '%{$string}%' OR k.id='{$string}' OR u.uid='{$string}';");
-  while ($entry = $result->fetch_assoc())
+  while ($entry = mysql_fetch_assoc($result))
     $return[] = $entry['id'];
 
   return $return;
@@ -41,9 +41,9 @@ function find_users_for_customer($id)
 {
   $id = (int) $id;
   $return = array();
-  $result = DB::query("SELECT uid, username FROM system.useraccounts WHERE ".
+  $result = db_query("SELECT uid, username FROM system.useraccounts WHERE ".
                      "kunde='{$id}';");
-  while ($entry = $result->fetch_assoc())
+  while ($entry = mysql_fetch_assoc($result))
     $return[$entry['uid']] = $entry['username'];
 
   return $return;
@@ -54,9 +54,9 @@ function find_users_for_customer($id)
 function hosting_contracts($cid)
 {
   $cid = (int) $cid;
-  $result = DB::query("SELECT u.username, werber, beschreibung, betrag, brutto, monate, anzahl, startdatum, startdatum + INTERVAL laufzeit MONTH - INTERVAL 1 DAY AS mindestlaufzeit, kuendigungsdatum, gesperrt, notizen FROM kundendaten.hosting AS h LEFT JOIN system.useraccounts AS u ON (h.hauptuser=u.uid) WHERE h.kunde=".$cid);
+  $result = db_query("SELECT u.username, werber, beschreibung, betrag, brutto, monate, anzahl, startdatum, startdatum + INTERVAL laufzeit MONTH - INTERVAL 1 DAY AS mindestlaufzeit, kuendigungsdatum, gesperrt, notizen FROM kundendaten.hosting AS h LEFT JOIN system.useraccounts AS u ON (h.hauptuser=u.uid) WHERE h.kunde=".$cid);
   $ret = array();
-  while ($x = $result->fetch_assoc())
+  while ($x = mysql_fetch_assoc($result))
     array_push($ret, $x);
   DEBUG($ret);
 
