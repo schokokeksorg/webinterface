@@ -40,7 +40,7 @@ function config($key)
   
   while( $object = mysql_fetch_assoc( $options ) ) {
     if (!array_key_exists($object['key'], $config)) {
-      $config[$object['key']]=$object['value'];
+	    $config[$object['key']]=$object['value'];
     }
   }
   // Sonst wird das Passwort des webadmin-Users mit ausgegeben

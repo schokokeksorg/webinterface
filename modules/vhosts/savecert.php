@@ -153,7 +153,7 @@ elseif ($_GET['action'] == 'newcsr')
   if (isset($_REQUEST['replace'])) {
     $replace = $_REQUEST['replace'];
   }
-  $cn = $_REQUEST['commonname'];
+  $cn = urldecode($_REQUEST['commonname']);
   $bitlength = 4096;
   if (isset($_REQUEST['bitlength'])) {
     $bitlength = $_REQUEST['bitlength'];
