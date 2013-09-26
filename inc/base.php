@@ -128,11 +128,7 @@ function maybe_null($value)
     return 'NULL';
 
   if (strlen( (string) $value ) > 0)
-<<<<<<< HEAD
-    return "'".DB::escape($value)."'";
-=======
     return "'".mysql_real_escape_string($value)."'";
->>>>>>> parent of 6108de7... Umstellung auf mysqli
   else
     return 'NULL';
 }
