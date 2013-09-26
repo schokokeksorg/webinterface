@@ -37,7 +37,7 @@ function config($key)
   /* read configuration from database */
   $options = DB::query( "SELECT `key`, value FROM misc.config" );
   
-  while( $object = mysql_fetch_assoc( $options ) ) {
+  while( $object = $options->fetch_assoc() ) {
     if (!array_key_exists($object['key'], $config)) {
       $config[$object['key']]=$object['value'];
     }
