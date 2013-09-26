@@ -150,7 +150,7 @@ if (count($vhosts) > 0)
     if ($traffic_sum > 1024) {
       $traffic_string = round($traffic_sum / 1024, 2).' GB';
     }
-    output('<p><strong>Traffic insgesamt: '.$traffic_string.'</strong> in den lezten 30 Tagen</p>');
+    output('<p><strong>Traffic insgesamt: '.$traffic_string.'</strong> in den letzten 30 Tagen</p>');
   }
   output('<p style="font-size: 90%;"><sup>*</sup>)&#160;Dieser Wert stellt den Datenverkehr dieser Website für die letzten 30 Tage dar.</p>');
   output('<p style="font-size: 90%;"><sup>**</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
