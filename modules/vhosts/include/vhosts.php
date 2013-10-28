@@ -80,7 +80,7 @@ function empty_vhost()
   
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
-  $vhost['php'] = 'php54';
+  $vhost['php'] = 'php55';
   $vhost['cgi'] = 1;
   $vhost['ssl'] = NULL;
   $vhost['suexec_user'] = NULL;
