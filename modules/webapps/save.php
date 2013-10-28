@@ -97,7 +97,7 @@ if ($_POST['target'] == 'new')
   $vhost['domain_id'] = $domainid;
   $vhost['domain'] = $domainname;
   $vhost['docroot'] = '';
-  $vhost['php'] = 'php54';
+  $vhost['php'] = 'php55';
   $vhost['ssl'] = $ssl;
   $vhost['logtype'] = $logtype;
   $vhost['errorlog'] = $errorlog; 
