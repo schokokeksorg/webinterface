@@ -296,11 +296,17 @@ function setup_session($role, $useridentity)
     DEBUG("We are a sub-user");
     $info = get_subuser_info($useridentity);
     $_SESSION['userinfo'] = $info;
+    $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_SUBUSER;
     $_SESSION['subuser'] = $useridentity;
-    $customer = get_customer_info($_SESSION['userinfo']['username']);
-    $_SESSION['customerinfo'] = $customer;
-    $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_CUSTOMER | ROLE_SUBUSER;
-    $_SESSION['restrict_modules'] = explode(',', $info['modules']);
+    $data = db_query("SELECT kundenaccount FROM system.useraccounts WHERE username='{$info['username']}'");
+    if ($entry = mysql_fetch_assoc($data)) {
+      if ($entry['kundenaccount'] == 1) {
+        $customer = get_customer_info($_SESSION['userinfo']['username']);
+        $_SESSION['customerinfo'] = $customer;
+        $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_CUSTOMER | ROLE_SUBUSER;
+        $_SESSION['restrict_modules'] = explode(',', $info['modules']);
+      }
+    }
     logger(LOG_INFO, "session/start", "login", "logged in user »{$info['username']}«");
   }
   if ($role & ROLE_SYSTEMUSER)
