@@ -91,8 +91,7 @@ DE91602911200041512006
 '.$amount.'
 
 
-RE '.$id.' KD '.$customerno.' vom '.$datum.'
-Rechnung '.$id.' von schokokeks.org';
+RE '.$id.' KD '.$customerno.' vom '.$datum;
   
   $descriptorspec = array(
     0 => array("pipe", "r"),  // STDIN ist eine Pipe, von der das Child liest
