@@ -16,12 +16,15 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/error.php');
 
-$host = config('db_host');
-if (config('db_port')) {
-  $host .= ":".config('db_port');
+include("config.php");
+global $config;
+
+$host = $config['db_host'];
+if ($config['db_port']) {
+  $host .= ":".$config['db_port'];
 }
 
-if (!@mysql_connect($host, config('db_user'), config('db_pass')))
+if (!@mysql_connect($host, $config['db_user'], $config['db_pass']))
 	die('Konnte nicht zur Datenbank verbinden. Wenn dieser Fehler wiederholt auftritt, beachrichtigen Sie bitte den Administrator.');
 	
 if (!@mysql_query('SET NAMES utf8'))
