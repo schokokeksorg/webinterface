@@ -96,6 +96,10 @@ elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
   }
   system_failure('Der angegebene Account kann mit diesem Client-Zertifikat nicht eingeloggt werden.');
 }
+elseif ($_SESSION['role'] != ROLE_ANONYMOUS && $_REQUEST['destination'] != '') {
+  # User hat sich grade eingeloggt
+  header('Location: ../'.$destination);
+}
 else
 {
   if (isset($_SERVER['REDIRECT_SSL_CLIENT_CERT']) && 
