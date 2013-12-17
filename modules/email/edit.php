@@ -52,7 +52,7 @@ else {
 }
 
 
-$is_autoresponder = is_array($account['autoresponder']) && $account['autoresponder']['valid_from'] != NULL;
+$is_autoresponder = is_array($account['autoresponder']) && $account['autoresponder']['valid_from'] != NULL && ($account['autoresponder']['valid_until'] > date('Y-m-d') || $account['autoresponder']['valid_until'] == NULL);
 $is_forward = (count($account['forwards']) > 0);
 $is_mailbox = ($account['password'] != NULL  ||  $id == 0);
 $numforwards = max(count($account['forwards']), 1);

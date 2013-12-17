@@ -74,7 +74,6 @@ if ($_GET['action'] == 'edit')
   }
   $account['spamfilter'] = $_POST['spamfilter_action'];
 
-
   $ar = empty_autoresponder_config();
   $valid_from_date = time();
   $valid_until_date = NULL;
@@ -111,10 +110,10 @@ if ($_GET['action'] == 'edit')
   }
   if (!isset($_POST['autoresponder']) || $_POST['autoresponder'] != 'yes') {
     $valid_from_date = NULL;
-  }
-  if ($valid_until_date && $valid_until_date < time()) {
-    warning('Das Deaktivierungs-Datum liegt in der Vergangenheit, eine automatische Deaktivierung wird nicht stattfinden.');
-    $valid_until_date = NULL;
+  } else {
+    if ($valid_until_date && $valid_until_date < time()) {
+      warning('Das Deaktivierungs-Datum liegt in der Vergangenheit, der Autoresponder wird sofort deaktiviert!');
+    }
   }
   if ($valid_from_date) {
     $ar['valid_from'] = date('Y-m-d', $valid_from_date);
