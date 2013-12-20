@@ -17,6 +17,9 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/security.php');
 
+include("external/php-iban/php-iban.php");
+
+
 function my_invoices()
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
@@ -34,7 +37,7 @@ function get_pdf($id)
   $id = (int) $id;
   $result = db_query("SELECT pdfdata FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} AND id={$id}");
   if (mysql_num_rows($result) == 0)
-	system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
+	  system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
   return mysql_fetch_object($result)->pdfdata;
 
 }
@@ -161,6 +164,63 @@ function generate_bezahlcode_image($id)
 }
 
 
+function get_sepamandate() 
+{
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+  $result = db_query("SELECT id, mandatsreferenz, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde={$cid}");
+  $ret = array();
+  while ($entry = mysql_fetch_assoc($result)) {
+    array_push($ret, $entry);
+  }
+  return $ret;
+}
 
-# bank://singlepaymentsepa?name=SCHOKOKEKS.ORG%20GBR&reason=RE%20256%20KD%2032%20vom%202008-03-01&iban=DE91602911200041512006&bic=GENODES1VBK&amount=45%2C00
+
+function yesterday($date) 
+{
+  $date = mysql_real_escape_string($date);
+  $result = db_query("SELECT '{$date}' - INTERVAL 1 DAY");
+  return mysql_fetch_array($result)[0];
+}
+
+
+function invalidate_sepamandat($id, $date) 
+{
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+  $id = (int) $id;
+  $date = mysql_real_escape_string($date);
+  db_query("UPDATE kundendaten.sepamandat SET gueltig_bis='{$date}' WHERE id={$id} AND kunde={$cid}");
+}
+
+
+function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
+{
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+  if ($gueltig_ab < date('Y-m-d')) {
+    system_failure('Das Mandat kann nicht rückwirkend erteilt werden. Bitte geben Sie ein Datum in der Zukunft an.');
+  }
+  $alte_mandate = get_sepamandate();
+  $referenzen = array();
+  foreach ($alte_mandate as $mandat) {
+    if ($mandat['gueltig_bis'] == NULL || $mandat['gueltig_bis'] >= $gueltig_ab) {
+      DEBUG('Altes Mandat wird für ungültig erklärt.');
+      DEBUG($mandat);
+      invalidate_sepamandat($mandat['id'], yesterday($gueltig_ab));
+    }
+    array_push($referenzen, $mandat['mandatsreferenz']);
+  }
+  $counter = 1;
+  $referenz = sprintf('K%04d-M%03d', $cid, $counter);
+  while (in_array($referenz, $referenzen)) {
+    $counter++;
+    $referenz = sprintf('K%04d-M%03d', $cid, $counter);
+  }
+  DEBUG('Nächste freie Mandatsreferenz: '. $referenz);
+
+  $today = date('Y-m-d');
+  db_query("INSERT INTO kundendaten.sepamandat (mandatsreferenz, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES ('{$referenz}', {$cid}, '{$today}', 'online', '{$gueltig_ab}', '{$name}', '{$adresse}', '{$iban}', '{$bic}', '{$bankname}')");
+}
+
+
+
 ?>

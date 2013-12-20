@@ -72,5 +72,35 @@ if (! $show_paid) {
 output('<p>'.internal_link('upcoming', 'Zukünftige Rechnungsposten anzeigen').'</p>');
 
 
+output('<h3>Bezahlung per Lastschrift</h3>');
+
+output('<p>Gerne buchen wir Ihre Beiträge von Ihrem Konto ab. Bei Lastschriftzahlung werden Sie durch Zustellung einer Rechnung informiert, die Abbuchung erfolgt dann eine Woche später.</p>');
+
+$mandate = get_sepamandate();
+if ($mandate) {
+  output('<p>Folgende Mandate sind bisher erteilt worden (momentan gültiges Mandat ist Fett dargestellt):</p>
+<table>
+<tr><th>Mandatsreferenz</th><th>IBAN</th><th>Gültigkeit</th></tr
+');
+  foreach ($mandate as $m) {
+    $gueltig = 'ab '.$m['gueltig_ab'];
+    if ($m['gueltig_bis']) {
+      $gueltig = $m['gueltig_ab'].' - '.$m['gueltig_bis'];
+    }
+    $aktiv = false;
+    if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == NULL || $m['gueltig_bis'] >= date('Y-m-d'))) {
+      $aktiv = true;
+    }
+    output('<tr><td'.($aktiv ? ' style="font-weight: bold;"' : '').'>'.internal_link('sepamandat_detail', $m['mandatsreferenz'], 'ref='.$m['mandatsreferenz']).'</td><td>'.$m['iban'].'</td><td>'.$gueltig.'</td></tr>');
+  }
+  output('</table>');
+}
+
+
+addnew('sepamandat', 'Erteilen Sie uns ein Lastschrift-Mandat');
+
+output('<p>Sie können Ihr Mandat jederzeit widerrufen. Senden Sie uns dazu bitte eine entsprechende E-Mail.</p>');
+
+
 
 ?>

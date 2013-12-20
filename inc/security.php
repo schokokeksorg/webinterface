@@ -193,6 +193,11 @@ function in_homedir($path)
   return strncmp($_SESSION['userinfo']['homedir'], $path, count($_SESSION['userinfo']['homedir'])) == 0;
 }
 
+function check_date( $input )
+{
+  return (bool) preg_match("/[0-9]{4}-(0?[1-9]|11|12)-([012]?[0-9]|30|31)/", $input);
+}
+
 
 function check_emailaddr( $input )
 {
