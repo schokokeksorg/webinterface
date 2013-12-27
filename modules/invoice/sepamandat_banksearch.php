@@ -22,11 +22,13 @@ require_once('invoice.php');
 
 $iban = $_GET['iban'];
 
+$iban_ok = (verify_iban($iban) ? '1' : '0');
+
 $bank = get_bank_info($iban);
 
 header("Content-Type: text/javascript");
 echo "[\n";
-echo ' { "bic": "'.$bank['bic'].'", "bankname" : "'.$bank['name'].'" } ';
+echo ' { "iban_ok": "'.$iban_ok.'", "bic": "'.$bank['bic'].'", "bankname" : "'.$bank['name'].'" } ';
 echo '
 ]';
 die();

@@ -14,6 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+require_once('inc/icons.php');
 require_once('invoice.php');
 
 require_role(ROLE_CUSTOMER);
@@ -70,7 +71,7 @@ $html .= '<h4>Ihre Bankverbindung</h4>';
 $html .= '<table>
 <tr><td><label for="kontoinhaber">Name des Kontoinhabers:</label></td><td><input type="text" name="kontoinhaber" id="kontoinhaber" value="'.$_SESSION['customerinfo']['name'].'" /></td></tr>
 <tr><td><label for="adresse">Adresse des Kontoinhabers:</label></td><td><textarea cols="50" lines="2" name="adresse" id="adresse"></textarea></td></tr>
-<tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" /></td></tr>
+<tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" /><span id="iban_feedback"></span></td></tr>
 <tr><td><label for="bankname">Name der Bank:</label></td><td><input type="text" name="bankname" id="bankname" /></td></tr>
 <tr><td><label for="bic">BIC:</label></td><td><input type="text" name="bic" id="bic" /></td></tr>
 </table>';
@@ -85,8 +86,17 @@ output('
 
 function populate_bankinfo(result) {
   bank = result[0];
-  $(\'#bankname\').val(bank.bankname);
-  $(\'#bic\').val(bank.bic);
+  if (bank.iban_ok == 1) {
+    $("#iban_feedback").html(\''.icon_ok().'\');
+    if ($(\'#bankname\').val() == "") 
+      $(\'#bankname\').val(bank.bankname);
+    if ($(\'#bic\').val() == "")  
+      $(\'#bic\').val(bank.bic);
+  } else {
+    $("#iban_feedback").html(\''.icon_error('IBAN scheint nicht gültig zu sein').'\');
+    $(\'#bankname\').val("");
+    $(\'#bic\').val("");
+  }
     
 }
 
@@ -101,7 +111,8 @@ function searchbank()
         $("#bankname").prop("disabled", false);
         $("#bic").prop("disabled", false);
       });
-
+  } else {
+    $("#iban_feedback").html("");
   }
 }
 
