@@ -19,6 +19,15 @@ require_once('invoice.php');
 require_role(ROLE_CUSTOMER);
 $section = 'invoice_current';
 
+$path = config('jquery_ui_path');
+
+html_header('
+<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css" />
+<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
+<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
+
+');
+
 title('Erteilung eines Mandats zur SEPA-Basis-Lastschrift');
 
 output('<p>Ich ermächtige die Firma schokokeks.org GbR, Zahlungen von meinem Konto mittels Lastschrift
@@ -71,5 +80,33 @@ $html .= '<p><input type="submit" value="Mandat erteilen" /></p>';
 
 output(html_form('sepamandat_neu', 'save', 'action=new', $html));
 
+output('
+<script type="text/javascript">
 
+function populate_bankinfo(result) {
+  bank = result[0];
+  $(\'#bankname\').val(bank.bankname);
+  $(\'#bic\').val(bank.bic);
+    
+}
+
+function searchbank() 
+{
+  var iban = $(\'#iban\').val();
+  if (iban.substr(0,2) == "DE" && iban.length == 22) {
+    $("#bankname").prop("disabled", true);
+    $("#bic").prop("disabled", true);
+    $.getJSON("sepamandat_banksearch?iban="+iban, populate_bankinfo)
+      .always( function() {
+        $("#bankname").prop("disabled", false);
+        $("#bic").prop("disabled", false);
+      });
+
+  }
+}
+
+$(\'#iban\').on("change keyup paste", searchbank );
+
+</script>
+');
 ?>

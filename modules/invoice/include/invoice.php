@@ -223,4 +223,32 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
 
 
 
+function get_bank_info($iban) 
+{
+  if (strlen($iban) != 22 || substr($iban, 0, 2) != 'DE') {
+    // Geht nur bei deutschen IBANs
+    echo 'Fehler!';
+    echo '$iban = '.$iban;
+    echo 'strlen($iban): '.strlen($iban);
+    echo 'substr($iban, 0, 2): '.substr($iban, 0, 2);
+    return NULL;
+  }
+  $blz = substr($iban, 4, 8);
+  // FIXME: Liste der BLZs muss vorhanden sein!
+  $bankinfofile = dirname(__FILE__).'/bankinfo.txt';
+  $f = file($bankinfofile);
+  $match = '';
+  foreach ($f as $line) {
+    if (substr($line, 0, 9) == $blz.'1') {
+      $match = $line;
+      break;
+    }
+  }
+  $bank = array();
+  $bank['name'] = iconv('latin1', 'utf8', chop(substr($match, 9,58)));
+  $bank['bic'] = chop(substr($match, 139,11));
+  return $bank;
+}
+
+
 ?>
