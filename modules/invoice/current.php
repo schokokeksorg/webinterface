@@ -97,7 +97,11 @@ if ($mandate) {
 }
 
 
-addnew('sepamandat', 'Erteilen Sie uns ein Lastschrift-Mandat');
+if ($mandate) {
+  addnew('sepamandat', 'Hat sich de Bankverbindung geändert? Erteilen Sie uns ein neues Lastschrift-Mandat');
+} else {
+  addnew('sepamandat', 'Erteilen Sie uns ein Lastschrift-Mandat');
+}
 
 output('<p>Sie können Ihr Mandat jederzeit widerrufen. Senden Sie uns dazu bitte eine entsprechende E-Mail.</p>');
 

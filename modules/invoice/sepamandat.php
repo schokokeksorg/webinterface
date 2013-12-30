@@ -35,7 +35,7 @@ output('<p>Ich ermächtige die Firma schokokeks.org GbR, Zahlungen von meinem Ko
 einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von der Firma schokokeks.org GbR auf mein
 Konto gezogenen Lastschriften einzulösen.</p>
 <p>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des
-belasteten Betrages verlangen. Es gelten dabei diemit meinem Kreditinstitut vereinbarten Bedingungen.
+belasteten Betrages verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.
 Insbesondere fallen bei Zurückweisung einer gerechtfertigten Abbuchung i.d.R. Gebühren an.</p>');
 
 $name = $_SESSION['customerinfo']['name'];
