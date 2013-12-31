@@ -70,7 +70,9 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
   }
   else
   {
-    login_screen('Ihr Browser hat kein Client-Zertifikat gesendet');
+    warning('Ihr Browser hat kein Client-Zertifikat gesendet');
+    header('Location: '.$prefix.$_REQUEST['backto'].encode_querystring(''));
+    die();
   }
 }
 elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
