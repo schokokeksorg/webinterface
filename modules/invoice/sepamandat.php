@@ -69,7 +69,7 @@ $html .= '<p><input type="radio" id="gueltig_ab_datum" name="gueltig_ab" value="
 
 $html .= '<h4>Ihre Bankverbindung</h4>';
 $html .= '<table>
-<tr><td><label for="kontoinhaber">Name des Kontoinhabers:</label></td><td><input type="text" name="kontoinhaber" id="kontoinhaber" value="'.$_SESSION['customerinfo']['name'].'" /></td></tr>
+<tr><td><label for="kontoinhaber">Name des Kontoinhabers:</label></td><td><input type="text" name="kontoinhaber" id="kontoinhaber" /> <button id="copydata">Von Kundendaten kopieren</button></td></tr>
 <tr><td><label for="adresse">Adresse des Kontoinhabers:</label></td><td><textarea cols="50" lines="2" name="adresse" id="adresse"></textarea></td></tr>
 <tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" size="30" /><span id="iban_feedback"></span></td></tr>
 <tr><td><label for="bankname">Name der Bank:</label></td><td><input type="text" name="bankname" id="bankname" size="30" /></td></tr>
@@ -116,7 +116,19 @@ function searchbank()
   }
 }
 
+function copydata_worker( result ) {
+  $("#kontoinhaber").val(result.kundenname);
+  $("#adresse").val(result.adresse);
+}
+
+function copydata( event ) {
+  event.preventDefault();
+  var kunde = $.getJSON("sepamandat_copydata", copydata_worker);
+}
+
+
 $(\'#iban\').on("change keyup paste", searchbank );
+$("#copydata").click(copydata);
 
 </script>
 ');
