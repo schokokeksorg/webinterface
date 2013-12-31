@@ -71,8 +71,8 @@ $html .= '<h4>Ihre Bankverbindung</h4>';
 $html .= '<table>
 <tr><td><label for="kontoinhaber">Name des Kontoinhabers:</label></td><td><input type="text" name="kontoinhaber" id="kontoinhaber" value="'.$_SESSION['customerinfo']['name'].'" /></td></tr>
 <tr><td><label for="adresse">Adresse des Kontoinhabers:</label></td><td><textarea cols="50" lines="2" name="adresse" id="adresse"></textarea></td></tr>
-<tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" /><span id="iban_feedback"></span></td></tr>
-<tr><td><label for="bankname">Name der Bank:</label></td><td><input type="text" name="bankname" id="bankname" /></td></tr>
+<tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" size="30" /><span id="iban_feedback"></span></td></tr>
+<tr><td><label for="bankname">Name der Bank:</label></td><td><input type="text" name="bankname" id="bankname" size="30" /></td></tr>
 <tr><td><label for="bic">BIC:</label></td><td><input type="text" name="bic" id="bic" /></td></tr>
 </table>';
 
