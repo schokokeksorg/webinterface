@@ -54,7 +54,7 @@ if ($m['medium'] == 'legacy') {
 output('<h3>Stammdaten</h3>
 <dl>
 <dt>Mandatsreferenz</dt><dd>'.$m['mandatsreferenz'].'</dd>
-<dt>Unsere Gläubiger-ID<dt><dd>'.config('glaeubiger_id').'</dd>
+<dt>Unsere Gläubiger-ID<dt><dd>'.$m['glaeubiger_id'].'</dd>
 </dl>');
 
 output('<h3>Gültigkeit</h3>');

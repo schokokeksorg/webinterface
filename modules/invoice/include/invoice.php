@@ -167,7 +167,7 @@ function generate_bezahlcode_image($id)
 function get_sepamandate() 
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT id, mandatsreferenz, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde={$cid}");
+  $result = db_query("SELECT id, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde={$cid}");
   $ret = array();
   while ($entry = mysql_fetch_assoc($result)) {
     array_push($ret, $entry);
@@ -196,7 +196,14 @@ function invalidate_sepamandat($id, $date)
 function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
-  if ($gueltig_ab < date('Y-m-d')) {
+  $first_date = date('Y-m-d');
+  $invoices = my_invoices();
+  foreach ($invoices as $i) {
+    if ($i['bezahlt'] == 0 && $i['datum'] < $first_date) {
+      $first_date = $i['datum'];
+    }
+  }
+  if ($gueltig_ab < date('Y-m-d') && $gueltig_ab != $first_date) {
     system_failure('Das Mandat kann nicht rückwirkend erteilt werden. Bitte geben Sie ein Datum in der Zukunft an.');
   }
   $alte_mandate = get_sepamandate();
@@ -217,8 +224,10 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
   }
   DEBUG('Nächste freie Mandatsreferenz: '. $referenz);
 
+  $glaeubiger_id = config('glaeubiger_id');
+
   $today = date('Y-m-d');
-  db_query("INSERT INTO kundendaten.sepamandat (mandatsreferenz, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES ('{$referenz}', {$cid}, '{$today}', 'online', '{$gueltig_ab}', '{$name}', '{$adresse}', '{$iban}', '{$bic}', '{$bankname}')");
+  db_query("INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES ('{$referenz}', '${glaeubiger_id}', {$cid}, '{$today}', 'online', '{$gueltig_ab}', '{$name}', '{$adresse}', '{$iban}', '{$bic}', '{$bankname}')");
 }
 
 
