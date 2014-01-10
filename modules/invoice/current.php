@@ -84,6 +84,9 @@ if ($mandate) {
 ');
   foreach ($mandate as $m) {
     $gueltig = 'ab '.$m['gueltig_ab'];
+    if ($m['gueltig_ab'] < date('Y-m-d')) {
+      $gueltig = 'seit '.$m['gueltig_ab'];
+    }
     if ($m['gueltig_bis']) {
       $gueltig = $m['gueltig_ab'].' - '.$m['gueltig_bis'];
     }

@@ -46,14 +46,14 @@ if ($_SESSION['customerinfo']['company']) {
     $name = $_SESSION['customerinfo']['company'];
   }
 }
-output('<p>Dieses Mandat gilt für Forderungen bzgl. der Kundennummer <strong>'.$_SESSION['customerinfo']['customerno'].'</strong> ('.$name.'). Sämtliche Forderungen werden mindestens 6 Bankarbeitstage vor Fälligkeit angekündigt. Diese Ankündigung erfolgt in der Regel durch Zusendung einer Rechnung per E-Mail.</p>');
+output('<p>Dieses Mandat gilt für Forderungen bzgl. der Kundennummer <strong>'.$_SESSION['customerinfo']['customerno'].'</strong> ('.$name.'). Sämtliche Forderungen werden mindestens 2 Tage vor Fälligkeit angekündigt. Diese Ankündigung erfolgt in der Regel im Rahmen der Zusendung einer Rechnung per E-Mail.</p>');
 
 
 
 $first_date = date('Y-m-d');
 $invoices = my_invoices();
 foreach ($invoices as $i) {
-  if ($i['bezahlt'] == 0 && $i['datum'] < $first_date) {
+  if ($i['bezahlt'] == 0 && $i['sepamandat'] == NULL && $i['datum'] < $first_date) {
     $first_date = $i['datum'];
   }
 }

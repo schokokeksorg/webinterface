@@ -60,6 +60,9 @@ output('<h3>Stammdaten</h3>
 output('<h3>Gültigkeit</h3>');
 
 $gueltigkeit = 'ab '.$m['gueltig_ab'];
+if ($m['gueltig_ab'] < date('Y-m-d')) {
+  $gueltigkeit = 'seit '.$m['gueltig_ab'];
+}
 if ($m['gueltig_bis']) {
   $gueltigkeit = 'von '.$m['gueltig_ab'].' bis '.$m['gueltig_bis'];
 }

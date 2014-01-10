@@ -23,7 +23,7 @@ include("external/php-iban/php-iban.php");
 function my_invoices()
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} ORDER BY id DESC");
+  $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung,sepamandat FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} ORDER BY id DESC");
   $ret = array();
   while($line = mysql_fetch_assoc($result))
   	array_push($ret, $line);
