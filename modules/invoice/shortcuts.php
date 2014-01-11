@@ -20,8 +20,12 @@ if ($_SESSION['role'] & ROLE_CUSTOMER) {
   $unpayed_invoices = 0;
   $my_invoices = my_invoices();
   foreach($my_invoices AS $inv) {
-    if ($inv['bezahlt'] == 0)
-      $unpayed_invoices++;
+    if ($inv['bezahlt'] == 0) {
+      $l = get_lastschrift($inv['id']);
+      if (! $l) {
+        $unpayed_invoices++;
+      }
+    }
   }
   if ($unpayed_invoices > 0) {
     $alert = $unpayed_invoices.' unbezahlt';
