@@ -26,6 +26,7 @@ $show_paid = (isset($_GET['paid']) && $_GET['paid'] == '1');
 
 $invoices = my_invoices();
 
+
 $invoices_to_show = array();
 foreach ($invoices as $i) {
   if ($show_paid || $i['bezahlt'] == 0) {
@@ -59,6 +60,12 @@ if (count($invoices_to_show) == 0) {
   	if ($invoice['bezahlt'] == 1) {
 	  	$bezahlt = 'Ja';
       $class = 'paid';
+    } else {
+      $l = get_lastschrift($invoice['id']);
+      if ($l) {
+        $bezahlt = 'Wird abgebucht<br/>am '.$l['buchungsdatum'];
+        $class = 'paid';
+      }
     }
   	output("<tr class=\"{$class}\"><td>".internal_link("html", $invoice['id'], "id={$invoice['id']}")."</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "<img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice['id']}")."</td></tr>\n");
   }

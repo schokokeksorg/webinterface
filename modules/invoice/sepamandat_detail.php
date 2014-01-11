@@ -74,10 +74,21 @@ if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == NULL || $m['guelt
   output('<p>Das Mandat ist erloschen ('.$gueltigkeit.').</p>');
 }
 
-if ($m['erstlastschrift'] == NULL) {
+$lastschriften = get_lastschriften($m['mandatsreferenz']);
+
+if (! $lastschriften) {
   output('<p>Es wurden bisher keine Abbuchungen mit Bezug auf dieses Mandat durchgeführt.</p>');
-} elseif ($m['letztelastschrift'] != NULL) {
-  output('<p>Dieses Mandat wurde zuletzt für eine Abbuchung am '.$m['letztelastschrift'].' in Anspruch genommen.</p>');
+} else {
+  output('<p>Dieses Mandat wurde bisher für folgende Abbuchungen in Anspruch genommen:</p>
+<ul>');
+  foreach ($lastschriften as $l) {
+    $status = '';
+    if ($l['buchungsdatum'] >= date('Y-m-d')) {
+      $status = '<span style="color: red; font-weight: bold;">Vorgemerkt:</span> ';
+    }
+    output('<li>'.$status.'Rechnung #'.$l['rechnungsnummer'].' vom '.$l['rechnungsdatum'].' über <strong>'.str_replace('.', ',', sprintf('%.2f', $l['betrag'])).' €</strong>, Buchungsdatum '.$l['buchungsdatum'].'</li>');
+  }
+  output('</ul>');
 }
 
 

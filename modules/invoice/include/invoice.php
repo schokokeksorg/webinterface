@@ -163,6 +163,26 @@ function generate_bezahlcode_image($id)
   }
 }
 
+function get_lastschrift($rechnungsnummer) {
+  $rechnungsnummer = (int) $rechnungsnummer;
+  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum FROM kundendaten.sepalastschrift WHERE rechnungsnummer='${rechnungsnummer}'");
+  if (mysql_num_rows($result) == 0) {
+    return NULL;
+  }
+  $item = mysql_fetch_assoc($result);
+  return $item;
+}
+
+function get_lastschriften($mandatsreferenz)
+{
+  $mandatsreferenz = mysql_real_escape_string($mandatsreferenz);
+  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum FROM kundendaten.sepalastschrift WHERE mandatsreferenz='${mandatsreferenz}' ORDER BY buchungsdatum DESC");
+  $ret = array();
+  while ($item = mysql_fetch_assoc($result)) {
+    $ret[] = $item;
+  }
+  return $ret;
+}
 
 function get_sepamandate() 
 {
@@ -196,6 +216,13 @@ function invalidate_sepamandat($id, $date)
 function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
+  $name = mysql_real_escape_string($name);
+  $adresse = mysql_real_escape_string($adresse);
+  $iban = mysql_real_escape_string($iban);
+  $bankname = mysql_real_escape_string($bankname);
+  $bic = mysql_real_escape_string($bic);
+  $gueltig_ab = mysql_real_escape_string($gueltig_ab);
+
   $first_date = date('Y-m-d');
   $invoices = my_invoices();
   foreach ($invoices as $i) {

@@ -71,8 +71,13 @@ output("<tr><td colspan=\"3\" style=\"text-align: right; font-weight: bold; bord
 output("<td style=\"font-weight: bold;\">{$summe} €</td></tr>\n");
 output('</table><br />');
 
+$l = get_lastschrift($invoice_id);
 
-if ($invoice['bezahlt'] == 0 && $invoice['abbuchung'] == 0) {
+if ($invoice['bezahlt'] == 1) {
+  output('<p>Diese Rechnung ist bereits bezahlt.</p>');
+} elseif ($l) {
+  output('<p>Diese Rechnung wird am '.$l['buchungsdatum'].' per Lastschrift eingezogen.</p>');
+} else {
   $qrcode_image = generate_qrcode_image($invoice_id);
 
   output('<h4>QR-Code für Mobile Banking (STUZZA-Verfahren, Österreichische und viele deutschen Banken)</h4><p><img src="data:image/png;base64,'.base64_encode($qrcode_image).'" /></p>');
