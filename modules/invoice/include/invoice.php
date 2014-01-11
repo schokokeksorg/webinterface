@@ -260,4 +260,12 @@ function get_bank_info($iban)
 }
 
 
+function find_iban($blz, $kto) 
+{
+  $iban = sprintf('DE00%08s%010s', $blz, $kto);
+  $iban = iban_set_checksum($iban);
+  return $iban;
+}
+
+
 ?>

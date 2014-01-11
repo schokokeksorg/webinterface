@@ -20,7 +20,16 @@ require_once('inc/debug.php');
 require_once('invoice.php');
 
 
-$iban = $_GET['iban'];
+$iban = NULL;
+if (isset($_GET['iban'])) {
+  $iban = $_GET['iban'];
+} elseif (isset($_GET['kto']) && isset($_GET['blz'])) {
+  $iban = find_iban($_GET['blz'], $_GET['kto']);
+}
+if ($iban == NULL) {
+  echo "Fehler!";
+  die();
+}
 
 $iban_ok = (verify_iban($iban) ? '1' : '0');
 
@@ -28,7 +37,7 @@ $bank = get_bank_info($iban);
 
 header("Content-Type: text/javascript");
 echo "[\n";
-echo ' { "iban_ok": "'.$iban_ok.'", "bic": "'.$bank['bic'].'", "bankname" : "'.$bank['name'].'" } ';
+echo ' { "iban_ok": "'.$iban_ok.'", "iban": "'.$iban.'", "bic": "'.$bank['bic'].'", "bankname" : "'.$bank['name'].'" } ';
 echo '
 ]';
 die();

@@ -58,20 +58,25 @@ foreach ($invoices as $i) {
   }
 }
 
-$html = '<h4>Gültigkeit des Mandats</h4>';
+$html = '<h4>Gültigkeit des Mandats</h4>
+<p>Ein eventuell zuvor erteiltes Mandat wird zu diesem Datum automatisch ungültig.</p>';
+
 $checked = False;
 if ($first_date != date('Y-m-d')) {
   $checked = True;
   $html .= '<p><input type="radio" id="gueltig_ab_'.$first_date.'" name="gueltig_ab" value="'.$first_date.'" checked="checked" /><label for="gueltig_ab_'.$first_date.'">Dieses Mandat gilt <strong>ab '.$first_date.'</strong> (Alle bisher offenen Forderungen werden ebenfalls abgebucht)</label></p>';
 }
 $html .= '<p><input type="radio" id="gueltig_ab_heute" name="gueltig_ab" value="'.date('Y-m-d').'" '.($checked ? '' : 'checked="checked"').' /><label for="gueltig_ab_heute">Dieses Mandat gilt <strong>ab heute</strong> ('.date('Y-m-d').')</label></p>';
-$html .= '<p><input type="radio" id="gueltig_ab_datum" name="gueltig_ab" value="datum" /><label for="gueltig_ab_datum">Dieses Mandat gilt <strong>erst ab</strong></label> '.html_datepicker("gueltig_ab_datum", time()).' (Ein eventuell zuvor erteiltes Mandat wird zu diesem Datum automatisch ungültig.)</p>';
+$html .= '<p><input type="radio" id="gueltig_ab_datum" name="gueltig_ab" value="datum" /><label for="gueltig_ab_datum">Dieses Mandat gilt <strong>erst ab</strong></label> '.html_datepicker("gueltig_ab_datum", time()).'</p>';
 
 $html .= '<h4>Ihre Bankverbindung</h4>';
 $html .= '<table>
 <tr><td><label for="kontoinhaber">Name des Kontoinhabers:</label></td><td><input type="text" name="kontoinhaber" id="kontoinhaber" /> <button id="copydata">Von Kundendaten kopieren</button></td></tr>
 <tr><td><label for="adresse">Adresse des Kontoinhabers:</label></td><td><textarea cols="50" lines="2" name="adresse" id="adresse"></textarea></td></tr>
-<tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" size="30" /><span id="iban_feedback"></span></td></tr>
+<tr id="ktoblz_input" style="display: none;"><td>Kontodaten:</td><td><label for="kto">Konto:</label> <input type="text" id="kto" /> <label for="blz">BLZ:</label> <input type="text" id="blz" /><br /><button id="ktoblz">IBAN berechnen...</button></td></tr>
+<tr><td><label for="iban">IBAN:</label></td><td><input type="text" name="iban" id="iban" size="30" /><span id="iban_feedback"></span><br />
+<span id="ktoblz_button"><button id="showktoblz">IBAN aus Kontonummer / BLZ berechnen...</button></span>
+</td></tr>
 <tr><td><label for="bankname">Name der Bank:</label></td><td><input type="text" name="bankname" id="bankname" size="30" /></td></tr>
 <tr><td><label for="bic">BIC:</label></td><td><input type="text" name="bic" id="bic" /></td></tr>
 </table>';
@@ -126,9 +131,31 @@ function copydata( event ) {
   var kunde = $.getJSON("sepamandat_copydata", copydata_worker);
 }
 
+function populate_iban(result) {
+  info = result[0];
+  $("#iban").val(info.iban);
+  populate_bankinfo(result)
+}
+
+function ktoblz( event ) {
+  event.preventDefault();
+  var kto = $("#kto").val();
+  var blz = $("#blz").val();
+  $.getJSON("sepamandat_banksearch?kto="+kto+"&blz="+blz, populate_iban)
+}
+
+function showktoblz( event ) {
+  event.preventDefault();
+  $("#ktoblz_button").hide();
+  $("#ktoblz_input").show();
+}
+
+
 
 $(\'#iban\').on("change keyup paste", searchbank );
 $("#copydata").click(copydata);
+$("#showktoblz").click(showktoblz);
+$("#ktoblz").click(ktoblz);
 
 </script>
 ');
