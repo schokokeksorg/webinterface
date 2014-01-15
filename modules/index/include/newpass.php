@@ -17,6 +17,18 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/db_connect.php');
 require_once('session/checkuser.php');
 
+function user_customer_match($cust, $user)
+{
+  $customerno = (int) $cust;
+  $username = mysql_real_escape_string($user);
+  $result = db_query("SELECT uid FROM system.useraccounts WHERE kunde={$customerno} AND username='{$username}' AND kundenaccount=1;");
+  if (mysql_num_rows($result) > 0)
+    return true;
+  return false;
+}
+
+
+
 function customer_has_email($customerno, $email)
 {
   $customerno = (int) $customerno;
@@ -88,20 +100,30 @@ function invalidate_systemuser_token($uid)
   db_query("DELETE FROM system.usertoken WHERE uid={$uid} LIMIT 1;");
 }
  
-function create_token($customerno)
+function create_token($username)
 {
-  $customerno = (int) $customerno;
+  $username = mysql_real_escape_string($username);
   expire_tokens();
-  $result = db_query("SELECT token_create FROM kundendaten.kunden WHERE id={$customerno} AND token_create IS NOT NULL;");
-  if (mysql_num_rows($result) > 0)
-  {
-    $res = mysql_fetch_object($result)->token_create;
-    input_error("Sie haben diese Funktion kürzlich erst benutzt, an Ihre E-Mail-Adresse wurde bereits am {$res} eine Nachricht verschickt. Sie können diese Funktion erst nach Ablauf von 24 Stunden erneut benutzen.");
-    return false;
+  $result = db_query("SELECT uid FROM system.useraccounts WHERE username='{$username}'");
+  $uid = (int) mysql_fetch_assoc($result)['uid'];
+  
+  $result = db_query("SELECT created FROM system.usertoken WHERE uid={$uid}");
+  if (mysql_num_rows($result) > 0) {
+    system_failure("Für Ihr Benutzerkonto ist bereits eine Passwort-Erinnerung versendet worden. Bitte wenden Sie sich an den Support wenn Sie diese nicht erhalten haben.");
   }
-  $token = random_string(10);
-  db_query("UPDATE kundendaten.kunden SET token='{$token}', token_create=now() WHERE id={$customerno} LIMIT 1;");
+  
+  $token = random_string(16);
+  db_query("INSERT INTO system.usertoken VALUES ({$uid}, NOW(), NOW() + INTERVAL 1 DAY, '{$token}')");
   return true;
+}
+
+
+function emailaddress_for_user($username)
+{
+  $username = mysql_real_escape_string($username);
+  $result = db_query("SELECT k.email FROM kundendaten.kunden AS k INNER JOIN system.useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
+  $data = mysql_fetch_assoc($result);
+  return $data['email'];
 }
 
 
@@ -115,5 +137,13 @@ function get_customer_token($customerno)
   return mysql_fetch_object($result)->token;
 }
 
+
+function get_user_token($username) 
+{
+  $username = mysql_real_escape_string($username);
+  $result = db_query("SELECT token FROM system.usertoken AS t INNER JOIN system.useraccounts AS u USING (uid) WHERE username='{$username}'");
+  $tmp = mysql_fetch_assoc($result);
+  return $tmp['token'];
+}
 
 ?>

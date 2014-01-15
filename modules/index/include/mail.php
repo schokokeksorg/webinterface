@@ -17,6 +17,21 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('newpass.php');
 require_once('session/checkuser.php');
 
+function send_user_token($username) 
+{
+  $token = get_user_token($username);
+  $email = emailaddress_for_user($username);
+
+  $tokenurl = config('webinterface_url').'/init'.$token.'?agb=1';
+
+  $msg = 'Sie haben für Ihren Zugang bei '.config('company_name').' ein neues Passwort angefordert.
+Bitte besuchen Sie folgende Adresse um Ihr Passwort neu zu setzen:
+  '.$tokenurl.'
+
+Mit freundlichen Grüßen,
+Ihre Admins von '.config('company_name');
+  send_mail($email, "Passwortanforderung fuer schokokeks.org", $msg);
+}
 
 function send_customer_token($customerno)
 {
@@ -24,7 +39,7 @@ function send_customer_token($customerno)
   $token = get_customer_token($customerno);
   $customer = get_customer_info($customerno);
   if ($customer['email'] == '')
-    system_failure('Für Ihr Kundenkonto ist keine E-Mail-Adresse eingetragen. Diese Funktion steht Ihnen daher nicht zur Verfügung.')
+    system_failure('Für Ihr Kundenkonto ist keine E-Mail-Adresse eingetragen. Diese Funktion steht Ihnen daher nicht zur Verfügung.');
   $anrede = "Sehr geehrte Damen und Herren";
   if ($customer['title'] == 'Herr')
     $anrede = "Sehr geehrter Herr {$customer['name']}";
