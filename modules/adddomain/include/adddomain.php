@@ -27,13 +27,10 @@ function get_domain_offer($domainname)
 {
   $domainname = filter_input_hostname($domainname);
   $domainname = preg_replace('/^www\./', '', $domainname);
-  if (preg_match('/.*\..*\..*/', $domainname)) {
-    warning('zu viele Punkte im Domainname');
-    return;
-  }
-  $basename = preg_replace('/\..*$/', '', $domainname);
+
+  $basename = preg_replace('/([^\.]+)\..*$/', '\1', $domainname);
   DEBUG('Found Basename: '.$basename);
-  $tld = preg_replace('/^.*\./', '', $domainname);
+  $tld = preg_replace('/^[^\.]*\./', '', $domainname);
   DEBUG('Found TLD: '.$tld);
 
   $cid = (int) $_SESSION['customerinfo']['customerno'];
