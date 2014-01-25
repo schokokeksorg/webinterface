@@ -36,9 +36,14 @@ function get_domain_offer($domainname)
   $tld = preg_replace('/^.*\./', '', $domainname);
   DEBUG('Found TLD: '.$tld);
 
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+
   $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
 
-  $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld='{$tld}' AND ruecksprache='N'");
+  $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde={$cid} AND tld='{$tld}' AND ruecksprache='N'");
+  if (mysql_num_rows($result) != 1) {
+    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld='{$tld}' AND ruecksprache='N'");
+  }
   if (mysql_num_rows($result) != 1) {
     warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
     return;
@@ -82,7 +87,7 @@ function register_domain($domainname, $uid)
 
   db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail, provider, betrag, brutto) VALUES ({$cid}, {$useraccount}, '{$data['basename']}', '{$data['tld']}', 'regular', NULL, 1, 1, 'auto', 'terions', {$data['gebuehr']}, 1) ");
   if ($data['setup']) {
-    db_query("INSERT INTO kundendaten.leistungen (kunde,periodisch,datum,betrag,brutto,beschreibung,anzahl) VALUES (({$cid}, 0, CURDATE(), {$data['setup']}, 1, 'Einmalige Setup-Gebühren für Domain \"{$data['domainname']}\"', 1)");
+    db_query("INSERT INTO kundendaten.leistungen (kunde,periodisch,datum,betrag,brutto,beschreibung,anzahl) VALUES ({$cid}, 0, CURDATE(), {$data['setup']}, 1, 'Einmalige Setup-Gebühren für Domain \"{$data['domainname']}\"', 1)");
   }
 }
 
