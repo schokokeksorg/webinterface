@@ -16,6 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/debug.php');
 require_once('inc/security.php');
+require_once('inc/jquery.php');
 
 require_once('vhosts.php');
 require_once('certs.php');
@@ -92,6 +93,39 @@ html_header("<script type=\"text/javascript\">
       document.getElementById('options_webapp').style.display = 'block';
     }
   }
+
+
+  function showhsts( event ) {
+    var ssl = $('#ssl option:selected').val();
+    if (ssl == 'forward') {
+      $('#hsts_block').show();
+    } else
+      $('#hsts_block').hide();
+  }
+
+  function hsts_preset( event ) {
+    var seconds = $('#hsts_preset option:selected').val();
+    if (seconds == 'custom') {
+      $('#hsts_seconds').show();
+      if ($('#hsts').val() < 0) {
+        $('#hsts').val(2592000); /* 30 Tage */
+      }
+    } else {
+      $('#hsts_seconds').hide();
+      $('#hsts').val(seconds);
+    }
+  }
+
+  $(document).ready(function(){
+    $('#ssl').change(showhsts);
+    showhsts();
+    if ($('#hsts_preset option:selected').val() != 'custom') {
+      $('#hsts_seconds').hide();
+    }
+    $('#hsts_preset').change(hsts_preset);
+    
+  })
+
   </script>");
 
 $defaultdocroot = $vhost['domain'];
@@ -210,6 +244,12 @@ if ($vhost_type=='webapp')
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
 ";
 }
+$hsts_value = $vhost['hsts'];
+$hsts_preset_values = array("-1" => "aus", "86400" => "1 Tag", "2592000" => "30 Tage", "31536000" => "1 Jahr", "63072000" => "2 Jahre", "custom" => "Individuell");
+$hsts_preset_value = 'custom';
+if (isset($hsts_preset_values[$hsts_value])) {
+  $hsts_preset_value = $hsts_value;
+}
 $form .= "
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
 	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
@@ -228,7 +268,8 @@ $form .= "
       ".($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein SSL</option>" : '')."
       ".($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">nur SSL</option>" : '')."
       <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Immer auf SSL umleiten</option>
-    </select>
+    </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"http://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure#HSTS\">HSTS</a>:</label> ".html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value)." <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span>
+    </span>
     </div>
     <h5>Logfiles <span class=\"warning\">*</span></h5>
     <div style=\"margin-left: 2em;\">

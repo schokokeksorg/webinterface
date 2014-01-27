@@ -139,6 +139,15 @@ if ($_GET['action'] == 'edit')
     /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
   }
 
+  $hsts = NULL;
+  if (isset($_POST['hsts'])) {
+    if (is_numeric($_POST['hsts']) && (int) $_POST['hsts'] > -2) {
+      $hsts = (int) $_POST['hsts'];
+    } else {
+      system_failure('Es wurde ein ungültiger HSTS-Wert eingegeben. Dort sind nur Sekunden erlaubt.');
+    }
+  }
+ 
   $cert = (isset($_POST['cert']) ? (int) $_POST['cert'] : NULL);
 
   $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : NULL);
@@ -205,6 +214,7 @@ if ($_GET['action'] == 'edit')
   $vhost['php'] = $php;
   $vhost['cgi'] = $cgi;
   $vhost['ssl'] = $ssl;
+  $vhost['hsts'] = $hsts;
   $vhost['cert'] = $cert;
   $vhost['ipv4'] = $ipv4;
   $vhost['logtype'] = $logtype;
