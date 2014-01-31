@@ -82,13 +82,7 @@ $debug = '';
 if ($debugmode)
   $debug = 'debug&amp;';
 
-$path = config('jquery_ui_path');
-
-html_header('
-<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css" />
-<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
-<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
-');
+require_once('inc/jquery.php');
 
 output(html_form('su_su', '', '', '<p><label for="query"><strong>Suchtext:</strong></label> <input type="text" name="query" id="query" /> <input type="submit" value="Suchen" /></p>
 '));

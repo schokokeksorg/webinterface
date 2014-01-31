@@ -18,11 +18,8 @@ require_once('inc/security.php');
 
 function do_ajax_cert_login() {
   global $prefix;
-  $path = config('jquery_ui_path');
+  require_once('inc/jquery.php');
   html_header('
-<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css" />
-<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
-<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
 <script type="text/javascript">
   function redirect(status) {
     if (status == "ok") {
