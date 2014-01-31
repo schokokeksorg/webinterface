@@ -21,8 +21,18 @@ require_role(ROLE_SYSTEMUSER);
 if (isset($_GET['regular_ftp']))
 {
   check_form_token('regular_ftp', $_REQUEST['token']);
-  if ($_GET['regular_ftp'] == 'yes')
+  if ($_GET['regular_ftp'] == 'yes') {
+    $sure = user_is_sure();
+    if ($sure === NULL)
+    {
+      are_you_sure("regular_ftp=yes&token=".$_REQUEST['token'], "Benötigen Sie wirklich klassischen FTP-Zugriff für Ihren Benutzeraccount? Lesen Sie die Hinweise in unserem Wiki falls Sie sich nicht sicher sind.");
+      return;
+    }
+    elseif ($sure === true)
+    {
     enable_regular_ftp();
+    }
+  }
   else
     disable_regular_ftp();
   redirect('accounts'); 
