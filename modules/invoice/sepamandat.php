@@ -17,17 +17,10 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/icons.php');
 require_once('invoice.php');
 
+require_once('inc/jquery.php');
+
 require_role(ROLE_CUSTOMER);
 $section = 'invoice_current';
-
-$path = config('jquery_ui_path');
-
-html_header('
-<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css" />
-<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
-<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
-
-');
 
 title('Erteilung eines Mandats zur SEPA-Basis-Lastschrift');
 
