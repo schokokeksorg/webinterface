@@ -14,15 +14,14 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/db_connect.php');
 require_once('session/checkuser.php');
 
 function customer_has_email($customerno, $email)
 {
   $customerno = (int) $customerno;
-  $email = mysql_real_escape_string($email);
+  $email = db_escape_string($email);
   $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=".$customerno." AND (email='".$email."' OR email_extern='{$email}' OR email_rechnung='{$email'}');");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 
@@ -30,9 +29,9 @@ function validate_token($customerno, $token)
 {
   expire_tokens();
   $customerno = (int) $customerno;
-  $token = mysql_real_escape_string($token);
+  $token = db_escape_string($token);
   $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id={$customerno} AND token='{$token}';");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 
@@ -53,9 +52,9 @@ function create_token($customerno)
   $customerno = (int) $customerno;
   expire_tokens();
   $result = db_query("SELECT token_create FROM kundendaten.kunden WHERE id={$customerno} AND token_create IS NOT NULL;");
-  if (mysql_num_rows($result) > 0)
+  if ($result->rowCount() > 0)
   {
-    $res = mysql_fetch_object($result)->token_create;
+    $res = $result->fetch(PDO::FETCH_OBJ)->token_create;
     input_error("Sie haben diese Funktion kürzlich erst benutzt, an Ihre E-Mail-Adresse wurde bereits am {$res} eine Nachricht verschickt. Sie können diese Funktion erst nach Ablauf von 24 Stunden erneut benutzen.");
     return false;
   }
@@ -70,9 +69,9 @@ function get_customer_token($customerno)
   $customerno = (int) $customerno;
   expire_tokens();
   $result = db_query("SELECT token FROM kundendaten.kunden WHERE id={$customerno} AND token IS NOT NULL;");
-  if (mysql_num_rows($result) < 1)
+  if ($result->rowCount() < 1)
     system_failure("Kann das Token nicht auslesen!");
-  return mysql_fetch_object($result)->token;
+  return $result->fetch(PDO::FETCH_OBJ)->token;
 }
 
 

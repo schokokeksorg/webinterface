@@ -21,7 +21,7 @@ function list_ftpusers()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=$uid");
   $ftpusers = array();
-  while ($u = mysql_fetch_assoc($result)) {
+  while ($u = $result->fetch()) {
     $ftpusers[] = $u;
   }
   return $ftpusers;
@@ -40,9 +40,9 @@ function load_ftpuser($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $id = (int) $id;
   $result = db_query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid={$uid} AND id='{$id}' LIMIT 1");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure("Fehler beim auslesen des Accounts");
-  $account = mysql_fetch_assoc($result);
+  $account = $result->fetch();
   DEBUG($account);
   return $account;
 }
@@ -117,11 +117,11 @@ function delete_ftpuser($id)
 
 function get_gid($groupname)
 {
-  $groupname = mysql_real_escape_string($groupname);
+  $groupname = db_escape_string($groupname);
   $result = db_query("SELECT gid FROM system.gruppen WHERE name='{$groupname}' LIMIT 1");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure('cannot determine gid of ftpusers group');
-  $a = mysql_fetch_assoc($result);
+  $a = $result->fetch();
   $gid = (int) $a['gid'];
   if ($gid == 0)
     system_failure('error on determining gid of ftpusers group');
@@ -134,7 +134,7 @@ function have_regular_ftp()
   $gid = get_gid('ftpusers');
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT * FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 

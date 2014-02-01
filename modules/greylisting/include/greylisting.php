@@ -19,7 +19,7 @@ function whitelist_entries()
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid={$uid};");
 	$return = array();
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch())
 		array_push($return, $line);
 	return $return;
 }
@@ -30,9 +30,9 @@ function get_whitelist_details($id)
 	$id = (int) $id;
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid={$uid} AND id={$id};");
-	if (mysql_num_rows($res) != 1)
+	if ($res->rowCount() != 1)
 		system_failure('Kann diesen Eintrag nicht finden');
-	return mysql_fetch_assoc($res);
+	return $res->fetch();
 }
 
 
@@ -55,9 +55,9 @@ function valid_entry($local, $domain)
 			system_failure('Diese E-Mail-Adresse gehört Ihnen nicht!');
 		return true;
 	}
-	$d = mysql_real_escape_string($domain);
+	$d = db_escape_string($domain);
 	$res = db_query("SELECT id FROM mail.v_domains WHERE domainname='{$d}' AND user={$_SESSION['userinfo']['uid']} LIMIT 1");
-	if (mysql_num_rows($res) != 1)
+	if ($res->rowCount() != 1)
 		system_failure('Diese domain gehört Ihnen nicht!');
 	return true;
 }
@@ -68,7 +68,7 @@ function new_whitelist_entry($local, $domain, $minutes)
 	valid_entry($local, $domain);
 	$uid = (int) $_SESSION['userinfo']['uid'];
 	$local = maybe_null($local);
-	$domain = mysql_real_escape_string($domain);
+	$domain = db_escape_string($domain);
 	
 	$expire = '';
 	if ($minutes == 'none')

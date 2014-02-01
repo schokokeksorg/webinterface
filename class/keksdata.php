@@ -14,7 +14,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/db_connect.php');
 require_once('inc/base.php');
 require_once('inc/debug.php');
 
@@ -57,7 +56,7 @@ abstract class KeksData
   {
     $fields = array();
     $res = db_query("DESCRIBE {$this->default_table}");
-    while ($f = mysql_fetch_object($res))
+    while ($f = $res->fetch(PDO::FETCH_OBJ))
     {
       $fields[$f->Field] = $f->Default;
     }
@@ -80,7 +79,7 @@ abstract class KeksData
     
     $res = db_query("SELECT {$fields} FROM {$table} {$where}");
     $return = array();
-    while ($arr = mysql_fetch_assoc($res))
+    while ($arr = $res->fetch())
       array_push($return, $arr);
     return $return;
   }
@@ -102,7 +101,7 @@ abstract class KeksData
     $upd = array();
     foreach ($this->changes as $key => $value)
     {
-      $value = mysql_real_escape_string($value);
+      $value = db_escape_string($value);
       array_push($upd, "`{$key}`='{$value}'");
     }
     db_query("UPDATE {$this->default_table} SET ".implode(', ', $upd)." WHERE id={$this->data['id']};");

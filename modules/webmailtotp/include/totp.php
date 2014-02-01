@@ -16,10 +16,10 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 function account_has_totp($username)
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT id FROM mail.webmail_totp WHERE email='{$username}'");
-  if (mysql_num_rows($result) > 0) {
-    $tmp = mysql_fetch_assoc($result);
+  if ($result->rowCount() > 0) {
+    $tmp = $result->fetch();
     $id = $tmp['id'];
     return $id;
   } else {
@@ -31,13 +31,13 @@ function account_has_totp($username)
 
 function validate_password($username, $password) 
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT account, cryptpass FROM mail.courier_mailaccounts WHERE account='{$username}' UNION SELECT account, cryptpass FROM mail.courier_virtual_accounts WHERE account='{$username}'");
-  if (mysql_num_rows($result) != 1) {
+  if ($result->rowCount() != 1) {
     // Kein Account mit dem Namen oder Name nicht eindeutig
     return false;
   }
-  $account = mysql_fetch_assoc($result);
+  $account = $result->fetch();
   return (crypt($password, $account['cryptpass']) == $account['cryptpass']);
 }
 
@@ -87,9 +87,9 @@ function decode_webmail_password($crypted, $webmailpw)
 
 
 function get_imap_password($username, $webmailpass) {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT webmailpass FROM mail.webmail_totp WHERE email='{$username}'");
-  $tmp = mysql_fetch_assoc($result);
+  $tmp = $result->fetch();
   
   $crypted = $tmp['webmailpass'];
     
@@ -107,7 +107,7 @@ function check_webmail_password($username, $webmailpass)
 
 function generate_secret($username)
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   require_once('external/googleauthenticator/GoogleAuthenticator.php');
   $ga = new PHPGangsta_GoogleAuthenticator();
   
@@ -120,9 +120,9 @@ function generate_secret($username)
 
 function check_locked($username) 
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT 1 FROM mail.webmail_totp WHERE unlock_timestamp IS NOT NULL and unlock_timestamp > NOW() AND email='{$username}'");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 function check_totp($username, $code) {
@@ -131,10 +131,10 @@ function check_totp($username, $code) {
     return false;
   }
 
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
 
   $result = db_query("SELECT totp_secret, failures FROM mail.webmail_totp WHERE email='{$username}' AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())");
-  $tmp = mysql_fetch_assoc($result);
+  $tmp = $result->fetch();
   $secret = $tmp['totp_secret'];
 
   require_once('external/googleauthenticator/GoogleAuthenticator.php');
@@ -197,7 +197,7 @@ function accountname($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT email FROM mail.webmail_totp WHERE id={$id} AND useraccount={$uid}");
-  if ($tmp = mysql_fetch_assoc($result)) {
+  if ($tmp = $result->fetch()) {
     return $tmp['email'];
   }
 }
@@ -214,17 +214,17 @@ function delete_totp($id)
 
 function blacklist_token($email, $token)
 {
-  $email = mysql_real_escape_string($email);
-  $token = mysql_real_escape_string($token);
+  $email = db_escape_string($email);
+  $token = db_escape_string($token);
   db_query("INSERT INTO mail.webmail_totp_blacklist (timestamp, email, token) VALUES (NOW(), '{$email}', '{$token}')");
 }
 
 function check_blacklist($email, $token)
 {
-  $email = mysql_real_escape_string($email);
-  $token = mysql_real_escape_string($token);
+  $email = db_escape_string($email);
+  $token = db_escape_string($token);
   db_query("DELETE FROM mail.webmail_totp_blacklist WHERE timestamp < NOW() - INTERVAL 10 MINUTE");
   $result = db_query("SELECT id FROM mail.webmail_totp_blacklist WHERE email='{$email}' AND token='{$token}'");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 

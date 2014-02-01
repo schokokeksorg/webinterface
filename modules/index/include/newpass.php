@@ -14,15 +14,14 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/db_connect.php');
 require_once('session/checkuser.php');
 
 function user_customer_match($cust, $user)
 {
   $customerno = (int) $cust;
-  $username = mysql_real_escape_string($user);
+  $username = db_escape_string($user);
   $result = db_query("SELECT uid FROM system.useraccounts WHERE kunde={$customerno} AND username='{$username}' AND kundenaccount=1;");
-  if (mysql_num_rows($result) > 0)
+  if ($result->rowCount() > 0)
     return true;
   return false;
 }
@@ -32,9 +31,9 @@ function user_customer_match($cust, $user)
 function customer_has_email($customerno, $email)
 {
   $customerno = (int) $customerno;
-  $email = mysql_real_escape_string($email);
+  $email = db_escape_string($email);
   $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=".$customerno." AND (email='{$email}' OR email_extern='{$email}' OR email_rechnung='{$email}');");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 
@@ -42,21 +41,21 @@ function validate_token($customerno, $token)
 {
   expire_tokens();
   $customerno = (int) $customerno;
-  $token = mysql_real_escape_string($token);
+  $token = db_escape_string($token);
   $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id={$customerno} AND token='{$token}';");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 
 function get_uid_for_token($token) 
 {
   expire_tokens();
-  $token = mysql_real_escape_string($token);
+  $token = db_escape_string($token);
   $result = db_query("SELECT uid FROM system.usertoken WHERE token='{$token}';");
-  if (mysql_num_rows($result) == 0) {
+  if ($result->rowCount() == 0) {
     return NULL;
   }
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   return $data['uid'];  
 }
 
@@ -64,10 +63,10 @@ function get_username_for_uid($uid)
 {
   $uid = (int) $uid;
   $result = db_query("SELECT username FROM system.useraccounts WHERE uid={$uid}");
-  if (mysql_num_rows($result) != 1) {
+  if ($result->rowCount() != 1) {
     system_failure("Unexpected number of users with this uid (!= 1)!");
   }
-  $item = mysql_fetch_assoc($result);
+  $item = $result->fetch();
   return $item['username'];
 }
 
@@ -75,9 +74,9 @@ function validate_uid_token($uid, $token)
 {
   expire_tokens();
   $uid = (int) $uid;
-  $token = mysql_real_escape_string($token);
+  $token = db_escape_string($token);
   $result = db_query("SELECT NULL FROM system.usertoken WHERE uid={$uid} AND token='{$token}';");
-  return (mysql_num_rows($result) > 0);
+  return ($result->rowCount() > 0);
 }
 
 
@@ -102,13 +101,13 @@ function invalidate_systemuser_token($uid)
  
 function create_token($username)
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   expire_tokens();
   $result = db_query("SELECT uid FROM system.useraccounts WHERE username='{$username}'");
-  $uid = (int) mysql_fetch_assoc($result)['uid'];
+  $uid = (int) $result->fetch()['uid'];
   
   $result = db_query("SELECT created FROM system.usertoken WHERE uid={$uid}");
-  if (mysql_num_rows($result) > 0) {
+  if ($result->rowCount() > 0) {
     system_failure("Für Ihr Benutzerkonto ist bereits eine Passwort-Erinnerung versendet worden. Bitte wenden Sie sich an den Support wenn Sie diese nicht erhalten haben.");
   }
   
@@ -120,9 +119,9 @@ function create_token($username)
 
 function emailaddress_for_user($username)
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT k.email FROM kundendaten.kunden AS k INNER JOIN system.useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   return $data['email'];
 }
 
@@ -132,17 +131,17 @@ function get_customer_token($customerno)
   $customerno = (int) $customerno;
   expire_tokens();
   $result = db_query("SELECT token FROM kundendaten.kunden WHERE id={$customerno} AND token IS NOT NULL;");
-  if (mysql_num_rows($result) < 1)
+  if ($result->rowCount() < 1)
     system_failure("Kann das Token nicht auslesen!");
-  return mysql_fetch_object($result)->token;
+  return $result->fetch(PDO::FETCH_OBJ)->token;
 }
 
 
 function get_user_token($username) 
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT token FROM system.usertoken AS t INNER JOIN system.useraccounts AS u USING (uid) WHERE username='{$username}'");
-  $tmp = mysql_fetch_assoc($result);
+  $tmp = $result->fetch();
   return $tmp['token'];
 }
 

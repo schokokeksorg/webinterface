@@ -27,14 +27,14 @@ function traffic_month($vhost_id)
 {
   $vhost_id = (int) $vhost_id;
   $result = db_query("SELECT sum(mb_in+mb_out) as mb FROM vhosts.traffic where date > CURDATE() - INTERVAL 1 MONTH AND vhost_id = {$vhost_id}");
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   return $data['mb'];
 }
 
 function autoipv6_address($vhost_id, $mode = 1)
 {
   $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id={$vhost_id}");
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   if (!$data['v6_prefix'])
   {
     warning("IPv6-Adresse nicht verfügbar, Server unterstützt kein IPv6");
@@ -55,7 +55,7 @@ function list_vhosts()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
   $ret = array();
-  while ($item = mysql_fetch_assoc($result))
+  while ($item = $result->fetch())
     array_push($ret, $item);
   return $ret;
 }
@@ -63,9 +63,9 @@ function list_vhosts()
 function ipv6_possible($server)
 {
   $serverid = (int) $server;
-  $servername = mysql_real_escape_string($server);
+  $servername = db_escape_string($server);
   $result = db_query("SELECT v6_prefix FROM system.servers WHERE id={$serverid} OR hostname='{$servername}'");
-  $line = mysql_fetch_assoc($result);
+  $line = $result->fetch();
   DEBUG("Server {$server} is v6-capable: ". ($line['v6_prefix'] != NULL));
   return ($line['v6_prefix'] != NULL);
 }
@@ -143,10 +143,10 @@ function get_vhost_details($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT vh.*,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} AND vh.id={$id}");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure('Interner Fehler beim Auslesen der Daten');
 
-  $ret = mysql_fetch_assoc($result);
+  $ret = $result->fetch();
 
   if ($ret['hsts'] === NULL) {
     DEBUG('HSTS: '.$ret['hsts']);
@@ -162,7 +162,7 @@ function get_aliases($vhost)
 {
   $result = db_query("SELECT id,fqdn,options FROM vhosts.v_alias WHERE vhost={$vhost}");
   $ret = array();
-  while ($item = mysql_fetch_assoc($result)) {
+  while ($item = $result->fetch()) {
     array_push($ret, $item);
   }
   return $ret;
@@ -192,7 +192,7 @@ function list_available_webapps()
 {
   $result = db_query("SELECT id,displayname FROM vhosts.global_webapps");
   $ret = array();
-  while ($item = mysql_fetch_assoc($result))
+  while ($item = $result->fetch())
     array_push($ret, $item);
   return $ret;
 }
@@ -248,9 +248,9 @@ function make_webapp_vhost($id, $webapp)
   if ($id == 0)
     system_failure("id == 0");
   $result = db_query("SELECT displayname FROM vhosts.global_webapps WHERE id={$webapp};");
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
     system_failure("webapp-id invalid");
-  $webapp_name = mysql_fetch_object($result)->displayname;
+  $webapp_name = $result->fetch(PDO::FETCH_OBJ)->displayname;
   logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
   db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES ({$id}, {$webapp})");
   mail('webapps-setup@schokokeks.org', 'setup', 'setup');
@@ -261,7 +261,7 @@ function check_hostname_collision($hostname, $domain)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   # Neuer vhost => Prüfe Duplikat
-  $hostnamecheck = "hostname='".mysql_real_escape_string($hostname)."'";
+  $hostnamecheck = "hostname='".db_escape_string($hostname)."'";
   if (! $hostname) {
     $hostnamecheck = "hostname IS NULL";
   }
@@ -270,15 +270,15 @@ function check_hostname_collision($hostname, $domain)
     $domaincheck = "domain IS NULL AND user={$uid}";
   }
   $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck}");
-  if (mysql_num_rows($result) > 0) {
+  if ($result->rowCount() > 0) {
     system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
   }
   if ($domain == -1) {
     return ;
   }
   $result = db_query("SELECT id, vhost FROM vhosts.alias WHERE {$hostnamecheck} AND {$domaincheck}");
-  if (mysql_num_rows($result) > 0) {
-    $data = mysql_fetch_assoc($result);
+  if ($result->rowCount() > 0) {
+    $data = $result->fetch();
     $vh = get_vhost_details($data['vhost']);
     system_failure('Dieser Hostname ist bereits als Alias für »'.$vh['fqdn'].'« eingerichtet');
   }
@@ -328,7 +328,7 @@ function save_vhost($vhost)
     if (! $vhost['options']) $vhost['options']='nodocroot';
     else $vhost['options']+=",nodocroot";
   }
-  $options = mysql_real_escape_string( $vhost['options'] );
+  $options = db_escape_string( $vhost['options'] );
 
   $cert = 0;
   $certs = user_certs();
@@ -383,10 +383,10 @@ function get_alias_details($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT * FROM vhosts.v_alias WHERE id={$id}");
   
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure('Interner Fehler beim Auslesen der Alias-Daten');
   
-  $alias = mysql_fetch_assoc($result);
+  $alias = $result->fetch();
   
   if ($alias['domain_id'] == NULL) {
     $alias['domain_id'] = -1;
@@ -420,7 +420,7 @@ function save_alias($alias)
   if ($alias['domain_id'] == -1)
     $domain = 'NULL';
   $vhost = get_vhost_details( (int) $alias['vhost']);
-  $options = mysql_real_escape_string( $alias['options'] );
+  $options = db_escape_string( $alias['options'] );
   if ($id == 0) {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
     db_query("INSERT INTO vhosts.alias (hostname, domain, vhost, options) VALUES ({$hostname}, {$domain}, {$vhost['id']}, '{$options}')");
@@ -437,7 +437,7 @@ function available_suexec_users()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT uid, username FROM vhosts.available_users LEFT JOIN vhosts.v_useraccounts ON (uid = suexec_user) WHERE mainuser={$uid}");
   $ret = array();
-  while ($i = mysql_fetch_assoc($result))
+  while ($i = $result->fetch())
     $ret[] = $i;
   DEBUG('available suexec-users:');
   DEBUG($ret);
@@ -451,7 +451,7 @@ function user_ipaddrs()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT ipaddr FROM vhosts.ipaddr_available WHERE uid={$uid}");
   $ret = array();
-  while ($i = mysql_fetch_assoc($result))
+  while ($i = $result->fetch())
   {
     $ret[] = $i['ipaddr'];
   }

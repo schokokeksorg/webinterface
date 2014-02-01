@@ -20,8 +20,8 @@ function user_has_accounts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT id from `mail`.`mailaccounts` WHERE uid=$uid");
-  DEBUG(mysql_num_rows($result)." accounts");
-  return (mysql_num_rows($result) > 0);
+  DEBUG($result->rowCount()." accounts");
+  return ($result->rowCount() > 0);
 }
 
 if (! function_exists("user_has_vmail_domain"))
@@ -34,7 +34,7 @@ if (! function_exists("user_has_vmail_domain"))
         }
         $uid = (int) $_SESSION['userinfo']['uid'];
         $result = db_query("SELECT COUNT(*) FROM mail.v_vmail_domains WHERE useraccount='{$uid}'");
-        $row = mysql_fetch_array($result);
+        $row = $result->fetch();
         $count = $row[0];
         DEBUG("User has {$count} vmail-domains");
         return ( (int) $count > 0 );

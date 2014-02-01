@@ -14,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/db_connect.php');
+require_once('class/database.php');
 require_once('inc/debug.php');
 
 function config($key)
@@ -36,9 +36,9 @@ function config($key)
     return $config[$key];
   
   /* read configuration from database */
-  $options = db_query( "SELECT `key`, value FROM misc.config" );
+  $result = db_query( "SELECT `key`, value FROM misc.config" );
   
-  while( $object = mysql_fetch_assoc( $options ) ) {
+  while( $object = $result->fetch() ) {
     if (!array_key_exists($object['key'], $config)) {
 	    $config[$object['key']]=$object['value'];
     }
@@ -56,8 +56,9 @@ function config($key)
 
 function get_server_by_id($id) {
   $id = (int) $id;
-  $result = mysql_fetch_assoc(db_query("SELECT hostname FROM system.servers WHERE id='{$id}'"));
-  return $result['hostname'];
+  $result = db_query("SELECT hostname FROM system.servers WHERE id='{$id}'");
+  $ret = $result->fetch();
+  return $ret['hostname'];
 }
 
 
@@ -74,7 +75,7 @@ function my_server_id()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT server FROM system.useraccounts WHERE uid={$uid}");
-  $r = mysql_fetch_assoc($result);
+  $r = $result->fetch();
   DEBUG($r);
   return $r['server'];
 }
@@ -85,7 +86,7 @@ function additional_servers()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT server FROM system.user_server WHERE uid={$uid}");
   $servers = array();
-  while ($s = mysql_fetch_assoc($result))
+  while ($s = $result->fetch())
     $servers[] = $s['server'];
   DEBUG($servers);
   return $servers;
@@ -96,42 +97,26 @@ function server_names()
 {
   $result = db_query("SELECT id, hostname FROM system.servers");
   $servers = array();
-  while ($s = mysql_fetch_assoc($result))
+  while ($s = $result->fetch())
     $servers[$s['id']] = $s['hostname'];
   DEBUG($servers);
   return $servers;
 }
 
 
-function db_query($query)
-{
-  DEBUG($query);
-  $result = @mysql_query($query);
-  if (mysql_error())
-  {
-    $error = mysql_error();
-    logger(LOG_ERR, "inc/base", "dberror", "mysql error: {$error}");
-    system_failure('Interner Datenbankfehler: »'.iconv('ISO-8859-1', 'UTF-8', $error).'«.');
-  }
-  $count = @mysql_num_rows($result);
-  if (! $count)
-    $count = 'no';
-  DEBUG("=> {$count} rows");
-  return $result; 
-}
-
-
-
+// FIXME
+// Diese Funktion funktioniert nicht für preprared statements
 function maybe_null($value)
 {
   if ($value == NULL)
     return 'NULL';
 
   if (strlen( (string) $value ) > 0)
-    return "'".mysql_real_escape_string($value)."'";
+    return "'".db_escape_string($value)."'";
   else
     return 'NULL';
 }
+
 
 #define('LOG_ERR', 3);
 #define('LOG_WARNING', 4);
@@ -148,11 +133,11 @@ function logger($severity, $scriptname, $scope, $message)
   elseif ($_SESSION['role'] & ROLE_CUSTOMER)
     $user = "'{$_SESSION['customerinfo']['customerno']}'";
   
-  $remote = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
+  $remote = db_escape_string($_SERVER['REMOTE_ADDR']);
 
-  $scriptname = mysql_real_escape_string($scriptname);
-  $scope = mysql_real_escape_string($scope);
-  $message = mysql_real_escape_string($message);
+  $scriptname = db_escape_string($scriptname);
+  $scope = db_escape_string($scope);
+  $message = db_escape_string($message);
 
   db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');");
 }

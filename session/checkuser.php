@@ -18,7 +18,6 @@ require_once('inc/base.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
 
-require_once('inc/db_connect.php');
 
 define('ROLE_ANONYMOUS', 0);
 define('ROLE_MAILACCOUNT', 1);
@@ -33,16 +32,16 @@ define('ROLE_SUBUSER', 32);
 
 function find_role($login, $password, $i_am_admin = False)
 {
-  $login = mysql_real_escape_string($login);
+  $login = db_escape_string($login);
   // Domain-Admin?  <not implemented>
   // System-User?
   $uid = (int) $login;
   if ($uid == 0)
     $uid = 'NULL';
   $result = db_query("SELECT username, passwort AS password, kundenaccount AS `primary`, status, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid={$uid} OR username='{$login}' LIMIT 1;");
-  if (@mysql_num_rows($result) > 0)
+  if (@$result->rowCount() > 0)
   {
-    $entry = mysql_fetch_object($result);
+    $entry = $result->fetch(PDO::FETCH_OBJ);
     if (strcasecmp($entry->username, $login) == 0 && $entry->username != $login) {
       // MySQL matched (warum auch immer) ohne Beachtung der Schreibweise. Wir wollen aber case-sensitive sein.
       logger(LOG_WARNING, "session/checkuser", "login", "denying login to wrong cased username »{$login}«.");
@@ -72,7 +71,7 @@ function find_role($login, $password, $i_am_admin = False)
   $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id={$customerno} AND passwort='{$pass}';");
   if ($i_am_admin)
     $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id={$customerno}");
-  if (@mysql_num_rows($result) > 0)
+  if (@$result->rowCount() > 0)
   {
     return ROLE_CUSTOMER;
   }
@@ -80,9 +79,9 @@ function find_role($login, $password, $i_am_admin = False)
   // Sub-User
 
   $result = db_query("SELECT password FROM system.subusers WHERE username='{$login}'");
-  if (@mysql_num_rows($result) > 0)
+  if (@$result->rowCount() > 0)
   {
-    $entry = mysql_fetch_object($result);
+    $entry = $result->fetch(PDO::FETCH_OBJ);
     $db_password = $entry->password;
     // SHA1 für alte Subuser (kaylee), SHA256 für neue Subuser
     if (hash("sha1", $password) == $db_password || hash("sha256", $password) == $db_password || $i_am_admin)
@@ -113,9 +112,9 @@ function find_role($login, $password, $i_am_admin = False)
     }
   }
   $result = db_query("SELECT cryptpass FROM mail.courier_mailaccounts WHERE account='{$account}' LIMIT 1;");
-  if (@mysql_num_rows($result) > 0)
+  if (@$result->rowCount() > 0)
   {
-    $entry = mysql_fetch_object($result);
+    $entry = $result->fetch(PDO::FETCH_OBJ);
     $db_password = $entry->cryptpass;
     $hash = crypt($password, $db_password);
     if ($hash == $db_password || $i_am_admin)
@@ -129,9 +128,9 @@ function find_role($login, $password, $i_am_admin = False)
   // virtueller Mail-Account
   $account = $login;
   $result = db_query("SELECT cryptpass FROM mail.courier_virtual_accounts WHERE account='{$account}' LIMIT 1;");
-  if (@mysql_num_rows($result) > 0)
+  if (@$result->rowCount() > 0)
   {
-    $entry = mysql_fetch_object($result);
+    $entry = $result->fetch(PDO::FETCH_OBJ);
     $db_password = $entry->cryptpass;
     $hash = crypt($password, $db_password);
     if ($hash == $db_password || $i_am_admin)
@@ -162,13 +161,13 @@ function get_customer_info($customer)
   }
   else
   {
-    $username = mysql_real_escape_string($customer);
+    $username = db_escape_string($customer);
     DEBUG('looking up customer info for username '.$username);
     $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
   }
-  if (@mysql_num_rows($result) == 0)
+  if (@$result->rowCount() == 0)
     system_failure("Konnte Kundendaten nicht auslesen!");
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   DEBUG($data);
   $ret['customerno'] = $data['id'];
   $ret['title'] = $data['anrede'];
@@ -183,12 +182,12 @@ function get_customer_info($customer)
 function get_subuser_info($username)
 {
   $result = db_query("SELECT uid, modules FROM system.subusers WHERE username='{$username}'");
-  if (mysql_num_rows($result) < 1)
+  if ($result->rowCount() < 1)
   {
     logger(LOG_ERR, "session/checkuser", "login", "error reading subuser's data: »{$username}«");
     system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
   }
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   $userinfo = get_user_info($data['uid']);
   $userinfo['modules'] = $data['modules'];
   return $userinfo;
@@ -197,15 +196,15 @@ function get_subuser_info($username)
 
 function get_user_info($username)
 {
-  $username = mysql_real_escape_string($username);
+  $username = db_escape_string($username);
   $result = db_query("SELECT kunde AS customerno, username, uid, homedir, name, server
                       FROM system.v_useraccounts WHERE username='{$username}' OR uid='{$username}' LIMIT 1");
-  if (mysql_num_rows($result) < 1)
+  if ($result->rowCount() < 1)
   {
     logger(LOG_ERR, "session/checkuser", "login", "error reading user's data: »{$username}«");
     system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
   }
-  $val = @mysql_fetch_object($result);
+  $val = @$result->fetch(PDO::FETCH_OBJ);
   return array(
           'username'      => $val->username,
           'customerno'    => $val->customerno,
@@ -239,7 +238,7 @@ function set_customer_password($customerno, $newpass)
 
 function set_subuser_password($subuser, $newpass)
 {
-  $subuser = mysql_real_escape_string($subuser);
+  $subuser = db_escape_string($subuser);
   $uid = (int) $_SESSION['userinfo']['uid'];
   $newpass = sha1($newpass);
   db_query("UPDATE system.subusers SET password='$newpass' WHERE username='{$subuser}' AND uid={$uid}");
@@ -269,20 +268,20 @@ function set_systemuser_password($uid, $newpass)
 function user_for_mailaccount($account) 
 {
   $result = db_query("SELECT uid FROM mail.courier_mailaccounts WHERE account='{$account}' LIMIT 1;");
-  if (mysql_num_rows($result) != 1) {
+  if ($result->rowCount() != 1) {
     system_failure('Diese Adresse ist herrenlos?!');
   }
-  $tmp = mysql_fetch_assoc($result);
+  $tmp = $result->fetch();
   return $tmp['uid'];
 }
 
 function user_for_vmail_account($account)
 {
   $result = db_query("SELECT useraccount FROM mail.v_vmail_accounts WHERE CONCAT_WS('@', local, domainname)='{$account}' LIMIT 1;");
-  if (mysql_num_rows($result) != 1) {
+  if ($result->rowCount() != 1) {
     system_failure('Diese Adresse ist herrenlos?!');
   }
-  $tmp = mysql_fetch_assoc($result);
+  $tmp = $result->fetch();
   return $tmp['useraccount'];
 }
 
@@ -300,7 +299,7 @@ function setup_session($role, $useridentity)
     $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_SUBUSER;
     $_SESSION['subuser'] = $useridentity;
     $data = db_query("SELECT kundenaccount FROM system.useraccounts WHERE username='{$info['username']}'");
-    if ($entry = mysql_fetch_assoc($data)) {
+    if ($entry = $data->fetch) {
       if ($entry['kundenaccount'] == 1) {
         $customer = get_customer_info($_SESSION['userinfo']['username']);
         $_SESSION['customerinfo'] = $customer;

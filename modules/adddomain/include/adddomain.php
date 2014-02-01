@@ -15,7 +15,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/debug.php');
-require_once('inc/db_connect.php');
 require_once('inc/base.php');
 require_once('inc/security.php');
 require_once('inc/error.php');
@@ -38,14 +37,14 @@ function get_domain_offer($domainname)
   $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
 
   $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde={$cid} AND tld='{$tld}' AND ruecksprache='N'");
-  if (mysql_num_rows($result) != 1) {
+  if ($result->rowCount() != 1) {
     $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld='{$tld}' AND ruecksprache='N'");
   }
-  if (mysql_num_rows($result) != 1) {
+  if ($result->rowCount() != 1) {
     warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
     return;
   }
-  $temp = mysql_fetch_assoc($result);
+  $temp = $result->fetch();
   $data["gebuehr"] = $temp["gebuehr"];
   $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
   
@@ -93,7 +92,7 @@ function list_useraccounts()
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
   $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde={$customerno}");
   $ret = array();
-  while ($item = mysql_fetch_assoc($result))
+  while ($item = $result->fetch())
   {
     $ret[] = $item;
   }

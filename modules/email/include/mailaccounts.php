@@ -15,7 +15,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/debug.php');
-require_once('inc/db_connect.php');
 require_once('inc/base.php');
 require_once('inc/security.php');
 
@@ -27,10 +26,10 @@ function mailaccounts($uid)
 {
   $uid = (int) $uid;
   $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=$uid ORDER BY if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`), local");
-  DEBUG("Found ".@mysql_num_rows($result)." rows!");
+  DEBUG("Found ".@$result->rowCount()." rows!");
   $accounts = array();
-  if (@mysql_num_rows($result) > 0)
-    while ($acc = @mysql_fetch_object($result))
+  if (@$result->rowCount() > 0)
+    while ($acc = @$result->fetch(PDO::FETCH_OBJ))
       array_push($accounts, array('id'=> $acc->id, 'account' => $acc->account, 'mailbox' => $acc->maildir, 'cryptpass' => $acc->cryptpass, 'enabled' => ($acc->aktiv == 1)));
   return $accounts;
 }
@@ -40,10 +39,10 @@ function get_mailaccount($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),'".config('masterdomain')."',`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=$id AND m.uid={$uid}");
-  DEBUG("Found ".mysql_num_rows($result)." rows!");
-  if (mysql_num_rows($result) != 1)
+  DEBUG("Found ".$result->rowCount()." rows!");
+  if ($result->rowCount() != 1)
     system_failure('Dieser Mailaccount existiert nicht oder gehört Ihnen nicht');
-  $acc = mysql_fetch_object($result);
+  $acc = $result->fetch(PDO::FETCH_OBJ);
   $ret = array('account' => $acc->account, 'mailbox' => $acc->maildir,  'enabled' => ($acc->aktiv == 1));
   DEBUG(print_r($ret, true));
   return $ret;
@@ -73,13 +72,13 @@ function change_mailaccount($id, $arr)
         array_push($conditions, "domain={$domain->id}");
       }
     }
-    array_push($conditions, "local='".mysql_real_escape_string($local)."'");
+    array_push($conditions, "local='".db_escape_string($local)."'");
   }
   if (isset($arr['mailbox']))
     if ($arr['mailbox'] == '')
       array_push($conditions, "`maildir`=NULL");
     else
-      array_push($conditions, "`maildir`='".mysql_real_escape_string($arr['mailbox'])."'");
+      array_push($conditions, "`maildir`='".db_escape_string($arr['mailbox'])."'");
 
   if (isset($arr['password']))
   {
@@ -121,13 +120,13 @@ function create_mailaccount($arr)
     }
   }
 
-  $values['local'] = "'".mysql_real_escape_string($local)."'";
+  $values['local'] = "'".db_escape_string($local)."'";
 
   if (isset($arr['mailbox']))
     if ($arr['mailbox'] == '')
       $values['maildir'] = 'NULL';
     else
-      $values['maildir']= "'".mysql_real_escape_string($arr['mailbox'])."'";
+      $values['maildir']= "'".db_escape_string($arr['mailbox'])."'";
 
 
   if (isset($arr['password']))
@@ -149,13 +148,13 @@ function get_mailaccount_id($accountname)
 {
   list($local, $domain) = explode('@', $accountname, 2);
 
-  $local = mysql_real_escape_string($local);
-  $domain = mysql_real_escape_string($domain);
+  $local = db_escape_string($local);
+  $domain = db_escape_string($domain);
 
   $result = db_query("SELECT acc.id FROM mail.mailaccounts AS acc LEFT JOIN mail.v_domains AS dom ON (dom.id=acc.domain) WHERE local='{$local}' AND dom.domainname='{$domain}'");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure('account nicht eindeutig');
-  $acc = mysql_fetch_assoc($result);
+  $acc = $result->fetch();
   return $acc['id'];
 }
     
@@ -214,7 +213,7 @@ function imap_on_vmail_domain()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT m.id FROM mail.mailaccounts AS m INNER JOIN mail.virtual_mail_domains AS vd USING (domain) WHERE m.uid={$uid}");
-  if (mysql_num_rows($result) > 0)
+  if ($result->rowCount() > 0)
     return true;
   return false;
 }
@@ -224,11 +223,11 @@ function user_has_only_vmail_domains()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT id FROM mail.v_vmail_domains WHERE useraccount={$uid}");
   // User hat keine VMail-Domains
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
     return false;
   $result = db_query("SELECT d.id FROM mail.v_domains AS d LEFT JOIN mail.v_vmail_domains AS vd USING (domainname) WHERE vd.id IS NULL AND d.user={$uid}");
   // User hat keine Domains die nicht vmail-Domains sind
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
     return true;
   return false;
 }

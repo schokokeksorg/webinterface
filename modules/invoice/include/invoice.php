@@ -25,7 +25,7 @@ function my_invoices()
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung,sepamandat FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} ORDER BY id DESC");
   $ret = array();
-  while($line = mysql_fetch_assoc($result))
+  while($line = $result->fetch())
   	array_push($ret, $line);
   return $ret;
 }
@@ -36,9 +36,9 @@ function get_pdf($id)
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
   $result = db_query("SELECT pdfdata FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} AND id={$id}");
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
 	  system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
-  return mysql_fetch_object($result)->pdfdata;
+  return $result->fetch(PDO::FETCH_OBJ)->pdfdata;
 
 }
 
@@ -48,9 +48,9 @@ function invoice_details($id)
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
   $result = db_query("SELECT kunde,datum,betrag,bezahlt,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} AND id={$id}");
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
   	system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
-  return mysql_fetch_assoc($result);
+  return $result->fetch();
 }
 
 function invoice_items($id)
@@ -58,10 +58,10 @@ function invoice_items($id)
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
   $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer={$id} AND kunde={$c}");
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
   	system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
   $ret = array();
-  while($line = mysql_fetch_assoc($result))
+  while($line = $result->fetch())
   array_push($ret, $line);
   return $ret;
 }
@@ -72,7 +72,7 @@ function upcoming_items()
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $result = db_query("SELECT anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde={$c} ORDER BY startdatum ASC");
   $ret = array();
-  while($line = mysql_fetch_assoc($result))
+  while($line = $result->fetch())
 	  array_push($ret, $line);
   return $ret;
 }
@@ -166,19 +166,19 @@ function generate_bezahlcode_image($id)
 function get_lastschrift($rechnungsnummer) {
   $rechnungsnummer = (int) $rechnungsnummer;
   $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.id=sl.rechnungsnummer) WHERE rechnungsnummer='${rechnungsnummer}' AND re.abbuchung=1");
-  if (mysql_num_rows($result) == 0) {
+  if ($result->rowCount() == 0) {
     return NULL;
   }
-  $item = mysql_fetch_assoc($result);
+  $item = $result->fetch();
   return $item;
 }
 
 function get_lastschriften($mandatsreferenz)
 {
-  $mandatsreferenz = mysql_real_escape_string($mandatsreferenz);
+  $mandatsreferenz = db_escape_string($mandatsreferenz);
   $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum FROM kundendaten.sepalastschrift WHERE mandatsreferenz='${mandatsreferenz}' ORDER BY buchungsdatum DESC");
   $ret = array();
-  while ($item = mysql_fetch_assoc($result)) {
+  while ($item = $result->fetch()) {
     $ret[] = $item;
   }
   return $ret;
@@ -189,7 +189,7 @@ function get_sepamandate()
   $cid = (int) $_SESSION['customerinfo']['customerno'];
   $result = db_query("SELECT id, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde={$cid}");
   $ret = array();
-  while ($entry = mysql_fetch_assoc($result)) {
+  while ($entry = $result->fetch()) {
     array_push($ret, $entry);
   }
   return $ret;
@@ -198,9 +198,9 @@ function get_sepamandate()
 
 function yesterday($date) 
 {
-  $date = mysql_real_escape_string($date);
+  $date = db_escape_string($date);
   $result = db_query("SELECT '{$date}' - INTERVAL 1 DAY");
-  return mysql_fetch_array($result)[0];
+  return $result->fetch()[0];
 }
 
 
@@ -208,7 +208,7 @@ function invalidate_sepamandat($id, $date)
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
-  $date = mysql_real_escape_string($date);
+  $date = db_escape_string($date);
   db_query("UPDATE kundendaten.sepamandat SET gueltig_bis='{$date}' WHERE id={$id} AND kunde={$cid}");
 }
 
@@ -216,12 +216,12 @@ function invalidate_sepamandat($id, $date)
 function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
-  $name = mysql_real_escape_string($name);
-  $adresse = mysql_real_escape_string($adresse);
-  $iban = mysql_real_escape_string($iban);
-  $bankname = mysql_real_escape_string($bankname);
-  $bic = mysql_real_escape_string($bic);
-  $gueltig_ab = mysql_real_escape_string($gueltig_ab);
+  $name = db_escape_string($name);
+  $adresse = db_escape_string($adresse);
+  $iban = db_escape_string($iban);
+  $bankname = db_escape_string($bankname);
+  $bic = db_escape_string($bic);
+  $gueltig_ab = db_escape_string($gueltig_ab);
 
   $first_date = date('Y-m-d');
   $invoices = my_invoices();

@@ -14,17 +14,16 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/db_connect.php');
 require_once('mail.php');
 
 function customer_with_email($email)
 {
-  $email = mysql_real_escape_string($email);
+  $email = db_escape_string($email);
   $result = db_query("SELECT id FROM kundendaten.kunden WHERE email='{$email}' OR email_rechnung='{$email}' OR email_extern='{$email}' LIMIT 1;");
-  if (mysql_num_rows($result) == 0)
+  if ($result->rowCount() == 0)
     return NULL;
   else
-    return mysql_fetch_object($result)->id;
+    return $result->fetch(PDO::FETCH_OBJ)->id;
 }
 
 
@@ -38,11 +37,11 @@ function create_customer($data)
     return NULL;
   }
 
-  $anrede = mysql_escape_string($data['anrede']);
-  $firma = mysql_escape_string($data['firma']);
-  $vorname = mysql_escape_string($data['vorname']);
-  $nachname = mysql_escape_string($data['nachname']);
-  $email = mysql_escape_string($data['email']);
+  $anrede = db_escape_string($data['anrede']);
+  $firma = db_escape_string($data['firma']);
+  $vorname = db_escape_string($data['vorname']);
+  $nachname = db_escape_string($data['nachname']);
+  $email = db_escape_string($data['email']);
 
   logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: {$anrede} / {$firma} / {$vorname} / {$nachname} / {$email}");
   
@@ -53,7 +52,7 @@ function create_customer($data)
 
   db_query("BEGIN");
   db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES ({$firma}, {$nachname}, {$vorname}, {$anrede}, {$email}, CURDATE(), 3)");
-  $customerno = mysql_insert_id();
+  $customerno = db_insert_id();
   db_query("COMMIT");
   return $customerno;
 

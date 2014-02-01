@@ -26,7 +26,7 @@ function user_certs()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=${uid} ORDER BY cn");
   $ret = array();
-  while ($i = mysql_fetch_assoc($result))
+  while ($i = $result->fetch())
     $ret[] = $i;
   DEBUG($ret);
   return $ret;
@@ -37,7 +37,7 @@ function user_csr()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=${uid} ORDER BY hostname");
   $ret = array();
-  while ($i = mysql_fetch_assoc($result))
+  while ($i = $result->fetch())
     $ret[] = $i;
   DEBUG($ret);
   return $ret;
@@ -49,9 +49,9 @@ function cert_details($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   
   $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, cert, `key` FROM vhosts.certs WHERE uid={$uid} AND id={$id}");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure("Ungültiges Zertifikat #{$id}");
-  return mysql_fetch_assoc($result);
+  return $result->fetch();
 }
 
 
@@ -61,9 +61,9 @@ function csr_details($id)
   $uid = (int) $_SESSION['userinfo']['uid'];
   
   $result = db_query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid={$uid} AND id={$id}");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure("Ungültiger CSR");
-  return mysql_fetch_assoc($result);
+  return $result->fetch();
 }
 
 
@@ -87,11 +87,11 @@ function get_chain($cert)
   if (! isset($certdata['issuer']['CN'])) {
     return NULL;
   }
-  $issuer = mysql_real_escape_string($certdata['issuer']['CN']);
+  $issuer = db_escape_string($certdata['issuer']['CN']);
   $result = db_query("SELECT id FROM vhosts.certchain WHERE cn='{$issuer}'");
-  if (mysql_num_rows($result) > 0)
+  if ($result->rowCount() > 0)
   {
-    $c = mysql_fetch_assoc($result);
+    $c = $result->fetch();
     //$chainfile = '/etc/apache2/certs/chains/'.$c['id'].'.pem';
     DEBUG("identified fitting certificate chain #".$c['id']);
     return $c['id'];
@@ -140,7 +140,7 @@ function validate_certificate($cert, $key)
   if ($chain)
   {
     $result = db_query("SELECT content FROM vhosts.certchain WHERE id={$chain}");
-    $tmp = mysql_fetch_assoc($result);
+    $tmp = $result->fetch();
     $chaincert = $tmp['content'];
     $chainfile = tempnam(sys_get_temp_dir(), 'webinterface');
     $f = fopen($chainfile, "w");
@@ -183,13 +183,13 @@ function save_cert($info, $cert, $key)
 {
   openssl_pkey_export($key, $key);
   openssl_x509_export($cert, $cert);
-  $subject = mysql_real_escape_string(filter_input_general($info['subject']));
-  $cn = mysql_real_escape_string(filter_input_general($info['cn']));
-  $valid_from = mysql_real_escape_string($info['valid_from']);
-  $valid_until = mysql_real_escape_string($info['valid_until']);
+  $subject = db_escape_string(filter_input_general($info['subject']));
+  $cn = db_escape_string(filter_input_general($info['cn']));
+  $valid_from = db_escape_string($info['valid_from']);
+  $valid_until = db_escape_string($info['valid_until']);
   $chain = maybe_null( get_chain($cert) );
-  $cert = mysql_real_escape_string($cert);
-  $key = mysql_real_escape_string($key);
+  $cert = db_escape_string($cert);
+  $key = db_escape_string($key);
   $uid = (int) $_SESSION['userinfo']['uid'];
 
   db_query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, chain, cert, `key`) VALUES ({$uid}, '{$subject}', '{$cn}', '{$valid_from}', '{$valid_until}', {$chain}, '{$cert}', '{$key}')");
@@ -203,17 +203,17 @@ function refresh_cert($id, $info, $cert, $key = NULL)
 
   $id = (int) $id;
   $oldcert = cert_details($id);
-  $cert = mysql_real_escape_string($cert);
-  $subject = mysql_real_escape_string(filter_input_general($info['subject']));
-  $cn = mysql_real_escape_string(filter_input_general($info['cn']));
+  $cert = db_escape_string($cert);
+  $subject = db_escape_string(filter_input_general($info['subject']));
+  $cn = db_escape_string(filter_input_general($info['cn']));
   
-  $valid_from = mysql_real_escape_string($info['valid_from']);
-  $valid_until = mysql_real_escape_string($info['valid_until']);
+  $valid_from = db_escape_string($info['valid_from']);
+  $valid_until = db_escape_string($info['valid_until']);
 
   $keyop = '';
   if ($key) {
     openssl_pkey_export($key, $key);
-    $keyop = ", `key`='".mysql_real_escape_string($key)."'";
+    $keyop = ", `key`='".db_escape_string($key)."'";
   }
   db_query("UPDATE vhosts.certs SET subject='{$subject}', cn='{$cn}', cert='{$cert}'{$keyop}, valid_from='{$valid_from}', valid_until='{$valid_until}', chain={$chain} WHERE id={$id} LIMIT 1");
 }
@@ -304,11 +304,11 @@ function save_csr($cn, $bits, $replace=NULL)
   list($csr, $key) = create_csr($cn, $bits);
   
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $cn = mysql_real_escape_string(filter_input_hostname($cn, true));
+  $cn = db_escape_string(filter_input_hostname($cn, true));
   $bits = (int) $bits;
   $replace = ($replace ? (int) $replace : 'NULL');
-  $csr = mysql_real_escape_string($csr);
-  $key = mysql_real_escape_string($key);
+  $csr = db_escape_string($csr);
+  $key = db_escape_string($key);
   db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES ({$uid}, '{$cn}', {$bits}, {$replace}, '{$csr}', '{$key}')");
   $id = mysql_insert_id();
   return $id;  

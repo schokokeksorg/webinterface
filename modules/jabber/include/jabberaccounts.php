@@ -15,7 +15,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once("inc/debug.php");
-require_once("inc/db_connect.php");
 require_once("inc/security.php");
 
 require_once('class/domain.php');
@@ -25,8 +24,8 @@ function get_jabber_accounts() {
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
   $result = db_query("SELECT id, `create`, created, lastactivity, local, domain FROM jabber.accounts WHERE customerno='$customerno' AND `delete`=0;");
   $accounts = array();
-  if (@mysql_num_rows($result) > 0)
-    while ($acc = @mysql_fetch_assoc($result))
+  if (@$result->rowCount() > 0)
+    while ($acc = @$result->fetch())
       array_push($accounts, $acc);
   return $accounts;
 }
@@ -41,9 +40,9 @@ function get_jabberaccount_details($id)
   $id = (int) $id;
 
   $result = db_query("SELECT id, local, domain FROM jabber.accounts WHERE customerno={$customerno} AND id={$id} LIMIT 1");
-  if (mysql_num_rows($result) != 1)
+  if ($result->rowCount() != 1)
     system_failure("Invalid account");
-  $data = mysql_fetch_assoc($result);
+  $data = $result->fetch();
   if ($data['domain'] == NULL)
     $data['domain'] = config('masterdomain');
   else
@@ -72,19 +71,19 @@ function create_jabber_account($local, $domain, $password)
   require_role(ROLE_CUSTOMER);
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
 
-  $local = mysql_real_escape_string( filter_input_username($local) );
+  $local = db_escape_string( filter_input_username($local) );
   $domain = (int) $domain;
   if (! valid_jabber_password($password))
   {
     input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
     return;
   }
-  $password = mysql_real_escape_string( $password );
+  $password = db_escape_string( $password );
   
   if ($domain > 0)
   {
     $result = db_query("SELECT id FROM kundendaten.domains WHERE kunde={$customerno} AND jabber=1 AND id={$domain};");
-    if (mysql_num_rows($result) == 0)
+    if ($result->rowCount() == 0)
     {
       logger(LOG_WARNING, "modules/jabber/include/jabberaccounts", "jabber", "attempt to create account for invalid domain »{$domain}«");
       system_failure("Invalid domain!");
@@ -98,7 +97,7 @@ function create_jabber_account($local, $domain, $password)
     $domainquery = 'domain IS NULL'; 
   }
   $result = db_query("SELECT id FROM jabber.accounts WHERE local='{$local}' AND {$domainquery}");
-  if (mysql_num_rows($result) > 0)
+  if ($result->rowCount() > 0)
   {
     logger(LOG_WARNING, "modules/jabber/include/jabberaccounts", "jabber", "attempt to create already existing account »{$local}@{$domain}«");
     system_failure("Diesen Account gibt es bereits!");
@@ -120,7 +119,7 @@ function change_jabber_password($id, $password)
     input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
     return;
   }
-  $password = mysql_real_escape_string( $password );
+  $password = db_escape_string( $password );
   
   db_query("UPDATE jabber.accounts SET password='{$password}' WHERE customerno={$customerno} AND id={$id} LIMIT 1");
   logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "changed password for account  »{$id}«");

@@ -25,7 +25,7 @@ function list_subusers()
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid}");
   $subusers = array();
-  while ($item = mysql_fetch_assoc($result))
+  while ($item = $result->fetch())
   {
     $item['modules'] = explode(',', $item['modules']);
     $subusers[] = $item;
@@ -40,7 +40,7 @@ function load_subuser($id) {
   $uid = (int) $_SESSION['userinfo']['uid'];
   
   $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid} AND id={$id}");
-  $item = mysql_fetch_assoc($result);
+  $item = $result->fetch();
   $item['modules'] = explode(',', $item['modules']);
   return $item;
 }
@@ -79,7 +79,7 @@ function new_subuser($username, $requested_modules, $password)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
 
-  $username = mysql_real_escape_string(filter_input_username($username));
+  $username = db_escape_string(filter_input_username($username));
   if (strpos($username, $_SESSION['userinfo']['username']) !== 0) {
     // Username nicht enthalten (FALSE) oder nicht am Anfang (>0)
     system_failure("Ungültiger Benutzername!");
@@ -100,7 +100,7 @@ function new_subuser($username, $requested_modules, $password)
   if (count($modules) == 0) {
     system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
   }
-  $modules = mysql_real_escape_string(implode(',', $modules));
+  $modules = db_escape_string(implode(',', $modules));
   
   $result = strong_password($password);
   if ($result !== true) {
@@ -128,7 +128,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
     system_failure("Kann diesen Account nicht finden!");
   }
 
-  $username = mysql_real_escape_string(filter_input_username($username));
+  $username = db_escape_string(filter_input_username($username));
   if (strpos($username, $_SESSION['userinfo']['username']) !== 0) {
     // Username nicht enthalten (FALSE) oder nicht am Anfang (>0)
     system_failure("Ungültiger Benutzername!");
@@ -148,7 +148,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
   if (count($modules) == 0) {
     system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
   }
-  $modules = mysql_real_escape_string(implode(',', $modules));
+  $modules = db_escape_string(implode(',', $modules));
   
   $pwchange = '';
   if ($password) {

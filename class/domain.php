@@ -14,7 +14,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/db_connect.php');
 require_once('inc/base.php');
 require_once('inc/debug.php');
 
@@ -42,7 +41,7 @@ class Domain extends KeksData
 
   function loadByName($name)
   {
-    $name = mysql_real_escape_string($name);
+    $name = db_escape_string($name);
     $res = $this->getData("*", "CONCAT_WS('.', domainname, tld)='{$name}' LIMIT 1");
     if (count($res) < 1)
       return false;
@@ -112,9 +111,9 @@ function get_domain_list($customerno, $uid = NULL)
   $query .= " ORDER BY domainname,tld";
   $result = db_query($query);
   $domains = array();
-  DEBUG('Result set is '.mysql_num_rows($result)." rows.<br />\n");
-  if (mysql_num_rows($result) > 0)
-    while ($domain = mysql_fetch_object($result))
+  DEBUG('Result set is '.$result->rowCount()." rows.<br />\n");
+  if ($result->rowCount() > 0)
+    while ($domain = $result->fetch(PDO::FETCH_OBJ))
       array_push($domains, new Domain((int) $domain->id));
   DEBUG($domains);
 	return $domains;	
