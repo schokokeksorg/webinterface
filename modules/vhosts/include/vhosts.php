@@ -127,12 +127,20 @@ function domainselect($selected = NULL, $selectattribute = '')
   $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
   $ret .= ' <option value="-1">'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').'</option>';
   $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
+  $found = false;
   foreach ($domainlist as $dom)
   {
-    $s = ($selected == $dom->id) ? ' selected="selected" ': '';
+    $s = '';
+    if ($selected == $dom->id) {
+      $s = ' selected="selected" ';
+      $found = true;
+    }
     $ret .= "<option value=\"{$dom->id}\"{$s}>{$dom->fqdn}</option>\n";
   }
   $ret .= '</select>';
+  if ($selected > 0 and ! $found) {
+    system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
+  }
   return $ret;
 }
 
