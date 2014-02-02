@@ -21,9 +21,12 @@ require_once('inc/debug.php');
 
 class DB extends PDO {
   function __construct() {
-    $dsn = "mysql:host=".config('db_host');
+    $dsn = "mysql:host=".config('db_host', true);
     if (config('db_port', true)) {
       $dsn .= ';port='.config('db_port', true);
+    }
+    if (config('db_socket', true)) {
+      $dsn = "mysql:unix_socket=".config('db_socket', true);
     }
     $username = config('db_user', true);
     $password = config('db_pass', true);

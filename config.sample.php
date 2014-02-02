@@ -17,7 +17,13 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 global $config;
 $config = array();
 
-$config['db_host'] = ':/var/run/mysqld/mysqld-sys.sock';
+// either...
+$config['db_socket'] = '/var/run/mysqld/mysqld-sys.sock';
+// ... or
+$config['db_host'] = '10.8.0.1';
+$config['db_port'] = 3307;
+// (socket is preferred if both are defined)
+
 $config['db_user'] = 'username';
 $config['db_pass'] = 'password';
 
@@ -37,6 +43,6 @@ $config['session_name'] = 'CONFIG_SCHOKOKEKS_ORG';
 $config['theme'] = 'default';
 $config['jquery_ui_path'] = 'https://source.schokokeks.org/external/jquery/jquery-ui-1.10.0/';
 
-ini_set('error_reporting','On');
+ini_set('display_errors','On');
 
 ?>
