@@ -58,7 +58,6 @@ Ihre E-Mail wird nicht weitergeleitet.',
 
 function get_vmail_id_by_emailaddr($emailaddr) 
 {
-  $emailaddr = db_escape_string( $emailaddr );
   $result = db_query("SELECT id FROM mail.v_vmail_accounts WHERE CONCAT(local, '@', domainname) = ?", array($emailaddr));
   $entry = $result->fetch();
   return (int) $entry['id'];
@@ -135,7 +134,6 @@ function get_vmail_domains()
 
 function find_account_id($accname)
 {
-  $accname = db_escape_string($accname);
   DEBUG($accname);
   $tmp = explode('@', $accname, 2);
   DEBUG($tmp);
@@ -492,7 +490,6 @@ function domain_has_vmail_accounts($domid)
 function change_domain($id, $type)
 {
   $id = (int) $id;
-  $type = db_escape_string($type);
   if (domain_has_vmail_accounts($id))
     system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
   

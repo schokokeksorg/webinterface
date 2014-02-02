@@ -60,7 +60,7 @@ function config($key, $localonly = false)
 
 function get_server_by_id($id) {
   $id = (int) $id;
-  $result = db_query("SELECT hostname FROM system.servers WHERE id='{$id}'");
+  $result = db_query("SELECT hostname FROM system.servers WHERE id=?", array($id));
   $ret = $result->fetch();
   return $ret['hostname'];
 }

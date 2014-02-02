@@ -23,7 +23,7 @@ include("external/php-iban/php-iban.php");
 function my_invoices()
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung,sepamandat FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} ORDER BY id DESC");
+  $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung,sepamandat FROM kundendaten.ausgestellte_rechnungen WHERE kunde=? ORDER BY id DESC", array($c));
   $ret = array();
   while($line = $result->fetch())
   	array_push($ret, $line);
@@ -35,7 +35,7 @@ function get_pdf($id)
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
-  $result = db_query("SELECT pdfdata FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} AND id={$id}");
+  $result = db_query("SELECT pdfdata FROM kundendaten.ausgestellte_rechnungen WHERE kunde=:c AND id=:id",array(":c" => $c, ":id" => $id));
   if ($result->rowCount() == 0)
 	  system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
   return $result->fetch(PDO::FETCH_OBJ)->pdfdata;
@@ -47,7 +47,7 @@ function invoice_details($id)
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
-  $result = db_query("SELECT kunde,datum,betrag,bezahlt,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE kunde={$c} AND id={$id}");
+  $result = db_query("SELECT kunde,datum,betrag,bezahlt,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE kunde=:c AND id=:id",array(":c" => $c, ":id" => $id));
   if ($result->rowCount() == 0)
   	system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
   return $result->fetch();
@@ -57,7 +57,7 @@ function invoice_items($id)
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
   $id = (int) $id;
-  $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer={$id} AND kunde={$c}");
+  $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer=:id AND kunde=:c",array(":c" => $c, ":id" => $id));
   if ($result->rowCount() == 0)
   	system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
   $ret = array();
@@ -70,7 +70,7 @@ function invoice_items($id)
 function upcoming_items()
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde={$c} ORDER BY startdatum ASC");
+  $result = db_query("SELECT anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde=? ORDER BY startdatum ASC", array($c));
   $ret = array();
   while($line = $result->fetch())
 	  array_push($ret, $line);
@@ -165,7 +165,7 @@ function generate_bezahlcode_image($id)
 
 function get_lastschrift($rechnungsnummer) {
   $rechnungsnummer = (int) $rechnungsnummer;
-  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.id=sl.rechnungsnummer) WHERE rechnungsnummer='${rechnungsnummer}' AND re.abbuchung=1");
+  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.id=sl.rechnungsnummer) WHERE rechnungsnummer=? AND re.abbuchung=1", array($rechnungsnummer));
   if ($result->rowCount() == 0) {
     return NULL;
   }
@@ -176,7 +176,7 @@ function get_lastschrift($rechnungsnummer) {
 function get_lastschriften($mandatsreferenz)
 {
   $mandatsreferenz = db_escape_string($mandatsreferenz);
-  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum FROM kundendaten.sepalastschrift WHERE mandatsreferenz='${mandatsreferenz}' ORDER BY buchungsdatum DESC");
+  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum FROM kundendaten.sepalastschrift WHERE mandatsreferenz=? ORDER BY buchungsdatum DESC", array($mandatsreferenz));
   $ret = array();
   while ($item = $result->fetch()) {
     $ret[] = $item;
@@ -187,7 +187,7 @@ function get_lastschriften($mandatsreferenz)
 function get_sepamandate() 
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT id, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde={$cid}");
+  $result = db_query("SELECT id, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde=?", array($cid));
   $ret = array();
   while ($entry = $result->fetch()) {
     array_push($ret, $entry);
@@ -206,22 +206,16 @@ function yesterday($date)
 
 function invalidate_sepamandat($id, $date) 
 {
-  $cid = (int) $_SESSION['customerinfo']['customerno'];
-  $id = (int) $id;
-  $date = db_escape_string($date);
-  db_query("UPDATE kundendaten.sepamandat SET gueltig_bis='{$date}' WHERE id={$id} AND kunde={$cid}");
+  $args = array(":cid" => (int) $_SESSION['customerinfo']['customerno'],
+                ":id" => (int) $id,
+                ":date" => $date);
+  db_query("UPDATE kundendaten.sepamandat SET gueltig_bis=:date WHERE id=:id AND kunde=:cid", $args);
 }
 
 
 function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
 {
   $cid = (int) $_SESSION['customerinfo']['customerno'];
-  $name = db_escape_string($name);
-  $adresse = db_escape_string($adresse);
-  $iban = db_escape_string($iban);
-  $bankname = db_escape_string($bankname);
-  $bic = db_escape_string($bic);
-  $gueltig_ab = db_escape_string($gueltig_ab);
 
   $first_date = date('Y-m-d');
   $invoices = my_invoices();
@@ -254,7 +248,10 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
   $glaeubiger_id = config('glaeubiger_id');
 
   $today = date('Y-m-d');
-  db_query("INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES ('{$referenz}', '${glaeubiger_id}', {$cid}, '{$today}', 'online', '{$gueltig_ab}', '{$name}', '{$adresse}', '{$iban}', '{$bic}', '{$bankname}')");
+  db_query("INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
+          array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid, 
+                ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse, 
+                ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname));
 }
 
 
