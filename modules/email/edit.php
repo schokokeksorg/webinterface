@@ -92,9 +92,9 @@ output("<script type=\"text/javascript\">
     SELECT.id = 'spamfilter_action_' + forwardsCounter;
     SELECT.name = 'spamfilter_action_' + forwardsCounter;
 
-    SELECT.options[0] = new Option('nicht filtern', 'none', 1);
+    SELECT.options[0] = new Option('nicht filtern', 'none', 0);
     SELECT.options[1] = new Option('markieren und zustellen', 'tag', 0);
-    SELECT.options[2] = new Option('nicht zustellen', 'delete', 0);
+    SELECT.options[2] = new Option('nicht zustellen', 'delete', 1);
 
     P2.appendChild(TXT2);
     P2.appendChild(SELECT);
@@ -300,7 +300,7 @@ $form .= "<div style=\"margin-left: 2em;".($is_forward ? '' : ' display: none;')
 $form .= '<div id="forward_entries">
 ';
 if (! isset($account['forwards'][0])) {
-  $account['forwards'][0] = array('destination' => '', 'spamfilter' => 'none');
+  $account['forwards'][0] = array('destination' => '', 'spamfilter' => 'delete');
 }
 for ($i = 0 ; $i < $numforwards ; $i++)
 {
@@ -309,6 +309,7 @@ for ($i = 0 ; $i < $numforwards ; $i++)
   <div style=\"float: right;\"><a href=\"#\" onclick=\"removeForward(this);\">".icon_delete("Diese Weiterleitung entfernen")."</a></div>
   <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
   <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_'.$num, array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), $account['forwards'][$i]['spamfilter'])."</p>
+  <p>Bitte beachten Sie unsere Hinweise zu <a href=\"http://wiki.schokokeks.org/E-Mail/Weiterleitungen\">Weiterleitungen und Spamfiltern</a>.</p>
   </div>\n";
 }
 $form .= '</div>';
