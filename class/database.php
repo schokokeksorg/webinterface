@@ -43,6 +43,13 @@ class DB extends PDO {
       $response->execute($params);
       return $response;
     } else {
+      if (strtoupper(substr($stmt, 0, 6)) == "INSERT" ||
+          strpos(strtoupper($stmt), "WHERE") > 0) { // Das steht nie am Anfang
+        $backtrace = debug_backtrace();
+        if (config("enable_debug")) {
+          warning("Unsafe SQL statement in {$backtrace[1]['file']} line {$backtrace[1]['line']}");
+        }
+      }
       return parent::query($stmt);
     }
   }

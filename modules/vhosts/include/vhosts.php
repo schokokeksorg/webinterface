@@ -359,7 +359,7 @@ function save_vhost($vhost)
   else {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
     $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ({$_SESSION['userinfo']['uid']}, {$hostname}, {$domain}, {$docroot}, {$php}, {$cgi}, {$ssl}, {$hsts}, {$suexec_user}, {$server}, {$logtype}, {$errorlog}, {$cert}, {$ipv4}, {$autoipv6}, '{$options}', {$stats})");
-    $id = mysql_insert_id();
+    $id = db_insert_id();
   }
   $oldvhost = get_vhost_details($id);
   /*
