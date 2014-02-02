@@ -61,9 +61,9 @@ class DB extends PDO {
 */
 function db_escape_string($string)
 {
-  global $db;
+  global $_db;
   __ensure_connected();
-  $quoted = $db->quote($string);
+  $quoted = $_db->quote($string);
   // entferne die quotes, damit wird es drop-in-Kompatibel zu db_escape_string()
   $ret = substr($quoted, 1, -1);
   return $ret;
@@ -72,9 +72,9 @@ function db_escape_string($string)
 
 function db_insert_id()
 {
-  global $db;
+  global $_db;
   __ensure_connected();
-  return $db->lastInsertId();
+  return $_db->lastInsertId();
 }
 
 
@@ -84,14 +84,14 @@ function __ensure_connected()
     Dieses Kontrukt ist vermultich noch schlimmer als ein normales singleton
     aber es hilft uns in unserem prozeduralen Kontext
   */
-  global $db;
-  if (! isset($db)) {
+  global $_db;
+  if (! isset($_db)) {
     try {
       DEBUG("Neue Datenbankverbindung!");
-      $db = new DB();
-      $db->query("SET NAMES utf8");
-      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $db->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
+      $_db = new DB();
+      $_db->query("SET NAMES utf8");
+      $_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $_db->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
     } catch (PDOException $e) {
       global $debugmode;
       if ($debugmode) {
@@ -106,14 +106,14 @@ function __ensure_connected()
 
 function db_query($stmt, $params = NULL)
 {
-  global $db;
+  global $_db;
   __ensure_connected();
   DEBUG($stmt);
   if ($params) {
     DEBUG($params);
   }
   try {
-    $result = $db->query($stmt, $params);
+    $result = $_db->query($stmt, $params);
     DEBUG('=> '.$result->rowCount().' rows');
   } catch (PDOException $e) {
     global $debugmode;
