@@ -109,7 +109,7 @@ function get_domain_list($customerno, $uid = NULL)
     $query .= " kunde={$customerno}";
   }
   $query .= " ORDER BY domainname,tld";
-  $result = db_query($query);
+  $result = db_query($query, array()); // FIXME Übergebe leeren array um die Warnung zu unterdrücken
   $domains = array();
   DEBUG('Result set is '.$result->rowCount()." rows.<br />\n");
   if ($result->rowCount() > 0)

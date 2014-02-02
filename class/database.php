@@ -44,6 +44,7 @@ class DB extends PDO {
       return $response;
     } else {
       if (strtoupper(substr($stmt, 0, 6)) == "INSERT" ||
+          strtoupper(substr($stmt, 0, 7)) == "REPLACE" ||
           strpos(strtoupper($stmt), "WHERE") > 0) { // Das steht nie am Anfang
         $backtrace = debug_backtrace();
         if (config("enable_debug")) {

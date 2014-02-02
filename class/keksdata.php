@@ -77,7 +77,7 @@ abstract class KeksData
     if (is_array($fields))
       $fields = implode(',', $fields);
     
-    $res = db_query("SELECT {$fields} FROM {$table} {$where}");
+    $res = db_query("SELECT {$fields} FROM {$table} {$where}", array()); // FIXME Übergebe leeren array um die Warnung zu unterdrücken
     $return = array();
     while ($arr = $res->fetch())
       array_push($return, $arr);
@@ -104,7 +104,7 @@ abstract class KeksData
       $value = db_escape_string($value);
       array_push($upd, "`{$key}`='{$value}'");
     }
-    db_query("UPDATE {$this->default_table} SET ".implode(', ', $upd)." WHERE id={$this->data['id']};");
+    db_query("UPDATE {$this->default_table} SET ".implode(', ', $upd)." WHERE id=?", array($this->data['id']));
   }
 
   abstract function parse($data);

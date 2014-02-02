@@ -26,14 +26,14 @@ require_once("certs.php");
 function traffic_month($vhost_id)
 {
   $vhost_id = (int) $vhost_id;
-  $result = db_query("SELECT sum(mb_in+mb_out) as mb FROM vhosts.traffic where date > CURDATE() - INTERVAL 1 MONTH AND vhost_id = {$vhost_id}");
+  $result = db_query("SELECT sum(mb_in+mb_out) as mb FROM vhosts.traffic where date > CURDATE() - INTERVAL 1 MONTH AND vhost_id = ?", array($vhost_id));
   $data = $result->fetch();
   return $data['mb'];
 }
 
 function autoipv6_address($vhost_id, $mode = 1)
 {
-  $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id={$vhost_id}");
+  $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id=?", array($vhost_id));
   $data = $result->fetch();
   if (!$data['v6_prefix'])
   {
@@ -53,7 +53,7 @@ function autoipv6_address($vhost_id, $mode = 1)
 function list_vhosts()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid={$uid} ORDER BY domain,hostname");
+  $result = db_query("SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=? ORDER BY domain,hostname", array($uid));
   $ret = array();
   while ($item = $result->fetch())
     array_push($ret, $item);
@@ -160,7 +160,7 @@ function get_vhost_details($id)
 
 function get_aliases($vhost)
 {
-  $result = db_query("SELECT id,fqdn,options FROM vhosts.v_alias WHERE vhost={$vhost}");
+  $result = db_query("SELECT id,fqdn,options FROM vhosts.v_alias WHERE vhost=?", array($vhost));
   $ret = array();
   while ($item = $result->fetch()) {
     array_push($ret, $item);

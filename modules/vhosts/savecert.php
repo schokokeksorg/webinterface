@@ -22,15 +22,20 @@ $section = 'vhosts_certs';
 if ($_GET['action'] == 'new')
 {
   check_form_token('vhosts_certs_new');
+  if (! isset($_POST['cert'])) {
+    system_failure("Es wurde kein Zertifikat eingegeben");
+  }
   $cert = $_POST['cert'];
-  $key = $_POST['key'];
+  $key = NULL;
   if (! isset($_POST['key']) && isset($_REQUEST['csr']))
   {
     $csr = csr_details($_REQUEST['csr']);
     $key = $csr['key'];
+  } else {
+    $key = $_POST['key'];
   }
   $oldcert = NULL;
-  if ($_REQUEST['replace'])
+  if (isset($_REQUEST['replace']))
   {
     $oldcert = cert_details($_REQUEST['replace']);
   }

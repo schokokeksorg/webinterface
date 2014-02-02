@@ -78,7 +78,7 @@ function redirect($target)
 function my_server_id()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT server FROM system.useraccounts WHERE uid={$uid}");
+  $result = db_query("SELECT server FROM system.useraccounts WHERE uid=?", array($uid));
   $r = $result->fetch();
   DEBUG($r);
   return $r['server'];
@@ -88,7 +88,7 @@ function my_server_id()
 function additional_servers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT server FROM system.user_server WHERE uid={$uid}");
+  $result = db_query("SELECT server FROM system.user_server WHERE uid=?", array($uid));
   $servers = array();
   while ($s = $result->fetch())
     $servers[] = $s['server'];

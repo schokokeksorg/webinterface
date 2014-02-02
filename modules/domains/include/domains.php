@@ -25,7 +25,7 @@ function mailman_subdomains($domain)
     return array();
   }
   $domain = (int) $domain;
-  $result = db_query("SELECT id, hostname FROM mail.mailman_domains WHERE domain={$domain}");
+  $result = db_query("SELECT id, hostname FROM mail.mailman_domains WHERE domain=?", array($domain));
   $ret = array();
   while ($line = $result->fetch())
   {
@@ -39,7 +39,7 @@ function dns_in_use($domain)
   if ( ! in_array('dns', config('modules')))
     return false;
   $domain = (int) $domain;
-  $result = db_query("SELECT id FROM dns.custom_records WHERE domain={$domain}");
+  $result = db_query("SELECT id FROM dns.custom_records WHERE domain=?", array($domain));
   return ($result->rowCount() > 0);
 }
 
@@ -51,16 +51,16 @@ function mail_in_use($domain)
     return false;
   }
   $domain = (int) $domain;
-  $result = db_query("SELECT mail FROM kundendaten.domains WHERE id={$domain}");
+  $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", array($domain));
   if ($result->rowCount() < 1)
     system_failure("Domain not found");
   $d = $result->fetch();
   if ($d['mail'] == 'none')
     return false; // manually disabled
-  $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain={$domain}");
+  $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain=?", array($domain));
   if ($result->rowCount() < 1)
     return true; // .courier
-  $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain={$domain}");
+  $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain=?", array($domain));
   return ($result->rowCount() > 0);
 }
 
@@ -71,12 +71,12 @@ function web_in_use($domain)
 
   $domain = (int) $domain;
 
-  $result = db_query("SELECT id FROM kundendaten.domains WHERE id={$domain} AND webserver=1");
+  $result = db_query("SELECT id FROM kundendaten.domains WHERE id=? AND webserver=1", array($domain));
   if ($result->rowCount() < 1)
     return false;
 
-  $result = db_query("SELECT id FROM vhosts.vhost WHERE domain={$domain}");
-  $result2 = db_query("SELECT id FROM vhosts.alias WHERE domain={$domain}");
+  $result = db_query("SELECT id FROM vhosts.vhost WHERE domain=?", array($domain));
+  $result2 = db_query("SELECT id FROM vhosts.alias WHERE domain=?", array($domain));
   return ($result->rowCount() > 0 || $result2->rowCount() > 0);
 }
 
