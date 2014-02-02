@@ -376,7 +376,7 @@ function save_vmail_account($account)
     $forward_query = "INSERT INTO mail.vmail_forward (account,spamfilter,destination) VALUES (:account, :spamfilter, :destination)";
     for ($i=0;$i < count($account['forwards']); $i++)
     { 
-      db_query($forward_query, array(":id" => $id, ":spamfilter" => $account['forwards'][$i]['spamfilter'], ":destination" => $account['forwards'][$i]['destination']));
+      db_query($forward_query, array(":account" => $id, ":spamfilter" => $account['forwards'][$i]['spamfilter'], ":destination" => $account['forwards'][$i]['destination']));
     }
   }
   if ($newaccount && $password != 'NULL')
