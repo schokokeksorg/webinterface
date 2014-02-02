@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('class/database.php');
 require_once('inc/debug.php');
 
-function config($key)
+function config($key, $localonly = false)
 {
   global $config;
 
@@ -35,6 +35,10 @@ function config($key)
   if (array_key_exists($key, $config))
     return $config[$key];
   
+  if ($localonly) {
+    return NULL;
+  }  
+
   /* read configuration from database */
   $result = db_query( "SELECT `key`, value FROM misc.config" );
   
