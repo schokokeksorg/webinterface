@@ -63,12 +63,12 @@ if ($_GET['action'] == 'edit')
       $docroot = $vhost['homedir'].'/websites/'.$_POST['docroot'];
     }
     if ((isset($_POST['use_default_docroot']) && $_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
-      $docroot = '';
+      $docroot = NULL;
     }
   
     DEBUG("Document-Root: ".$docroot);
   }
-  $php = '';
+  $php = NULL;
   if ($_POST['vhost_type'] == 'regular' && isset($_POST['php']))
   {
     switch ($_POST['php']) {
@@ -125,7 +125,7 @@ if ($_GET['action'] == 'edit')
   }
 
   
-  $ssl = '';
+  $ssl = NULL;
   switch ($_POST['ssl']) {
     case 'http':
       $ssl = 'http';

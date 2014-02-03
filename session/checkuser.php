@@ -32,7 +32,6 @@ define('ROLE_SUBUSER', 32);
 
 function find_role($login, $password, $i_am_admin = False)
 {
-  $login = db_escape_string($login);
   // Domain-Admin?  <not implemented>
   // System-User?
   $uid = (int) $login;
