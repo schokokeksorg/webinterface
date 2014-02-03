@@ -35,9 +35,8 @@ function do_ajax_cert_login() {
 
 function get_logins_by_cert($cert) 
 {
-	$cert = db_escape_string(str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert));
-	$query = "SELECT type,username,startpage FROM system.clientcert WHERE cert='{$cert}'";
-	$result = db_query($query);
+	$cert = str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert);
+	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=?", array($cert));
 	if ($result->rowCount() < 1)
 		return NULL;
 	else {
@@ -54,8 +53,7 @@ function get_cert_by_id($id)
   $id = (int) $id;
 	if ($id == 0)
 	  system_failure('no ID');
-	$query = "SELECT id,dn,issuer,cert,username,startpage FROM system.clientcert WHERE `id`='{$id}' LIMIT 1";
-	$result = db_query($query);
+	$result = db_query("SELECT id,dn,issuer,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
 	if ($result->rowCount() < 1)
 		return NULL;
 	$ret = $result->fetch();
@@ -66,11 +64,9 @@ function get_cert_by_id($id)
 
 function get_certs_by_username($username) 
 {
-	$username = db_escape_string($username);
 	if ($username == '')
 	  system_failure('empty username');
-	$query = "SELECT id,dn,issuer,cert,startpage FROM system.clientcert WHERE `username`='{$username}'";
-	$result = db_query($query);
+	$result = db_query("SELECT id,dn,issuer,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
 	if ($result->rowCount() < 1)
 		return NULL;
 	while ($row = $result->fetch()) {
@@ -86,33 +82,34 @@ function add_clientcert($certdata, $dn, $issuer, $startpage='')
   $username = NULL;
   if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $type = 'user';
-    $username = db_escape_string($_SESSION['userinfo']['username']);
+    $username = $_SESSION['userinfo']['username'];
     if (isset($_SESSION['subuser'])) {
-      $username = db_escape_string($_SESSION['subuser']);
+      $username = $_SESSION['subuser'];
       $type = 'subuser';
     }
   } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $type = 'email';
-    $username = db_escape_string($_SESSION['mailaccount']);
+    $username = $_SESSION['mailaccount'];
   }
   if (! $type || ! $username) {
     system_failure('cannot get type or username of login');
   }
-  $certdata = db_escape_string($certdata);
-  $dn = maybe_null(db_escape_string($dn));
-  $issuer = maybe_null(db_escape_string($issuer));
   if ($startpage &&  ! check_path($startpage))
     system_failure('Startseite kaputt');
-  $startpage = maybe_null(db_escape_string($startpage));
 
   if ($certdata == '')
     system_failure('Kein Zertifikat');
-  DEBUG($certdata);
-  DEBUG($dn);
-  DEBUG($issuer);
+
+  $args = array(":dn" => $dn,
+                ":issuer" => $issuer,
+                ":certdata" => $certdata,
+                ":type" => $type,
+                ":username" => $username,
+                ":startpage" => $startpage);
+  DEBUG($args);
 
   db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `cert`, `type`, `username`, `startpage`) 
-VALUES ({$dn}, {$issuer}, '{$certdata}', '{$type}', '{$username}', {$startpage})");
+VALUES (:dn, :issuer, :certdata, :type, :username, :startpage)", $args);
 
 }
 
@@ -124,18 +121,19 @@ function delete_clientcert($id)
   $username = NULL;
   if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $type = 'user';
-    $username = db_escape_string($_SESSION['userinfo']['username']);
+    $username = $_SESSION['userinfo']['username'];
     if (isset($_SESSION['subuser'])) {
-      $username = db_escape_string($_SESSION['subuser']);
+      $username = $_SESSION['subuser'];
       $type = 'subuser';
     }
   } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     $type = 'email';
-    $username = db_escape_string($_SESSION['mailaccount']);
+    $username = $_SESSION['mailaccount'];
   }
   if (! $type || ! $username) {
     system_failure('cannot get type or username of login');
   }
-  db_query("DELETE FROM system.clientcert WHERE id={$id} AND type='{$type}' AND username='{$username}' LIMIT 1");
+  db_query("DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username", 
+           array(":id" => $id, ":type" => $type, ":username" => $username));
 }
 

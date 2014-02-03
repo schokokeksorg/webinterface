@@ -36,9 +36,9 @@ function get_domain_offer($domainname)
 
   $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
 
-  $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde={$cid} AND tld='{$tld}' AND ruecksprache='N'");
+  $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
   if ($result->rowCount() != 1) {
-    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld='{$tld}' AND ruecksprache='N'");
+    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
   }
   if ($result->rowCount() != 1) {
     warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
@@ -81,16 +81,23 @@ function register_domain($domainname, $uid)
     system_failure('Kein User gesetzt');
   }
 
-  db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail, provider, betrag, brutto) VALUES ({$cid}, {$useraccount}, '{$data['basename']}', '{$data['tld']}', 'regular', NULL, 1, 1, 'auto', 'terions', {$data['gebuehr']}, 1) ");
+  $args = array(":cid" => $cid,
+                ":useraccount" => $useraccount,
+                ":basename" => $data['basename'],
+                ":tld" => $data['tld'],
+                ":gebuehr" => $data['gebuehr']);
+  db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail, provider, betrag, brutto) VALUES ".
+           "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto', 'terions', :gebuehr, 1) ", $args);
   if ($data['setup']) {
-    db_query("INSERT INTO kundendaten.leistungen (kunde,periodisch,datum,betrag,brutto,beschreibung,anzahl) VALUES ({$cid}, 0, CURDATE(), {$data['setup']}, 1, 'Einmalige Setup-Gebühren für Domain \"{$data['domainname']}\"', 1)");
+    $args = array(":cid" => $cid, ":setup" => $data['setup'], ":text" => 'Einmalige Setup-Gebühren für Domain "'.$data['domainname'].'"');
+    db_query("INSERT INTO kundendaten.leistungen (kunde,periodisch,datum,betrag,brutto,beschreibung,anzahl) VALUES (:cid, 0, CURDATE(), :setup, 1, :text, 1)", $args);
   }
 }
 
 function list_useraccounts()
 {
   $customerno = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde={$customerno}");
+  $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde=?", array($customerno));
   $ret = array();
   while ($item = $result->fetch())
   {

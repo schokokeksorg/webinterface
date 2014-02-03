@@ -27,12 +27,13 @@ $uid = (int) $_SESSION['userinfo']['uid'];
 
 if (isset($_POST['freq']) && in_array($_POST['freq'],array("day","week","month"))) {
   check_form_token('freewvs_freq'); 
-	db_query("REPLACE INTO qatools.freewvs (user,freq) VALUES ({$uid},'{$_POST['freq']}');");
+  $args = array(":uid" => $uid, ":freq" => $_POST['freq']);
+	db_query("REPLACE INTO qatools.freewvs (user,freq) VALUES (:uid,:freq)", $args);
 	header("Location: freewvs");
 	die();
 }
 
-$result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid={$uid};");
+$result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid=?", array($uid));
 $result=$result->fetch();
 $freq=$result['freq'];
 

@@ -197,13 +197,6 @@ function refresh_cert($id, $info, $cert, $key = NULL)
 
   $id = (int) $id;
   $oldcert = cert_details($id);
-  $cert = db_escape_string($cert);
-  $subject = db_escape_string(filter_input_general($info['subject']));
-  $cn = db_escape_string(filter_input_general($info['cn']));
-  
-  $valid_from = db_escape_string($info['valid_from']);
-  $valid_until = db_escape_string($info['valid_until']);
-
   $args = array(":subject" => filter_input_general($info['subject']),
                 ":cn" => filter_input_general($info['cn']),
                 ":cert" => $cert,
@@ -307,7 +300,6 @@ function save_csr($cn, $bits, $replace=NULL)
   list($csr, $key) = create_csr($cn, $bits);
   
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $cn = db_escape_string(filter_input_hostname($cn, true));
   db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :bits, :replace, :csr, :key)",
            array(":uid" => $uid, ":cn" => filter_input_hostname($cn, true), ":bits" => $bits, 
                  ":replace" => $replace, ":csr" => $csr, ":key" => $key));

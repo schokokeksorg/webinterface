@@ -175,7 +175,6 @@ function get_lastschrift($rechnungsnummer) {
 
 function get_lastschriften($mandatsreferenz)
 {
-  $mandatsreferenz = db_escape_string($mandatsreferenz);
   $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum FROM kundendaten.sepalastschrift WHERE mandatsreferenz=? ORDER BY buchungsdatum DESC", array($mandatsreferenz));
   $ret = array();
   while ($item = $result->fetch()) {
@@ -198,8 +197,7 @@ function get_sepamandate()
 
 function yesterday($date) 
 {
-  $date = db_escape_string($date);
-  $result = db_query("SELECT '{$date}' - INTERVAL 1 DAY");
+  $result = db_query("SELECT ? - INTERVAL 1 DAY", array($date));
   return $result->fetch()[0];
 }
 

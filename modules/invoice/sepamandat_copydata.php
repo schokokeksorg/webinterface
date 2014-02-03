@@ -21,7 +21,7 @@ require_once('invoice.php');
 
 $kundenname = $_SESSION['customerinfo']['name'];
 $id = (int) $_SESSION['customerinfo']['customerno'];
-$result = db_query("SELECT CONCAT(adresse, '\\\\n', plz, ' ', ort) AS adresse FROM kundendaten.kunden WHERE id={$id}");
+$result = db_query("SELECT CONCAT(adresse, '\\\\n', plz, ' ', ort) AS adresse FROM kundendaten.kunden WHERE id=?", array($id));
 $r = $result->fetch();
 
 header("Content-Type: text/javascript");

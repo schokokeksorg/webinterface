@@ -70,10 +70,10 @@ else
   
   $record['hostname'] = $_REQUEST['hostname'];
   $record['domain'] = (int) $_REQUEST['domain'];
-  $record['ip'] = (isset($_REQUEST['ip']) ? $_REQUEST['ip'] : '');
-  $record['data'] = $_REQUEST['data'];
-  $record['dyndns'] = (isset($_REQUEST['dyndns']) ? (int) $_REQUEST['dyndns'] : '');
-  $record['spec'] = (isset($_REQUEST['spec']) ? (int) $_REQUEST['spec'] : '');
+  $record['ip'] = (isset($_REQUEST['ip']) ? $_REQUEST['ip'] : NULL);
+  $record['data'] = (isset($_REQUEST['data']) ? $_REQUEST['data'] : NULL);
+  $record['dyndns'] = (isset($_REQUEST['dyndns']) ? (int) $_REQUEST['dyndns'] : NULL);
+  $record['spec'] = (isset($_REQUEST['spec']) ? (int) $_REQUEST['spec'] : NULL);
   $record['ttl'] = (int) $_REQUEST['ttl'];
   
   save_dns_record($id, $record);

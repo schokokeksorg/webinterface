@@ -62,6 +62,10 @@ class DB extends PDO {
 */
 function db_escape_string($string)
 {
+  if (config("enable_debug")) {
+    $backtrace = debug_backtrace();
+    warning("call to db_escape_string() in {$backtrace[1]['file']} line {$backtrace[1]['line']}");
+  }
   global $_db;
   __ensure_connected();
   $quoted = $_db->quote($string);

@@ -112,6 +112,10 @@ function server_names()
 // Diese Funktion funktioniert nicht für preprared statements
 function maybe_null($value)
 {
+  if (config("enable_debug")) {
+    $backtrace = debug_backtrace();
+    warning("call to maybe_null() in {$backtrace[1]['file']} line {$backtrace[1]['line']}");
+  }
   if ($value == NULL)
     return 'NULL';
 
@@ -131,19 +135,19 @@ function logger($severity, $scriptname, $scope, $message)
   if (config('logging') <= $severity)
     return;
 
-  $user = 'NULL';
+  $user = NULL;
   if ($_SESSION['role'] & ROLE_SYSTEMUSER)
-    $user = "'{$_SESSION['userinfo']['username']}'";
+    $user = $_SESSION['userinfo']['username'];
   elseif ($_SESSION['role'] & ROLE_CUSTOMER)
-    $user = "'{$_SESSION['customerinfo']['customerno']}'";
+    $user = $_SESSION['customerinfo']['customerno'];
   
-  $remote = db_escape_string($_SERVER['REMOTE_ADDR']);
+  $args = array(":user" => $user,
+                ":remote" => $_SERVER['REMOTE_ADDR'],
+                ":scriptname" => $scriptname,
+                ":scope" => $scope,
+                ":message" => $message);
 
-  $scriptname = db_escape_string($scriptname);
-  $scope = db_escape_string($scope);
-  $message = db_escape_string($message);
-
-  db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES ('{$remote}', {$user}, '{$scriptname}', '{$scope}', '{$message}');");
+  db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES (:remote, :user, :scriptname, :scope, :message)", $args);
 }
 
 function html_header($arg)

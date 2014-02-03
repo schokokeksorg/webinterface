@@ -45,22 +45,23 @@ function list_customers()
 
 function find_customers($string) 
 {
-  $string = db_escape_string(chop($string));
+  $args = array(":string" => '%'.chop($string).'%', ":number" => $string);
   $return = array();
   $result = db_query("SELECT k.id FROM kundendaten.kunden AS k LEFT JOIN system.useraccounts AS u ON (k.id=u.kunde) WHERE ".
-                     "firma LIKE '%{$string}%' OR firma2 LIKE '%{$string}%' OR ".
-                     "nachname LIKE '%{$string}%' OR vorname LIKE '%{$string}%' OR ".
-                     "adresse LIKE '%{$string}%' OR adresse2 LIKE '%{$string}%' OR ".
-                     "ort LIKE '%{$string}%' OR pgp_id LIKE '%{$string}%' OR ".
-                     "notizen LIKE '%{$string}%' OR email_rechnung LIKE '%{$string}%' OR ".
-                     "email LIKE '%{$string}%' OR email_extern LIKE '%{$string}%' OR u.name LIKE '%{$string}%' OR ".
-                     "u.username LIKE '%{$string}%' OR k.id='{$string}' OR u.uid='{$string}';");
+                     "firma LIKE :string OR firma2 LIKE :string OR ".
+                     "nachname LIKE :string OR vorname LIKE :string OR ".
+                     "adresse LIKE :string OR adresse2 LIKE :string OR ".
+                     "ort LIKE :string OR pgp_id LIKE :string OR ".
+                     "notizen LIKE :string OR email_rechnung LIKE :string OR ".
+                     "email LIKE :string OR email_extern LIKE :string OR u.name LIKE :string OR ".
+                     "u.username LIKE :string OR k.id=:number OR u.uid=:number", $args);
   while ($entry = $result->fetch())
     $return[] = $entry['id'];
 
+  unset($args[':number']);
   $result = db_query("SELECT kunde FROM kundendaten.domains WHERE kunde IS NOT NULL AND (
-                      domainname LIKE '%{$string}%' OR CONCAT_WS('.', domainname, tld) LIKE '%{$string}%'
-                      )");
+                      domainname LIKE :string OR CONCAT_WS('.', domainname, tld) LIKE :string
+                      )", $args);
 
   while ($entry = $result->fetch())
     $return[] = $entry['kunde'];
@@ -74,7 +75,7 @@ function find_users_for_customer($id)
   $id = (int) $id;
   $return = array();
   $result = db_query("SELECT uid, username, name FROM system.useraccounts WHERE ".
-                     "kunde='{$id}';");
+                     "kunde=?", array($id));
   while ($entry = $result->fetch())
     $return[] = $entry;
 

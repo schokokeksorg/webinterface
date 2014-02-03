@@ -19,7 +19,7 @@ require_once("inc/security.php");
 require_once("inc/base.php");
 
 
-if ($_POST['newsletter'] == 'no' || $_POST['recipient'] == "") {
+if ((isset($_REQUEST['newsletter']) && $_REQUEST['newsletter'] == 'no') || (isset($_REQUEST['recipient']) && $_REQUEST['recipient'] == "")) {
   $sure = user_is_sure();
   if ($sure === NULL)
   {
@@ -39,10 +39,10 @@ if ($_POST['newsletter'] == 'no' || $_POST['recipient'] == "") {
   }
 } else {
   check_form_token('newsletter');
-  if (! check_emailaddr($_POST['recipient']) || filter_input_general($_POST['recipient']) != $_POST['recipient']) {
+  if (! check_emailaddr($_REQUEST['recipient']) || filter_input_general($_REQUEST['recipient']) != $_REQUEST['recipient']) {
     system_failure("Keine gültige E-Mail-Adresse!");
   }
-  set_newsletter_address($_POST['recipient']);
+  set_newsletter_address($_REQUEST['recipient']);
   if (! $debugmode)
     header('Location: newsletter');
 }
