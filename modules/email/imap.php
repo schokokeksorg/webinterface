@@ -71,8 +71,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save')
     $error = check_valid($acc);
     if ($error != "")
     {
-      input_error($error);
-      output("");
+      system_failure($error);
     }
     else
     {

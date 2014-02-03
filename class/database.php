@@ -39,6 +39,13 @@ class DB extends PDO {
   */
   function query($stmt, $params = NULL) {
     if (is_array($params)) {
+      if (config("enable_debug")) {
+        foreach (array_values($params) as $p) {
+          if ($p === '') {
+            warning("Potential bug, empty string found in database parameters");
+          }
+        }
+      }
       $response = parent::prepare($stmt);
       $response->execute($params);
       return $response;

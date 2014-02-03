@@ -16,8 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 function account_has_totp($username)
 {
-  $username = db_escape_string($username);
-  $result = db_query("SELECT id FROM mail.webmail_totp WHERE email='{$username}'");
+  $result = db_query("SELECT id FROM mail.webmail_totp WHERE email=?", array($username));
   if ($result->rowCount() > 0) {
     $tmp = $result->fetch();
     $id = $tmp['id'];
@@ -31,8 +30,8 @@ function account_has_totp($username)
 
 function validate_password($username, $password) 
 {
-  $username = db_escape_string($username);
-  $result = db_query("SELECT account, cryptpass FROM mail.courier_mailaccounts WHERE account='{$username}' UNION SELECT account, cryptpass FROM mail.courier_virtual_accounts WHERE account='{$username}'");
+  $args[":username"] = $username;
+  $result = db_query("SELECT account, cryptpass FROM mail.courier_mailaccounts WHERE account=:username UNION SELECT account, cryptpass FROM mail.courier_virtual_accounts WHERE account=:username", $args);
   if ($result->rowCount() != 1) {
     // Kein Account mit dem Namen oder Name nicht eindeutig
     return false;
@@ -58,12 +57,12 @@ function store_webmail_password($username, $oldpw, $newpw)
   for ($i = 0 ; $i != strlen($oldpw) ; $i++) {
     $code .= chr( ord($oldpw[$i]) ^ ord($secret[$i]) );
   }
-  $code = base64_encode($code);
-  DEBUG(array($oldpw, $newpw, $code));
+  DEBUG(array($oldpw, $newpw));
+  $args = array(":uid" => $_SESSION['userinfo']['uid'],
+                ":username" => $username,
+                ":code" => base64_encode($code));
 
-  $uid = (int) $_SESSION['userinfo']['uid'];
-
-  db_query("REPLACE INTO mail.webmail_totp (useraccount, email, webmailpass) VALUES ({$uid}, '{$username}', '{$code}')");
+  db_query("REPLACE INTO mail.webmail_totp (useraccount, email, webmailpass) VALUES (:uid, :username, :code)", $args);
 }
 
 
@@ -87,8 +86,7 @@ function decode_webmail_password($crypted, $webmailpw)
 
 
 function get_imap_password($username, $webmailpass) {
-  $username = db_escape_string($username);
-  $result = db_query("SELECT webmailpass FROM mail.webmail_totp WHERE email='{$username}'");
+  $result = db_query("SELECT webmailpass FROM mail.webmail_totp WHERE email=?", array($username));
   $tmp = $result->fetch();
   
   $crypted = $tmp['webmailpass'];
@@ -107,21 +105,20 @@ function check_webmail_password($username, $webmailpass)
 
 function generate_secret($username)
 {
-  $username = db_escape_string($username);
   require_once('external/googleauthenticator/GoogleAuthenticator.php');
   $ga = new PHPGangsta_GoogleAuthenticator();
   
   $secret = $ga->createSecret();
   DEBUG('GA-Secret: '.$secret);
   DEBUG('QrCode: '.$ga->getQRCodeGoogleUrl('Blog', $secret));
-  db_query("UPDATE mail.webmail_totp SET totp_secret='{$secret}' WHERE email='{$username}'");
+  $args = array(":secret" => $secret, ":username" => $username);
+  db_query("UPDATE mail.webmail_totp SET totp_secret=:secret WHERE email=:username", $args);
   return $secret;
 }
 
 function check_locked($username) 
 {
-  $username = db_escape_string($username);
-  $result = db_query("SELECT 1 FROM mail.webmail_totp WHERE unlock_timestamp IS NOT NULL and unlock_timestamp > NOW() AND email='{$username}'");
+  $result = db_query("SELECT 1 FROM mail.webmail_totp WHERE unlock_timestamp IS NOT NULL and unlock_timestamp > NOW() AND email=?", array($username));
   return ($result->rowCount() > 0);
 }
 
@@ -131,9 +128,7 @@ function check_totp($username, $code) {
     return false;
   }
 
-  $username = db_escape_string($username);
-
-  $result = db_query("SELECT totp_secret, failures FROM mail.webmail_totp WHERE email='{$username}' AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())");
+  $result = db_query("SELECT totp_secret, failures FROM mail.webmail_totp WHERE email=? AND (unlock_timestamp IS NULL OR unlock_timestamp <= NOW())", array($username));
   $tmp = $result->fetch();
   $secret = $tmp['totp_secret'];
 
@@ -147,9 +142,9 @@ function check_totp($username, $code) {
     DEBUG('OK');
   } else {
     if ($tmp['failures'] > 0 && $tmp['failures'] % 5 == 0) {
-      db_query("UPDATE mail.webmail_totp SET failures = failures+1, unlock_timestamp = NOW() + INTERVAL 5 MINUTE WHERE email='{$username}'");
+      db_query("UPDATE mail.webmail_totp SET failures = failures+1, unlock_timestamp = NOW() + INTERVAL 5 MINUTE WHERE email=?", array($username));
     } else {
-      db_query("UPDATE mail.webmail_totp SET failures = failures+1 WHERE email='{$username}'");
+      db_query("UPDATE mail.webmail_totp SET failures = failures+1 WHERE email=?", array($username));
     }
     
     DEBUG('FAILED');
@@ -194,9 +189,9 @@ function generate_qrcode_image($secret) {
 
 function accountname($id) 
 {
-  $id = (int) $id;
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT email FROM mail.webmail_totp WHERE id={$id} AND useraccount={$uid}");
+  $args = array(":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid']);
+  $result = db_query("SELECT email FROM mail.webmail_totp WHERE id=:id AND useraccount=:uid", $args);
   if ($tmp = $result->fetch()) {
     return $tmp['email'];
   }
@@ -205,26 +200,24 @@ function accountname($id)
 
 function delete_totp($id) 
 {
-  $id = (int) $id;
-  $uid = (int) $_SESSION['userinfo']['uid'];
+  $args = array(":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid']);
   
-  db_query("DELETE FROM mail.webmail_totp WHERE id={$id} AND useraccount={$uid}");
+  db_query("DELETE FROM mail.webmail_totp WHERE id=:id AND useraccount=:uid", $args);
 }
 
 
 function blacklist_token($email, $token)
 {
-  $email = db_escape_string($email);
-  $token = db_escape_string($token);
-  db_query("INSERT INTO mail.webmail_totp_blacklist (timestamp, email, token) VALUES (NOW(), '{$email}', '{$token}')");
+  $args = array(":email" => $email, ":token" => $token);
+  db_query("INSERT INTO mail.webmail_totp_blacklist (timestamp, email, token) VALUES (NOW(), :email, :token)", $args);
 }
 
 function check_blacklist($email, $token)
 {
-  $email = db_escape_string($email);
-  $token = db_escape_string($token);
+  $args = array(":email" => $email, ":token" => $token);
   db_query("DELETE FROM mail.webmail_totp_blacklist WHERE timestamp < NOW() - INTERVAL 10 MINUTE");
-  $result = db_query("SELECT id FROM mail.webmail_totp_blacklist WHERE email='{$email}' AND token='{$token}'");
+  $result = db_query("SELECT id FROM mail.webmail_totp_blacklist WHERE email=:email AND token=:token", $args);
   return ($result->rowCount() > 0);
 }
 

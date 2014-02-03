@@ -22,7 +22,7 @@ require_once('inc/security.php');
 function get_lists()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner={$uid};");
+  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=?", array($uid));
   $ret = array();
   while ($list = $result->fetch())
     $ret[] = $list;
@@ -33,9 +33,9 @@ function get_lists()
 
 function get_list($id)
 {
-  $id = (int) $id;
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner={$uid} AND id={$id};");
+  $args = array(":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid']);
+  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
   if ($result->rowCount() < 1)
     system_failure('Die gewünschte Mailingliste konnte nicht gefunden werden');
   $list = $result->fetch();
@@ -47,26 +47,28 @@ function get_list($id)
 
 function delete_list($id)
 {
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $id = (int) $id;
-  db_query("UPDATE mail.mailman_lists SET status='delete' WHERE owner={$uid} AND id={$id};");
+  $args = array(":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid']);
+  db_query("UPDATE mail.mailman_lists SET status='delete' WHERE owner=:uid AND id=:id", $args);
 }
 
 
 function create_list($listname, $maildomain, $admin)
 {
   verify_input_username($listname);
-  $maildomain = maybe_null( (int) $maildomain );
-  $owner = (int) $_SESSION['userinfo']['uid'];
   verify_input_general($admin);
   if (! check_emailaddr($admin))
     system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
-  $admin = db_escape_string($admin);
-  $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname='{$listname}'");
+  $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname=?", array($listname));
   if ($result->rowCount() > 0)
     system_failure('Eine Liste mit diesem Namen existiert bereits (unter dieser oder einer anderen Domain). Jeder Listenname kann nur einmal verwendet werden.');
 
-  db_query("INSERT INTO mail.mailman_lists (status, listname, maildomain, owner, admin) VALUES ('pending', '{$listname}', {$maildomain}, {$owner}, '{$admin}');");
+  $args = array(":listname" => $listname,
+                ":maildomain" => $maildomain,
+                ":owner" => $_SESSION['userinfo']['uid'],
+                ":admin" => $admin);
+
+  db_query("INSERT INTO mail.mailman_lists (status, listname, maildomain, owner, admin) VALUES ('pending', :listname, :maildomain, :owner, :admin)", $args);
   DEBUG('Neue ID: '.db_insert_id());
 }
 
@@ -74,7 +76,7 @@ function create_list($listname, $maildomain, $admin)
 function get_mailman_domains()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT md.id, md.fqdn FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user={$uid}");
+  $result = db_query("SELECT md.id, md.fqdn FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user=?", array($uid));
   $ret = array();
   while ($dom = $result->fetch())
     $ret[] = $dom;

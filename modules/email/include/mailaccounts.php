@@ -77,9 +77,9 @@ function change_mailaccount($id, $arr)
   if (isset($arr['mailbox'])) {
     array_push($conditions, "`maildir`=:maildir");
     if ($arr['mailbox'] == '')
-      $values[":mailbox"] = NULL;
+      $values[":maildir"] = NULL;
     else
-      $values[":mailbox"] = $arr['mailbox'];
+      $values[":maildir"] = $arr['mailbox'];
   }
 
   if (isset($arr['password']))
@@ -131,7 +131,7 @@ function create_mailaccount($arr)
     if ($arr['mailbox'] == '')
       $values[':maildir'] = NULL;
     else
-      $values[':maildir']= $arr['mailbox'];
+      $values[':maildir'] = $arr['mailbox'];
 
 
   if (isset($arr['password']))
