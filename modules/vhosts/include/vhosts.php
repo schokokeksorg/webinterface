@@ -72,7 +72,7 @@ function ipv6_possible($server)
 function empty_vhost()
 {
   $vhost['id'] = NULL;
-  $vhost['hostname'] = '';
+  $vhost['hostname'] = NULL;
   
   $vhost['domain_id'] = -1;
   $vhost['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
@@ -105,12 +105,12 @@ function empty_vhost()
 
 function empty_alias()
 {
-  $alias['hostname'] = '';
+  $alias['hostname'] = NULL;
   
   $alias['domain_id'] = -1;
   $alias['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
   
-  $alias['options'] = '';
+  $alias['options'] = NULL;
   return $alias;
 }
 
@@ -183,12 +183,12 @@ function get_all_aliases($vhost)
   $aliases = get_aliases($vhost['id']);
   $ret = array();
   if (strstr($vhost['options'], 'aliaswww')) {
-    array_push($ret, array('id' => 'www', 'fqdn' => 'www.'.$vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : '')));
+    array_push($ret, array('id' => 'www', 'fqdn' => 'www.'.$vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : NULL)));
   }
   foreach ($aliases as $item) {
     array_push($ret, $item);
     if (strstr($item['options'], 'aliaswww')) {
-      array_push($ret, array('id' => 'www_'.$item['id'], 'fqdn' => 'www.'.$item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : '')));
+      array_push($ret, array('id' => 'www_'.$item['id'], 'fqdn' => 'www.'.$item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : NULL)));
     }
   }
   return $ret;
