@@ -29,7 +29,6 @@ function load_results()
 }
 
 function get_upgradeinstructions($appname) {
-  $appname = db_escape_string($appname);
   $result = db_query("SELECT url FROM qatools.freewvs_upgradeinstructions WHERE appname=?", array($appname));
   if ($result->rowCount() > 0) {
     $tmp = $result->fetch();

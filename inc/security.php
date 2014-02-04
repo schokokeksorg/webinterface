@@ -63,6 +63,9 @@ function strong_password($password)
 
 function filter_input_general( $input )
 {
+  if ($input === NULL) {
+    return NULL;
+  }
   return htmlspecialchars(iconv('UTF-8', 'UTF-8', $input), ENT_QUOTES, 'UTF-8');
 }
 
