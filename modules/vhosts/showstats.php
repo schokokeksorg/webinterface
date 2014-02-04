@@ -67,8 +67,8 @@ if ( is_file($file) )
   // NOWRAP rewriten
   $html = preg_replace('/NOWRAP/', 'nowrap="nowrap"', $html);
   // lowercase tag names and keys
-  $html = preg_replace('/(<[^ ]+ )/e', "strtolower('$1')", $html);
-  $html = preg_replace('/( [A-Z]+=)/e', "strtolower('$1')", $html);
+  $html = preg_replace_callback('/(<[^ >]+[ >])/', function ($s) { return strtolower($s[0]); }, $html);
+  $html = preg_replace_callback('/( [A-Z]+=)/', function ($s) { return strtolower($s[0]); }, $html);
   // xml-values mit anführungszeichen
   $html = preg_replace('/=([-0-9a-zA-Z]+)([ >])/', '="$1"$2', $html);
   // Bilder rewriten
