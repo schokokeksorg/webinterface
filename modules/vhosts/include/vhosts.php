@@ -337,13 +337,11 @@ function save_vhost($vhost)
     }
   }
 
-  $cert = 0;
+  $cert = NULL;
   $certs = user_certs();
   foreach ($certs as $c)
     if ($c['id'] == $vhost['cert'])
       $cert = $c['id'];
-  if ($cert == 0)
-    $cert = NULL;
 
   $ipv4 = NULL;
   $ipv4_avail = user_ipaddrs();
@@ -357,7 +355,7 @@ function save_vhost($vhost)
     $autoipv6 = $vhost['autoipv6'];
   }
 
-  $args = array(":hostname" => $hostname,
+  $args = array(":hostname" => ($hostname ? $hostname : NULL),
                 ":domain" => $domain,
                 ":docroot" => $vhost['docroot'],
                 ":php" => $vhost['php'],
@@ -366,13 +364,13 @@ function save_vhost($vhost)
                 ":hsts" => $hsts,
                 ":suexec_user" => $suexec_user,
                 ":server" => $server,
-                ":logtype" => $vhost['logtype'],
+                ":logtype" => ($vhost['logtype'] ? $vhost['logtype'] : NULL),
                 ":errorlog" => (int) $vhost['errorlog'],
                 ":cert" => $cert,
                 ":ipv4" => $ipv4,
                 ":autoipv6" => $autoipv6,
-                ":options" => $vhost['options'],
-                ":stats" => $vhost['stats'],
+                ":options" => ($vhost['options'] ? $vhost['options'] : NULL),
+                ":stats" => ($vhost['stats'] ? $vhost['stats'] : NULL),
                 ":id" => $id);
   if ($id != 0) {
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
