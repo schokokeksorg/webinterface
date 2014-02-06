@@ -21,6 +21,32 @@ require_once('hasdomain.php');
 
 require_once('common.php');
 
+
+$forced_spamfilter_domains = array(
+  't-online.de', 'gmx.de', 'gmx.net', 'web.de', 'gmail.com', 'googlemail.com',
+  'gmail.com', 'googlemail.de', 'freenet.de', 'aol.com', 'yahoo.com'
+  );
+
+
+function forward_spamfilter_options($target) {
+  global $forced_spamfilter_domains;
+  list($l, $d) = explode('@', $target, 2);
+  DEBUG('Weiterleitung an '.$l.' @ '.$d);
+  if (in_array($d, $forced_spamfilter_domains)) {
+    // Domain in der Liste => Spam darf nicht weiter geleitet werden
+    return array(array('delete'), 'delete');
+  }
+  $result = db_query("SELECT id FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld) = ?", array($d));
+  if ($result->rowCount() > 0) {
+    // Lokale Domain
+    return array(array('none', 'tag', 'delete'), 'none');
+  }  
+  // Auswärtige Domain aber keine aus der Liste
+  return array(array('none', 'tag', 'delete'), 'delete');
+}
+
+
+
 function empty_account()
 {
 	$account = array(
@@ -244,11 +270,13 @@ function save_vmail_account($account)
   {
     for ($i=0;$i < count($account['forwards']); $i++)
     {
-      if ($account['forwards'][$i]['spamfilter'] != 'tag' && $account['forwards'][$i]['spamfilter'] != 'delete')
+      if ($account['forwards'][$i]['spamfilter'] != 'tag' && $account['forwards'][$i]['spamfilter'] != 'delete') {
         $account['forwards'][$i]['spamfilter'] = NULL;
+      }
       $account['forwards'][$i]['destination'] = filter_input_general($account['forwards'][$i]['destination']);
-      if (! check_emailaddr($account['forwards'][$i]['destination']))
+      if (! check_emailaddr($account['forwards'][$i]['destination'])) {
         system_failure('Das Weiterleitungs-Ziel »'.$account['forwards'][$i]['destination'].'« ist keine E-Mail-Adresse!');
+      }
     }
   }
 
@@ -377,7 +405,7 @@ function save_vmail_account($account)
       db_query($forward_query, array(":account" => $id, ":spamfilter" => $account['forwards'][$i]['spamfilter'], ":destination" => $account['forwards'][$i]['destination']));
     }
   }
-  if ($newaccount && $password != 'NULL')
+  if ($newaccount && $password)
   {
     $servername = get_server_by_id($server);
     $emailaddr = 'vmail-'.$account['local'].'%'.$domainname.'@'.$servername;
