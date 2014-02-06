@@ -23,7 +23,7 @@ require_once("inc/debug.php");
 function list_subusers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid}");
+  $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid=?", array($uid));
   $subusers = array();
   while ($item = $result->fetch())
   {
@@ -36,10 +36,9 @@ function list_subusers()
 
 
 function load_subuser($id) {
-  $id = (int) $id;
-  $uid = (int) $_SESSION['userinfo']['uid'];
+  $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
   
-  $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid={$uid} AND id={$id}");
+  $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid=:uid AND id=:id", $args);
   $item = $result->fetch();
   $item['modules'] = explode(',', $item['modules']);
   return $item;
@@ -63,23 +62,22 @@ function available_modules()
 }
 
 function delete_subuser($id) {
-  $id = (int) $id;
-  $uid = (int) $_SESSION['userinfo']['uid'];
+  $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
   
-  db_query("DELETE FROM system.subusers WHERE id={$id} AND uid={$uid}");
+  db_query("DELETE FROM system.subusers WHERE id=:id AND uid=:uid", $args);
 }
 
 function empty_subuser()
 {
-  $subuser = array("id" => NULL, "username" => $_SESSION['userinfo']['username'].'_', "modules" => array('index'));
+  $subuser = array("id" => NULL, 
+                   "username" => $_SESSION['userinfo']['username'].'_', 
+                   "modules" => array('index'));
   return $subuser;
 }
 
 function new_subuser($username, $requested_modules, $password) 
 {
-  $uid = (int) $_SESSION['userinfo']['uid'];
-
-  $username = db_escape_string(filter_input_username($username));
+  $username = filter_input_username($username);
   if (strpos($username, $_SESSION['userinfo']['username']) !== 0) {
     // Username nicht enthalten (FALSE) oder nicht am Anfang (>0)
     system_failure("Ungültiger Benutzername!");
@@ -100,15 +98,18 @@ function new_subuser($username, $requested_modules, $password)
   if (count($modules) == 0) {
     system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
   }
-  $modules = db_escape_string(implode(',', $modules));
   
   $result = strong_password($password);
   if ($result !== true) {
     system_failure("Unsicheres Passwort. Die Meldung von cracklib lautet: ".$result);
   }
-  $password = hash("sha256", $password);
 
-  db_query("INSERT INTO system.subusers (uid, username, password, modules) VALUES ({$uid}, '{$username}', '{$password}', '{$modules}')");
+  $args = array(":uid" => $_SESSION['userinfo']['uid'],
+                ":username" => $username,
+                ":password" => hash("sha256", $password),
+                ":modules" => implode(',', $modules));
+
+  db_query("INSERT INTO system.subusers (uid, username, password, modules) VALUES (:uid, :username, :password, :modules)", $args);
 }
 
 
@@ -128,7 +129,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
     system_failure("Kann diesen Account nicht finden!");
   }
 
-  $username = db_escape_string(filter_input_username($username));
+  $username = filter_input_username($username);
   if (strpos($username, $_SESSION['userinfo']['username']) !== 0) {
     // Username nicht enthalten (FALSE) oder nicht am Anfang (>0)
     system_failure("Ungültiger Benutzername!");
@@ -148,20 +149,24 @@ function edit_subuser($id, $username, $requested_modules, $password)
   if (count($modules) == 0) {
     system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
   }
-  $modules = db_escape_string(implode(',', $modules));
   
+  $args = array(":uid" => $_SESSION['userinfo']['uid'],
+                ":id" => $id,
+                ":username" => $username,
+                ":modules" => implode(',', $modules));
+
   $pwchange = '';
   if ($password) {
     $result = strong_password($password);
     if ($result !== true) {
       system_failure("Unsicheres Passwort. Die Meldung von cracklib lautet: ".$result);
     }
-    $password = hash("sha256", $password);
-    $pwchange = ", password='{$password}'";
+    $args[':password'] = hash("sha256", $password);
+    $pwchange = ", password=:password";
   }
 
 
-  db_query("UPDATE system.subusers SET username='{$username}', modules='{$modules}'{$pwchange} WHERE id={$id} AND uid={$uid}");
+  db_query("UPDATE system.subusers SET username=:username, modules=:modules{$pwchange} WHERE id=:id AND uid=:uid", $args);
 }
 
 

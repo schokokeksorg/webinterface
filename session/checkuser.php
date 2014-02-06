@@ -297,7 +297,7 @@ function setup_session($role, $useridentity)
     $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_SUBUSER;
     $_SESSION['subuser'] = $useridentity;
     $data = db_query("SELECT kundenaccount FROM system.useraccounts WHERE username=?", array($info['username']));
-    if ($entry = $data->fetch) {
+    if ($entry = $data->fetch()) {
       if ($entry['kundenaccount'] == 1) {
         $customer = get_customer_info($_SESSION['userinfo']['username']);
         $_SESSION['customerinfo'] = $customer;

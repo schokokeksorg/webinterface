@@ -1,0 +1,4 @@
+name = webapps
+description = Web-Anwendungen installieren
+permission = Web-Anwendungen installieren / Freewvs-Meldungen einsehen
+
