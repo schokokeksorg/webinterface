@@ -18,9 +18,9 @@ require_once('session/checkuser.php');
 
 function user_customer_match($cust, $user)
 {
-  $customerno = (int) $cust;
-  $username = db_escape_string($user);
-  $result = db_query("SELECT uid FROM system.useraccounts WHERE kunde={$customerno} AND username='{$username}' AND kundenaccount=1;");
+  $args = array(":cid" => $cust,
+                ":user" => $user);
+  $result = db_query("SELECT uid FROM system.useraccounts WHERE kunde=:cid AND username=:user AND kundenaccount=1", $args);
   if ($result->rowCount() > 0)
     return true;
   return false;
@@ -30,9 +30,9 @@ function user_customer_match($cust, $user)
 
 function customer_has_email($customerno, $email)
 {
-  $customerno = (int) $customerno;
-  $email = db_escape_string($email);
-  $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=".$customerno." AND (email='{$email}' OR email_extern='{$email}' OR email_rechnung='{$email}');");
+  $args = array(":cid" => $customerno,
+                ":email" => $email);
+  $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=:cid AND (email=:email OR email_extern=:email OR email_rechnung=:email)", $args);
   return ($result->rowCount() > 0);
 }
 
@@ -40,9 +40,9 @@ function customer_has_email($customerno, $email)
 function validate_token($customerno, $token)
 {
   expire_tokens();
-  $customerno = (int) $customerno;
-  $token = db_escape_string($token);
-  $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id={$customerno} AND token='{$token}';");
+  $args = array(":cid" => $customerno,
+                ":token" => $token);
+  $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=:cid AND token=:token", $args);
   return ($result->rowCount() > 0);
 }
 
@@ -50,8 +50,7 @@ function validate_token($customerno, $token)
 function get_uid_for_token($token) 
 {
   expire_tokens();
-  $token = db_escape_string($token);
-  $result = db_query("SELECT uid FROM system.usertoken WHERE token='{$token}';");
+  $result = db_query("SELECT uid FROM system.usertoken WHERE token=?", array($token));
   if ($result->rowCount() == 0) {
     return NULL;
   }
@@ -61,8 +60,7 @@ function get_uid_for_token($token)
 
 function get_username_for_uid($uid) 
 {
-  $uid = (int) $uid;
-  $result = db_query("SELECT username FROM system.useraccounts WHERE uid={$uid}");
+  $result = db_query("SELECT username FROM system.useraccounts WHERE uid=?", array($uid));
   if ($result->rowCount() != 1) {
     system_failure("Unexpected number of users with this uid (!= 1)!");
   }
@@ -73,9 +71,9 @@ function get_username_for_uid($uid)
 function validate_uid_token($uid, $token)
 {
   expire_tokens();
-  $uid = (int) $uid;
-  $token = db_escape_string($token);
-  $result = db_query("SELECT NULL FROM system.usertoken WHERE uid={$uid} AND token='{$token}';");
+  $args = array(":uid" => $uid,
+                ":token" => $token);
+  $result = db_query("SELECT NULL FROM system.usertoken WHERE uid=:uid AND token=:token", $args);
   return ($result->rowCount() > 0);
 }
 
@@ -89,38 +87,35 @@ function expire_tokens()
 
 function invalidate_customer_token($customerno)
 {
-  $customerno = (int) $customerno;
-  db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id={$customerno} LIMIT 1;");
+  db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id=?", array($customerno));
 }
  
 function invalidate_systemuser_token($uid)
 {
-  $uid = (int) $uid;
-  db_query("DELETE FROM system.usertoken WHERE uid={$uid} LIMIT 1;");
+  db_query("DELETE FROM system.usertoken WHERE uid=?", array($uid));
 }
  
 function create_token($username)
 {
-  $username = db_escape_string($username);
   expire_tokens();
-  $result = db_query("SELECT uid FROM system.useraccounts WHERE username='{$username}'");
+  $result = db_query("SELECT uid FROM system.useraccounts WHERE username=?", array($username));
   $uid = (int) $result->fetch()['uid'];
   
-  $result = db_query("SELECT created FROM system.usertoken WHERE uid={$uid}");
+  $result = db_query("SELECT created FROM system.usertoken WHERE uid=?", array($uid));
   if ($result->rowCount() > 0) {
     system_failure("Für Ihr Benutzerkonto ist bereits eine Passwort-Erinnerung versendet worden. Bitte wenden Sie sich an den Support wenn Sie diese nicht erhalten haben.");
   }
   
-  $token = random_string(16);
-  db_query("INSERT INTO system.usertoken VALUES ({$uid}, NOW(), NOW() + INTERVAL 1 DAY, '{$token}')");
+  $args = array(":uid" => $uid,
+                ":token" => random_string(16));
+  db_query("INSERT INTO system.usertoken VALUES (:uid} NOW(), NOW() + INTERVAL 1 DAY, :token)", $args);
   return true;
 }
 
 
 function emailaddress_for_user($username)
 {
-  $username = db_escape_string($username);
-  $result = db_query("SELECT k.email FROM kundendaten.kunden AS k INNER JOIN system.useraccounts AS u ON (u.kunde=k.id) WHERE u.username='{$username}'");
+  $result = db_query("SELECT k.email FROM kundendaten.kunden AS k INNER JOIN system.useraccounts AS u ON (u.kunde=k.id) WHERE u.username=?", array($username));
   $data = $result->fetch();
   return $data['email'];
 }
@@ -128,9 +123,8 @@ function emailaddress_for_user($username)
 
 function get_customer_token($customerno)
 {
-  $customerno = (int) $customerno;
   expire_tokens();
-  $result = db_query("SELECT token FROM kundendaten.kunden WHERE id={$customerno} AND token IS NOT NULL;");
+  $result = db_query("SELECT token FROM kundendaten.kunden WHERE id=? AND token IS NOT NULL", array($customerno));
   if ($result->rowCount() < 1)
     system_failure("Kann das Token nicht auslesen!");
   return $result->fetch(PDO::FETCH_OBJ)->token;
@@ -139,8 +133,7 @@ function get_customer_token($customerno)
 
 function get_user_token($username) 
 {
-  $username = db_escape_string($username);
-  $result = db_query("SELECT token FROM system.usertoken AS t INNER JOIN system.useraccounts AS u USING (uid) WHERE username='{$username}'");
+  $result = db_query("SELECT token FROM system.usertoken AS t INNER JOIN system.useraccounts AS u USING (uid) WHERE username=?", array($username));
   $tmp = $result->fetch();
   return $tmp['token'];
 }
