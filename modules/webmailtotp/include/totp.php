@@ -137,7 +137,7 @@ function check_totp($username, $code) {
   
   $checkResult = $ga->verifyCode($secret, $code, 2);    // 2 = 2*30sec clock tolerance
   if ($checkResult) {
-    db_query("UPDATE mail.webmail_totp SET failures = 0, unlock_timestamp=NULL WHERE email='{$username}'");
+    db_query("UPDATE mail.webmail_totp SET failures = 0, unlock_timestamp=NULL WHERE email=?", array($username));
     blacklist_token($username, $code);
     DEBUG('OK');
   } else {
