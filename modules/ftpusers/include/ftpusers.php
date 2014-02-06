@@ -19,7 +19,7 @@ require_once('inc/base.php');
 function list_ftpusers()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=$uid");
+  $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=?", array($uid));
   $ftpusers = array();
   while ($u = $result->fetch()) {
     $ftpusers[] = $u;
@@ -37,9 +37,8 @@ function load_ftpuser($id)
 {
   if ($id == 0)
     return empty_ftpuser();
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $id = (int) $id;
-  $result = db_query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid={$uid} AND id='{$id}' LIMIT 1");
+  $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
+  $result = db_query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid=:uid AND id=:id", $args);
   if ($result->rowCount() != 1)
     system_failure("Fehler beim auslesen des Accounts");
   $account = $result->fetch();
@@ -50,21 +49,15 @@ function load_ftpuser($id)
 
 function save_ftpuser($data)
 {
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $id = (int) $data['id'];
   verify_input_username($data['username']);
   if ($data['username'] == '')
     system_failure('Bitte geben Sie eine Erweiterung für den Benutzernamen an!');
-  $username = $_SESSION['userinfo']['username'].'-'.$data['username'];
   $homedir = filter_input_general($data['homedir']);
   if (substr($homedir, 0, 1) == '/')
     $homedir = substr($homedir, 1);
   $homedir = $_SESSION['userinfo']['homedir'].'/'.$homedir;
   if (! in_homedir($homedir))
     system_failure('Pfad scheint nicht in Ihrem Home zu sein oder enthielt ungültige Zeichen.');
-  $active = ($data['active'] == 1 ? '1' : '0');
-
-  $forcessl = ($data['forcessl'] == 0 ? '0' : '1');
 
   $server = NULL;
   if ($data['server'] == my_server_id())
@@ -75,9 +68,8 @@ function save_ftpuser($data)
   {
     $server = (int) $data['server'];
   }
-  $server = maybe_null($server);
 
-  $password_query = '';
+  $set_password = false;
   $password_hash = '';
   if ($data['password'] != '')
   {
@@ -92,33 +84,46 @@ function save_ftpuser($data)
       $salt = random_string(8);
       $password_hash = crypt($data['password'], "\$1\${$salt}\$");
     }
+    $set_pasword = true;
     $password_query = "password='{$password_hash}', ";
   }
-  elseif (! $id)
+  elseif (! $data['id'])
   {
     system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
   }
     
+  $args = array(":username" => $_SESSION['userinfo']['username'].'-'.$data['username'],
+                ":homedir" => $homedir,
+                ":active" => ($data['active'] == 1 ? 1 : 0),
+                ":forcessl" => ($data['forcessl'] == 0 ? 0 : 1),
+                ":server" => $server,
+                ":uid" => $_SESSION['userinfo']['uid']);
   
-  if ($id)
-    db_query("UPDATE system.ftpusers SET username='{$username}', {$password_query} homedir='{$homedir}', active='{$active}', forcessl='{$forcessl}', server={$server} WHERE id={$id} AND uid={$uid} LIMIT 1");
-  else
-    db_query("INSERT INTO system.ftpusers (username, password, homedir, uid, active, forcessl, server) VALUES ('{$username}', '{$password_hash}', '{$homedir}', '{$uid}', '{$active}', '{$forcessl}', {$server})");
+  if ($data['id']) {
+    $args[":id"] = $data['id'];
+    if ($set_password) {
+      $args[':password'] = $password_hash;
+      db_query("UPDATE system.ftpusers SET username=:username, password=:password, homedir=:homedir, active=:active, forcessl=:forcessl, server=:server WHERE id=:id AND uid=:uid", $args);
+    } else {
+      db_query("UPDATE system.ftpusers SET username=:username, homedir=:homedir, active=:active, forcessl=:forcessl, server=:server WHERE id=:id AND uid=:uid", $args);
+    }
+  }  else {
+    $args[':password'] = $password_hash;
+    db_query("INSERT INTO system.ftpusers (username, password, homedir, uid, active, forcessl, server) VALUES (:username, :password, :homedir, :uid, :active, :forcessl, :server)", $args);
+  }
 }
 
 
 function delete_ftpuser($id)
 {
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $id = (int) $id;
-  db_query("DELETE FROM system.ftpusers WHERE id='{$id}' AND uid={$uid} LIMIT 1");
+  $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
+  db_query("DELETE FROM system.ftpusers WHERE id=:id AND uid=:uid", $args);
 }
 
 
 function get_gid($groupname)
 {
-  $groupname = db_escape_string($groupname);
-  $result = db_query("SELECT gid FROM system.gruppen WHERE name='{$groupname}' LIMIT 1");
+  $result = db_query("SELECT gid FROM system.gruppen WHERE name=?", array($groupname));
   if ($result->rowCount() != 1)
     system_failure('cannot determine gid of ftpusers group');
   $a = $result->fetch();
@@ -131,9 +136,8 @@ function get_gid($groupname)
 
 function have_regular_ftp()
 {
-  $gid = get_gid('ftpusers');
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT * FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
+  $args = array(":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']);
+  $result = db_query("SELECT * FROM system.gruppenzugehoerigkeit WHERE gid=:gid AND uid=:uid", $args);
   return ($result->rowCount() > 0);
 }
 
@@ -141,16 +145,14 @@ function have_regular_ftp()
 function enable_regular_ftp()
 {
   require_role(ROLE_SYSTEMUSER);
-  $gid = get_gid('ftpusers');
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  db_query("REPLACE INTO system.gruppenzugehoerigkeit (gid, uid) VALUES ('$gid', '$uid')");
+  $args = array(":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']);
+  db_query("REPLACE INTO system.gruppenzugehoerigkeit (gid, uid) VALUES (:gid, :uid)", $args);
 }
 
 function disable_regular_ftp()
 {
-  $gid = get_gid('ftpusers');
-  $uid = (int) $_SESSION['userinfo']['uid'];
-  db_query("DELETE FROM system.gruppenzugehoerigkeit WHERE gid='$gid' AND uid='$uid'");
+  $args = array(":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']);
+  db_query("DELETE FROM system.gruppenzugehoerigkeit WHERE gid=:gid AND uid=:uid", $args);
 }
 
 
