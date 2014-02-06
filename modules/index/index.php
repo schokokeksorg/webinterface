@@ -78,7 +78,7 @@ foreach ($modules as $modname => $info) {
     include('modules/'.$modname.'/shortcuts.php');
     foreach ($shortcuts as $shortcut) {
       $shortcut['module'] = $modname;
-      $my_shortcuts[$shortcut['weight']] = $shortcut;
+      $my_shortcuts[$shortcut['weight'].$modname] = $shortcut;
     }
   }
 }
