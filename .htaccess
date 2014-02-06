@@ -18,12 +18,6 @@ RewriteRule ^init(.*)$  go/index/initialize_useraccount?token=$1&%{QUERY_STRING}
 #Allow from 2001:8d8:81:1310:1:1:2:42
 #Deny from all
 
-<IfModule mod_php5.c>
-  php_flag short_open_tag off
-  php_flag display_errors on
-  php_flag display_startup_errors on
-</IfModule>
-
 # allow client certs
 #SSLVerifyClient optional_no_ca
 #SSLoptions +StdEnvVars +ExportCertData

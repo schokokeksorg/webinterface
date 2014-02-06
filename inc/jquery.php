@@ -16,11 +16,28 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/base.php');
 
-$path = config('jquery_ui_path');
-html_header('
-<link rel="stylesheet" href="'.$path.'/themes/base/jquery-ui.css" />
-<script type="text/javascript" src="'.$path.'/jquery-1.9.0.js" ></script>
-<script type="text/javascript" src="'.$path.'/ui/jquery-ui.js" ></script>
-
+if (! defined('__JQUERY_INCLUDED')) {
+  define('__JQUERY_INCLUDED', '1');
+  global $prefix;
+  html_header('
+<link rel="stylesheet" href="'.$prefix.'external/jquery/jquery-ui.min.css" />
+<script type="text/javascript" src="'.$prefix.'external/jquery/jquery.min.js" ></script>
+<script type="text/javascript" src="'.$prefix.'external/jquery/jquery-ui.min.js" ></script>
 ');
+}
 
+function javascript($file = NULL) {
+  global $go, $prefix;
+  list($module, $page) = explode('/', $go, 2);
+  if (! $file) {
+    $file = $page.'.js';
+  }
+  if (file_exists('modules/'.$module.'/'.$file)) {
+    html_header('
+<script type="text/javascript" src="'.$prefix.'modules/'.$module.'/'.$file.'"></script>
+');
+  } else {
+    DEBUG('Missing JS file: '.'modules/'.$module.'/'.$file);
+    warning('Interner Fehler: Dieses Modul wollte JavaScript laden, das hat aber nicht geklappt.');
+  }
+}

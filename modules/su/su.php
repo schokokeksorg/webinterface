@@ -83,20 +83,11 @@ if ($debugmode)
   $debug = 'debug&amp;';
 
 require_once('inc/jquery.php');
+// lädt die JS-Datei mit gleichem basename
+javascript();
 
 output(html_form('su_su', '', '', '<p><label for="query"><strong>Suchtext:</strong></label> <input type="text" name="query" id="query" /> <input type="submit" value="Suchen" /></p>
 '));
-output('
-<script type="text/javascript">
-$("#query").autocomplete({
-    source: "su_ajax",
-    select: function( event, ui ) {
-      if (ui.item) {
-        window.location.href = "?do="+ui.item.id;
-      }
-}
- });
-</script>');
 
 if ($search) {
   $allentries = build_results($search);
@@ -105,39 +96,3 @@ if ($search) {
   }
 }
 
-/*
-
-
-$users = list_system_users();
-$options = '';
-foreach ($users as $user)
-{
-  $options .= "  <option value=\"{$user->uid}\">{$user->username} ({$user->uid})</option>\n";
-}
-
-output(html_form('su_su', 'su', '', '<p>Benutzer auswählen:
-<select name="destination" size="1">
-'.$options.'
-</select>
-<input type="submit" name="submit" value="zum Benutzer wechseln" />
-</p>
-'));
-
-$customers = list_customers();
-$options = '';
-foreach ($customers as $customer)
-{
-  $options .= "  <option value=\"{$customer->id}\">{$customer->id} - ".htmlspecialchars($customer->name)."</option>\n";
-}
-
-output(html_form('su_su', 'su', '', '<p>Kunde auswählen:
-<select name="destination" size="1">
-'.$options.'
-</select>
-<input type="submit" name="submit" value="zum Kunden wechseln" />
-</p>
-'));
-
-*/
-
-?>
