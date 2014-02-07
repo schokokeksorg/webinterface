@@ -52,7 +52,7 @@ function change_mailaccount($id, $arr)
 {
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $conditions = array("local=:local", "domain=:domain");
+  $conditions = array();
   $values = array(":id" => $id, ":uid" => $uid);
 
   if (isset($arr['account']))
@@ -73,6 +73,8 @@ function change_mailaccount($id, $arr)
       }
     }
     $values[":local"] = $local;
+    $conditions[] = "local=:local";
+    $conditions[] = "domain=:domain";
   }
   if (isset($arr['mailbox'])) {
     array_push($conditions, "`maildir`=:maildir");
@@ -96,7 +98,7 @@ function change_mailaccount($id, $arr)
 
 
   db_query("UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id=:id AND uid=:uid", $values);
-  logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "updated account »{$arr['account']}«");
+  logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "updated account »{$id}«");
 
 }
 

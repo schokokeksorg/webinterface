@@ -120,7 +120,8 @@ function db_query($stmt, $params = NULL)
 {
   global $_db;
   __ensure_connected();
-  DEBUG($stmt);
+  $backtrace = debug_backtrace();
+  DEBUG($backtrace[0]['file'].':'.$backtrace[0]['line'].': '.$stmt);
   if ($params) {
     DEBUG($params);
   }
