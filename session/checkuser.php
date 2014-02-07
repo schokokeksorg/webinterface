@@ -36,7 +36,7 @@ function find_role($login, $password, $i_am_admin = False)
   // System-User?
   $uid = (int) $login;
   if ($uid == 0)
-    $uid = 'NULL';
+    $uid = NULL;
   $result = db_query("SELECT username, passwort AS password, kundenaccount AS `primary`, status, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid=:uid OR username=:login LIMIT 1;", array(":uid" => $uid, ":login" => $login));
   if (@$result->rowCount() > 0)
   {

@@ -60,9 +60,9 @@ function create_dyndns_account($handle, $password_http, $sshkey)
   $handle = filter_input_username($handle);
   $sshkey = filter_input_general($sshkey);
 
-  $pwhash = 'NULL';
+  $pwhash = NULL;
   if ($password_http)
-    $pwhash = "'{SHA}".base64_encode(sha1($password_http, true))."'";
+    $pwhash = "{SHA}".base64_encode(sha1($password_http, true));
 
   db_query("INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
            "(:uid, :handle, :pwhash, :sshkey)",

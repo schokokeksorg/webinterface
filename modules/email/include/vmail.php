@@ -335,7 +335,7 @@ function save_vmail_account($account)
   }  
 
   if ($account['quota_threshold'] == -1) {
-    $account['quota_threshold'] = 'NULL';
+    $account['quota_threshold'] = NULL;
   }
   else {
     $account['quota_threshold'] = min( (int) $account['quota_threshold'], (int) $account['quota'] );

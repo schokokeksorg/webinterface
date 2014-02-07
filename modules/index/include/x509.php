@@ -19,18 +19,7 @@ require_once('inc/security.php');
 function do_ajax_cert_login() {
   global $prefix;
   require_once('inc/jquery.php');
-  html_header('
-<script type="text/javascript">
-  function redirect(status) {
-    if (status == "ok") {
-      window.location.reload();
-    } else {
-      window.location.href="../../certlogin/";
-    }
-  }
-  $.get("'.$prefix.'certlogin/ajax.php", redirect);
-</script>
-');
+  javascript('certlogin.js');
 }
 
 function get_logins_by_cert($cert) 

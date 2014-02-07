@@ -42,6 +42,7 @@ class DB extends PDO {
       if (config("enable_debug")) {
         foreach (array_values($params) as $p) {
           if ($p === '') {
+            DEBUG("Potential bug, empty string found in database parameters");
             warning("Potential bug, empty string found in database parameters");
           }
         }
@@ -71,7 +72,7 @@ function db_escape_string($string)
 {
   if (config("enable_debug")) {
     $backtrace = debug_backtrace();
-    warning("call to db_escape_string() in {$backtrace[1]['file']} line {$backtrace[1]['line']}");
+    warning("call to db_escape_string() in {$backtrace[0]['file']} line {$backtrace[0]['line']}");
   }
   global $_db;
   __ensure_connected();

@@ -176,7 +176,7 @@ function create_mysql_database($dbname, $description = '', $server = NULL)
     return NULL;
   }
   if (! in_array($server, additional_servers()) || ($server == my_server_id())) {
-    $server = 'NULL';
+    $server = NULL;
   }
   $args = array(":dbname" => $dbname,
                 ":uid" => $_SESSION['userinfo']['uid'],
