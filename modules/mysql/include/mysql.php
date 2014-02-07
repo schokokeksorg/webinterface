@@ -167,7 +167,7 @@ function delete_mysql_account($username)
 }
 
 
-function create_mysql_database($dbname, $description = '', $server = NULL)
+function create_mysql_database($dbname, $description = NULL, $server = NULL)
 {
   if (! validate_mysql_dbname($dbname))
   {
