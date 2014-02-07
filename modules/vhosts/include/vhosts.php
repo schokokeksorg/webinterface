@@ -369,7 +369,7 @@ function save_vhost($vhost)
                 ":cert" => $cert,
                 ":ipv4" => $ipv4,
                 ":autoipv6" => $autoipv6,
-                ":options" => ($vhost['options'] ? $vhost['options'] : NULL),
+                ":options" => $vhost['options'],
                 ":stats" => ($vhost['stats'] ? $vhost['stats'] : NULL),
                 ":id" => $id);
   if ($id != 0) {
