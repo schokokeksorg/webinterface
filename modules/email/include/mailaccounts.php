@@ -220,7 +220,7 @@ function check_valid($acc)
 function imap_on_vmail_domain()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT m.id FROM mail.mailaccounts AS m INNER JOIN mail.virtual_mail_domains AS vd USING (domain) WHERE m.uid=?", array($uid));
+  $result = db_query("SELECT m.id FROM mail.mailaccounts AS m INNER JOIN mail.virtual_mail_domains AS vd USING (domain) WHERE vd.hostname IS NULL AND m.uid=?", array($uid));
   if ($result->rowCount() > 0)
     return true;
   return false;
