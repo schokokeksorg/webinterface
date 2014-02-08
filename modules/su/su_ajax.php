@@ -38,7 +38,7 @@ foreach ($allentries as $entry) {
 
 
 
-header("Content-Type: text/javascript");
+header("Content-Type: application/json");
 echo "[\n";
 echo implode(",\n", $lines);
 echo '

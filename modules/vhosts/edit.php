@@ -17,6 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/debug.php');
 require_once('inc/security.php');
 require_once('inc/jquery.php');
+javascript();
 
 require_once('vhosts.php');
 require_once('certs.php');
@@ -43,90 +44,6 @@ if ($id == 0) {
 else {
   title("Subdomain bearbeiten");
 }
-
-html_header("<script type=\"text/javascript\">
- 
-  function selectedDomain() {
-    var selected;
-    selected=document.getElementById('domain').options.selectedIndex;
-    return document.getElementById('domain').options.item(selected).text;
-    }
-  
-  function defaultDocumentRoot() {
-    var hostname;
-    if (document.getElementById('hostname').value == '') 
-      hostname = selectedDomain();
-    else
-      hostname = document.getElementById('hostname').value + '.' + selectedDomain();
-    var default_docroot = hostname + '/htdocs';
-    useDefaultDocroot(default_docroot);
-  }
-  
-  function useDefaultDocroot( default_docroot ) {
-    var do_it = (document.getElementById('use_default_docroot').checked == true);
-    var inputfield = document.getElementById('docroot');
-    inputfield.disabled = do_it;
-    if (do_it) {
-      document.getElementById('docroot').value = default_docroot;
-    }
-  }
-  
-  function showAppropriateLines() {
-    if (document.getElementById('vhost_type_regular').checked == true) {
-      document.getElementById('options_docroot').style.display = 'block';
-      document.getElementById('options_scriptlang').style.display = 'block';
-      document.getElementById('options_webapp').style.display = 'none';
-    }
-    else if (document.getElementById('vhost_type_dav').checked == true) { 
-      document.getElementById('options_docroot').style.display = 'block';
-      document.getElementById('options_scriptlang').style.display = 'none';
-      document.getElementById('options_webapp').style.display = 'none';
-    }
-    else if (document.getElementById('vhost_type_svn').checked == true) {
-      document.getElementById('options_docroot').style.display = 'none';
-      document.getElementById('options_scriptlang').style.display = 'none';
-      document.getElementById('options_webapp').style.display = 'none';
-    }
-    else if (document.getElementById('vhost_type_webapp').checked == true) {
-      document.getElementById('options_docroot').style.display = 'none';
-      document.getElementById('options_scriptlang').style.display = 'none';
-      document.getElementById('options_webapp').style.display = 'block';
-    }
-  }
-
-
-  function showhsts( event ) {
-    var ssl = $('#ssl option:selected').val();
-    if (ssl == 'forward') {
-      $('#hsts_block').show();
-    } else
-      $('#hsts_block').hide();
-  }
-
-  function hsts_preset( event ) {
-    var seconds = $('#hsts_preset option:selected').val();
-    if (seconds == 'custom') {
-      $('#hsts_seconds').show();
-      if ($('#hsts').val() < 0) {
-        $('#hsts').val(2592000); /* 30 Tage */
-      }
-    } else {
-      $('#hsts_seconds').hide();
-      $('#hsts').val(seconds);
-    }
-  }
-
-  $(document).ready(function(){
-    $('#ssl').change(showhsts);
-    showhsts();
-    if ($('#hsts_preset option:selected').val() != 'custom') {
-      $('#hsts_seconds').hide();
-    }
-    $('#hsts_preset').change(hsts_preset);
-    
-  })
-
-  </script>");
 
 $defaultdocroot = $vhost['domain'];
 if (! $vhost['domain'])
@@ -169,7 +86,7 @@ foreach ($applist as $app)
 
 $form = "
 <h4 style=\"margin-top: 2em;\">Name des VHost</h4>
-    <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" onkeyup=\"defaultDocumentRoot()\"  onchange=\"defaultDocumentRoot()\" /><strong>.</strong>".domainselect($vhost['domain_id'], 'onchange="defaultDocumentRoot()"');
+    <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" /><strong>.</strong>".domainselect($vhost['domain_id']);
 $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>
 
 <div class=\"vhostsidebyside\">
@@ -177,7 +94,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
   <h4>Optionen</h4>
   <h5>Speicherort für Dateien (»Document Root«)</h5>
   <div style=\"margin-left: 2em;\">
-    <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" onclick=\"defaultDocumentRoot()\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
+    <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
     <strong>".$vhost['homedir']."/websites/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\" ".($is_default_docroot ? 'disabled="disabled" ' : '')."/>
   </div>
 </div>
@@ -186,7 +103,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 /*
  * Boolean option, to be used when only one PHP version is available
  */
-$have_php = ($vhost['php'] == 'php53' ? ' checked="checked" ' : '');
+$have_php = ($vhost['php'] == 'php55' ? ' checked="checked" ' : '');
 
 /*
 $phpoptions = "<h5>PHP</h5>
@@ -234,14 +151,14 @@ $form .= "
 $form .= "
 <h4>Verwendung</h4>
         <div style=\"margin-left: 2em;\">
-	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type=='regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type=='regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
 ";
 if ($vhost_type=='webapp')
 {
   // Wird nur noch angezeigt wenn der Vhost schon auf webapp konfiguriert ist, ansonsten nicht.
   // Die User sollen den Webapp-Installer benutzen.
   $form .= "
-	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
 ";
 }
 $hsts_value = $vhost['hsts'];
@@ -251,8 +168,8 @@ if (isset($hsts_preset_values[$hsts_value])) {
   $hsts_preset_value = $hsts_value;
 }
 $form .= "
-	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
-	  <input class=\"usageoption\" onclick=\"showAppropriateLines()\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
 	</div>
 <br />
 <br />

@@ -19,7 +19,7 @@ require_once('vmail.php');
 $email = filter_var($_REQUEST['target'], FILTER_VALIDATE_EMAIL);
 $type = forward_type($email);
 
-header("Content-Type: text/javascript");
+header("Content-Type: application/json");
 echo ' { "target": "'.$email.'", "type": "'.$type.'" } ';
 die();
 
