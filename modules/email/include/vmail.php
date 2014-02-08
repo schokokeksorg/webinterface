@@ -28,21 +28,21 @@ $forced_spamfilter_domains = array(
   );
 
 
-function forward_spamfilter_options($target) {
+function forward_type($target) {
   global $forced_spamfilter_domains;
   list($l, $d) = explode('@', $target, 2);
   DEBUG('Weiterleitung an '.$l.' @ '.$d);
   if (in_array($d, $forced_spamfilter_domains)) {
     // Domain in der Liste => Spam darf nicht weiter geleitet werden
-    return array(array('delete'), 'delete');
+    return 'critical';
   }
   $result = db_query("SELECT id FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld) = ?", array($d));
   if ($result->rowCount() > 0) {
     // Lokale Domain
-    return array(array('none', 'tag', 'delete'), 'none');
+    return 'local';
   }  
   // Auswärtige Domain aber keine aus der Liste
-  return array(array('none', 'tag', 'delete'), 'delete');
+  return 'external';
 }
 
 

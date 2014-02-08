@@ -20,6 +20,9 @@ require_once('inc/icons.php');
 
 require_once('vmail.php');
 
+require_once('inc/jquery.php');
+javascript();
+
 $section = 'email_vmail';
 require_role(array(ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT));
 
@@ -57,112 +60,6 @@ $is_forward = (count($account['forwards']) > 0);
 $is_mailbox = ($account['password'] != NULL  ||  $id == 0);
 $numforwards = max(count($account['forwards']), 1);
 
-output("<script type=\"text/javascript\">
-  
-  var numForwards = {$numforwards};
-  var forwardsCounter = {$numforwards};
-
-  function moreForward()
-  {
-    numForwards += 1;
-    forwardsCounter += 1;
-
-    if ( document.getElementById('vmail_forward_' + forwardsCounter) ) {
-      document.getElementById('vmail_forward_' + forwardsCounter).style.display = ''
-    }
-
-    P1 = document.createElement('p');
-
-    TXT1 = document.createTextNode('Weiterleiten an ');
-
-    INPUT = document.createElement('input');
-    INPUT.type = 'text';
-    INPUT.name = 'forward_to_' + forwardsCounter;
-    INPUT.id = 'forward_to_' + forwardsCounter;
-    INPUT.value = '';
-
-    P1.appendChild(TXT1);
-    P1.appendChild(INPUT);
-
-    P2 = document.createElement('p');
-
-    TXT2 = document.createTextNode('Spam-Mails an diese Adresse ');
-
-    SELECT = document.createElement('select');
-    SELECT.id = 'spamfilter_action_' + forwardsCounter;
-    SELECT.name = 'spamfilter_action_' + forwardsCounter;
-
-    SELECT.options[0] = new Option('nicht filtern', 'none', 0);
-    SELECT.options[1] = new Option('markieren und zustellen', 'tag', 0);
-    SELECT.options[2] = new Option('nicht zustellen', 'delete', 1);
-
-    P2.appendChild(TXT2);
-    P2.appendChild(SELECT);
-
-    DIV = document.createElement('div');
-    DIV.className = 'vmail-forward';
-    DIV.id = 'vmail_forward_' + forwardsCounter;
-
-    DELETE = document.getElementById('vmail_forward_1').getElementsByTagName('div')[0].cloneNode(true);
-
-    DIV.appendChild(DELETE);
-    DIV.appendChild(P1);
-    DIV.appendChild(P2);
-
-    parent = document.getElementById('forward_entries');
-    parent.appendChild(DIV);
-  }
-
-  function removeForward(elem) 
-  {
-    div_id = elem.parentNode.parentNode.id;
-    div = document.getElementById(div_id);
-    input = div.getElementsByTagName('input')[0];
-    input.value = '';
-    select = div.getElementsByTagName('select')[0];
-    select.options[0].selected = 'selected';
-    if (numForwards >= 1) {
-      numForwards -= 1;
-    }
-    if (numForwards >= 1) {
-      div.style.display = 'none';
-      document.getElementById('forward_entries').removeChild(div);
-    }
-  }
-
-  function toggleDisplay(checkbox_id, item_id) 
-  {
-    if (document.getElementById(checkbox_id).checked == true) {
-      document.getElementById(item_id).style.display = 'block';
-    } else {
-      document.getElementById(item_id).style.display = 'none';
-    }
-  }
-
-  function clearPassword() {
-    var input = document.getElementById('password');
-    if (input.value == '**********') {
-      input.value = '';
-    }
-    input.style.color = '#000';
-    /* FIXME: Keine Ahnung, warum das notwendig ist. Mit dem und dem Aufruf in 'onclick=' tut es was es soll.  */
-    input.focus();
-  }
-
-  function refillPassword() {
-    var input = document.getElementById('password');
-    if (input.value == '') {
-      input.value = input.defaultValue;
-    }
-    if (input.value == '**********') {
-      input.style.color = '#aaa';
-    }
-  }
-
-
-</script>
-");
-
 $form = '';
 
 if ($accountlogin) {
@@ -195,9 +92,9 @@ if ($accountlogin) {
   } 
   
   $form .= "
-    <p><input onchange=\"toggleDisplay('mailbox', 'mailbox_options')\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
-    <div style=\"margin-left: 2em;".($is_mailbox ? '' : ' display: none;')."\" id=\"mailbox_options\">
-    <p>Passwort für Abruf:&#160;<input onclick=\"clearPassword()\" onfocus=\"clearPassword()\" onblur=\"refillPassword()\" style=\"color: #aaa;\" type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
+    <p><input class=\"option_group\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
+    <div style=\"margin-left: 2em;\" id=\"mailbox_config\" class=\"option_group\">
+    <p>Passwort für Abruf:&#160;<input style=\"color: #aaa;\" type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
 
   $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 
@@ -216,9 +113,9 @@ if ($accountlogin) {
 
 
 
-$form .= "<p><input onchange=\"toggleDisplay('autoresponder', 'autoresponder_config')\" type=\"checkbox\" id=\"autoresponder\" name=\"autoresponder\" value=\"yes\" ".($is_autoresponder ? 'checked="checked" ' : '')." /><label for=\"autoresponder\">&#160;<strong>Automatische Antwort versenden</strong></label></p>";
+$form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"autoresponder\" name=\"autoresponder\" value=\"yes\" ".($is_autoresponder ? 'checked="checked" ' : '')." /><label for=\"autoresponder\">&#160;<strong>Automatische Antwort versenden</strong></label></p>";
 
-$form .= "<div style=\"margin-left: 2em;".($is_autoresponder ? '' : ' display: none;')."\" id=\"autoresponder_config\">";
+$form .= "<div style=\"margin-left: 2em;\" id=\"autoresponder_config\" class=\"option_group\">";
 
 $ar = $account['autoresponder'];
 if (! $ar) {
@@ -292,36 +189,41 @@ $form .= '</div>';
 
 
 
-$form .= "<p><input onchange=\"toggleDisplay('forward', 'forward_config')\" type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";
+$form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";
 
 
-$form .= "<div style=\"margin-left: 2em;".($is_forward ? '' : ' display: none;')."\" id=\"forward_config\">";
+$form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\" class=\"option_group\">";
 
 $form .= '<div id="forward_entries">
 ';
 if (! isset($account['forwards'][0])) {
   $account['forwards'][0] = array('destination' => '', 'spamfilter' => 'delete');
 }
-for ($i = 0 ; $i < $numforwards ; $i++)
+while (count($account['forwards']) < 10) {
+  // Dummy-Einträge für Leute ohne JavaScript
+  $account['forwards'][] = array('destination' => '', 'spamfilter' => 'delete');
+}
+for ($i = 0 ; $i < max($numforwards,10) ; $i++)
 {
   $num = $i+1;
   $form .= "<div class=\"vmail-forward\" id=\"vmail_forward_{$num}\">
-  <div style=\"float: right;\"><a href=\"#\" onclick=\"removeForward(this);\">".icon_delete("Diese Weiterleitung entfernen")."</a></div>
+  <div style=\"float: right;\" class=\"delete_forward\">".icon_delete("Diese Weiterleitung entfernen")."</div>
   <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
   <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_'.$num, array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), $account['forwards'][$i]['spamfilter'])."</p>
+  <p class=\"warning\" style=\"display: none;\"></p>
   <p>Bitte beachten Sie unsere Hinweise zu <a href=\"http://wiki.schokokeks.org/E-Mail/Weiterleitungen\">Weiterleitungen und Spamfiltern</a>.</p>
   </div>\n";
 }
 $form .= '</div>';
 
-$form .= '<p><a href="#" onclick="moreForward();">'.icon_add().' Weiteren Empfänger hinzufügen</a></p>
+$form .= '<p><a href="#" id="more_forwards">'.icon_add().' Weiteren Empfänger hinzufügen</a></p>
 </div>';
 
 $target = 'vmail';
 if ($accountlogin) {
   $target = '../index/index';
 }
-$form .= '<p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link($target, 'Abbrechen').'</p>';
+$form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link($target, 'Abbrechen').'</p>';
 
 output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 
