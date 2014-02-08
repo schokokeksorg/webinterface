@@ -80,12 +80,11 @@ if ($_GET['action'] == 'edit')
   if (isset($_POST['ar_valid_from']) && ($_POST['ar_valid_from'] == 'now')) {
     $valid_from_date = time();
   } else {
-    if (isset($_POST['ar_valid_from_day']) && isset($_POST['ar_valid_from_month']) && isset($_POST['ar_valid_from_year'])) {
-      $tmpdate = $_POST['ar_valid_from_year'].'-'.$_POST['ar_valid_from_month'].'-'.$_POST['ar_valid_from_day'];
-      if (date('Y-n-j', strtotime($tmpdate)) != $tmpdate) {
+    if (isset($_POST['ar_startdate'])) {
+      if (date('Y-m-d', strtotime($_POST['ar_startdate'])) != $_POST['ar_startdate']) {
         system_failure('Das Aktivierungs-Datum scheint ungültig zu sein.');
       } else {
-        $valid_from_date = strtotime($tmpdate);
+        $valid_from_date = strtotime($_POST['ar_startdate']);
       }
     }
   }
@@ -99,12 +98,11 @@ if ($_GET['action'] == 'edit')
   if (isset($_POST['ar_valid_until']) && ($_POST['ar_valid_until'] == 'infinity')) {
     $valid_until_date = NULL;
   } else {
-    if (isset($_POST['ar_valid_until_day']) && isset($_POST['ar_valid_until_month']) && isset($_POST['ar_valid_until_year'])) {
-      $tmpdate = $_POST['ar_valid_until_year'].'-'.$_POST['ar_valid_until_month'].'-'.$_POST['ar_valid_until_day'];
-      if (date('Y-n-j', strtotime($tmpdate)) != $tmpdate) {
+    if (isset($_POST['ar_enddate'])) {
+      if (date('Y-m-d', strtotime($_POST['ar_enddate'])) != $_POST['ar_enddate']) {
         system_failure('Das Deaktivierungs-Datum scheint ungültig zu sein.');
       } else {
-        $valid_until_date = strtotime($tmpdate);
+        $valid_until_date = strtotime($_POST['ar_enddate']);
       }
     }
   }

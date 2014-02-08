@@ -134,8 +134,8 @@ if (! $startdate || $startdate <= date('Y-m-d')) {
   $startdate = date('Y-m-d', time() + 1*24*60*60);
 }
 $form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".
-  "<input type=\"radio\" name=\"ar_valid_from\" value=\"future\" id=\"ar_valid_from_future\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_future\">Erst ab dem </label>".
-  html_datepicker("ar_valid_from", strtotime($startdate))."</p>";
+  "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_date\">Erst ab dem </label>".
+  "<input type=\"text\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" /></p>";
 
 $valid_until_infinity_checked = ($ar['valid_until'] == NULL) ? ' checked="checked"' : '';
 $valid_until_date_checked = ($ar['valid_until'] != NULL) ? ' checked="checked"' : '';
@@ -146,7 +146,7 @@ if (! $enddate) {
 $form .= "<h4>Deaktivierung</h4>";
 $form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id=\"ar_valid_until_infinity\"{$valid_until_infinity_checked} /> <label for=\"ar_valid_until_infinity\">Unbefristet</label><br />".
   "<input type=\"radio\" name=\"ar_valid_until\" value=\"date\" id=\"ar_valid_until_date\"{$valid_until_date_checked} /> <label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
-  html_datepicker("ar_valid_until", strtotime($enddate))."</p>";
+  "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /></p>";
 
 
 $subject = filter_input_general($ar['subject']);

@@ -182,5 +182,44 @@ $(document).ready(function(){
   $('#more_forwards').click(moreForward);
 
   $('div.vmail-forward input').on("change keyup paste", checkForward);
+
+
+  $.datepicker.regional['de'] = {clearText: 'löschen', clearStatus: 'aktuelles Datum löschen',
+                closeText: 'schließen', closeStatus: 'ohne Änderungen schließen',
+                prevText: '< zurück', prevStatus: 'letzten Monat zeigen',
+                nextText: 'vor >', nextStatus: 'nächsten Monat zeigen',
+                currentText: 'heute', currentStatus: '',
+                monthNames: ['Januar','Februar','März','April','Mai','Juni',
+                'Juli','August','September','Oktober','November','Dezember'],
+                monthNamesShort: ['Jan','Feb','Mär','Apr','Mai','Jun',
+                'Jul','Aug','Sep','Okt','Nov','Dez'],
+                monthStatus: 'anderen Monat anzeigen', yearStatus: 'anderes Jahr anzeigen',
+                weekHeader: 'Wo', weekStatus: 'Woche des Monats',
+                dayNames: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+                dayNamesShort: ['So','Mo','Di','Mi','Do','Fr','Sa'],
+                dayNamesMin: ['So','Mo','Di','Mi','Do','Fr','Sa'],
+                dayStatus: 'Setze DD als ersten Wochentag', dateStatus: 'Wähle D, M d',
+                dateFormat: 'dd.mm.yy', firstDay: 1, 
+                initStatus: 'Wähle ein Datum', isRTL: false};
+  $.datepicker.setDefaults( $.datepicker.regional[ "de" ] );
+  $.datepicker.setDefaults({
+    dateFormat: 'yy-mm-dd',
+    minDate: 1,
+    maxDate: "+3y"
+
+    });
+
+  $('#ar_startdate').datepicker();
+  $('#ar_startdate').change(function () {
+    $('#ar_valid_from_date').attr('checked', true)
+    $('#ar_enddate').datepicker("option", "minDate", $('#ar_startdate').val());
+    });
+
+  $('#ar_enddate').datepicker();
+  $('#ar_enddate').datepicker("option", "minDate", $('#ar_startdate').val());
+  $('#ar_enddate').change(function () {
+    $('#ar_valid_until_date').attr('checked', true)
+    });
 });
+
 
