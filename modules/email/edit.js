@@ -32,7 +32,7 @@
 
     $clone.find('input:first-of-type').val('');
     $clone.find('select:first-of-type')
-          .find('option:first-of-type').attr('selected', true);
+          .find('option:first-of-type').prop('selected', true);
     $clone.find('.warning').text('');
     $clone.find('.warning').hide();
     
@@ -48,7 +48,7 @@
     input = div.find('input:first');
     input.val('');
     select = div.find('select:first');
-    select.find('option:first').attr('selected', true);
+    select.find('option:first').prop('selected', true);
     if ($('div.vmail-forward').length > 1) {
       div.remove();
     }
@@ -129,23 +129,23 @@ function checkForwardCallback( result ) {
     return;
   }
   if (type == 'critical') {
-    element.find('select option[value="delete"]').attr('selected', true);
-    element.find('select option[value="none"]').attr('disabled', true);
-    element.find('select option[value="tag"]').attr('disabled', true);
-    element.find('select option[value="delete"]').attr('disabled', false);
+    element.find('select option[value="delete"]').prop('selected', true);
+    element.find('select option[value="none"]').prop('disabled', true);
+    element.find('select option[value="tag"]').prop('disabled', true);
+    element.find('select option[value="delete"]').prop('disabled', false);
     element.find('.warning').text('Weiterleitungen zu einigen großen E-Mail-Providern dürfen nur mit aktiviertem Spamfilter eingerichtet werden.');
     element.find('.warning').show()
   } else if (type == 'local') {
-    //element.find('select option[value="none"]').attr('selected', true);
-    element.find('select option[value="none"]').attr('disabled', false);
-    element.find('select option[value="tag"]').attr('disabled', false);
-    element.find('select option[value="delete"]').attr('disabled', false);
+    //element.find('select option[value="none"]').prop('selected', true);
+    element.find('select option[value="none"]').prop('disabled', false);
+    element.find('select option[value="tag"]').prop('disabled', false);
+    element.find('select option[value="delete"]').prop('disabled', false);
     element.find('.warning').hide()
   } else {
-    //element.find('select option[value="delete"]').attr('selected', true);
-    element.find('select option[value="none"]').attr('disabled', false);
-    element.find('select option[value="tag"]').attr('disabled', false);
-    element.find('select option[value="delete"]').attr('disabled', false);
+    //element.find('select option[value="delete"]').prop('selected', true);
+    element.find('select option[value="none"]').prop('disabled', false);
+    element.find('select option[value="tag"]').prop('disabled', false);
+    element.find('select option[value="delete"]').prop('disabled', false);
     element.find('.warning').hide()
   }
   $('#submit').prop('disabled', false);
@@ -214,14 +214,14 @@ $(document).ready(function(){
 
   $('#ar_startdate').datepicker();
   $('#ar_startdate').change(function () {
-    $('#ar_valid_from_date').attr('checked', true)
+    $('#ar_valid_from_date').prop('checked', true)
     $('#ar_enddate').datepicker("option", "minDate", $('#ar_startdate').val());
     });
 
   $('#ar_enddate').datepicker();
   $('#ar_enddate').datepicker("option", "minDate", $('#ar_startdate').val());
   $('#ar_enddate').change(function () {
-    $('#ar_valid_until_date').attr('checked', true)
+    $('#ar_valid_until_date').prop('checked', true)
     });
 });
 
