@@ -136,13 +136,13 @@ function checkForwardCallback( result ) {
     element.find('.warning').text('Weiterleitungen zu einigen großen E-Mail-Providern dürfen nur mit aktiviertem Spamfilter eingerichtet werden.');
     element.find('.warning').show()
   } else if (type == 'local') {
-    element.find('select option[value="none"]').attr('selected', true);
+    //element.find('select option[value="none"]').attr('selected', true);
     element.find('select option[value="none"]').attr('disabled', false);
     element.find('select option[value="tag"]').attr('disabled', false);
     element.find('select option[value="delete"]').attr('disabled', false);
     element.find('.warning').hide()
   } else {
-    element.find('select option[value="delete"]').attr('selected', true);
+    //element.find('select option[value="delete"]').attr('selected', true);
     element.find('select option[value="none"]').attr('disabled', false);
     element.find('select option[value="tag"]').attr('disabled', false);
     element.find('select option[value="delete"]').attr('disabled', false);
@@ -182,6 +182,9 @@ $(document).ready(function(){
   $('#more_forwards').click(moreForward);
 
   $('div.vmail-forward input').on("change keyup paste", checkForward);
+  
+  // trigger setup of warnings
+  $('div.vmail-forward input').change();
 
 
   $.datepicker.regional['de'] = {clearText: 'löschen', clearStatus: 'aktuelles Datum löschen',
