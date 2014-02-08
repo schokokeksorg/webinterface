@@ -20,9 +20,9 @@ if (! defined('__JQUERY_INCLUDED')) {
   define('__JQUERY_INCLUDED', '1');
   global $prefix;
   html_header('
-<link rel="stylesheet" href="'.$prefix.'external/jquery/jquery-ui.min.css" />
+<link rel="stylesheet" href="'.$prefix.'external/jquery/ui/jquery-ui.min.css" />
 <script type="text/javascript" src="'.$prefix.'external/jquery/jquery.min.js" ></script>
-<script type="text/javascript" src="'.$prefix.'external/jquery/jquery-ui.min.js" ></script>
+<script type="text/javascript" src="'.$prefix.'external/jquery/ui/jquery-ui.min.js" ></script>
 ');
 }
 
