@@ -97,6 +97,11 @@ foreach ($my_shortcuts as $shortcut) {
 }
 output('</div>');
 
+if (have_module('systemuser') && $_SESSION['role'] & ROLE_SYSTEMUSER) {
+  ini_set('include_path', ini_get('include_path').':modules/systemuser/include');
+  include('modules/systemuser/overview.php');
+}
+
 
 if (have_module('email') && $_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
   include('modules/email/vmailoverview.php');

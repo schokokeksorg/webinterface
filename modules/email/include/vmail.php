@@ -24,13 +24,15 @@ require_once('common.php');
 
 $forced_spamfilter_domains = array(
   't-online.de', 'gmx.de', 'gmx.net', 'web.de', 'gmail.com', 'googlemail.com',
-  'gmail.com', 'googlemail.de', 'freenet.de', 'aol.com', 'yahoo.com'
+  'gmail.com', 'googlemail.de', 'freenet.de', 'aol.com', 'yahoo.com', 'gmx.at', 
+  'ymail.com', 'hotmail.com', 'mail.de', 'email.de', 'online.de', 'outlook.com',
+  'me.com'
   );
 
 
 function forward_type($target) {
   global $forced_spamfilter_domains;
-  list($l, $d) = explode('@', $target, 2);
+  list($l, $d) = explode('@', strtolower($target), 2);
   DEBUG('Weiterleitung an '.$l.' @ '.$d);
   if (in_array($d, $forced_spamfilter_domains)) {
     // Domain in der Liste => Spam darf nicht weiter geleitet werden

@@ -77,7 +77,7 @@ function get_account_details($uid, $customerno=0)
   if ($customerno == 0)
     $customerno = $_SESSION['customerinfo']['customerno'];
   $args = array(":uid" => $uid, ":customerno" => $customerno);
-  $result = db_query("SELECT uid,username,name,shell,quota,erstellungsdatum FROM system.useraccounts WHERE kunde=:customerno AND uid=:uid", $args);
+  $result = db_query("SELECT uid,username,name,shell,server,quota,erstellungsdatum FROM system.useraccounts WHERE kunde=:customerno AND uid=:uid", $args);
   if ($result->rowCount() == 0)
     system_failure("Cannot find the requestes useraccount (for this customer).");
   return $result->fetch();
