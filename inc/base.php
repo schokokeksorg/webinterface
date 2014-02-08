@@ -2,7 +2,7 @@
 /*
 This file belongs to the Webinterface of schokokeks.org Hosting
 
-Written 2008-2013 by schokokeks.org Hosting, namely
+Written 2008-2014 by schokokeks.org Hosting, namely
   Bernd Wurst <bernd@schokokeks.org>
   Hanno Böck <hanno@schokokeks.org>
 
@@ -20,6 +20,17 @@ require_once('inc/debug.php');
 function config($key, $localonly = false)
 {
   global $config;
+
+  if ($key == "modules") {
+    // Stelle sicher, dass das "index"-Modul immer aktiv ist!
+    if (! in_array("index", $config['modules'])) {
+      $config['modules'][] = "index";
+    }
+    // Stelle sicher, dass das "about"-Modul immer aktiv ist!
+    if (! in_array("about", $config['modules'])) {
+      $config['modules'][] = "about";
+    }
+  }
 
   if ($key == 'modules' && isset($_SESSION['restrict_modules']))
   {

@@ -1,7 +1,7 @@
 /*
 This file belongs to the Webinterface of schokokeks.org Hosting
 
-Written 2008-2013 by schokokeks.org Hosting, namely
+Written 2008-2014 by schokokeks.org Hosting, namely
   Bernd Wurst <bernd@schokokeks.org>
   Hanno Böck <hanno@schokokeks.org>
 

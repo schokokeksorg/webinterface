@@ -1,45 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<?php
+/*
 This file belongs to the Webinterface of schokokeks.org Hosting
 
-Written 2008-2013 by schokokeks.org Hosting, namely
+Written 2008-2014 by schokokeks.org Hosting, namely
   Bernd Wurst <bernd@schokokeks.org>
   Hanno Böck <hanno@schokokeks.org>
 
-To the extent possible under law, the author(s) have dedicated 
-all copyright and related and neighboring rights to this 
-software to the public domain worldwide. This software is 
-distributed without any warranty.
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain 
-Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
 http://creativecommons.org/publicdomain/zero/1.0/
 
-Nevertheless, in case you use a significant part of this 
-code, we ask (but not require, see the license) that you 
-keep the authors' names in place and return your changes 
-to the public. We would be especially happy if you tell 
-us what you're going to do with this code.
--->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
+*/
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
-<head>
+title('Lizenzinformationen');
 
-<title>Administration - Bildrechte</title>
-<link rel="stylesheet" href="../css/default.css" type="text/css" media="screen" title="Normal" /></head>
-<body>
-
-<div class="content">
-<a name="content" style="display: none"> </a>
-
-
-<h3>Lizenzinformationen</h3>
-<p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webhosting. Der Source-Code ist unter <a href="http://source.schokokeks.org/">source.schokokeks.org</a> erhältlich und wurde unter der Lizenz CC0 / Public Domain freigegeben.</p>
+output('<p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webhosting. Der Source-Code ist unter <a href="http://source.schokokeks.org/">source.schokokeks.org</a> erhältlich und wurde unter der Lizenz CC0 / Public Domain freigegeben.</p>
 <p>Folgende Bestandteile wurden von anderen Autoren übernommen und unterliegen einer abweichenden Lizenz:</p>
 <ul>
   <li>Eine <a href="https://github.com/PHPGangsta/GoogleAuthenticator">Bibliothek zur Abwicklung der Google-Authenticator-Anmeldung</a> wurde von <a href="http://www.phpgangsta.de/2-faktor-authentifizierung-mit-dem-google-authenticator">Michael Kliewe (PHPGangsta)</a> übernommen und ist unter der BSD-Lizenz freigegeben</li>
+  <li>Die Bibliotheken <a href="http://jquery.com/">JQuery</a> und <a href="http://jqueryui.com/">JQueryUI</a>, veröffentlicht unter <a href="https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt">MIT-Lizenz</a></li>
+  <li><a href="http://code.google.com/p/php-iban/">php-iban</a>, veröffentlicht unter <a href="https://www.gnu.org/licenses/gpl-3.0">GPLv3</a></li>
+  <li>Die Bibliothek <a href="https://github.com/gggeek/phpxmlrpc">XML-RPC for PHP</a> von Edd Dumbill / Gaetano Giunta</li>
 </ul>
 <p>Einzelne Grafiken wurden aus freien Projekten entnommen oder es wurden freie Grafiken verwendet.</p>
 <p>Der Ursprung von Grafiken ist:</p>
@@ -50,9 +33,4 @@ us what you're going to do with this code.
 </ul>
 
 <p>Diese Urheberinformation ist nach bestem Wissen erstellt. Sollten Sie Fehler erkennen oder verwenden wir Ihre Arbeit ohne dies hier zu erwähnen, dann <a href="http://www.schokokeks.org/kontakt">kontaktieren Sie uns</a> bitte.</p>
-
-</div>
-
-</body>
-</html>
-
+');
