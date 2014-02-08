@@ -35,7 +35,7 @@ if ($_GET['action'] == 'new')
     $key = $_POST['key'];
   }
   $oldcert = NULL;
-  if (isset($_REQUEST['replace']))
+  if (isset($_REQUEST['replace']) && is_numeric($_REQUEST['replace']))
   {
     $oldcert = cert_details($_REQUEST['replace']);
   }
