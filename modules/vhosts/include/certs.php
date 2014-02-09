@@ -254,13 +254,13 @@ distinguished_name      = req_distinguished_name
 
 [ req_distinguished_name ]
 countryName                     = Country Name (2 letter code)
-countryName_default             = DE
+countryName_default             = 
 stateOrProvinceName             = State or Province Name (full name)
-stateOrProvinceName_default     = Baden-Wuerttemberg
+stateOrProvinceName_default     = 
 localityName                    = Locality Name (eg, city)
-localityName_default            = Murrhardt
+localityName_default            = 
 0.organizationName              = Organization Name (eg, company)
-0.organizationName_default      = schokokeks.org
+0.organizationName_default      = 
 
 commonName = Common Name
 commonName_default = {$cn}
