@@ -380,6 +380,10 @@ function save_vmail_account($account)
       $quote = "attach";
     elseif ($ar['quote'] == NULL)
       $quote = NULL;
+    if (! check_emailaddr($ar['fromaddr'])) {
+      input_error("Die Absenderadresse sieht ungültig aus. Es wird Ihre E-Mail-Adresse benutzt!");
+      $ar['fromaddr'] = NULL;
+    }
     $query = "REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
              "VALUES (:id, :valid_from, :valid_until, :fromname, :fromaddr, :subject, :message, :quote)";
     $args = array(":id" => $id,
