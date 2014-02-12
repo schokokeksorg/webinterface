@@ -193,7 +193,7 @@ function save_cert($info, $cert, $key)
 function refresh_cert($id, $info, $cert, $key = NULL)
 {
   openssl_x509_export($cert, $cert);
-  $chain = maybe_null( get_chain($cert) );
+  $chain = get_chain($cert);
 
   $id = (int) $id;
   $oldcert = cert_details($id);
