@@ -390,7 +390,7 @@ function save_vmail_account($account)
                   ":valid_from" => $ar['valid_from'],
                   ":valid_until" => $ar['valid_until'],
                   ":fromname" => $ar['fromname'],
-                  ":fromaddr" => check_emailaddr($ar['fromaddr']),
+                  ":fromaddr" => $ar['fromaddr'],
                   ":subject" => $ar['subject'],
                   ":message" => $ar['message'],
                   ":quote" => $quote);
