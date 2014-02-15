@@ -84,7 +84,7 @@ function save_ftpuser($data)
       $salt = random_string(8);
       $password_hash = crypt($data['password'], "\$1\${$salt}\$");
     }
-    $set_pasword = true;
+    $set_password = true;
     $password_query = "password='{$password_hash}', ";
   }
   elseif (! $data['id'])
