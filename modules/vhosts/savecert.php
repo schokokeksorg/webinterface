@@ -26,18 +26,22 @@ if ($_GET['action'] == 'new')
     system_failure("Es wurde kein Zertifikat eingegeben");
   }
   $cert = $_POST['cert'];
+  $oldcert = NULL;
+  if (isset($_REQUEST['replace']) && is_numeric($_REQUEST['replace']))
+  {
+    $oldcert = cert_details($_REQUEST['replace']);
+    DEBUG('altes cert:');
+    DEBUG($oldcert);
+  }
   $key = NULL;
   if (! isset($_POST['key']) && isset($_REQUEST['csr']))
   {
     $csr = csr_details($_REQUEST['csr']);
     $key = $csr['key'];
-  } else {
-    $key = $_POST['key'];
-  }
-  $oldcert = NULL;
-  if (isset($_REQUEST['replace']) && is_numeric($_REQUEST['replace']))
-  {
-    $oldcert = cert_details($_REQUEST['replace']);
+  } elseif (isset($_POST['key']) and $_POST['key']) {
+    $key = $_POST['key']; 
+  } elseif ($oldcert) {
+    $key = $oldcert['key'];
   }
 
   if (! $cert or ! $key)

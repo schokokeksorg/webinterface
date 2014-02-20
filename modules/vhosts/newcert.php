@@ -59,8 +59,13 @@ $form = '
 <h4>Server-Zertifikat:</h4>
 <p><textarea name="cert" rows="10" cols="70"></textarea></p>
 
-<h4>privater Schlüssel:</h4>
-<p><textarea name="key" rows="10" cols="70"></textarea></p>
+<h4>privater Schlüssel:</h4>';
+
+if ($oldcert) {
+  $form .= '<p>Wenn Ihre Zertifizierungsstelle einen echten <em>renew</em>-Vorgang durchführt und das Zertifikat basierend auf dem alten CSR neu ausgestellt hat, brauchen Sie hier keinen privaten Schlüssel anzugeben.</p>';
+}
+
+$form .= '<p><textarea name="key" rows="10" cols="70"></textarea></p>
 
 <p><input type="submit" value="Speichern" /></p>
 
@@ -72,4 +77,4 @@ output('<p>Es ist ein <strong>Zertifikat</strong> und ein dazu passender <strong
 <pre>-----BEGIN CERTIFICATE-----
 ...
 -----END CERTIFICATE-----</pre>
-<p>aufweisen. Sind die genannten Vorausetzungen erfüllt, können Sie Ihre Zertifikats-Daten einfach in untenstehendes Formular eingeben.</p>');
+<p>aufweisen.');

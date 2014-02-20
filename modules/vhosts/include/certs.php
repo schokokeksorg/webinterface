@@ -130,7 +130,7 @@ function validate_certificate($cert, $key)
   // Prüfe ob Key und Zertifikat zusammen passen
   if (openssl_x509_check_private_key($cert, $key) !== true)
   {
-    DEBUG("Zertifikat und Key passen nicht zusammen");
+    DEBUG("Zertifikat und Key passen nicht zusammen: ".openssl_x509_check_private_key($cert, $key));
     return CERT_INVALID;
   }
 
