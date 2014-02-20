@@ -30,7 +30,7 @@ class DB extends PDO {
     }
     $username = config('db_user', true);
     $password = config('db_pass', true);
-    parent::__construct($dsn, $username, $password);
+    parent::__construct($dsn, $username, $password, array(PDO::ATTR_TIMEOUT => "30"));
   }
 
 
@@ -108,9 +108,9 @@ function __ensure_connected()
     } catch (PDOException $e) {
       global $debugmode;
       if ($debugmode) {
-        system_failure("MySQL-Fehler: ".$e->getMessage());
+        die("MySQL-Fehler: ".$e->getMessage());
       } else {
-        system_failure("Fehler bei der Datenbankverbindung!");
+        die("Fehler bei der Datenbankverbindung!");
       }
     }
   }
