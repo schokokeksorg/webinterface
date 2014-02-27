@@ -19,7 +19,7 @@ require_once('inc/security.php');
 function do_ajax_cert_login() {
   global $prefix;
   require_once('inc/jquery.php');
-  javascript('certlogin.js');
+  javascript('certlogin.js', 'index');
 }
 
 function get_logins_by_cert($cert) 

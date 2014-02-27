@@ -26,11 +26,14 @@ if (! defined('__JQUERY_INCLUDED')) {
 ');
 }
 
-function javascript($file = NULL) {
+function javascript($file = NULL, $module = NULL) {
   global $go, $prefix;
-  list($module, $page) = explode('/', $go, 2);
+  list($mod, $page) = explode('/', $go, 2);
   if (! $file) {
     $file = $page.'.js';
+  }
+  if (! $module) {
+    $module = $mod;
   }
   if (file_exists('modules/'.$module.'/'.$file)) {
     html_header('
