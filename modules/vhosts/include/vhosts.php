@@ -442,6 +442,9 @@ function save_alias($alias)
   if ($alias['domain_id'] == -1)
     $domain = NULL;
   $vhost = get_vhost_details( (int) $alias['vhost']);
+  if (! $alias['hostname']) {
+    $alias['hostname'] = NULL;
+  }
   $args = array(":hostname" => $alias['hostname'],
                 ":domain" => $domain,
                 ":vhost" => $vhost['id'],
