@@ -76,18 +76,18 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
   $id = (int) $id;
   $handle = filter_input_username($handle);
   $sshkey = filter_input_general($sshkey);
-
-  $pwhash = NULL;
-  if ($password_http)
-  {
-    if ($password_http == '************')
-      $pwhash = 'password';
-    else
-      $pwhash = "'{SHA}".base64_encode(sha1($password_http, true))."'";
+  if (chop($sshkey) == '') {
+    $sshkey = NULL;
   }
-  
-  $args = array(":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey, ":id" => $id);
-  db_query("UPDATE dns.dyndns SET handle=:handle, password=:pwhash, sshkey=:sshkey WHERE id=:id", $args);
+
+  $args = array(":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id);
+  $pwhash = NULL;
+  if ($password_http && $password_http != '************') {
+      $args[":pwhash"] = "{SHA}".base64_encode(sha1($password_http, true));
+      db_query("UPDATE dns.dyndns SET handle=:handle, password=:pwhash, sshkey=:sshkey WHERE id=:id", $args);
+  } else {
+      db_query("UPDATE dns.dyndns SET handle=:handle, sshkey=:sshkey WHERE id=:id", $args);
+  }
   logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "edited account »{$id}«");
 }
 
