@@ -147,7 +147,7 @@ function create_mysql_account($username, $description = '')
   if (! validate_mysql_username($username))
   {
     logger(LOG_WARNING, "modules/mysql/include/mysql", "mysql", "illegal username »{$username}«");
-    input_error("Der eingegebene Benutzername entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
+    system_failure("Der eingegebene Benutzername entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
   $args = array(":uid" => $_SESSION['userinfo']['uid'],
@@ -172,7 +172,7 @@ function create_mysql_database($dbname, $description = NULL, $server = NULL)
   if (! validate_mysql_dbname($dbname))
   {
     logger(LOG_WARNING, "modules/mysql/include/mysql", "mysql", "illegal db-name »{$dbname}«");
-    input_error("Der eingegebene Datenbankname entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
+    system_failure("Der eingegebene Datenbankname entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
     return NULL;
   }
   if (! in_array($server, additional_servers()) || ($server == my_server_id())) {

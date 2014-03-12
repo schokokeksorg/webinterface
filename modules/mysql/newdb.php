@@ -41,9 +41,11 @@ while (in_array($suggestion, $dbnames)) {
   $count++;
 }
 
+$hint = 'Der Datenbankname muss mit <strong>'.$username.'_</strong> beginnen.';
+
 $form = '<h4>Name der neuen Datenbank</h4>
 <input type="text" name="newdb" value="'.$suggestion.'" />
-<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. Der Datenbankname muss mit dem Benutzernamen beginnen.</p>
+<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. '.$hint.'</p>
 <p><label for="description">Optionale Beschreibung dieser Datenbank:</label> <input type="text" name="description" id="description" /></p>
 ';
 if (count(additional_servers()) > 0) {

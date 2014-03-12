@@ -65,9 +65,15 @@ while (in_array($suggestion, $usernames)) {
   $count++;
 }
 
+$hint = 'Der MySQL-Benutzername muss entweder <strong>'.$username.'</strong> lauten oder mit <strong>'.$username.'_</strong> beginnen.';
+if (in_array($username, $usernames)) {
+  $hint = 'Der MySQL-Benutzername muss mit <strong>'.$username.'_</strong> beginnen.';
+}
+
+
 $form = '<h4>Benutzername</h4>
 <input type="text" name="newuser" value="'.$suggestion.'" maxlength="16" />
-<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. Der Benutzername muss mit Ihrem System-Benutzernamen beginnen.</p>
+<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. '.$hint.'</p>
 <p>Aufgrund einer Einschränkung des MySQL-Servers dürfen Benutzernamen nur maximal 16 Zeichen lang sein.</p>
 <p><label for="description">Optionale Beschreibung dieses Benutzers:</label> <input type="text" name="description" id="description" /></p>
 <h4>Passwort</h4>
