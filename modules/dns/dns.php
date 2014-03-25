@@ -54,7 +54,7 @@ foreach($domains AS $dom)
   $records = get_domain_records($dom->id);
 
   $autorec = ($dom->autodns == 1 ? 'Ja' : 'Nein');
-  if ($dom->provider != 'terions' || $dom->billing != 'regular') {
+  if ($dom->provider != 'terions' || $dom->billing != 'regular' || $dom->registrierungsdatum == NULL) {
     $state = check_dns($dom->domainname, $dom->tld);
     if ($state !== True) {
       $current = 'Momentaner DNS-Server (u.A.): '.$state;
@@ -105,7 +105,7 @@ if ($external_domains) {
 }
 if ($unused_dns) {
   $output.='<h4>Wichtiger Hinweis</h4>
-<p>In der obigen Liste befinden sich Domains, bei denen unser DNS-Server aktiviert ist aber die Domain momentan auf einen anderen DNS-Server eingerichtet ist. Dies ist normal bei bevorstehenden Domain-Transfers zu uns, sollte aber nicht dauerhaft so bleiben.<p>
+<p>In der obigen Liste befinden sich Domains, bei denen unser DNS-Server aktiviert ist aber die Domain momentan auf einen anderen DNS-Server eingerichtet ist. <strong>Dies ist normal bei bevorstehenden Domain-Transfers zu uns</strong>, sollte aber nicht dauerhaft so bleiben.<p>
 <p>Wenn Sie weiterhin einen externen DNS-Server benutzen möchten, dann schalten Sie bitte unseren DNS-Server für diese Domain aus, damit es nicht zu Fehlfunktionen kommt.</p>
 <p>Im Zweifel sprechen Sie bitte unseren Support an.</p>';
 }
