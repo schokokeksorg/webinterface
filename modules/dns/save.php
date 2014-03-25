@@ -30,7 +30,7 @@ if (isset($_REQUEST['id']))
   $id = (int) $_REQUEST['id'];
 
 
-if ($_GET['type'] == 'dyndns') {
+if (isset($_GET['type']) && $_GET['type'] == 'dyndns') {
   if ($_GET['action'] == 'delete') {
     $sure = user_is_sure();
     if ($sure === NULL)
@@ -63,6 +63,50 @@ if ($_GET['type'] == 'dyndns') {
   }
 }
 
+
+if (isset($_GET['dns']) && isset($_GET['dom'])) {
+  $section = 'dns_dns';
+  $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
+  $dom = NULL;
+  foreach ($domains as $d) {
+    if ($d->id == $_GET['dom']) {
+      $dom = $d;
+      break;
+    }
+  }
+  if (! $dom) {
+    system_failure("Domain nicht gefunden!");
+  }
+  if ($_GET['dns'] == 0) {
+    if ($dom->dns == 1) {
+      $sure = user_is_sure();
+      if ($sure === NULL)
+      {
+        are_you_sure("dom={$dom->id}&dns=0", "Möchten Sie die Domain {$dom->fqdn} aus dem DNS-Server entfernen?");
+      }
+      elseif ($sure === true)
+      {
+        remove_from_dns($dom->id);
+        redirect('dns');
+      }
+      elseif ($sure === false)
+      {
+        redirect('dns');
+      }      
+    } else {
+      system_failure("Diese Domain ist nicht im DNS-Server eingetragen.");
+    }
+  }
+  if ($_GET['dns'] == 1) {
+    if ($dom->dns == 0) {
+      add_to_dns($dom->id);
+      redirect('dns');
+    } else {
+      system_failure("Diese Domain ist bereits im DNS-Server eingetragen.");
+    }
+  }
+  
+}
 
 
 

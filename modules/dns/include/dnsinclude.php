@@ -338,4 +338,77 @@ function domain_is_maildomain($domain)
 }
 
 
-?>
+$own_ns = array();
+
+function own_ns() {
+  global $own_ns;
+
+  if (count($own_ns) < 1) {
+    $auth = dns_get_record(config('masterdomain'), DNS_NS);
+    foreach ($auth as $ns) {
+      $own_ns[] = $ns['target'];   
+    }
+  }
+
+  return $own_ns;  
+}
+
+
+$tld_ns = array();
+
+function check_dns($domainname, $tld) {
+  global $tld_ns;
+  $domain=idn_to_ascii($domainname.".".$tld);
+
+  if (! isset($tld_ns[$tld])) {
+    $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
+    $line = explode("\n", $resp, 2)[0];
+    $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
+    $tld_ns[$tld] = $NS;
+  }
+  
+  $resp = shell_exec('dig @'.$tld_ns[$tld].' +noall +authority -t ns '.$domain.'.');
+  $line = explode("\n", $resp, 2)[0];
+  if (preg_match('/^.*\\sIN\\s+NS\\s+/', $line) === 0) {
+    return "NXDOMAIN";
+  }
+  $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+).$/", '\1', $line);
+  
+  $own_ns = own_ns();
+
+  if (in_array($NS, $own_ns)) {
+    return True;
+  }
+  return $NS;
+}
+
+function remove_from_dns($dom) {
+  $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
+  $current = NULL;
+  foreach ($domains as $d) {
+    if ($d->id == $dom && $d->dns == 1) {
+      $current = $d;
+      break;
+    }
+  }
+  if (! $current) {
+    system_failure("Domain nicht gefunden!");
+  }
+  db_query("UPDATE kundendaten.domains SET dns=0 WHERE id=?", array($current->id));
+}
+
+function add_to_dns($dom) {
+  $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
+  $current = NULL;
+  foreach ($domains as $d) {
+    if ($d->id == $dom && $d->dns == 0) {
+      $current = $d;
+      break;
+    }
+  }
+  if (! $current) {
+    system_failure("Domain nicht gefunden!");
+  }
+  db_query("UPDATE kundendaten.domains SET dns=1, autodns=1 WHERE id=?", array($current->id));
+}
+
