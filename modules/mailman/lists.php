@@ -63,7 +63,7 @@ if (! empty($lists))
 
     output("<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$list['admin']}</td><td>{$status}</td><td style=\"text-align: right;\">{$sizestr}</td>");
     if ($list['status'] == 'running')
-      output("<td>".internal_link('save', icon_delete(), "action=delete&id={$list['id']}")." <a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\" title=\"Zur Listen-Verwaltung\">".other_icon("database_go.png")."</a></td></tr>\n");
+      output("<td>".internal_link('save', icon_delete("Mailingliste löschen"), "action=delete&id={$list['id']}")." <a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")."</a></td></tr>\n");
     else
       output("<td>&#160;</td></tr>\n");
   }
