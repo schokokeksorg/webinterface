@@ -19,6 +19,8 @@ require_role(ROLE_SYSTEMUSER);
 $section = 'git_git';
 include('git.php');
 
+refresh_gitolite();
+
 if ($_GET['action'] == 'newuser') {
   check_form_token('git_newkey');
   $handle = $_POST['handle'];
