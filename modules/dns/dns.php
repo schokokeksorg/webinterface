@@ -45,9 +45,9 @@ foreach($domains AS $dom)
   $style="";
   if ($dom->dns == 0) {
     if (strstr($dom->domainname, '.')) {
-      $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>'.icon_disabled('DNS-Server ausgeschaltet').'&nbsp;DNS-Server für Subdomains bitte mit dem Support besprechen</td></tr>';
+      $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>Subdomain ohne eigene DNS-Zone</td></tr>';
     } else {
-      $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>'.icon_disabled('DNS-Server ausgeschaltet').'&nbsp;'.internal_link('save', icon_add().' Einschalten', "dom={$dom->id}&dns=1").'</td></tr>';
+      $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>'.icon_disabled('DNS-Server ausgeschaltet').' Es wird ein externer DNS-Server benutzt<br />'.internal_link('save', icon_add().' Lokalen DNS-Server aktivieren', "dom={$dom->id}&dns=1").'</td></tr>';
     }
     continue;
   }
@@ -62,10 +62,10 @@ foreach($domains AS $dom)
         $current = 'Diese Domain ist aktuell nicht registriert.';
       }
       if (substr_compare($state, config('masterdomain'), -strlen(config('masterdomain')), strlen(config('masterdomain'))) === 0) {
-        $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').icon_warning('Es werden veraltete DNS-Server benutzt').'&nbsp;'.$current.'</td></tr>';
+        $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').'<br />'.icon_warning().'Es werden veraltete DNS-Server benutzt<br />'.$current.'</td></tr>';
         continue;
       } else {
-        $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').icon_warning('DNS-Server eingeschaltet aber nicht genutzt').'&nbsp;'.$current.'<br />'.internal_link('save', icon_delete().' Abschalten', "dom={$dom->id}&dns=0").'</td></tr>';
+        $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').'<br />'.icon_warning().' Lokaler DNS-Server eingeschaltet aber nicht genutzt<br />'.$current.'<br />'.internal_link('save', icon_delete().' Lokalen DNS-Server abschalten', "dom={$dom->id}&dns=0").'</td></tr>';
         $unused_dns = True;
         continue;
       }
