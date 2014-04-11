@@ -160,8 +160,13 @@ function get_mailaccount_id($accountname)
                 ":domain" => $domain);
 
   $result = db_query("SELECT acc.id FROM mail.mailaccounts AS acc LEFT JOIN mail.v_domains AS dom ON (dom.id=acc.domain) WHERE local=:local AND dom.domainname=:domain", $args);
-  if ($result->rowCount() != 1)
+  if (($result->rowCount() == 0) && ($domain == config('masterdomain'))) {
+    unset($args[':domain']);
+    $result = db_query("SELECT acc.id FROM mail.mailaccounts AS acc WHERE local=:local AND acc.domain IS NULL", $args);
+  }
+  if ($result->rowCount() != 1) {
     system_failure('account nicht eindeutig');
+  }    
   $acc = $result->fetch();
   return $acc['id'];
 }
