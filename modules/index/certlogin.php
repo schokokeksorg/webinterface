@@ -24,7 +24,7 @@ if ($_SESSION['role'] == ROLE_ANONYMOUS) {
   redirect('index');
 }
 
-output('<p>Sie werden nun über Ihr SSL-Client-Zertifikat eingeloggt. Möglicherweise werden Sie von Ihrem Browser zunächst gebeten, ein Zertifkkat auszuwählen.</p>');
+output('<p>Sie werden nun über Ihr SSL-Client-Zertifikat eingeloggt. Möglicherweise werden Sie von Ihrem Browser zunächst gebeten, ein Zertifikat auszuwählen.</p>');
 
 output('<p>Sollte der Login nicht funktionieren, klicken Sie bitte diesen Link:</p>
 <p><strong>'.internal_link('../../certlogin/', 'Login über SSL-Client-Zertifikat').'</strong></p>

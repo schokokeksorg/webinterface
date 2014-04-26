@@ -40,7 +40,7 @@ function prepare_cert($cert)
 function get_logins_by_cert($cert) 
 {
 	$cert = prepare_cert($cert);
-	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=?", array($cert));
+	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
 	if ($result->rowCount() < 1)
 		return NULL;
 	else {

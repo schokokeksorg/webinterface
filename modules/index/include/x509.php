@@ -65,7 +65,7 @@ function get_certs_by_username($username)
 }
 
 
-function add_clientcert($certdata, $dn, $issuer, $startpage='')
+function add_clientcert($certdata, $dn, $issuer, $startpage=NULL)
 {
   $type = NULL;
   $username = NULL;
