@@ -279,8 +279,8 @@ function newkey($pubkey, $handle)
   $username = $_SESSION['userinfo']['username'];
   
   $handle = $username.'-'.$handle;
-  if (! validate_name($handle)) {
-    system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich, Binderstrich und Punkt benutzen.");
+  if (! validate_name($handle) || (str_replace(".", "x", $handle) != $handle)) {
+    system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich und Bindestrich benutzen.");
   }
 
   $keyfile = $key_dir.'/'.$handle.'.pub';
