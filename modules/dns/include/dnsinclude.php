@@ -200,6 +200,9 @@ function save_dns_record($id, $record)
   $dom->ensure_userdomain();
   if (! $dom->id)
     system_failure('invalid domain');
+  if ($record['hostname'] == '') {
+    $record['hostname'] = NULL;
+  }
   verify_input_hostname($record['hostname'], true);
   if ($record['ttl'] &&  (int) $record['ttl'] < 1)
     system_failure('Fehler bei TTL');
