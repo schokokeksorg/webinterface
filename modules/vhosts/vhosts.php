@@ -32,7 +32,12 @@ output("<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als
 ");
 
 
-$vhosts = list_vhosts();
+$domain = NULL;
+if (isset($_REQUEST['domain']) && $_REQUEST['domain'] != '') {
+  $domain = $_REQUEST['domain'];
+  output('<p class="warning"><strong>Filter aktiv!</strong> Momentan werden nur Einstellungen für die Domain <strong>'.filter_input_general($domain).'</strong> angezeigt. Klicken Sie '.internal_link('', 'hier', 'domain=').' um alle Einstellungen anzuzeigen.</p>');
+}
+$vhosts = list_vhosts($domain);
 $traffic_sum = 0;
 
 if (count($vhosts) > 0)
@@ -51,7 +56,15 @@ if (count($vhosts) > 0)
     $fqdn = $vhost['fqdn'];
     $class = 'odd';
     if ($even) $class = 'even';
-    output("<tr class=\"{$class}\"><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"')."</td><td>".internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost='.$vhost['id'] )."</td><td>");
+    $proto = 'http';
+    if ($vhost['ssl'] == 'https' || $vhost['ssl'] == 'forward') {
+      $proto = 'https';
+    }
+    $linkuri = $vhost['fqdn'];
+    if (strstr($vhost['options'], 'aliaswww')) {
+      $linkuri = "www.".$vhost['fqdn'];
+    }
+    output("<tr class=\"{$class}\"><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"')."</td><td><a href=\"{$proto}://{$linkuri}\">".other_icon('world_link.png', 'Website aufrufen')."</a> ".internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost='.$vhost['id'] )."</td><td>");
     $aliases = get_all_aliases($vhost);
     $tmp = '';
     if (count($aliases) > 0)
