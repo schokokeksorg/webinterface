@@ -86,11 +86,11 @@ function upgradeable($appname, $version)
     DEBUG("found MediaWiki");
     return 'mediawiki';
   }
-  elseif ($appname == 'owncloud') 
+  /*elseif ($appname == 'owncloud') 
   {
     DEBUG('found OwnCloud');
     return 'owncloud';
-  }
+  }*/
   DEBUG("found no upgradeable webapp!");
   return NULL;
 }
