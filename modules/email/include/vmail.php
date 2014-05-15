@@ -375,11 +375,13 @@ function save_vmail_account($account)
 
   if (is_array($account['autoresponder'])) {
     $ar = $account['autoresponder'];
-    $quote = "inline";
+    $quote = NULL;
     if ($ar['quote'] == 'attach')
       $quote = "attach";
-    elseif ($ar['quote'] == NULL)
-      $quote = NULL;
+    elseif ($ar['quote'] == 'inline')
+      $quote = 'inline';
+    elseif ($ar['quote'] == 'teaser')
+      $quote = 'teaser';
     if (! check_emailaddr($ar['fromaddr'])) {
       input_error("Die Absenderadresse sieht ungültig aus. Es wird Ihre E-Mail-Adresse benutzt!");
       $ar['fromaddr'] = NULL;

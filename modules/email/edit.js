@@ -208,14 +208,19 @@ $(document).ready(function(){
   $.datepicker.setDefaults({
     dateFormat: 'yy-mm-dd',
     minDate: 1,
-    maxDate: "+3y"
+    maxDate: "+2m"
 
     });
 
   $('#ar_startdate').datepicker();
   $('#ar_startdate').change(function () {
     $('#ar_valid_from_date').prop('checked', true)
-    $('#ar_enddate').datepicker("option", "minDate", $('#ar_startdate').val());
+    mindate = $('#ar_startdate').datepicker("getDate");
+    mindate.setDate(mindate.getDate()+1);
+    $('#ar_enddate').datepicker("option", "minDate", mindate);
+    maxdate = $('#ar_startdate').datepicker("getDate");
+    maxdate.setDate(maxdate.getDate()+60);
+    $('#ar_enddate').datepicker("option", "maxDate", maxdate);
     });
 
   $('#ar_enddate').datepicker();

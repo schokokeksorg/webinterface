@@ -133,6 +133,9 @@ if ($_GET['action'] == 'edit')
   }
 
   if (isset($_POST['ar_quote'])) {
+    if ($_POST['ar_quote'] == 'teaser') {
+      $ar['quote'] = 'teaser';
+    }
     if ($_POST['ar_quote'] == 'inline') {
       $ar['quote'] = 'inline';
     }

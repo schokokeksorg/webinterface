@@ -144,10 +144,13 @@ if (! $enddate) {
   $enddate = date('Y-m-d', time() + 7*24*60*60);
 }
 $form .= "<h4>Deaktivierung</h4>";
+$form .= "<p><label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
+  "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /><br/><small>(Automatische Antworten sind nur befristet erlaubt. Benötigen Sie langfristig funktionierende automatische Antworten, sprechen Sie unsere Administratoren bitte an, dann suchen wir eine Lösung.)</small></p>";
+/*
 $form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id=\"ar_valid_until_infinity\"{$valid_until_infinity_checked} /> <label for=\"ar_valid_until_infinity\">Unbefristet</label><br />".
   "<input type=\"radio\" name=\"ar_valid_until\" value=\"date\" id=\"ar_valid_until_date\"{$valid_until_date_checked} /> <label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
-  "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /></p>";
-
+  "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /><br/><small>(Automatische Antworten sind nur befristet erlaubt. Benötigen Sie langfristig funktionierende automatische Antworten, sprechen Sie unsere Administratoren bitte an, dann suchen wir eine Lösung.)</small></p>";
+*/
 
 $subject = filter_input_general($ar['subject']);
 if ($subject == NULL)
@@ -168,8 +171,9 @@ if (! $quote)
   $quote = 'none';
 $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
   html_select('ar_quote', array("none" => 'nicht in Antwort einschließen', 
-                                "inline" => 'zitieren (max. 50 Zeilen)', 
-                                "attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
+                                "teaser" => 'anreißen (erste 10 Zeilen)', 
+                                "inline" => 'zitieren (max. 50 Zeilen)'), $quote)."</p>";
+                                //"attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
 
 
 $ar_from_default_checked = ($ar['fromname'] == NULL) ? ' checked="checked"' : '';
