@@ -165,7 +165,7 @@ function generate_bezahlcode_image($id)
 
 function get_lastschrift($rechnungsnummer) {
   $rechnungsnummer = (int) $rechnungsnummer;
-  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.id=sl.rechnungsnummer) WHERE rechnungsnummer=? AND re.abbuchung=1", array($rechnungsnummer));
+  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.sepamandat=sl.mandatsreferenz) WHERE rechnungsnummer=? AND re.abbuchung=1", array($rechnungsnummer));
   if ($result->rowCount() == 0) {
     return NULL;
   }
