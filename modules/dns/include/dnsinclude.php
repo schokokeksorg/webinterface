@@ -79,10 +79,20 @@ function create_dyndns_account($handle, $password_http, $sshkey)
 function edit_dyndns_account($id, $handle, $password_http, $sshkey)
 {
   $id = (int) $id;
+  $oldaccount = get_dyndns_account($id);
   $handle = filter_input_username($handle);
   $sshkey = filter_input_general($sshkey);
   if (chop($sshkey) == '') {
     $sshkey = NULL;
+  }
+
+  if ($oldaccount['handle'] != $handle) {
+    $masterdomain = new Domain(config('masterdomain'));
+    db_query("UPDATE dns.custom_records SET hostname=:newhostname WHERE ".
+             "hostname=:oldhostname AND domain=:dom AND dyndns=:dyndns AND ip IS NULL",
+             array(":dom" => $masterdomain->id, ":newhostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'],
+                   ":oldhostname" => $oldaccount['handle'].'.'.$_SESSION['userinfo']['username'],  ":dyndns" => $id));
+
   }
 
   $args = array(":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id);
