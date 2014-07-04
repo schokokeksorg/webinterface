@@ -67,6 +67,11 @@ function create_dyndns_account($handle, $password_http, $sshkey)
   db_query("INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
            "(:uid, :handle, :pwhash, :sshkey)",
            array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey));
+  $dyndns_id = db_insert_id();
+  $masterdomain = new Domain(config('masterdomain'));
+  db_query("INSERT INTO dns.custom_records (type, domain, hostname, dyndns, ttl) VALUES ".
+           "('a', :dom, :hostname, :dyndns, 120)",
+           array(":dom" => $masterdomain->id, ":hostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'], ":dyndns" => $dyndns_id));
   logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "inserted account");
 }
 
@@ -108,7 +113,9 @@ function get_dyndns_records($id)
   $data = array();
   while ($entry = $result->fetch()) {
     $dom = new Domain((int) $entry['domain']);
-    $dom->ensure_userdomain();
+    if ($dom->fqdn != config('masterdomain')) {
+      $dom->ensure_userdomain();
+    }
     $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
     if (! $entry['hostname'])
       $entry['fqdn'] = $dom->fqdn;

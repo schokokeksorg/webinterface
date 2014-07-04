@@ -40,11 +40,18 @@ output('<table><tr><th>Hostname</th><th>Typ</th><th>IP-Adresse/Inhalt</th><th>TT
 ');
 foreach ($records AS $rec)
 {
+  $editable = true;
   $data = ( $rec['ip'] ? $rec['ip'] : $rec['data'] );
   if ($rec['dyndns'])
   {
-    $dyndns = get_dyndns_account($rec['dyndns']);
-    $data = internal_link('dyndns_edit', '<em>DynDNS #'.$rec['dyndns'].' ('.$dyndns['handle'].')</em>', 'id='.$rec['dyndns']);
+    if ($domain->fqdn == config('masterdomain'))
+    { 
+      $data = '<em>DynDNS #'.$rec['dyndns'].'</em>';
+      $editable = false;
+    } else {
+      $dyndns = get_dyndns_account($rec['dyndns']);
+      $data = internal_link('dyndns_edit', '<em>DynDNS #'.$rec['dyndns'].' ('.$dyndns['handle'].')</em>', 'id='.$rec['dyndns']);
+    }
   }
   if ($rec['type'] == 'mx')
   {
@@ -56,7 +63,10 @@ foreach ($records AS $rec)
   }
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
   $link = $rec['fqdn'];
-  if (in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp'))) {
+  if (!in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp'))) {
+      $editable = false;
+  }
+  if ($editable) {
       $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
   }
   output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
