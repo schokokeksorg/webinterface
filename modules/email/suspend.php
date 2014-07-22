@@ -46,7 +46,12 @@ output('<p>Mit dieser Funktion können Sie eine E-Mail-Adresse stilllegen (so we
 $form = "<h4>Text der Fehlermeldung</h4>".
   "<p><textarea cols=\"80\" rows=\"10\" name=\"smtpreply\" id=\"smtpreply\">{$account['smtpreply']}</textarea></p>";
 
-$form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('edit', 'Abbrechen', "id=".$id).'</p>';
+$form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;';
+if ($suspended) {
+  $form .= internal_link('vmail', 'Abbrechen').'</p>';
+} else {
+  $form .= internal_link('edit', 'Abbrechen', "id=".$id).'</p>';
+}
 output(html_form('vmail_edit_mailbox', 'save', 'action=suspend&id='.$id, $form));
 
 if ($suspended) {
