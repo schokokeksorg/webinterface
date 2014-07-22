@@ -83,7 +83,7 @@ if (count($domains) > 0)
 	      $acc = get_account_details($this_account['id']);
 	      $actions = array();
 	      DEBUG($acc);
-	      if ($acc['password'] != '' && ($acc['smtpreply'] == NULL))
+	      if ($acc['password'] != '')
 	      {
                 $percent = round(( $acc["quota_used"] / $acc["quota"] ) * 100 );
                 $color = ( $percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green" ));
