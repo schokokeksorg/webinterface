@@ -25,7 +25,7 @@ require_once('common.php');
 $forced_spamfilter_domains = array(
   't-online.de', 'gmx.de', 'gmx.net', 'web.de', 'gmail.com', 'googlemail.com',
   'googlemail.de', 'freenet.de', 'aol.com', 'yahoo.com', 'gmx.at', 'ymail.com', 
-  'hotmail.com', 'mail.de', 'email.de', 'online.de', 'outlook.com', 'me.com'
+  'hotmail.com', 'mail.de', 'email.de', 'online.de', 'outlook.com', 'me.com', 'yahoo.de'
   );
 
 
