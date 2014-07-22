@@ -218,6 +218,55 @@ elseif ($_GET['action'] == 'delete')
   }
 
 }
+elseif ($_GET['action'] == 'suspend')
+{
+  $title = "E-mail-Adresse stillegen";
+  $section = 'vmail_vmail';
+
+  $account = get_account_details( (int) $_GET['id'] );
+
+  $domain = NULL;
+  $domains = get_vmail_domains();
+  foreach ($domains as $dom)
+    if ($dom['id'] == $account['domain'])
+    {
+      $domain = $dom['domainname'];
+      break;
+    }
+  $account_string = $account['local'] . "@" . $domain;
+  
+  if (!isset($_POST['smtpreply']) || !$_POST['smtpreply']) {
+    system_failure('Zur Stillegung einer Adresse müssen Sie einen Text eingeben den der Absender als Fehlermeldung erhält.');
+  }
+  $account['smtpreply'] = $_POST['smtpreply'];
+
+  save_vmail_account($account);
+  if (! $debugmode)
+    header("Location: vmail");
+}
+elseif ($_GET['action'] == 'unsuspend')
+{
+  $title = "E-mail-Adresse wieder aktivieren";
+  $section = 'vmail_vmail';
+
+  $account = get_account_details( (int) $_GET['id'] );
+
+  $domain = NULL;
+  $domains = get_vmail_domains();
+  foreach ($domains as $dom)
+    if ($dom['id'] == $account['domain'])
+    {
+      $domain = $dom['domainname'];
+      break;
+    }
+  $account_string = $account['local'] . "@" . $domain;
+  
+  $account['smtpreply'] = NULL;
+
+  save_vmail_account($account);
+  if (! $debugmode)
+    header("Location: vmail");
+}
 else
   system_failure("Unimplemented action");
 

@@ -83,7 +83,7 @@ if (count($domains) > 0)
 	      $acc = get_account_details($this_account['id']);
 	      $actions = array();
 	      DEBUG($acc);
-	      if ($acc['password'] != '')
+	      if ($acc['password'] != '' && ($acc['smtpreply'] == NULL))
 	      {
                 $percent = round(( $acc["quota_used"] / $acc["quota"] ) * 100 );
                 $color = ( $percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green" ));
@@ -141,8 +141,13 @@ if (count($domains) > 0)
 		  $dest .= "<li>{$a}</li>";
 		$dest .= '</ul>';
 	      }
-              output('<p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>
-	      <p>'.$dest.'</p>');
+        if ($acc['smtpreply']) {
+          output('<p><strike>'.$acc['local'].'@'.$this_account['domainname'].'</strike> '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
+          output("<ul><li>".icon_disabled()." Diese Adresse ist stillgelegt. <strong>".internal_link('suspend', 'Stillegung ändern/aufheben', 'account='.$acc['id']).'</strong></li></ul>');
+        } else {
+          output('<p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
+          output('<p>'.$dest.'</p>');
+        }
 	    }
     } else {
       output('<p><em>Bisher keine E-Mail-Adressen unter dieser Domain.</em></p>');

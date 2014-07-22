@@ -55,6 +55,7 @@ function empty_account()
 		'local' => '',
 		'domain' => NULL,
 		'password' => NULL,
+    'smtpreply' => NULL,
 		'spamfilter' => 'folder',
 		'spamexpire' => 7,
     'quota' => config('vmail_basequota'),
@@ -101,7 +102,7 @@ function get_account_details($id, $checkuid = true)
     $uid_check = "useraccount=:uid AND ";
     $args[":uid"] = $uid;
   }
-  $result = db_query("SELECT id, local, domain, password, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id=:id LIMIT 1", $args);
+  $result = db_query("SELECT id, local, domain, password, smtpreply, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id=:id LIMIT 1", $args);
 	if ($result->rowCount() == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -236,6 +237,9 @@ function save_vmail_account($account)
       system_failure('Sie können die E-Mail-Adresse nicht ändern!');
     if ($account['quota'] != $oldaccount['quota'])
       system_failure('Sie können Ihren eigenen Speicherplatz nicht verändern.');
+    if ($account['smtpreply'] != NULL) {
+      system_failure("Sie können nicht den Account stillegen mit dem Sie grade angemeldet sind.");
+    }
   } else {
   
     $account['local'] = filter_input_username($account['local']);
@@ -344,10 +348,13 @@ function save_vmail_account($account)
   
   $account['local'] = strtolower($account['local']);
   $account['spamexpire'] = (int) $account['spamexpire'];
+  # Leerstring wird zu NULL
+  $account['smtpreply'] = ($account['smtpreply'] ? $account['smtpreply'] : NULL);
 
   $args = array(":local" => $account['local'],
                 ":domain" => $account['domain'],
                 ":password" => $password,
+                ":smtpreply" => $account['smtpreply'],
                 ":spamfilter" => $spam,
                 ":spamexpire" => $account['spamexpire'],
                 ":quota" => $account['quota'], 
@@ -358,7 +365,7 @@ function save_vmail_account($account)
   if ($newaccount)
   {
     unset($args[":id"]);
-    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, quota, quota_threshold) VALUES (:local, :domain, :spamfilter, :spamexpire, :password, :quota, :quota_threshold)";
+    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, smtpreply, quota, quota_threshold) VALUES (:local, :domain, :spamfilter, :spamexpire, :password, :smtpreply, :quota, :quota_threshold)";
   } else {
     if ($set_password)
       $pw=", password=:password";
@@ -366,7 +373,7 @@ function save_vmail_account($account)
       unset($args[":password"]);
       $pw='';
     }
-    $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, spamfilter=:spamfilter, spamexpire=:spamexpire, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
+    $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, smtpreply=:smtpreply, spamfilter=:spamfilter, spamexpire=:spamexpire, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
   }
   db_query($query, $args); 
   if ($newaccount) {
