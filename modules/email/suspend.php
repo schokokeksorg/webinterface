@@ -38,9 +38,9 @@ if ($account['smtpreply']) {
 Bitte besuchen Sie unsere Website um eine aktuelle Kontaktmöglichkeit zu finden.';
 }
 
-title("E-Mail-Adresse stillegen");
+title("E-Mail-Adresse stilllegen");
 
-output('<p>Mit dieser Funktion können Sie eine E-Mail-Adresse stillegen (so werden keine Nachrichten für diese Adresse angenommen) und dabei dem Absender einen eigenen, hier festgelegten Fehlertext zukommen lassen. Diese Methode hat nicht die Probleme, die ein klassische Autoresponder verursacht, da keine Antwort-E-Mails versendet werden. Der Absender erhält von seinem Mail-Server eine Fehlermeldung mit dem entsprechenden Text.</p>
+output('<p>Mit dieser Funktion können Sie eine E-Mail-Adresse stilllegen (so werden keine Nachrichten für diese Adresse angenommen) und dabei dem Absender einen eigenen, hier festgelegten Fehlertext zukommen lassen. Diese Methode hat nicht die Probleme, die ein klassische Autoresponder verursacht, da keine Antwort-E-Mails versendet werden. Der Absender erhält von seinem Mail-Server eine Fehlermeldung mit dem entsprechenden Text.</p>
 <p><strong>Wichtig:</strong> Dieses Verfahren funktioniert nur, wenn die E-Mails wirklich nicht angenommen werden (Annahme wird verweigert), somit sind keine Weiterleitung und keine Speicherung möglich. Sie können aber natürlich im Text auf eine andere E-Mail-Adresse hinweisen.</p>');
 
 $form = "<h4>Text der Fehlermeldung</h4>".
@@ -50,7 +50,7 @@ $form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#
 output(html_form('vmail_edit_mailbox', 'save', 'action=suspend&id='.$id, $form));
 
 if ($suspended) {
-  output("<p><strong>".internal_link('save', 'Stillegung aufheben', 'action=unsuspend&id='.$account['id'])."</strong></p>");
+  output("<p><strong>".internal_link('save', 'Stilllegung aufheben', 'action=unsuspend&id='.$account['id'])."</strong></p>");
 }
 
 

@@ -238,7 +238,7 @@ function save_vmail_account($account)
     if ($account['quota'] != $oldaccount['quota'])
       system_failure('Sie können Ihren eigenen Speicherplatz nicht verändern.');
     if ($account['smtpreply'] != NULL) {
-      system_failure("Sie können nicht den Account stillegen mit dem Sie grade angemeldet sind.");
+      system_failure("Sie können nicht den Account stilllegen mit dem Sie grade angemeldet sind.");
     }
   } else {
   

@@ -147,7 +147,7 @@ $form .= "<h4>Deaktivierung</h4>";
 $form .= "<p><label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
   "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /><br/>";
 if (!$accountlogin && ($id != 0)) {
-  $form .= "<small>(Automatische Antworten sind nur befristet erlaubt. Wenn Sie diese Adresse dauerhaft stillegen möchten, können Sie dies am Ende dieser Seite tun.)</small></p>";
+  $form .= "<small>(Automatische Antworten sind nur befristet erlaubt. Wenn Sie diese Adresse dauerhaft stilllegen möchten, können Sie dies am Ende dieser Seite tun.)</small></p>";
 }
 /*
 $form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id=\"ar_valid_until_infinity\"{$valid_until_infinity_checked} /> <label for=\"ar_valid_until_infinity\">Unbefristet</label><br />".
@@ -235,7 +235,7 @@ $form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#
 output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 
 if (! $accountlogin && ($id != 0)) {
-  output("<p>".internal_link('suspend', 'Diese Adresse stillegen (mit individuellem Fehlertext)', "account=".$id)."</p>");
+  output("<p>".internal_link('suspend', 'Diese Adresse stilllegen (mit individuellem Fehlertext)', "account=".$id)."</p>");
 }
 
 

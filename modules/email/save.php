@@ -220,7 +220,7 @@ elseif ($_GET['action'] == 'delete')
 }
 elseif ($_GET['action'] == 'suspend')
 {
-  $title = "E-mail-Adresse stillegen";
+  $title = "E-mail-Adresse stilllegen";
   $section = 'vmail_vmail';
 
   $account = get_account_details( (int) $_GET['id'] );
@@ -236,7 +236,7 @@ elseif ($_GET['action'] == 'suspend')
   $account_string = $account['local'] . "@" . $domain;
   
   if (!isset($_POST['smtpreply']) || !$_POST['smtpreply']) {
-    system_failure('Zur Stillegung einer Adresse müssen Sie einen Text eingeben den der Absender als Fehlermeldung erhält.');
+    system_failure('Zur Stilllegung einer Adresse müssen Sie einen Text eingeben den der Absender als Fehlermeldung erhält.');
   }
   $account['smtpreply'] = $_POST['smtpreply'];
 
