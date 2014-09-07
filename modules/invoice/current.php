@@ -65,6 +65,10 @@ if (count($invoices_to_show) == 0) {
       if ($l) {
         $bezahlt = 'Wird abgebucht<br/>am '.$l['buchungsdatum'];
         $class = 'paid';
+        if ($l['status'] == 'rejected') {
+          $bezahlt  = 'Abbuchung zurückgewiesen';
+          $class = 'unpaid';
+        }
       }
     }
   	output("<tr class=\"{$class}\"><td>".internal_link("html", $invoice['id'], "id={$invoice['id']}")."</td><td>{$invoice['datum']}</td><td>{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "<img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice['id']}")."</td></tr>\n");

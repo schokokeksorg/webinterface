@@ -83,8 +83,11 @@ if (! $lastschriften) {
 <ul>');
   foreach ($lastschriften as $l) {
     $status = '';
-    if ($l['buchungsdatum'] >= date('Y-m-d')) {
+    if ($l['status'] == 'pending') {
       $status = '<span style="color: red; font-weight: bold;">Vorgemerkt:</span> ';
+    }
+    if ($l['status'] == 'rejected') {
+      $status = '<span style="color: red; font-weight: bold;">Zurückgewiesen:</span> ';
     }
     output('<li>'.$status.'Rechnung #'.$l['rechnungsnummer'].' vom '.$l['rechnungsdatum'].' über <strong>'.str_replace('.', ',', sprintf('%.2f', $l['betrag'])).' €</strong>, Buchungsdatum '.$l['buchungsdatum'].'</li>');
   }

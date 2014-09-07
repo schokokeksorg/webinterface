@@ -75,8 +75,10 @@ $l = get_lastschrift($invoice_id);
 
 if ($invoice['bezahlt'] == 1) {
   output('<p>Diese Rechnung ist bereits bezahlt.</p>');
-} elseif ($l) {
+} elseif ($l && $l['status'] == 'pending') {
   output('<p>Diese Rechnung wird am '.$l['buchungsdatum'].' per Lastschrift eingezogen.</p>');
+} elseif ($l && $l['status'] == 'done') {
+  output('<p>Diese Rechnung wurde am '.$l['buchungsdatum'].' per Lastschrift eingezogen.</p>');
 } else {
   $qrcode_image = generate_qrcode_image($invoice_id);
 

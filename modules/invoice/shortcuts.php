@@ -22,7 +22,7 @@ if ($_SESSION['role'] & ROLE_CUSTOMER) {
   foreach($my_invoices AS $inv) {
     if ($inv['bezahlt'] == 0) {
       $l = get_lastschrift($inv['id']);
-      if (! $l) {
+      if (! $l || $l['status'] == 'rejected') {
         $unpayed_invoices++;
       }
     }
