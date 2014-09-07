@@ -133,20 +133,17 @@ if (count($vhosts) > 0)
         case NULL:
           $php = icon_disabled('PHP ausgeschaltet');
           break;
-        case 'mod_php':
-          $php = icon_warning('[mod_php] Veraltet, bitte umstellen!').' Apache-Modul';
-          break;
-        case 'fastcgi':
+        case 'php53':
           $php = icon_enabled_warning('PHP in veralteter Version aktiviert');
           break;
-        case 'php53':
-          $php = icon_enabled_php53('PHP in Version 5.3 eingeschaltet');
-          break;
         case 'php54':
-          $php = icon_enabled_php54('PHP in Version 5.4 eingeschaltet');
+          $php = icon_enabled_warning('PHP in veralteter Version aktiviert');
           break;
         case 'php55':
-          $php = icon_enabled_php55('PHP in Version 5.5 eingeschaltet');
+          $php = icon_enabled_phpxx('PHP in Version 5.5 eingeschaltet', 5, 5);
+          break;
+        case 'php56':
+          $php = icon_enabled_phpxx('PHP in Version 5.6 eingeschaltet', 5, 6);
           break;
       }
       output("<td>{$php}</td>");

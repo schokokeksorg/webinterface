@@ -22,24 +22,10 @@ function icon_warning($title = '')
   return "<img src=\"{$prefix}images/warning.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
-
-
-function icon_enabled_php53($title = '')
+function icon_enabled_phpxx($title = '', $major, $minor)
 {
   global $prefix;
-  return "<img src=\"{$prefix}images/ok-php53.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
-}
-
-function icon_enabled_php54($title = '')
-{
-  global $prefix;
-  return "<img src=\"{$prefix}images/ok-php54.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
-}
-
-function icon_enabled_php55($title = '')
-{
-  global $prefix;
-  return "<img src=\"{$prefix}images/ok-php55.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
+  return "<img src=\"{$prefix}images/ok-php$major$minor.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
 function icon_enabled_warning($title = '')
