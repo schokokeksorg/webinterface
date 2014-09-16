@@ -1,0 +1,1250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="domainrobot"
+ targetNamespace="urn:domainrobot/domainrobot.wsdl"
+ xmlns:tns="urn:domainrobot/domainrobot.wsdl"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns="urn:domainrobot"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:HTTP="http://schemas.xmlsoap.org/wsdl/http/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="urn:domainrobot"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="urn:domainrobot"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="WarningOrError"><!-- ns__WarningOrError -->
+
+   <sequence>
+     <element name="code" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__WarningOrError::code -->
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__WarningOrError::text -->
+     <element name="context" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__WarningOrError::context -->
+     <element name="details" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/><!-- ns__WarningOrError::details -->
+   </sequence>
+  </complexType>
+  <complexType name="Metadata"><!-- ns__Metadata -->
+
+   <sequence>
+     <element name="serverTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Metadata::serverTransactionId -->
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Metadata::clientTransactionId -->
+   </sequence>
+  </complexType>
+  <complexType name="CommonResponse"><!-- ns__CommonResponse -->
+
+   <sequence>
+     <element name="status" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__CommonResponse::status -->
+     <element name="errors" type="ns:WarningOrError" minOccurs="0" maxOccurs="unbounded"/><!-- ns__CommonResponse::errors -->
+     <element name="warnings" type="ns:WarningOrError" minOccurs="0" maxOccurs="unbounded"/><!-- ns__CommonResponse::warnings -->
+     <element name="metadata" type="ns:Metadata" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__CommonResponse::metadata -->
+   </sequence>
+  </complexType>
+  <complexType name="DomainContact"><!-- ns__DomainContact -->
+
+   <sequence>
+     <element name="type" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__DomainContact::type -->
+     <element name="contact" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__DomainContact::contact -->
+   </sequence>
+  </complexType>
+  <complexType name="Nameserver"><!-- ns__Nameserver -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Nameserver::name -->
+     <element name="ipv4" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/><!-- ns__Nameserver::ipv4 -->
+     <element name="ipv6" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/><!-- ns__Nameserver::ipv6 -->
+   </sequence>
+  </complexType>
+  <complexType name="AbstractListResult"><!-- ns__AbstractListResult -->
+
+   <sequence>
+     <element name="page" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__AbstractListResult::page -->
+     <element name="limit" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__AbstractListResult::limit -->
+     <element name="totalEntries" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__AbstractListResult::totalEntries -->
+     <element name="totalpages" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__AbstractListResult::totalpages -->
+   </sequence>
+  </complexType>
+  <complexType name="Contact"><!-- ns__Contact -->
+
+   <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::accountId -->
+     <element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::id -->
+     <element name="handle" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::handle -->
+     <element name="type" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::type -->
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::name -->
+     <element name="organisation" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::organisation -->
+     <element name="street" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/><!-- ns__Contact::street -->
+     <element name="postOfficeBox" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::postOfficeBox -->
+     <element name="postalCode" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::postalCode -->
+     <element name="city" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::city -->
+     <element name="state" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::state -->
+     <element name="country" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::country -->
+     <element name="email" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::email -->
+     <element name="phone" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::phone -->
+     <element name="fax" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::fax -->
+     <element name="sip" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::sip -->
+     <element name="lastChangeDate" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Contact::lastChangeDate -->
+   </sequence>
+  </complexType>
+  <complexType name="Domain"><!-- ns__Domain -->
+
+   <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Domain::accountId -->
+     <element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Domain::id -->
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Domain::name -->
+     <element name="contacts" type="ns:DomainContact" minOccurs="1" maxOccurs="unbounded"/><!-- ns__Domain::contacts -->
+     <element name="nameservers" type="ns:Nameserver" minOccurs="1" maxOccurs="unbounded"/><!-- ns__Domain::nameservers -->
+     <element name="status" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/><!-- ns__Domain::status -->
+     <element name="transferLockEnabled" type="xsd:boolean" minOccurs="1" maxOccurs="1"/><!-- ns__Domain::transferLockEnabled -->
+     <element name="authCode" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Domain::authCode -->
+     <element name="createDate" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Domain::createDate -->
+   </sequence>
+  </complexType>
+  <complexType name="Job"><!-- ns__Job -->
+
+   <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__Job::id -->
+   </sequence>
+  </complexType>
+  <complexType name="DomainStatusResult"><!-- ns__DomainStatusResult -->
+
+   <sequence>
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__DomainStatusResult::domainName -->
+     <element name="status" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__DomainStatusResult::status -->
+     <element name="transferMethod" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__DomainStatusResult::transferMethod -->
+     <element name="domainSuffix" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__DomainStatusResult::domainSuffix -->
+   </sequence>
+  </complexType>
+  <complexType name="Filter"><!-- ns__Filter -->
+
+   <sequence>
+     <element name="field" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Filter::field -->
+     <element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__Filter::value -->
+   </sequence>
+  </complexType>
+  <complexType name="FindContactsResult"><!-- ns__FindContactsResult -->
+
+   <complexContent>
+    <extension base="ns:AbstractListResult">
+     <sequence>
+     <element name="data" type="ns:Contact" minOccurs="1" maxOccurs="unbounded"/><!-- ns__FindContactsResult::data -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="FindDomainsResult"><!-- ns__FindDomainsResult -->
+
+   <complexContent>
+    <extension base="ns:AbstractListResult">
+     <sequence>
+     <element name="data" type="ns:Domain" minOccurs="1" maxOccurs="unbounded"/><!-- ns__FindDomainsResult::data -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="FindJobsResult"><!-- ns__FindJobsResult -->
+
+   <complexContent>
+    <extension base="ns:AbstractListResult">
+     <sequence>
+     <element name="data" type="ns:Job" minOccurs="1" maxOccurs="unbounded"/><!-- ns__FindJobsResult::data -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="SortOptions"><!-- ns__SortOptions -->
+
+   <sequence>
+     <element name="column" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__SortOptions::column -->
+     <element name="order" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__SortOptions::order -->
+   </sequence>
+  </complexType>
+  <complexType name="TransferData"><!-- ns__TransferData -->
+
+   <sequence>
+     <element name="authInfo" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__TransferData::authInfo -->
+     <element name="authInfo2" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__TransferData::authInfo2 -->
+     <element name="foaRecipient" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__TransferData::foaRecipient -->
+   </sequence>
+  </complexType>
+  <complexType name="contactCreateRequest"><!-- ns__contactCreateRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactCreateRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactCreateRequest::authToken -->
+     <element name="contact" type="ns:Contact" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactCreateRequest::contact -->
+   </sequence>
+  </complexType>
+  <complexType name="contactCreateResponseData"><!-- ns__contactCreateResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:Contact" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactCreateResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="contactDeleteRequest"><!-- ns__contactDeleteRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactDeleteRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactDeleteRequest::authToken -->
+     <element name="contactId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactDeleteRequest::contactId -->
+   </sequence>
+  </complexType>
+  <complexType name="contactDeleteResponseData"><!-- ns__contactDeleteResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="contactInfoRequest"><!-- ns__contactInfoRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactInfoRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactInfoRequest::authToken -->
+     <element name="contactId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactInfoRequest::contactId -->
+   </sequence>
+  </complexType>
+  <complexType name="contactInfoResponseData"><!-- ns__contactInfoResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:Contact" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactInfoResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="contactSyncRequest"><!-- ns__contactSyncRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactSyncRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactSyncRequest::authToken -->
+     <element name="contactId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactSyncRequest::contactId -->
+   </sequence>
+  </complexType>
+  <complexType name="contactSyncResponseData"><!-- ns__contactSyncResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="contactUpdateRequest"><!-- ns__contactUpdateRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactUpdateRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactUpdateRequest::authToken -->
+     <element name="contact" type="ns:Contact" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactUpdateRequest::contact -->
+   </sequence>
+  </complexType>
+  <complexType name="contactUpdateResponseData"><!-- ns__contactUpdateResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:Contact" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactUpdateResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="contactUsableForRequest"><!-- ns__contactUsableForRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactUsableForRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactUsableForRequest::authToken -->
+     <element name="contactId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactUsableForRequest::contactId -->
+     <element name="domainSuffix" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactUsableForRequest::domainSuffix -->
+   </sequence>
+  </complexType>
+  <complexType name="contactUsableForResponseData"><!-- ns__contactUsableForResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="values" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/><!-- ns__contactUsableForResponseData::values -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="contactsFindRequest"><!-- ns__contactsFindRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactsFindRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__contactsFindRequest::authToken -->
+     <element name="filter" type="ns:Filter" minOccurs="0" maxOccurs="unbounded"/><!-- ns__contactsFindRequest::filter -->
+     <element name="limit" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__contactsFindRequest::limit -->
+     <element name="page" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__contactsFindRequest::page -->
+     <element name="sort" type="ns:SortOptions" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactsFindRequest::sort -->
+   </sequence>
+  </complexType>
+  <complexType name="contactsFindResponseData"><!-- ns__contactsFindResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:FindContactsResult" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__contactsFindResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainChangeTagRequest"><!-- ns__domainChangeTagRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainChangeTagRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainChangeTagRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainChangeTagRequest::domainName -->
+     <element name="tag" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainChangeTagRequest::tag -->
+   </sequence>
+  </complexType>
+  <complexType name="domainChangeTagResponseData"><!-- ns__domainChangeTagResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainCreateRequest"><!-- ns__domainCreateRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateRequest::authToken -->
+     <element name="domain" type="ns:Domain" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainCreateRequest::domain -->
+     <element name="registrationPeriod" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainCreateRequest::registrationPeriod -->
+     <element name="execDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainCreateRequest::execDate -->
+   </sequence>
+  </complexType>
+  <complexType name="domainCreateResponseData"><!-- ns__domainCreateResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:Domain" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainCreateResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainCreateAuthInfoRequest"><!-- ns__domainCreateAuthInfoRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateAuthInfoRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateAuthInfoRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateAuthInfoRequest::domainName -->
+   </sequence>
+  </complexType>
+  <complexType name="domainCreateAuthInfoResponseData"><!-- ns__domainCreateAuthInfoResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainCreateAuthInfo2Request"><!-- ns__domainCreateAuthInfo2Request -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateAuthInfo2Request::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateAuthInfo2Request::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainCreateAuthInfo2Request::domainName -->
+   </sequence>
+  </complexType>
+  <complexType name="domainCreateAuthInfo2ResponseData"><!-- ns__domainCreateAuthInfo2ResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainDeleteRequest"><!-- ns__domainDeleteRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainDeleteRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainDeleteRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainDeleteRequest::domainName -->
+     <element name="execDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainDeleteRequest::execDate -->
+   </sequence>
+  </complexType>
+  <complexType name="domainDeleteResponseData"><!-- ns__domainDeleteResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainInfoRequest"><!-- ns__domainInfoRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainInfoRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainInfoRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainInfoRequest::domainName -->
+   </sequence>
+  </complexType>
+  <complexType name="domainInfoResponseData"><!-- ns__domainInfoResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:Domain" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainInfoResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainRenewRequest"><!-- ns__domainRenewRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRenewRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRenewRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRenewRequest::domainName -->
+     <element name="currentExpiryDate" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRenewRequest::currentExpiryDate -->
+     <element name="registrationPeriod" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__domainRenewRequest::registrationPeriod -->
+   </sequence>
+  </complexType>
+  <complexType name="domainRenewResponseData"><!-- ns__domainRenewResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainRestoreRequest"><!-- ns__domainRestoreRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRestoreRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRestoreRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainRestoreRequest::domainName -->
+   </sequence>
+  </complexType>
+  <complexType name="domainRestoreResponseData"><!-- ns__domainRestoreResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainSetAutoRenewModeRequest"><!-- ns__domainSetAutoRenewModeRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSetAutoRenewModeRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSetAutoRenewModeRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSetAutoRenewModeRequest::domainName -->
+     <element name="mode" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSetAutoRenewModeRequest::mode -->
+   </sequence>
+  </complexType>
+  <complexType name="domainSetAutoRenewModeResponseData"><!-- ns__domainSetAutoRenewModeResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainSimpleTransferRequest"><!-- ns__domainSimpleTransferRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSimpleTransferRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSimpleTransferRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSimpleTransferRequest::domainName -->
+     <element name="transferData" type="ns:TransferData" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainSimpleTransferRequest::transferData -->
+     <element name="registrationPeriod" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainSimpleTransferRequest::registrationPeriod -->
+     <element name="execDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainSimpleTransferRequest::execDate -->
+   </sequence>
+  </complexType>
+  <complexType name="domainSimpleTransferResponseData"><!-- ns__domainSimpleTransferResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainStatusRequest"><!-- ns__domainStatusRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainStatusRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainStatusRequest::authToken -->
+     <element name="domainNames" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/><!-- ns__domainStatusRequest::domainNames -->
+   </sequence>
+  </complexType>
+  <complexType name="domainStatusResponseData"><!-- ns__domainStatusResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="values" type="ns:DomainStatusResult" minOccurs="0" maxOccurs="unbounded"/><!-- ns__domainStatusResponseData::values -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainSyncRequest"><!-- ns__domainSyncRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSyncRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSyncRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainSyncRequest::domainName -->
+   </sequence>
+  </complexType>
+  <complexType name="domainSyncResponseData"><!-- ns__domainSyncResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainTransferRequest"><!-- ns__domainTransferRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferRequest::authToken -->
+     <element name="domain" type="ns:Domain" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainTransferRequest::domain -->
+     <element name="transferData" type="ns:TransferData" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainTransferRequest::transferData -->
+     <element name="registrationPeriod" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainTransferRequest::registrationPeriod -->
+     <element name="execDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainTransferRequest::execDate -->
+   </sequence>
+  </complexType>
+  <complexType name="domainTransferResponseData"><!-- ns__domainTransferResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainTransferOutAckRequest"><!-- ns__domainTransferOutAckRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutAckRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutAckRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutAckRequest::domainName -->
+   </sequence>
+  </complexType>
+  <complexType name="domainTransferOutAckResponseData"><!-- ns__domainTransferOutAckResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainTransferOutNackRequest"><!-- ns__domainTransferOutNackRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutNackRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutNackRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutNackRequest::domainName -->
+     <element name="reason" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainTransferOutNackRequest::reason -->
+   </sequence>
+  </complexType>
+  <complexType name="domainTransferOutNackResponseData"><!-- ns__domainTransferOutNackResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainUpdateRequest"><!-- ns__domainUpdateRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainUpdateRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainUpdateRequest::authToken -->
+     <element name="domain" type="ns:Domain" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainUpdateRequest::domain -->
+   </sequence>
+  </complexType>
+  <complexType name="domainUpdateResponseData"><!-- ns__domainUpdateResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:Domain" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainUpdateResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainWithdrawRequest"><!-- ns__domainWithdrawRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainWithdrawRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainWithdrawRequest::authToken -->
+     <element name="domainName" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainWithdrawRequest::domainName -->
+     <element name="disconnect" type="xsd:boolean" minOccurs="1" maxOccurs="1"/><!-- ns__domainWithdrawRequest::disconnect -->
+     <element name="execDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainWithdrawRequest::execDate -->
+   </sequence>
+  </complexType>
+  <complexType name="domainWithdrawResponseData"><!-- ns__domainWithdrawResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="domainsFindRequest"><!-- ns__domainsFindRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainsFindRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__domainsFindRequest::authToken -->
+     <element name="filter" type="ns:Filter" minOccurs="0" maxOccurs="unbounded"/><!-- ns__domainsFindRequest::filter -->
+     <element name="limit" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__domainsFindRequest::limit -->
+     <element name="page" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__domainsFindRequest::page -->
+     <element name="sort" type="ns:SortOptions" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainsFindRequest::sort -->
+   </sequence>
+  </complexType>
+  <complexType name="domainsFindResponseData"><!-- ns__domainsFindResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:FindDomainsResult" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__domainsFindResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+  <complexType name="jobsFindRequest"><!-- ns__jobsFindRequest -->
+
+   <sequence>
+     <element name="clientTransactionId" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__jobsFindRequest::clientTransactionId -->
+     <element name="authToken" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__jobsFindRequest::authToken -->
+     <element name="filter" type="ns:Filter" minOccurs="0" maxOccurs="unbounded"/><!-- ns__jobsFindRequest::filter -->
+     <element name="limit" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__jobsFindRequest::limit -->
+     <element name="page" type="xsd:long" minOccurs="1" maxOccurs="1"/><!-- ns__jobsFindRequest::page -->
+     <element name="sort" type="ns:SortOptions" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__jobsFindRequest::sort -->
+   </sequence>
+  </complexType>
+  <complexType name="jobsFindResponseData"><!-- ns__jobsFindResponseData -->
+
+   <complexContent>
+    <extension base="ns:CommonResponse">
+     <sequence>
+     <element name="value" type="ns:FindJobsResult" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__jobsFindResponseData::value -->
+     </sequence>
+    </extension>
+   </complexContent>
+  </complexType>
+ </schema>
+
+</types>
+
+<message name="contactCreate">
+ <part name="request" type="ns:contactCreateRequest"/><!-- ns__contactCreate::request -->
+</message>
+
+<message name="contactCreateResponse">
+ <part name="response" type="ns:contactCreateResponseData"/><!-- ns__contactCreate::response -->
+</message>
+
+<message name="contactDelete">
+ <part name="request" type="ns:contactDeleteRequest"/><!-- ns__contactDelete::request -->
+</message>
+
+<message name="contactDeleteResponse">
+ <part name="response" type="ns:contactDeleteResponseData"/><!-- ns__contactDelete::response -->
+</message>
+
+<message name="contactInfo">
+ <part name="request" type="ns:contactInfoRequest"/><!-- ns__contactInfo::request -->
+</message>
+
+<message name="contactInfoResponse">
+ <part name="response" type="ns:contactInfoResponseData"/><!-- ns__contactInfo::response -->
+</message>
+
+<message name="contactSync">
+ <part name="request" type="ns:contactSyncRequest"/><!-- ns__contactSync::request -->
+</message>
+
+<message name="contactSyncResponse">
+ <part name="response" type="ns:contactSyncResponseData"/><!-- ns__contactSync::response -->
+</message>
+
+<message name="contactUpdate">
+ <part name="request" type="ns:contactUpdateRequest"/><!-- ns__contactUpdate::request -->
+</message>
+
+<message name="contactUpdateResponse">
+ <part name="response" type="ns:contactUpdateResponseData"/><!-- ns__contactUpdate::response -->
+</message>
+
+<message name="contactUsableFor">
+ <part name="request" type="ns:contactUsableForRequest"/><!-- ns__contactUsableFor::request -->
+</message>
+
+<message name="contactUsableForResponse">
+ <part name="response" type="ns:contactUsableForResponseData"/><!-- ns__contactUsableFor::response -->
+</message>
+
+<message name="contactsFind">
+ <part name="request" type="ns:contactsFindRequest"/><!-- ns__contactsFind::request -->
+</message>
+
+<message name="contactsFindResponse">
+ <part name="response" type="ns:contactsFindResponseData"/><!-- ns__contactsFind::response -->
+</message>
+
+<message name="domainChangeTag">
+ <part name="request" type="ns:domainChangeTagRequest"/><!-- ns__domainChangeTag::request -->
+</message>
+
+<message name="domainChangeTagResponse">
+ <part name="response" type="ns:domainChangeTagResponseData"/><!-- ns__domainChangeTag::response -->
+</message>
+
+<message name="domainCreate">
+ <part name="request" type="ns:domainCreateRequest"/><!-- ns__domainCreate::request -->
+</message>
+
+<message name="domainCreateResponse">
+ <part name="response" type="ns:domainCreateResponseData"/><!-- ns__domainCreate::response -->
+</message>
+
+<message name="domainCreateAuthInfo">
+ <part name="request" type="ns:domainCreateAuthInfoRequest"/><!-- ns__domainCreateAuthInfo::request -->
+</message>
+
+<message name="domainCreateAuthInfoResponse">
+ <part name="response" type="ns:domainCreateAuthInfoResponseData"/><!-- ns__domainCreateAuthInfo::response -->
+</message>
+
+<message name="domainCreateAuthInfo2">
+ <part name="request" type="ns:domainCreateAuthInfo2Request"/><!-- ns__domainCreateAuthInfo2::request -->
+</message>
+
+<message name="domainCreateAuthInfo2Response">
+ <part name="response" type="ns:domainCreateAuthInfo2ResponseData"/><!-- ns__domainCreateAuthInfo2::response -->
+</message>
+
+<message name="domainDelete">
+ <part name="request" type="ns:domainDeleteRequest"/><!-- ns__domainDelete::request -->
+</message>
+
+<message name="domainDeleteResponse">
+ <part name="response" type="ns:domainDeleteResponseData"/><!-- ns__domainDelete::response -->
+</message>
+
+<message name="domainInfo">
+ <part name="request" type="ns:domainInfoRequest"/><!-- ns__domainInfo::request -->
+</message>
+
+<message name="domainInfoResponse">
+ <part name="response" type="ns:domainInfoResponseData"/><!-- ns__domainInfo::response -->
+</message>
+
+<message name="domainRenew">
+ <part name="request" type="ns:domainRenewRequest"/><!-- ns__domainRenew::request -->
+</message>
+
+<message name="domainRenewResponse">
+ <part name="response" type="ns:domainRenewResponseData"/><!-- ns__domainRenew::response -->
+</message>
+
+<message name="domainRestore">
+ <part name="request" type="ns:domainRestoreRequest"/><!-- ns__domainRestore::request -->
+</message>
+
+<message name="domainRestoreResponse">
+ <part name="response" type="ns:domainRestoreResponseData"/><!-- ns__domainRestore::response -->
+</message>
+
+<message name="domainSetAutoRenewMode">
+ <part name="request" type="ns:domainSetAutoRenewModeRequest"/><!-- ns__domainSetAutoRenewMode::request -->
+</message>
+
+<message name="domainSetAutoRenewModeResponse">
+ <part name="response" type="ns:domainSetAutoRenewModeResponseData"/><!-- ns__domainSetAutoRenewMode::response -->
+</message>
+
+<message name="domainSimpleTransfer">
+ <part name="request" type="ns:domainSimpleTransferRequest"/><!-- ns__domainSimpleTransfer::request -->
+</message>
+
+<message name="domainSimpleTransferResponse">
+ <part name="response" type="ns:domainSimpleTransferResponseData"/><!-- ns__domainSimpleTransfer::response -->
+</message>
+
+<message name="domainStatus">
+ <part name="request" type="ns:domainStatusRequest"/><!-- ns__domainStatus::request -->
+</message>
+
+<message name="domainStatusResponse">
+ <part name="response" type="ns:domainStatusResponseData"/><!-- ns__domainStatus::response -->
+</message>
+
+<message name="domainSync">
+ <part name="request" type="ns:domainSyncRequest"/><!-- ns__domainSync::request -->
+</message>
+
+<message name="domainSyncResponse">
+ <part name="response" type="ns:domainSyncResponseData"/><!-- ns__domainSync::response -->
+</message>
+
+<message name="domainTransfer">
+ <part name="request" type="ns:domainTransferRequest"/><!-- ns__domainTransfer::request -->
+</message>
+
+<message name="domainTransferResponse">
+ <part name="response" type="ns:domainTransferResponseData"/><!-- ns__domainTransfer::response -->
+</message>
+
+<message name="domainTransferOutAck">
+ <part name="request" type="ns:domainTransferOutAckRequest"/><!-- ns__domainTransferOutAck::request -->
+</message>
+
+<message name="domainTransferOutAckResponse">
+ <part name="response" type="ns:domainTransferOutAckResponseData"/><!-- ns__domainTransferOutAck::response -->
+</message>
+
+<message name="domainTransferOutNack">
+ <part name="request" type="ns:domainTransferOutNackRequest"/><!-- ns__domainTransferOutNack::request -->
+</message>
+
+<message name="domainTransferOutNackResponse">
+ <part name="response" type="ns:domainTransferOutNackResponseData"/><!-- ns__domainTransferOutNack::response -->
+</message>
+
+<message name="domainUpdate">
+ <part name="request" type="ns:domainUpdateRequest"/><!-- ns__domainUpdate::request -->
+</message>
+
+<message name="domainUpdateResponse">
+ <part name="response" type="ns:domainUpdateResponseData"/><!-- ns__domainUpdate::response -->
+</message>
+
+<message name="domainWithdraw">
+ <part name="request" type="ns:domainWithdrawRequest"/><!-- ns__domainWithdraw::request -->
+</message>
+
+<message name="domainWithdrawResponse">
+ <part name="response" type="ns:domainWithdrawResponseData"/><!-- ns__domainWithdraw::response -->
+</message>
+
+<message name="domainsFind">
+ <part name="request" type="ns:domainsFindRequest"/><!-- ns__domainsFind::request -->
+</message>
+
+<message name="domainsFindResponse">
+ <part name="response" type="ns:domainsFindResponseData"/><!-- ns__domainsFind::response -->
+</message>
+
+<message name="jobsFind">
+ <part name="request" type="ns:jobsFindRequest"/><!-- ns__jobsFind::request -->
+</message>
+
+<message name="jobsFindResponse">
+ <part name="response" type="ns:jobsFindResponseData"/><!-- ns__jobsFind::response -->
+</message>
+
+<portType name="domainrobotPortType">
+ <operation name="contactCreate">
+  <documentation>Service definition of function ns__contactCreate</documentation>
+  <input message="tns:contactCreate"/>
+  <output message="tns:contactCreateResponse"/>
+ </operation>
+ <operation name="contactDelete">
+  <documentation>Service definition of function ns__contactDelete</documentation>
+  <input message="tns:contactDelete"/>
+  <output message="tns:contactDeleteResponse"/>
+ </operation>
+ <operation name="contactInfo">
+  <documentation>Service definition of function ns__contactInfo</documentation>
+  <input message="tns:contactInfo"/>
+  <output message="tns:contactInfoResponse"/>
+ </operation>
+ <operation name="contactSync">
+  <documentation>Service definition of function ns__contactSync</documentation>
+  <input message="tns:contactSync"/>
+  <output message="tns:contactSyncResponse"/>
+ </operation>
+ <operation name="contactUpdate">
+  <documentation>Service definition of function ns__contactUpdate</documentation>
+  <input message="tns:contactUpdate"/>
+  <output message="tns:contactUpdateResponse"/>
+ </operation>
+ <operation name="contactUsableFor">
+  <documentation>Service definition of function ns__contactUsableFor</documentation>
+  <input message="tns:contactUsableFor"/>
+  <output message="tns:contactUsableForResponse"/>
+ </operation>
+ <operation name="contactsFind">
+  <documentation>Service definition of function ns__contactsFind</documentation>
+  <input message="tns:contactsFind"/>
+  <output message="tns:contactsFindResponse"/>
+ </operation>
+ <operation name="domainChangeTag">
+  <documentation>Service definition of function ns__domainChangeTag</documentation>
+  <input message="tns:domainChangeTag"/>
+  <output message="tns:domainChangeTagResponse"/>
+ </operation>
+ <operation name="domainCreate">
+  <documentation>Service definition of function ns__domainCreate</documentation>
+  <input message="tns:domainCreate"/>
+  <output message="tns:domainCreateResponse"/>
+ </operation>
+ <operation name="domainCreateAuthInfo">
+  <documentation>Service definition of function ns__domainCreateAuthInfo</documentation>
+  <input message="tns:domainCreateAuthInfo"/>
+  <output message="tns:domainCreateAuthInfoResponse"/>
+ </operation>
+ <operation name="domainCreateAuthInfo2">
+  <documentation>Service definition of function ns__domainCreateAuthInfo2</documentation>
+  <input message="tns:domainCreateAuthInfo2"/>
+  <output message="tns:domainCreateAuthInfo2Response"/>
+ </operation>
+ <operation name="domainDelete">
+  <documentation>Service definition of function ns__domainDelete</documentation>
+  <input message="tns:domainDelete"/>
+  <output message="tns:domainDeleteResponse"/>
+ </operation>
+ <operation name="domainInfo">
+  <documentation>Service definition of function ns__domainInfo</documentation>
+  <input message="tns:domainInfo"/>
+  <output message="tns:domainInfoResponse"/>
+ </operation>
+ <operation name="domainRenew">
+  <documentation>Service definition of function ns__domainRenew</documentation>
+  <input message="tns:domainRenew"/>
+  <output message="tns:domainRenewResponse"/>
+ </operation>
+ <operation name="domainRestore">
+  <documentation>Service definition of function ns__domainRestore</documentation>
+  <input message="tns:domainRestore"/>
+  <output message="tns:domainRestoreResponse"/>
+ </operation>
+ <operation name="domainSetAutoRenewMode">
+  <documentation>Service definition of function ns__domainSetAutoRenewMode</documentation>
+  <input message="tns:domainSetAutoRenewMode"/>
+  <output message="tns:domainSetAutoRenewModeResponse"/>
+ </operation>
+ <operation name="domainSimpleTransfer">
+  <documentation>Service definition of function ns__domainSimpleTransfer</documentation>
+  <input message="tns:domainSimpleTransfer"/>
+  <output message="tns:domainSimpleTransferResponse"/>
+ </operation>
+ <operation name="domainStatus">
+  <documentation>Service definition of function ns__domainStatus</documentation>
+  <input message="tns:domainStatus"/>
+  <output message="tns:domainStatusResponse"/>
+ </operation>
+ <operation name="domainSync">
+  <documentation>Service definition of function ns__domainSync</documentation>
+  <input message="tns:domainSync"/>
+  <output message="tns:domainSyncResponse"/>
+ </operation>
+ <operation name="domainTransfer">
+  <documentation>Service definition of function ns__domainTransfer</documentation>
+  <input message="tns:domainTransfer"/>
+  <output message="tns:domainTransferResponse"/>
+ </operation>
+ <operation name="domainTransferOutAck">
+  <documentation>Service definition of function ns__domainTransferOutAck</documentation>
+  <input message="tns:domainTransferOutAck"/>
+  <output message="tns:domainTransferOutAckResponse"/>
+ </operation>
+ <operation name="domainTransferOutNack">
+  <documentation>Service definition of function ns__domainTransferOutNack</documentation>
+  <input message="tns:domainTransferOutNack"/>
+  <output message="tns:domainTransferOutNackResponse"/>
+ </operation>
+ <operation name="domainUpdate">
+  <documentation>Service definition of function ns__domainUpdate</documentation>
+  <input message="tns:domainUpdate"/>
+  <output message="tns:domainUpdateResponse"/>
+ </operation>
+ <operation name="domainWithdraw">
+  <documentation>Service definition of function ns__domainWithdraw</documentation>
+  <input message="tns:domainWithdraw"/>
+  <output message="tns:domainWithdrawResponse"/>
+ </operation>
+ <operation name="domainsFind">
+  <documentation>Service definition of function ns__domainsFind</documentation>
+  <input message="tns:domainsFind"/>
+  <output message="tns:domainsFindResponse"/>
+ </operation>
+ <operation name="jobsFind">
+  <documentation>Service definition of function ns__jobsFind</documentation>
+  <input message="tns:jobsFind"/>
+  <output message="tns:jobsFindResponse"/>
+ </operation>
+</portType>
+
+<binding name="domainrobot" type="tns:domainrobotPortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="contactCreate">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="contactDelete">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="contactInfo">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="contactSync">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="contactUpdate">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="contactUsableFor">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="contactsFind">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainChangeTag">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainCreate">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainCreateAuthInfo">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainCreateAuthInfo2">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainDelete">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainInfo">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainRenew">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainRestore">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainSetAutoRenewMode">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainSimpleTransfer">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainStatus">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainSync">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainTransfer">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainTransferOutAck">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainTransferOutNack">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainUpdate">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainWithdraw">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="domainsFind">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="jobsFind">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="urn:domainrobot" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="domainrobot">
+ <documentation>gSOAP 2.8.17r generated service definition</documentation>
+ <port name="domainrobot" binding="tns:domainrobot">
+  <SOAP:address location="http://localhost:80"/>
+ </port>
+</service>
+
+</definitions>
