@@ -112,16 +112,27 @@ if ($type == 'ptr' || $type == 'cname')
 if ($type == 'spf' || $type == 'txt')
 {
   $form .= '
-<tr><td><label for="data">Inhalt:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
+<tr><td><label for="data">Inhalt:</label></td><td><input type="text" name="data" id="data" value="'.filter_input_general($data['data']).'" /></td></tr>
 ';
 }
 
 if ($type == 'sshfp')
 {
-  $rsadefault = ($data['spec'] == 1) ? ' selected="selected"' : '';
-  $dsadefault = ($data['spec'] == 2) ? ' selected="selected"' : '';
+  $algs = array(
+    1 => "RSA",
+    2 => "DSA",
+    3 => "ECDSA",
+    4 => "ED25519" );
+
+  $option="";
+  foreach ($algs as $key => $alg) {
+    $option .= '<option value="'.$key.'" ';
+    if ($key == $data['spec']) $option .= 'selected="selected"';
+    $option .= '>'.$alg.' ('.$key.')</option>';
+  }
+ 
   $form .= '
-<tr><td><label for="spec">Algorithmus:</label></td><td><select name="spec" id="spec"><option value="1"'.$rsadefault.'>RSA (1)</option><option value="2"'.$dsadefault.'>DSS (2)</option></select></td></tr>
+<tr><td><label for="spec">Algorithmus:</label></td><td><select name="spec" id="spec">'.$option.'</select></td></tr>
 <tr><td><label for="data">Fingerabdruck:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
 ';
 }

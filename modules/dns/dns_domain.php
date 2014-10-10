@@ -69,7 +69,7 @@ foreach ($records AS $rec)
   if ($editable) {
       $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
   }
-  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
+  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>".filter_input_general($data)."</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
 }  
 foreach ($auto_records AS $rec)
 {
