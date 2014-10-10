@@ -52,8 +52,6 @@ $form .= "
     <div style=\"margin-left: 2em;\">
     <select name=\"ssl\" id=\"ssl\">
       <option value=\"none\" selected=\"selected\">SSL optional anbieten</option>
-      <option value=\"http\">kein SSL</option>
-      <option value=\"https\">nur SSL</option>
       <option value=\"forward\">Immer auf SSL umleiten</option>
     </select>
     </div>
