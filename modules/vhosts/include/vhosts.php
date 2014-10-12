@@ -361,8 +361,8 @@ function save_vhost($vhost)
     $autoipv6 = $vhost['autoipv6'];
   }
 
-  if (!($vhost['ssl'] = 'forward' || $vhost['ssl'] == 'http' ||
-        $vhost['ssl'] = 'https')) {
+  if (!($vhost['ssl'] == 'forward' || $vhost['ssl'] == 'http' ||
+        $vhost['ssl'] == 'https')) {
     $vhost['ssl'] = NULL;
   }
 
