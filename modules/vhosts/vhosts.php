@@ -172,6 +172,4 @@ else // keine VHosts vorhanden
 
 addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
 
-addnew('../webapps/install', 'Neue Domain bzw. Subdomain mit vorinstallierter Web-Anwendung einrichten');
-
 ?>
