@@ -103,7 +103,7 @@ $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" valu
 /*
  * Boolean option, to be used when only one PHP version is available
  */
-$have_php = ($vhost['php'] == 'php55' ? ' checked="checked" ' : '');
+$have_php = ($vhost['php'] == 'php56' ? ' checked="checked" ' : '');
 
 /*
 $phpoptions = "<h5>PHP</h5>
@@ -117,7 +117,7 @@ $phpoptions = "<h5>PHP</h5>
  */
 //if ($vhost['php'] == 'php54')
 //{
-  $options = array("none" => 'ausgeschaltet', "php53" => 'PHP 5.3 (veraltet)' , "php54" => "PHP 5.4 (veraltet)", "php55" => "PHP 5.5", "php56" => "PHP 5.6 (experimentell)");
+  $options = array("none" => 'ausgeschaltet', "php54" => "PHP 5.4 (veraltet)", "php55" => "PHP 5.5", "php56" => "PHP 5.6");
   $phpoptions = "
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">

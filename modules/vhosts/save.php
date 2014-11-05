@@ -72,15 +72,6 @@ if ($_GET['action'] == 'edit')
   if ($_POST['vhost_type'] == 'regular' && isset($_POST['php']))
   {
     switch ($_POST['php']) {
-      case 'mod_php':
-        $php = 'mod_php';
-        break;
-      case 'fastcgi':
-        $php = 'fastcgi';
-        break;
-      case 'php53':
-        $php = 'php53';
-        break;
       case 'php54':
         $php = 'php54';
         break;
