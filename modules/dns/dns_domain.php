@@ -41,25 +41,25 @@ output('<table><tr><th>Hostname</th><th>Typ</th><th>IP-Adresse/Inhalt</th><th>TT
 foreach ($records AS $rec)
 {
   $editable = true;
-  $data = ( $rec['ip'] ? $rec['ip'] : $rec['data'] );
+  $data = filter_input_general( $rec['ip'] ? $rec['ip'] : $rec['data'] );
   if ($rec['dyndns'])
   {
     if ($domain->fqdn == config('masterdomain'))
     { 
-      $data = '<em>DynDNS #'.$rec['dyndns'].'</em>';
+      $data = '<em>DynDNS #'.(int) $rec['dyndns'].'</em>';
       $editable = false;
     } else {
       $dyndns = get_dyndns_account($rec['dyndns']);
-      $data = internal_link('dyndns_edit', '<em>DynDNS #'.$rec['dyndns'].' ('.$dyndns['handle'].')</em>', 'id='.$rec['dyndns']);
+      $data = internal_link('dyndns_edit', '<em>DynDNS #'.(int) $rec['dyndns'].' ('.filter_input_general($dyndns['handle']).')</em>', 'id='.(int) $rec['dyndns']);
     }
   }
   if ($rec['type'] == 'mx')
   {
-    $data .= ' ('.$rec['spec'].')';
+    $data .= ' ('.(int) $rec['spec'].')';
   }
   if ($rec['type'] == 'sshfp')
   {
-    $data = $rec['spec'] . ' 1 ' . $data;
+    $data = (int) $rec['spec'] . ' 1 ' . $data;
   }
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
   $link = $rec['fqdn'];
@@ -69,11 +69,11 @@ foreach ($records AS $rec)
   if ($editable) {
       $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
   }
-  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>".filter_input_general($data)."</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
+  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>".$data."</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
 }  
 foreach ($auto_records AS $rec)
 {
-  $data = ( $rec['ip'] ? $rec['ip'] : $rec['data'] );
+  $data = filter_input_general( $rec['ip'] ? $rec['ip'] : $rec['data'] );
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
   output("<tr><td><em>{$rec['fqdn']}</em></td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
   
