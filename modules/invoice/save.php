@@ -18,6 +18,7 @@ require_role(ROLE_CUSTOMER);
 
 require('invoice.php');
 require_once("inc/debug.php");
+require_once("inc/security.php");
 global $debugmode;
 
 $section = 'invoice_current';
