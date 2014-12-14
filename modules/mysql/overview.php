@@ -78,7 +78,7 @@ if (count($dbs) > 0 || count($users) > 0) {
 
   foreach($dbs as $db)
   {
-    $phpmyadmin = "https://mysql.{$servers[$db['name']]}/";
+    $phpmyadmin = "https://mysql-{$servers[$db['name']]}/";
     $desc = '';
     if ($db['description']) {
       $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.$db['description'].'</span>';
@@ -121,7 +121,7 @@ if (count($dbs) > 0) {
   output("<h4>Verwaltung der Datenbanken (phpMyAdmin)</h4>
   <p><img src=\"{$prefix}images/phpmyadmin.png\" style=\"width: 120px; height: 70px; float: right;\" />Zur Verwaltung der Datenbank-Inhalte stellen wir Ihnen eine stets aktualisierte Version von phpMyAdmin zur Verfügung.</p>");
   if (count($myservers) == 1) {
-    output("<p><strong><a href=\"https://mysql.{$myservers[0]}/\">phpMyAdmin aufrufen</a></strong></p>");
+    output("<p><strong><a href=\"https://mysql-{$myservers[0]}/\">phpMyAdmin aufrufen</a></strong></p>");
   }
   else {
     output("<p><em>Ihre Datenbanken befinden sich auf unterschiedlichen Servern, daher müssen Sie die jeweils passende Adresse für phpMyAdmin benutzen. Klicken Sie auf das Symbol ".other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin")." oben neben der jeweiligen Datenbank.</em></p>");
