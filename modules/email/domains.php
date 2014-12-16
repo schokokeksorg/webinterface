@@ -17,6 +17,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/security.php');
 require_role(ROLE_SYSTEMUSER);
+require_once('inc/jquery.php');
+javascript('domains.js');
 
 require_once('vmail.php');
 
@@ -42,20 +44,39 @@ beachtet. Subdomains können grundsätzlich nur durch Administratoren eingericht
   <tr><th>Domainname</th><th>Einstellung</th><th></th><th></th></tr>
 ');
 
+$odd = true;
 foreach ($domains AS $id => $dom) {
-  $trextra = '';
+  $odd = !$odd;
+  $trextra = ($odd ? ' class="odd"' : ' class="even"');
   $extra = '';
+  $edit_disabled = false;
   $type = maildomain_type($dom['type']);
   $edit = html_form('vmail_domainchange', 'domainchange', '', html_select('type', array('virtual' => 'Webinterface-Verwaltung', 'auto' => '.courier-Dateien', 'none' => 'keine E-Mails empfangen'), $dom['type']).' <input type="hidden" name="id" value="'.$id.'" /><input type="submit" value="ändern" />');
-  if ($dom['type'] == 'manual')
+  if ($dom['type'] == 'manual') {
+    $edit_disabled = true;
     $edit = 'Kann nur von Admins geändert werden';
-  if (domain_has_vmail_accounts($id))
+  }
+  if (domain_has_vmail_accounts($id)) {
+    $edit_disabled = true;
     $edit = 'Keine Änderung möglich, so lange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
+  }
   if ($dom['mailserver_lock']) {
-    $trextra = ' style="background-color: #faa;"';
+    $trextra .= ' style="background-color: #faa;"';
     $extra = '<strong>Mailserver-Sperre aktiv!</strong>';
   }
-  output("<tr{$trextra}><td>{$dom['name']}</td><td>{$type}</td><td>{$edit}</td><td style=\"border: none;\">{$extra}</td></tr>\n");
+  $check_off = ($dom['type'] == 'none' ? ' checked="checked"' : '');
+  $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
+  $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
+  
+  $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled':'').'" id="buttonset-'.$id.'">
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.$check_off.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-off">Ausgeschaltet</label>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-webinterface">Webinterface</label>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-manual">Manuell</label>
+      </span>';
+  output("<tr{$trextra}><td>{$dom['name']}</td><td>$buttons</td><td>{$type}</td><td>{$edit}</td><td style=\"border: none;\">{$extra}</td></tr>\n");
   if (array_key_exists($id, $subdomains)) {
     foreach ($subdomains[$id] AS $subdom) {
       $type = maildomain_type($subdom['type']);

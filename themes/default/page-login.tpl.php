@@ -52,7 +52,7 @@ if ($messages) {
 }
 ?>
 
-<h3>schokokeks.org Hosting Webinterface</h3>
+<h3 class="headline">schokokeks.org Hosting Webinterface</h3>
 <p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org Hosting festlegen. Sofern Sie noch kein Kunde von schokokeks.org Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="http://www.schokokeks.org">öffentliche Seite</a>.</p>
 <form action="" method="post">
 <p><label for="username" class="login_label">Benutzername oder E-Mail-Adresse:</label> <input type="text" id="username" name="webinterface_username" size="30" /></p>
