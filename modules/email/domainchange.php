@@ -24,10 +24,19 @@ require_role(ROLE_SYSTEMUSER);
 
 check_form_token('vmail_domainchange');
 
-if (! $_POST['type'] || ! $_POST['id'])
-  system_failure("Unvollständige POST-Daten");
-
-change_domain($_POST['id'], $_POST['type']);
+foreach ($_POST as $key => $value) {
+  if (strpos($key, "option-") === 0) {
+    $id = substr($key, 7);
+    $type = 'virtual';
+    if ($value == 'manual') {
+      $type = 'auto';
+    } elseif ($value == 'off') {
+      $type = 'none';
+    }
+    DEBUG('change request for id #'.$id.' to '.$value);
+    change_domain($id, $type);
+  }
+}
 
 if (!$debugmode) {
   header('Location: domains');

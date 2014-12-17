@@ -377,7 +377,7 @@ tr.unpaid td {
 }
 
 .ui-button {
-  border: 1px solid #000;
+  border: 1px solid #425d6c;
   background-color: #fff;
   color: #000;
 }
@@ -385,7 +385,7 @@ tr.unpaid td {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-  border: 1px solid #000;
-  background: #000;
+  border: 1px solid #425d6c;
+  background: #425d6c;
   color: #fff;
 }

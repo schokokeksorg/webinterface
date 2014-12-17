@@ -48,39 +48,51 @@ $odd = true;
 foreach ($domains AS $id => $dom) {
   $odd = !$odd;
   $trextra = ($odd ? ' class="odd"' : ' class="even"');
-  $extra = '';
   $edit_disabled = false;
-  $type = maildomain_type($dom['type']);
-  $edit = html_form('vmail_domainchange', 'domainchange', '', html_select('type', array('virtual' => 'Webinterface-Verwaltung', 'auto' => '.courier-Dateien', 'none' => 'keine E-Mails empfangen'), $dom['type']).' <input type="hidden" name="id" value="'.$id.'" /><input type="submit" value="ändern" />');
+  $notice = '';
   if ($dom['type'] == 'manual') {
     $edit_disabled = true;
-    $edit = 'Kann nur von Admins geändert werden';
+    $notice = 'Kann nur von Admins geändert werden';
   }
   if (domain_has_vmail_accounts($id)) {
     $edit_disabled = true;
-    $edit = 'Keine Änderung möglich, so lange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
+    $notice = 'Keine Änderung möglich, so lange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
   }
   if ($dom['mailserver_lock']) {
     $trextra .= ' style="background-color: #faa;"';
-    $extra = '<strong>Mailserver-Sperre aktiv!</strong>';
+    $notice .= ' <strong>Mailserver-Sperre aktiv!</strong>';
   }
   $check_off = ($dom['type'] == 'none' ? ' checked="checked"' : '');
   $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
   $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
   
   $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled':'').'" id="buttonset-'.$id.'">
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.$check_off.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
-         <label for="option-'.$id.'-off">Ausgeschaltet</label>
          <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
          <label for="option-'.$id.'-webinterface">Webinterface</label>
          <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
          <label for="option-'.$id.'-manual">Manuell</label>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.$check_off.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-off">Ausgeschaltet</label>
+         <input type="submit" value="Speichern" />
       </span>';
-  output("<tr{$trextra}><td>{$dom['name']}</td><td>$buttons</td><td>{$type}</td><td>{$edit}</td><td style=\"border: none;\">{$extra}</td></tr>\n");
+  output("<tr{$trextra}><td>{$dom['name']}</td><td>".html_form('vmail_domainchange', 'domainchange', '', $buttons)."</td><td>{$notice}</td></tr>\n");
   if (array_key_exists($id, $subdomains)) {
     foreach ($subdomains[$id] AS $subdom) {
-      $type = maildomain_type($subdom['type']);
-      output("<tr><td>{$subdom['name']}.{$dom['name']}</td><td>{$type}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");
+      $odd = !$odd;
+      $trextra = ($odd ? ' class="odd"' : ' class="even"');
+      $edit_disabled = true;
+      $check_webinterface = ($subdom['type'] == 'virtual' ? ' checked="checked"' : '');
+      $check_manual = ($subdom['type'] == 'auto' || $subdom['type'] == 'manual' ? ' checked="checked"' : '');
+      $id = $id.'-'.$subdom['name'];
+      $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled':'').'" id="buttonset-'.$id.'">
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-webinterface">Webinterface</label>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-manual">Manuell</label>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <label for="option-'.$id.'-off">Ausgeschaltet</label>
+      </span>';
+      output("<tr{$trextra}><td>{$subdom['name']}.{$dom['name']}</td><td>{$buttons}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");
     }
   }
 }
