@@ -13,7 +13,7 @@
     return hostname + '/htdocs';
   }
   
-  function useDefaultDocroot( default_docroot ) {
+  function useDefaultDocroot( default_docroot='' ) {
     var do_it = $('#use_default_docroot').prop('checked');
     var inputfield = $('#docroot');
     inputfield.attr('disabled', do_it);
@@ -76,6 +76,7 @@ $(function() {
   $('#hostname').change(useDefaultDocroot);
   $('#domain').change(useDefaultDocroot);
   $('#use_default_docroot').change(useDefaultDocroot);
+  useDefaultDocroot();
 
   $('.usageoption').change(showAppropriateLines);
 
