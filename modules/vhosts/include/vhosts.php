@@ -80,8 +80,8 @@ function empty_vhost()
   $vhost['id'] = NULL;
   $vhost['hostname'] = NULL;
   
-  $vhost['domain_id'] = -1;
-  $vhost['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
+  $vhost['domain_id'] = NULL;
+  $vhost['domain'] = NULL;
   
   $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
   $vhost['docroot'] = NULL;
@@ -121,6 +121,16 @@ function empty_alias()
 }
 
 
+function userdomain() {
+  if (config('user_vhosts_domain') === NULL) {
+    return NULL;
+  }
+  $result = db_query("SELECT id,name FROM vhosts.v_domains WHERE name=:dom", array(":dom" => config('user_vhosts_domain')));
+  $res = $result->fetch();
+  return $res;
+}
+
+
 function domainselect($selected = NULL, $selectattribute = '')
 {
   global $domainlist, $config;
@@ -130,8 +140,6 @@ function domainselect($selected = NULL, $selectattribute = '')
   $selected = (int) $selected;
 
   $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
-  $ret .= ' <option value="-1">'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').'</option>';
-  $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
   $found = false;
   foreach ($domainlist as $dom)
   {
@@ -142,6 +150,16 @@ function domainselect($selected = NULL, $selectattribute = '')
     }
     $ret .= "<option value=\"{$dom->id}\"{$s}>{$dom->fqdn}</option>\n";
   }
+  if (count($domainlist) > 0) {
+    $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
+  }
+  $userdomain = userdomain();
+  if ($userdomain) {
+    $s = ($selected == -1 ? ' selected="selected"' : '');
+    $ret .= ' <option value="-1"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.$userdomain['name'].'</option>';
+  }
+  $s = ($selected == -2 ? ' selected="selected"' : '');
+  $ret .= ' <option value="-2"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').'</option>';
   $ret .= '</select>';
   if ($selected > 0 and ! $found) {
     system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
@@ -161,6 +179,21 @@ function get_vhost_details($id)
 
   $ret = $result->fetch();
 
+  if ($ret['domain_id'] === NULL) {
+    $ret['domain_id'] = -2;
+  }
+  $userdomain = userdomain();
+  if ($ret['domain_id'] == $userdomain['id']) {
+    $user = $_SESSION['userinfo']['username'];
+    $ret['domain_id'] = -1;
+    if ($ret['hostname'] == $user) {
+      $ret['hostname'] = NULL;
+    } elseif (substr($ret['hostname'], -count($user), count($user)) == $user) {
+      $ret['hostname'] = substr($ret['hostname'], 0, -count($user)-1); // Punkt mit entfernen!
+    } else {
+      system_failure('Userdomain ohne Username!');
+    }
+  }
   if ($ret['hsts'] === NULL) {
     DEBUG('HSTS: '.$ret['hsts']);
     $ret['hsts'] = -1;
@@ -283,6 +316,10 @@ function check_hostname_collision($hostname, $domain)
   $domaincheck = "domain=:domain";
   if ($domain == -1) {
     $args[":uid"] = $uid;
+    $domaincheck = "domain=-1 AND user=:uid";
+  }
+  if ($domain == -2) {
+    $args[":uid"] = $uid;
     unset($args[":domain"]);
     $domaincheck = "domain IS NULL AND user=:uid";
   }
@@ -310,7 +347,7 @@ function save_vhost($vhost)
   $domain = (int) $vhost['domain_id'];
   if ($domain == 0)
     system_failure('$domain == 0');
-  if ($vhost['domain_id'] == -1)
+  if ($vhost['domain_id'] == -2)
     $domain = NULL;
   if ($id == 0) {
     check_hostname_collision($vhost['hostname'], $vhost['domain_id']);
@@ -450,7 +487,7 @@ function save_alias($alias)
   $domain = (int) $alias['domain_id'];
   if ($domain == 0)
     system_failure('$domain == 0');
-  if ($alias['domain_id'] == -1)
+  if ($alias['domain_id'] == -2)
     $domain = NULL;
   $vhost = get_vhost_details( (int) $alias['vhost']);
   if (! $alias['hostname']) {

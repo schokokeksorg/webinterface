@@ -46,8 +46,12 @@ else {
 }
 
 $defaultdocroot = $vhost['domain'];
-if (! $vhost['domain'])
+if (! $vhost['domain']) {
   $defaultdocroot = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
+}
+if ($vhost['domain_id'] == -1) {
+  $defaultdocroot = $_SESSION['userinfo']['username'].'.'.config('user_vhosts_domain');
+}
 if ($vhost['hostname'])
   $defaultdocroot = $vhost['hostname'].'.'.$defaultdocroot;
 

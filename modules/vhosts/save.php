@@ -40,10 +40,18 @@ if ($_GET['action'] == 'edit')
   $hostname = filter_input_hostname($_POST['hostname'], true);
 
   $domain_id = (int) $_POST['domain'];
-  if ($domain_id != -1) {
+  if ($domain_id >= 0) {
     $domain = new Domain( (int) $_POST['domain'] );
     $domain->ensure_userdomain();
     $domain_id = $domain->id;
+  }
+  if ($domain_id == -1) {
+    # use configured user_vhosts_domain
+    $userdomain = userdomain();
+    $domain = new Domain( (int) $userdomain['id'] );
+    $domain_id = $domain->id;
+    $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
+    $hostname = trim($hostname, " .-");
   }
 
   if (! (isset($_POST['options']) && is_array($_POST['options'])))
@@ -236,10 +244,18 @@ elseif ($_GET['action'] == 'addalias')
   
   $hostname = filter_input_hostname($_POST['hostname'], true);
   $domainid = (int) $_POST['domain'];
-  if ($domainid != -1) {
+  if ($domainid >= 0) {
     $domain = new Domain( (int) $_POST['domain'] );
     $domain->ensure_userdomain();
     $domainid = $domain->id;
+  }
+  if ($domainid == -1) {
+    # use configured user_vhosts_domain
+    $userdomain = userdomain();
+    $domain = new Domain( (int) $userdomain['id'] );
+    $domainid = $domain->id;
+    $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
+    $hostname = trim($hostname, " .-");
   }
 
   if (! is_array($_POST['options']))
