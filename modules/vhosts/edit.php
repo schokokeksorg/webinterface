@@ -182,13 +182,13 @@ $form .= "
 
 <h4 style=\"clear: right; margin-top: 3em;\">Allgemeine Optionen</h4>
 <div style=\"margin-left: 2em;\">
-    <h5>SSL-Verschlüsselung</h5>
+    <h5>Verschlüsselte Verbindung erzwingen</h5>
     <div style=\"margin-left: 2em;\">
     <select name=\"ssl\" id=\"ssl\">
-      <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >Normal</option>
-      ".($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein SSL</option>" : '')."
-      ".($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">nur SSL</option>" : '')."
-      <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Immer auf SSL umleiten</option>
+      <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >Nein</option>
+      ".($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein SSL anbieten</option>" : '')."
+      ".($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">Konfiguration nur für SSL verwenden</option>" : '')."
+      <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Ja, immer auf HTTPS umleiten</option>
     </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"http://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure#HSTS\">HSTS</a>:</label> ".html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value)." <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span>
     </span>
     </div>
