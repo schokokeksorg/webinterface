@@ -188,8 +188,8 @@ function get_vhost_details($id)
     $ret['domain_id'] = -1;
     if ($ret['hostname'] == $user) {
       $ret['hostname'] = NULL;
-    } elseif (substr($ret['hostname'], -count($user), count($user)) == $user) {
-      $ret['hostname'] = substr($ret['hostname'], 0, -count($user)-1); // Punkt mit entfernen!
+    } elseif (substr($ret['hostname'], -strlen($user), strlen($user)) == $user) {
+      $ret['hostname'] = substr($ret['hostname'], 0, -strlen($user)-1); // Punkt mit entfernen!
     } else {
       system_failure('Userdomain ohne Username!');
     }
