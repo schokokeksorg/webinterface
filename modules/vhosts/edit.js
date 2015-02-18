@@ -1,6 +1,7 @@
  
   function selectedDomain() {
-    return $('#domain option:selected').text();
+      dom = $('#domain option:selected').text();
+      return dom.match(/\S+/g)[0]
     }
   
 

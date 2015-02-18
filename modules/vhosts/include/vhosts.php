@@ -130,6 +130,19 @@ function userdomain() {
   return $res;
 }
 
+function user_uses_userdomain()
+{
+  global $config;
+  $uid = (int) $_SESSION['userinfo']['uid'];
+  $userdomain = userdomain();
+  $result = db_query("SELECT id FROM vhosts.vhost WHERE domain=:domid AND user=:uid", array(":uid" => $uid, ":domid" => $userdomain['id']));
+  if ($result->rowCount() > 0) {
+    DEBUG("User hat ".$result->rowCount()." Domains *.schokokeks.net");
+    return True;
+  }
+  DEBUG("User hat keine Domains *.schokokeks.net");
+  return false;
+}
 
 function domainselect($selected = NULL, $selectattribute = '')
 {
@@ -150,20 +163,24 @@ function domainselect($selected = NULL, $selectattribute = '')
     }
     $ret .= "<option value=\"{$dom->id}\"{$s}>{$dom->fqdn}</option>\n";
   }
-  if (count($domainlist) > 0) {
+  $userdomain = userdomain();
+  $user_needs_userdomain = $userdomain && (count($domainlist) == 0 || user_uses_userdomain());
+  $user_needs_userdomain = $user_needs_userdomain || ($selected == -2);
+  if (count($domainlist) > 0 && $user_needs_userdomain) {
     $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
   }
-  $userdomain = userdomain();
-  if ($userdomain) {
+  if ($userdomain && (count($domainlist) == 0 || user_uses_userdomain())) {
     $s = ($selected == -1 ? ' selected="selected"' : '');
     $ret .= ' <option value="-1"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.$userdomain['name'].'</option>';
   }
-  $s = ($selected == -2 ? ' selected="selected"' : '');
-  $ret .= ' <option value="-2"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').'</option>';
-  $ret .= '</select>';
-  if ($selected > 0 and ! $found) {
-    system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
+  if ($selected == -2) {
+    $s = ($selected == -2 ? ' selected="selected"' : '');
+    $ret .= ' <option value="-2"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').' (Bitte nicht mehr benutzen!)</option>';
+    if ($selected > 0 and ! $found) {
+      system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
+    }
   }
+  $ret .= '</select>';
   return $ret;
 }
 
@@ -171,6 +188,7 @@ function domainselect($selected = NULL, $selectattribute = '')
 
 function get_vhost_details($id)
 {
+  DEBUG("Lese #{$id}...");
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   $result = db_query("SELECT vh.*,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid AND vh.id=:id", array(":uid" => $uid, ":id" => $id));
@@ -307,30 +325,32 @@ function check_hostname_collision($hostname, $domain)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   # Neuer vhost => Prüfe Duplikat
-  $args = array(":hostname" => $hostname, ":domain" => $domain);
+  $args = array(":hostname" => $hostname, ":domain" => $domain, ":uid" => $uid);
+  $domaincheck = "domain=:domain";
+  if ($domain == -1) {
+    $userdomain = userdomain();
+    if ($hostname) {
+      $hostname .= ".".$_SESSION['userinfo']['username'];
+    }
+    $args[":domain"] = $userdomain['id'];
+  }
+  if ($domain == -2) {
+    unset($args[":domain"]);
+    $domaincheck = "domain IS NULL";
+  }
   $hostnamecheck = "hostname=:hostname";
   if (! $hostname) {
     $hostnamecheck = "hostname IS NULL";
     unset($args[":hostname"]);
   }
-  $domaincheck = "domain=:domain";
-  if ($domain == -1) {
-    $args[":uid"] = $uid;
-    $domaincheck = "domain=-1 AND user=:uid";
-  }
-  if ($domain == -2) {
-    $args[":uid"] = $uid;
-    unset($args[":domain"]);
-    $domaincheck = "domain IS NULL AND user=:uid";
-  }
-  $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck}", $args);
+  $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck} AND user=:uid", $args);
   if ($result->rowCount() > 0) {
     system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
   }
-  if ($domain == -1) {
+  if ($domain <= -1) {
     return ;
   }
-  $result = db_query("SELECT id, vhost FROM vhosts.alias WHERE {$hostnamecheck} AND {$domaincheck}", $args);
+  $result = db_query("SELECT id, vhost FROM vhosts.v_alias WHERE {$hostnamecheck} AND {$domaincheck}", $args);
   if ($result->rowCount() > 0) {
     $data = $result->fetch();
     $vh = get_vhost_details($data['vhost']);

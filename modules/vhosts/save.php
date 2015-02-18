@@ -39,19 +39,26 @@ if ($_GET['action'] == 'edit')
 
   $hostname = filter_input_hostname($_POST['hostname'], true);
 
+  $domainname = NULL;
   $domain_id = (int) $_POST['domain'];
   if ($domain_id >= 0) {
     $domain = new Domain( (int) $_POST['domain'] );
     $domain->ensure_userdomain();
     $domain_id = $domain->id;
+    $domainname = $domain->fqdn;
   }
-  if ($domain_id == -1) {
+  elseif ($domain_id == -1) {
     # use configured user_vhosts_domain
     $userdomain = userdomain();
     $domain = new Domain( (int) $userdomain['id'] );
     $domain_id = $domain->id;
+    $domainname = $domain->fqdn;
     $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
     $hostname = trim($hostname, " .-");
+  }
+  elseif ($domain_id == -2) {
+    # use system masterdomain
+    $domainname = $_SESSION['userinfo']['username'].".".config('masterdomain');
   }
 
   if (! (isset($_POST['options']) && is_array($_POST['options'])))
@@ -61,7 +68,7 @@ if ($_GET['action'] == 'edit')
   $docroot = '';
   if ($_POST['vhost_type'] == 'regular' || $_POST['vhost_type'] == 'dav')
   {
-    $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain->fqdn).'/htdocs';
+    $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domainname).'/htdocs';
   
     $docroot = '';
     if (isset($_POST['docroot']))
