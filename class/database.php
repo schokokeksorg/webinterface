@@ -132,7 +132,7 @@ function db_query($stmt, $params = NULL)
   } catch (PDOException $e) {
     global $debugmode;
     if ($debugmode) {
-      system_failure("MySQL-Fehler: ".$e->getMessage());
+      system_failure("MySQL-Fehler: ".$e->getMessage()."\nQuery:\n".$stmt);
     } else {
       system_failure("Datenbankfehler");
     }
