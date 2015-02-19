@@ -350,6 +350,7 @@ function check_hostname_collision($hostname, $domain)
   if ($domain <= -1) {
     return ;
   }
+  unset($args[":uid"]);
   $result = db_query("SELECT id, vhost FROM vhosts.v_alias WHERE {$hostnamecheck} AND {$domaincheck}", $args);
   if ($result->rowCount() > 0) {
     $data = $result->fetch();
