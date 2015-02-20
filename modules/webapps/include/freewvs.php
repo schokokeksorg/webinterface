@@ -20,7 +20,7 @@ require_once('inc/base.php');
 function load_results()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT directory, docroot, lastcheck, appname, version, state, safeversion, vulninfo FROM qatools.freewvs_results WHERE uid=?", array($uid));
+  $result = db_query("SELECT directory, docroot, first_seen, last_seen, first_warned, last_warned, appname, version, state, safeversion, vulninfo FROM qatools.detected_webapps WHERE uid=?", array($uid));
   $ret = array();
   while ($line = $result->fetch()) {
     array_push($ret, $line);
