@@ -21,6 +21,8 @@ require_once('inc/error.php');
 
 require_once('terions.php');
 
+require_once('modules/email/include/vmail.php');
+
 
 function get_domain_offer($domainname) 
 {
@@ -88,10 +90,13 @@ function register_domain($domainname, $uid)
                 ":gebuehr" => $data['gebuehr']);
   db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail, provider, betrag, brutto) VALUES ".
            "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto', 'terions', :gebuehr, 1) ", $args);
+  $domid = db_insert_id();
   if ($data['setup']) {
     $args = array(":cid" => $cid, ":setup" => $data['setup'], ":text" => 'Einmalige Setup-Gebühren für Domain "'.$data['domainname'].'"');
     db_query("INSERT INTO kundendaten.leistungen (kunde,periodisch,datum,betrag,brutto,beschreibung,anzahl) VALUES (:cid, 0, CURDATE(), :setup, 1, :text, 1)", $args);
   }
+  # Umstellen auf vmail
+  change_domain($domid, 'virtual');
 }
 
 function list_useraccounts()
