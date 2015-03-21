@@ -57,6 +57,8 @@ function create_list($listname, $maildomain, $admin)
 {
   verify_input_username($listname);
   verify_input_general($admin);
+  if (in_array($listname, array("admin", "administrator", "webmaster", "hostmaster", "postmaster")))
+    system_failure('Der Mailinglistenname '.$listname.' ist unzulässig.');
   if (! check_emailaddr($admin))
     system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
   $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname=?", array($listname));
