@@ -123,7 +123,7 @@ function get_dyndns_records($id)
   $data = array();
   while ($entry = $result->fetch()) {
     $dom = new Domain((int) $entry['domain']);
-    if ($dom->fqdn != config('masterdomain')) {
+    if ($dom->fqdn != config('masterdomain') && $dom->fqdn != config('user_vhosts_domain')) {
       $dom->ensure_userdomain();
     }
     $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
