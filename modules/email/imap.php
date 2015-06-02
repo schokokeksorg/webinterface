@@ -207,6 +207,7 @@ else
   {
     output('<div class="error"><strong>Achtung:</strong> Alle Ihre Domains sind auf Webinterface-Verwaltung konfiguriert. Sie können dennoch manuelle IMAP-Konten für Ihre speziellen Konfigurationen anlegen, in der Regel sollten Sie aber hier keine IMAP-Acccounts anlegen. Dies kann zu Fehlfunktionen führen.</div>');
   }
+  addnew("imap", "Neuen Account anlegen", "action=create");
   output('<p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
 <table style="margin-bottom: 1em;">
 <tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&#160;</th></tr>
