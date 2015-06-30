@@ -54,7 +54,7 @@ foreach($domains AS $dom)
   $records = get_domain_records($dom->id);
 
   $autorec = ($dom->autodns == 1 ? 'Ja' : 'Nein');
-  if ($dom->provider != 'terions' || $dom->billing != 'regular' || $dom->registrierungsdatum == NULL) {
+  if ($dom->provider != 'terions' || $dom->billing != 'regular' || $dom->registrierungsdatum == NULL || $dom->kuendigungsdatum != NULL) {
     $state = check_dns($dom->domainname, $dom->tld);
     if ($state !== True) {
       $current = 'Momentaner DNS-Server (u.A.): '.$state;
