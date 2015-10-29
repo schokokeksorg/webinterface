@@ -28,7 +28,15 @@ if ($role & ROLE_SYSADMIN) {
   unset($_SESSION['admin_user']);
   header('Location: '.$prefix.'go/su/su');
   die();
+} elseif ($role & ROLE_CUSTOMER) {
+  setup_session($role, $admin_user);
+  unset($_SESSION['admin_user']);
+  header('Location: '.$prefix.'go/su/su_customer');
+  die();
 }
+
+
+
 
 
 

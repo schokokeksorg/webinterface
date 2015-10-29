@@ -16,6 +16,10 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 $role = $_SESSION['role'];
 
+if ($role & ROLE_CUSTOMER)
+{
+  $menu["su_customer"] = array("label" => "Benutzer wechseln", "file" => "su_customer", "weight" => -10, "submenu" => "systemuser_account");
+}
 if ($role & ROLE_SYSADMIN)
 {
   $menu["su_su"] = array("label" => "Su-Login", "file" => "su", "weight" => -10);

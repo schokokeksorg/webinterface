@@ -142,3 +142,31 @@ function build_results($term) {
 }
 
 
+function su($type, $id) {
+  $role = NULL;
+  $admin_user = $_SESSION['userinfo']['username'];
+  $_SESSION['admin_user'] = $admin_user;
+  $role = find_role($id, '', True);
+  if (!$role) {
+    unset($_SESSION['admin_user']);
+    return False;
+  }
+  setup_session($role, $id);
+  if ($type == 'c') {
+    if (! (ROLE_CUSTOMER & $_SESSION['role'])) {
+      session_destroy();
+      system_failure('Es wurde ein "su" zu einem Kundenaccount angefordert, das war aber kein Kundenaccount!');
+    }
+  } elseif ($type == 'u') {
+    if (! (ROLE_SYSTEMUSER & $_SESSION['role'])) {
+      session_destroy();
+      system_failure('Es wurde ein "su" zu einem Benutzeraccount angefordert, das war aber kein Benutzeraccount!');
+    }
+  } elseif ($type) {
+    // wenn type leer ist, dann ist es auch egal
+    system_failure('unknown type');
+  }
+
+  redirect('../../go/index/index');
+  die();
+}
