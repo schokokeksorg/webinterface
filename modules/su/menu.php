@@ -18,7 +18,11 @@ $role = $_SESSION['role'];
 
 if ($role & ROLE_CUSTOMER)
 {
-  $menu["su_su_customer"] = array("label" => "Benutzer wechseln", "file" => "su_customer", "weight" => -10, "submenu" => "systemuser_account");
+  if (have_module('systemuser')) {
+    $menu["su_su_customer"] = array("label" => "Benutzer wechseln", "file" => "su_customer", "weight" => -10, "submenu" => "systemuser_account");
+  } else {
+    $menu["su_su_customer"] = array("label" => "Benutzer wechseln", "file" => "su_customer", "weight" => 90);
+  }
 }
 if ($role & ROLE_SYSADMIN)
 {
