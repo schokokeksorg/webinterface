@@ -141,6 +141,9 @@ if (count($vhosts) > 0)
         case 'php56':
           $php = icon_enabled_phpxx('PHP in Version 5.6 eingeschaltet', 5, 6);
           break;
+        case 'php70':
+          $php = icon_enabled_phpxx('PHP in Version 7.0 eingeschaltet', 7, 0);
+          break;
       }
       output("<td>{$php}</td>");
       if ($vhost['docroot_is_default'] == 1)
