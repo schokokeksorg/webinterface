@@ -209,11 +209,16 @@ if ($_GET['action'] == 'edit')
   $new_options = array();
   foreach ($old_options AS $op)
   {
-    if ($op != 'aliaswww')
+    if ($op != 'aliaswww') {
       array_push($new_options, $op);
+    }
   }
-  if ($aliaswww)
+  if ($aliaswww){
     array_push($new_options, 'aliaswww');
+  }
+  if ($cert == -1) {
+    array_push($new_options, 'letsencrypt');
+  }
 
   DEBUG($old_options);
   DEBUG($new_options);

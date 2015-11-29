@@ -232,9 +232,32 @@ function delete_csr($id)
 }
 
 
+function split_cn($cn)
+{
+  $domains = array();
+  if (strstr($cn, ',') or strstr($cn, "\n")) {
+    $domains = preg_split("/[, \n]+/", $cn);
+    DEBUG("Domains:");
+    DEBUG($domains);
+  } else {
+    $domains[] = $cn;
+  }
+  for ($i=0;$i!=count($domains);$i++) {
+    $domains[$i] = filter_input_hostname($domains[$i], true);
+  }
+  return $domains;
+}
+
 function create_csr($cn, $bits)
 {
-  $cn = filter_input_hostname($cn, true);
+  $domains = split_cn($cn);
+  $tmp = array();
+  foreach ($domains as $dom) {
+    $tmp[] = 'DNS:'.$dom;
+  }
+  $SAN = "[ v3_req ]\nsubjectAltName = ".implode(', ', $tmp);
+  DEBUG($SAN);
+  $cn = $domains[0];
   $bits = (int) $bits;
   if ($bits == 0)
     $bits = 4096;
@@ -251,6 +274,7 @@ default_bits = {$bits}
 default_keyfile = {$keyfile}
 encrypt_key = no
 distinguished_name      = req_distinguished_name
+req_extensions = v3_req
 
 [ req_distinguished_name ]
 countryName                     = Country Name (2 letter code)
@@ -264,6 +288,7 @@ localityName_default            =
 
 commonName = Common Name
 commonName_default = {$cn}
+{$SAN}
 ");
   fclose($c);
 
@@ -295,13 +320,15 @@ function save_csr($cn, $bits, $replace=NULL)
   if (! $cn) {
     system_failure("Sie müssen einen Domainname eingeben!");
   }
+  $domains = split_cn($cn);
+  $cn = $domains[0];
   $csr = NULL;
   $key = NULL;
-  list($csr, $key) = create_csr($cn, $bits);
+  list($csr, $key) = create_csr(implode(',',$domains), $bits);
   
   $uid = (int) $_SESSION['userinfo']['uid'];
   db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :bits, :replace, :csr, :key)",
-           array(":uid" => $uid, ":cn" => filter_input_hostname($cn, true), ":bits" => $bits, 
+           array(":uid" => $uid, ":cn" => $cn, ":bits" => $bits, 
                  ":replace" => $replace, ":csr" => $csr, ":key" => $key));
   $id = db_insert_id();
   return $id;  

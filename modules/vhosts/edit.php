@@ -227,7 +227,7 @@ if (!$vhost['server']) {
 $extended = '';
   if (count($certs))
   {
-    $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen');
+    $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen', -1 => 'Automatische Zertifikatsverwaltung über Let\'s Encrypt!');
     foreach ($certs as $c)
     {
       $certselect[$c['id']] = $c['subject'];

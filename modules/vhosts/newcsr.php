@@ -35,7 +35,7 @@ Einstellungen stehen Ihnen die OpenSSL-Programme in Ihrem Benutzeraccount zur Ve
 
 $bitselect = array(2048 => 2048, 4096 => 4096);
 
-$form = '<p><label for="commonname">Domain-/Hostname:</label> <input type="text" name="commonname" id="commonname" /></p>
+$form = '<p><label for="commonname">Domain-/Hostname:</label> <input type="text" name="commonname" id="commonname" /> (Mehrere Hostnames ggf. mit Komma trennen.)</p>
 <p><label for="bitlength">Bitlänge:</label> '.html_select('bitlength', $bitselect, 4096).'</p>
 <p><input type="submit" value="Erzeugen" /></p>';
 
