@@ -218,6 +218,11 @@ if ($_GET['action'] == 'edit')
   }
   if ($cert == -1) {
     array_push($new_options, 'letsencrypt');
+    if ($vhost['cert'] != 0) {
+      # FIXME: Wenn der User manuell von einem gültigen Cert auf "letsencrypt" umgestellt hat, 
+      # dann sollte das alte Cert noch so lange eingetragen bleiben bis das neue da ist.
+      $cert = $vhost['cert']
+    }
   }
 
   DEBUG($old_options);

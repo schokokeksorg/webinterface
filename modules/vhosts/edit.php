@@ -232,6 +232,9 @@ $extended = '';
     {
       $certselect[$c['id']] = $c['subject'];
     }
+    if ($vhost['certid'] == 0 && strstr($vhost['options'], 'letsencrypt')) {
+      $vhost['certid'] = -1;
+    }
     $extended .= "
       <h5>verwendetes SSL-Zertifikat</h5>
       <div style=\"margin-left: 2em;\">

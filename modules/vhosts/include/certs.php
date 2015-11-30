@@ -174,7 +174,11 @@ validTo_time_t => 1267190790
   */
   DEBUG($certdata);
   //return array('subject' => $certdata['name'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']));
-  return array('subject' => $certdata['subject']['CN'].' / '.$certdata['issuer']['O'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN']);
+  $issuer = $certdata['issuer']['CN'];
+  if (isset($certdata['issuer']['O'])) {
+    $issuer = $certdata['issuer']['O'];
+  }
+  return array('subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN']);
 }
 
 
