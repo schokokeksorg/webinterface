@@ -213,15 +213,30 @@ if ($_GET['action'] == 'edit')
       array_push($new_options, $op);
     }
   }
-  if ($aliaswww){
+  if ($aliaswww) {
     array_push($new_options, 'aliaswww');
   }
-  if ($cert == -1) {
+  $letsencrypt = ($cert == 0 ? false : ($cert == -1 || cert_is_letsencrypt($cert)));
+
+  if ($letsencrypt) {
     array_push($new_options, 'letsencrypt');
     if ($vhost['cert'] != 0) {
-      # FIXME: Wenn der User manuell von einem gültigen Cert auf "letsencrypt" umgestellt hat, 
+      # Wenn der User manuell von einem gültigen Cert auf "letsencrypt" umgestellt hat, 
       # dann sollte das alte Cert noch so lange eingetragen bleiben bis das neue da ist.
-      $cert = $vhost['cert']
+      $cert = $vhost['cert'];
+    } elseif ($cert > 0) {
+      # Das Cert was der user gewählt hat, ist von Lets encrypt
+      # tu nix, $cert ist schon korrekt
+    } else {
+      # Wenn vorher kein Zertifikat aktiv war, dann setze jetzt auch keines. 
+      # Der letsencrypt-Automatismus macht das dann schon.
+      $cert = 0;
+    }
+  } else {
+    # Wenn kein Letsencrypt gewünscht ist, entferne die Letsencrypt-Option
+    $key = array_search('letsencrypt',$new_options);
+    if ($key !== false) {
+      unset($new_options[$key]);
     }
   }
 

@@ -48,10 +48,21 @@ function cert_details($id)
   $id = (int) $id;
   $uid = (int) $_SESSION['userinfo']['uid'];
   
-  $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, cert, `key` FROM vhosts.certs WHERE uid=:uid AND id=:id", array(":uid" => $uid, ":id" => $id));
+  $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, chain, cert, `key` FROM vhosts.certs WHERE uid=:uid AND id=:id", array(":uid" => $uid, ":id" => $id));
   if ($result->rowCount() != 1)
     system_failure("Ungültiges Zertifikat #{$id}");
   return $result->fetch();
+}
+
+function cert_is_letsencrypt($id)
+{
+  $details = cert_details($id);
+  if (strstr($details['subject'], 'happy hacker fake CA') ||
+      strstr($details['subject'], "Let's Encrypt Authority X1") ||
+      $details['chain'] == 18) {
+    return true;
+  }
+  return false;
 }
 
 
