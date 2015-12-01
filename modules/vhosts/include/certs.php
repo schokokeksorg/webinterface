@@ -57,9 +57,7 @@ function cert_details($id)
 function cert_is_letsencrypt($id)
 {
   $details = cert_details($id);
-  if (strstr($details['subject'], 'happy hacker fake CA') ||
-      strstr($details['subject'], "Let's Encrypt Authority X1") ||
-      $details['chain'] == 18) {
+  if ($details['chain'] == config('letsencrypt_chain')) {
     return true;
   }
   return false;
