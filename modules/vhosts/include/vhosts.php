@@ -200,6 +200,7 @@ function get_vhost_details($id)
   if ($ret['domain_id'] === NULL) {
     $ret['domain_id'] = -2;
   }
+  $ret['cert'] = $ret['certid'];
   $userdomain = userdomain();
   if ($ret['domain_id'] == $userdomain['id']) {
     $user = $_SESSION['userinfo']['username'];
