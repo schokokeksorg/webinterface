@@ -225,22 +225,19 @@ if (!$vhost['server']) {
 }
 
 $extended = '';
-  if (count($certs))
+  $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen', -1 => 'Automatische Zertifikatsverwaltung über Let\'s Encrypt!');
+  foreach ($certs as $c)
   {
-    $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen', -1 => 'Automatische Zertifikatsverwaltung über Let\'s Encrypt!');
-    foreach ($certs as $c)
-    {
-      $certselect[$c['id']] = $c['subject'];
-    }
-    if ($vhost['certid'] == 0 && strstr($vhost['options'], 'letsencrypt')) {
-      $vhost['certid'] = -1;
-    }
-    $extended .= "
-      <h5>verwendetes SSL-Zertifikat</h5>
-      <div style=\"margin-left: 2em;\">
-      ".html_select('cert', $certselect, $vhost['certid'])."
-      </div>";
+    $certselect[$c['id']] = $c['subject'];
   }
+  if ($vhost['certid'] == 0 && strstr($vhost['options'], 'letsencrypt')) {
+    $vhost['certid'] = -1;
+  }
+  $extended .= "
+    <h5>verwendetes SSL-Zertifikat</h5>
+    <div style=\"margin-left: 2em;\">
+    ".html_select('cert', $certselect, $vhost['certid'])."
+    </div>";
   if (count($ipaddrs))
   {
     $ipselect = array(0 => 'System-Standard');
