@@ -398,7 +398,7 @@ function save_vhost($vhost)
     if (! $vhost['options']) {
       $vhost['options']='nodocroot';
     } else {
-      $vhost['options']+=",nodocroot";
+      $vhost['options'].=",nodocroot";
     }
   }
 
