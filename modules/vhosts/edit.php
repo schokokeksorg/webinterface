@@ -230,7 +230,7 @@ $extended = '';
   {
     $certselect[$c['id']] = $c['subject'];
   }
-  if ($vhost['certid'] == 0 && strstr($vhost['options'], 'letsencrypt')) {
+  if (strstr($vhost['options'], 'letsencrypt')) {
     $vhost['certid'] = -1;
   }
   $extended .= "
