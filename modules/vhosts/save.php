@@ -96,8 +96,8 @@ if ($_GET['action'] == 'edit')
       case 'php56':
         $php = 'php56';
         break;
-      case 'php70':
-        $php = 'php70';
+      case 'fpm70': # FIXME: FPM soll bald der default sein, momentan nur einzelne Versionen
+        $php = 'fpm70';
         break;
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }
