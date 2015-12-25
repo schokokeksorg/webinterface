@@ -106,6 +106,10 @@ if (count($vhosts) > 0)
     {
       output("<td>".icon_disabled('SSL ausgeschaltet')."</td>");
     }
+    elseif (strstr($vhost['options'], "letsencrypt") && $vhost['cert'])
+    {
+      output("<td>".other_icon("letsencrypt.png", "Automatische Zertifikatsverwaltung mit Let's Encrypt")."</td>");
+    }
     elseif ($vhost['cert'])
     {
       output("<td>".other_icon("secure.png", "SSL mit eigenem Zertifikat")."</td>");
@@ -113,7 +117,7 @@ if (count($vhosts) > 0)
     elseif (strstr($vhost['options'], "letsencrypt")) {
       // Letsencrypt gewählt aber noch nicht aktiv
       $message = "Let's Encrypt-Zertifikat ist noch nicht bereit";
-      output("<td>".other_icon("secure.png", $message).icon_warning($message)."</td>");
+      output("<td>".other_icon("letsencrypt.png", $message).icon_warning($message)."</td>");
     }
     else
     {
