@@ -108,7 +108,13 @@ if (count($vhosts) > 0)
     }
     elseif (strstr($vhost['options'], "letsencrypt") && $vhost['cert'])
     {
-      output("<td>".other_icon("letsencrypt.png", "Automatische Zertifikatsverwaltung mit Let's Encrypt")."</td>");
+      $forward = '';
+      if ($vhost['ssl'] == 'forward') {
+        $forward = " ".other_icon("refresh.png", 'Auf SSL umleiten');
+      } else {
+        $forward = " ".other_icon("warning.png", 'Ungeschützter Aufruf weiterhin möglich');
+      }
+      output("<td>".other_icon("letsencrypt.png", "Automatische Zertifikatsverwaltung mit Let's Encrypt").$forward."</td>");
     }
     elseif ($vhost['cert'])
     {
