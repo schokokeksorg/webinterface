@@ -19,7 +19,7 @@ require_once('inc/base.php');
 require_once('inc/security.php');
 require_once('inc/error.php');
 
-require_once('terions.php');
+require_once('httpnet.php');
 
 require_once('modules/email/include/vmail.php');
 

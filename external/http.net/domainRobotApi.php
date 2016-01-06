@@ -32,6 +32,11 @@ class domainRobotDefaultRequest extends domainRobotDefaultObject {
 		$this->clientTransactionId = date("YmdHis")."-".$pass;
 	}
 
+	public function overrideTransactionId($id)
+	{
+		$this->clientTransactionId = $id;
+	}
+
 	public function getTransactionId()
 	{
 		return $this->clientTransactionId;
@@ -44,18 +49,53 @@ class domainRobotContact extends domainRobotDefaultObject {
 	public $handle;
 	public $type;
 	public $name;
-	public $organisation;
+	public $organization;
 	public $street;
-	public $postOfficeBox;
 	public $postalCode;
 	public $city;
 	public $state;
 	public $country;
-	public $email;
-	public $phone;
-	public $fax;
-	public $sip;
+	public $phoneNumber;
+	public $faxNumber;
+	public $emailAddress;
+	public $sipUri;
 	public $lastChangeDate;
+	public $hidden;
+	public $extGender;
+	public $extCompanyNumber;
+	public $extCompanyNumberCountry;
+	public $extTradingName;
+	public $extTaxId;
+	public $extTaxIdCountry;
+	public $extDateOfBirth;
+	public $extPlaceOfBirth;
+	public $extPlaceOfBirthZipCode;
+	public $extCountryOfBirth;
+	public $extLanguage;
+	public $extNationality;
+	public $extRemarks;
+	public $extIdentificationCardNumber;
+	public $extIdentificationCardIssuingAuthority;
+	public $extIdentificationCardIssueDate;
+	public $extIdentificationCardValidUntil;
+	public $extIdentificationCardCountry;
+	public $extTradeMarkName;
+	public $extTradeMarkRegistrationAuthority;
+	public $extTradeMarkRegisterNumber;
+	public $extTradeMarkCountry;
+	public $extTradeMarkDateOfApplication;
+	public $extTradeMarkDateOfRegistration;
+	public $extAeroIdentificationNumber;
+	public $extAeroPassword;
+	public $extCaLegalType;
+	public $extCatIntendedUsage;
+	public $extUkType;
+	public $extProProfession;
+	public $extProAuthorityName;
+	public $extProAuthorityUrl;
+	public $extProLicenseNumber;
+	public $extTravelUniqueIdentificationNumber;
+	public $extXxxMemberId;
 }
 
 class domainRobotDomainContact extends domainRobotDefaultObject {
@@ -70,21 +110,42 @@ class domainRobotDomainContact extends domainRobotDefaultObject {
 }
 
 class domainRobotDomain extends domainRobotDefaultObject {
-	public $accountId;
-	public $id;
+	public $accountId = NULL;
+	public $id = NULL;
 	public $name;
+	public $nameUnicode;
 	public $contacts;
 	public $nameservers;
 	public $status;
 	public $transferLockEnabled;
-	public $authCode;
+	public $authInfo;
+	public $addDate;
 	public $createDate;
+	public $lastChangeDate;
+	public $terminableByDate;
+	public $currentContractPeriodEnd;
+	public $nextContractPeriodStart;
+	public $deletionDate;
+	public $deletionType;
 }
 
 class domainRobotTransferData extends domainRobotDefaultObject {
 	public $authInfo;
 	public $authInfo2;
 	public $foaRecipient;
+}
+
+class domainRobotFilter extends domainRobotDefaultObject {
+	public $field;
+	public $value;
+	public $relation;
+	public $subFilterConnective;
+	public $subFilter;
+}
+
+class domainRobotSortOptions extends domainRobotDefaultObject {
+	public $field;
+	public $order;
 }
 
 class domainRobotNameserver extends domainRobotDefaultObject {
@@ -100,7 +161,7 @@ class domainRobotNameserver extends domainRobotDefaultObject {
 
 class domainRobotApi {
 
-	private $location = "http://regspeed.de/api/domain/v1/soap";
+	private $location = "https://regspeed.de/api/domain/v1/soap";
 
 	private $authToken;
         private $soap = NULL;
@@ -108,11 +169,13 @@ class domainRobotApi {
 	private $lastRequestId = NULL;
 	private $lastResponse = NULL;
 
+	private $transactionId = NULL;
+
 	public function __construct($authToken)
 	{
 		$this->authToken = $authToken;
 		try {
-			if ($client = new SOAPClient(__DIR__."/domainrobot.wsdl", array('location' => $this->location, 'connection_timeout' => 10, 'features' => SOAP_SINGLE_ELEMENT_ARRAYS)))
+			if ($client = new SOAPClient(__DIR__."/domainrobot.wsdl", array('trace' => true, 'location' => $this->location, 'connection_timeout' => 10, 'features' => SOAP_SINGLE_ELEMENT_ARRAYS)))
 			{
 				$this->soap = $client;
 			} else {
@@ -123,8 +186,21 @@ class domainRobotApi {
 		}
 	}
 
+	public function setTransactionId($transactionId) {
+		$this->transactionId = $transactionId;
+	}
+
+	public function resetLocation($url)
+	{
+		$this->location = $url;
+		$this->__construct($this->authToken);
+	}
+
 	private function _request($action, $request)
 	{
+		if (isset($this->transactionId)) {
+			$request->overrideTransactionId($this->transactionId);
+		}
 		$this->lastRequestId = $request->getTransactionId();
 		try {
 			$this->lastResponse = $this->soap->{$action}($request);
@@ -132,6 +208,19 @@ class domainRobotApi {
 		} catch (Exception $e) {
 			return false;
 		}
+	}
+
+	public function request($action, $request)
+	{
+		return $this->_request($action, $request);
+	}
+
+	public function getServerTransactionId()
+	{
+		if (isset($this->lastResponse) && isset($this->lastResponse->status)) {
+			return $this->lastResponse->metadata->serverTransactionId;
+		}
+		return false;
 	}
 
 	public function getStatus()
@@ -150,6 +239,16 @@ class domainRobotApi {
 		return array();
 	}
 
+	public function getErrorsToString()
+	{
+		$str = NULL;
+		foreach($this->getErrors() as $error) {
+			$str .= $error->code.": ".$error->text.";";
+		}
+		return $str;
+	}
+
+
 	public function getWarnings()
 	{
 		if (isset($this->lastResponse) && isset($this->lastResponse->warnings)) {
@@ -158,12 +257,62 @@ class domainRobotApi {
 		return array();
 	}
 
-	public function getValues()
+	public function getValue()
 	{
-		if (isset($this->lastResponse) && isset($this->lastResponse->values)) {
+		if (isset($this->lastResponse) && isset($this->lastResponse->value)) {
+			return $this->lastResponse->value;
+		} elseif (isset($this->lastResponse) && isset($this->lastResponse->values)) {
 			return $this->lastResponse->values;
 		}
 		return false;
+	}
+
+	public function contactsFindByData($data)
+	{
+		$filter = new domainRobotFilter();
+		$filter->set("field", NULL);
+		$filter->set("value", NULL);
+		$filter->set("subFilterConnective", "AND");
+		$subFilters = array();
+		foreach($data as $key => $value) {
+			$subFilter = new domainRobotFilter();
+			$subFilter->set("field", "contact".ucfirst($key));
+			$subFilter->set("value", $value);
+			$subFilters[] = $subFilter;
+		}
+		$filter->set("subFilter", $subFilters);
+
+		$sort = new domainRobotSortOptions();
+		$sort->set("field", "contactName");
+		$sort->set("order", "ASC");
+
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("filter", $filter);
+		$request->set("limit", 0);
+		$request->set("page", 1);
+		$request->set("sort", $sort);
+		return $this->_request("contactsFind", $request);
+	}
+
+	public function contactsFind($nameFilter = NULL)
+	{
+		$filter = NULL;
+		if (strlen($nameFilter)) {
+			$filter = new domainRobotFilter();
+			$filter->set("field", "contactName");
+			$filter->set("value", $nameFilter);
+		}
+
+		$sort = new domainRobotSortOptions();
+		$sort->set("field", "contactName");
+		$sort->set("order", "ASC");
+
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("filter", $filter);
+		$request->set("limit", 0);
+		$request->set("page", 1);
+		$request->set("sort", $sort);
+		return $this->_request("contactsFind", $request);
 	}
 
 	public function contactCreate($data)
@@ -188,13 +337,17 @@ class domainRobotApi {
 		return $this->_request("contactUpdate", $request);
 	}
 
-	public function contactDelete($handle, $deleteNow)
+	public function contactInfo($contact)
 	{
-		// TODO FindHandle oder nehmen wir auch das Handle als contactId an?
-		return false;
-
 		$request = new domainRobotDefaultRequest($this->authToken);
-		$request->set("contactId", $handle);
+		$request->set("contactId", $contact);
+		return $this->_request("contactInfo", $request);
+	}
+
+	public function contactDelete($contact, $deleteNow)
+	{
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("contactId", $contact);
 		$request->set("deleteNow", $deleteNow);
 		return $this->_request("contactDelete", $request);
 	}
@@ -206,6 +359,10 @@ class domainRobotApi {
 		$tech = new domainRobotDomainContact("tech", $data['tech']);
 		$zone = new domainRobotDomainContact("zone", $data['zone']);
 		$contacts = array($owner, $admin, $tech, $zone);
+		if (isset($data['billing'])) {
+			$billing = new domainRobotDomainContact("billing", $data['billing']);
+			$contacts = array($owner, $admin, $tech, $zone, $billing);
+		}
 		return $contacts;
 	}
 
@@ -227,6 +384,42 @@ class domainRobotApi {
 		return $nameservers;
 	}
 
+	public function domainsFindByName($nameFilter)
+	{
+		$filter = new domainRobotFilter();
+		$filter->set("field", "domainName");
+		$filter->set("value", $nameFilter);
+
+		$sort = new domainRobotSortOptions();
+		$sort->set("field", "domainName");
+		$sort->set("order", "ASC");
+
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("filter", $filter);
+		$request->set("limit", 0);
+		$request->set("page", 1);
+		$request->set("sort", $sort);
+		return $this->_request("domainsFind", $request);
+	}
+
+	public function domainsFindByHandle($handleFilter)
+	{
+		$filter = new domainRobotFilter();
+		$filter->set("field", "contactId");
+		$filter->set("value", $handleFilter);
+
+		$sort = new domainRobotSortOptions();
+		$sort->set("field", "domainName");
+		$sort->set("order", "ASC");
+
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("filter", $filter);
+		$request->set("limit", 0);
+		$request->set("page", 1);
+		$request->set("sort", $sort);
+		return $this->_request("domainsFind", $request);
+	}
+
 	public function domainInfo($domain)
 	{
 		$request = new domainRobotDefaultRequest($this->authToken);
@@ -234,10 +427,10 @@ class domainRobotApi {
 		return $this->_request("domainInfo", $request);
 	}
 
-	public function domainStatus($domain)
+	public function domainStatus($domains)
 	{
 		$request = new domainRobotDefaultRequest($this->authToken);
-		$request->set("domainNames", array($domain));
+		$request->set("domainNames", $domains);
 		return $this->_request("domainStatus", $request);
 	}
 
@@ -265,8 +458,8 @@ class domainRobotApi {
 		$domain->set("transferLockEnabled", true);
 
 		$transferData = new domainRobotTransferData();
-		if (isset($data['authCode'])) {
-			$transferData->set("authCode", $data['authCode']);
+		if (isset($data['authInfo'])) {
+			$transferData->set("authInfo", $data['authInfo']);
 		}
 		$transferData->set("foaRecipient", "both");
 
@@ -284,6 +477,9 @@ class domainRobotApi {
 		$domain->set("contacts", $this->_getContacts($data));
 		$domain->set("nameservers", $this->_getNameservers($data));
 		$domain->set("transferLockEnabled", true);
+		if (isset($data['transferLockEnabled'])) {
+			$domain->set("transferLockEnabled", $data['transferLockEnabled']);
+		}
 
 		$request = new domainRobotDefaultRequest($this->authToken);
 		$request->set("domain", $domain);
@@ -304,7 +500,7 @@ class domainRobotApi {
 		return $this->_request("domainCreateAuthInfo2", $request);
 	}
 
-	public function domainDelete($domain, $execData = NULL)
+	public function domainDelete($domain, $execDate = NULL)
 	{
 		$request = new domainRobotDefaultRequest($this->authToken);
 		$request->set("domainName", $domain);
@@ -312,7 +508,7 @@ class domainRobotApi {
 		return $this->_request("domainDelete", $request);
 	}
 
-	public function domainWithdraw($domain, $disconnect = true, $execData = NULL)
+	public function domainWithdraw($domain, $disconnect = true, $execDate = NULL)
 	{
 		$request = new domainRobotDefaultRequest($this->authToken);
 		$request->set("domainName", $domain);
@@ -323,6 +519,7 @@ class domainRobotApi {
 
 	public function domainSetAutoRenewMode($domain, $mode)
 	{
+		// TODO not implemented yet, moeglich ueber domainDelete/cancelJob
 		$request = new domainRobotDefaultRequest($this->authToken);
 		$request->set("domainName", $domain);
 		$request->set("mode", $mode);
@@ -331,6 +528,7 @@ class domainRobotApi {
 
 	public function domainSetTransferLock($domain, $mode)
 	{
+		// TODO not implemented yet, moeglich ueber domainUpdate
 		$request = new domainRobotDefaultRequest($this->authToken);
 		$request->set("domainName", $domain);
 		$request->set("mode", $mode);
@@ -365,5 +563,50 @@ class domainRobotApi {
 		$request->set("domainName", $domain);
 		$request->set("reason", $reason);
 		return $this->_request("domainTransferOutNack", $request);
+	}
+
+	public function jobCancel($jobId) {
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("jobId", $jobId);
+		return $this->_request("jobCancel", $request);
+	}
+
+	public function jobsFindByName($domainFilter = NULL)
+	{
+		$filter = NULL;
+		if (strlen($domainFilter)) {
+			$filter = new domainRobotFilter();
+			$filter->set("field", "jobDomainNameAce");
+			$filter->set("value", $domainFilter);
+		}
+
+		$sort = new domainRobotSortOptions();
+		$sort->set("field", "jobExecutionDate");
+		$sort->set("order", "DESC");
+
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("filter", $filter);
+		$request->set("limit", 10);
+		$request->set("page", 1);
+		$request->set("sort", $sort);
+		return $this->_request("jobsFind", $request);
+	}
+
+	public function jobsFindById($idFilter)
+	{
+		$filter = new domainRobotFilter();
+		$filter->set("field", "jobId");
+		$filter->set("value", $idFilter);
+		
+		$sort = new domainRobotSortOptions();
+		$sort->set("field", "jobDomainNameAce");
+		$sort->set("order", "ASC");
+
+		$request = new domainRobotDefaultRequest($this->authToken);
+		$request->set("filter", $filter);
+		$request->set("limit", 0);
+		$request->set("page", 1);
+		$request->set("sort", $sort);
+		return $this->_request("jobsFind", $request);
 	}
 }

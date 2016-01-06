@@ -14,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('external/tld-systems/domainRobotApi.php');
+require_once('external/http.net/domainRobotApi.php');
 
 require_once('inc/debug.php');
 require_once('inc/base.php');
@@ -24,13 +24,13 @@ require_once('inc/error.php');
 
 function terions_available($domainname) 
 {
-  if (! config('tld-systems-apikey')) {
+  if (! config('http.net-apikey')) {
     system_failure("Kein API-Key vorhanden!");
   }
-  $api = new domainRobotApi(config('tld-systems-apikey'));
+  $api = new domainRobotApi(config('http.net-apikey'));
   $result = $api->domainStatus($domainname);
-  if (isset($api->getValues()[0])) {
-    return ($api->getValues()[0]->status == 'available');
+  if (isset($api->getValue()[0])) {
+    return ($api->getValue()[0]->status == 'available');
   }
   return false;
 }
