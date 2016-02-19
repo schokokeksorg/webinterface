@@ -50,7 +50,11 @@ foreach ($records AS $rec)
       $editable = false;
     } else {
       $dyndns = get_dyndns_account($rec['dyndns']);
-      $data = internal_link('dyndns_edit', '<em>DynDNS #'.(int) $rec['dyndns'].' ('.filter_input_general($dyndns['handle']).')</em>', 'id='.(int) $rec['dyndns']);
+      if ($dyndns === NULL) {
+        $data = '<em>DynDNS #'.(int) $rec['dyndns'].' (nicht Ihr Account)</em>';
+      } else {
+        $data = internal_link('dyndns_edit', '<em>DynDNS #'.(int) $rec['dyndns'].' ('.filter_input_general($dyndns['handle']).')</em>', 'id='.(int) $rec['dyndns']);
+      }
     }
   }
   if ($rec['type'] == 'mx')

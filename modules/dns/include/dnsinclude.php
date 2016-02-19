@@ -35,13 +35,16 @@ function get_dyndns_accounts()
 }
 
 
-function get_dyndns_account($id) 
+function get_dyndns_account($id, $ignore=true) 
 {
   $args = array(":id" => (int) $id,
                 ":uid" => (int) $_SESSION['userinfo']['uid']);
   $result = db_query("SELECT * FROM dns.dyndns WHERE id=:id AND uid=:uid", $args);
   if ($result->rowCount() != 1) {
-    logger(LOG_WARNING, "modules/dns/include/dnsinclude", "dyndns", "account »{$id}« invalid for uid »{$uid}«.");
+    if ($ignore) {
+      return NULL;
+    } 
+    logger(LOG_WARNING, "modules/dns/include/dnsinclude", "dyndns", "account »{$id}« invalid for uid »{$_SESSION['userinfo']['uid']}«.");
     system_failure("Account ungültig");
   }
   $item = $result->fetch();
