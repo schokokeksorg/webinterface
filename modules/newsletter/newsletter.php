@@ -42,7 +42,7 @@ $form = '<p><input type="radio" id="newsletter_yes" name="newsletter" value="yes
 output(html_form("newsletter", "save.php", "", $form));
 
 output("<h3>Vergangene Newsletter</h3>
-<p>Hier sehen Sie die Newsletter des vergangenen Jahres zum Nachlesen.</p>");
+<p>Hier sehen Sie die Newsletter der vergangenen Jahre zum Nachlesen.</p>");
 
 output("<ul>");
 $news = get_latest_news();

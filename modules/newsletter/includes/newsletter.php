@@ -28,7 +28,7 @@ function get_newsletter_address() {
 
 
 function get_latest_news() {
-  $result = db_query("SELECT id, date, subject, content FROM misc.news WHERE date > CURDATE() - INTERVAL 1 YEAR ORDER BY date DESC");
+  $result = db_query("SELECT id, date, subject, content FROM misc.news WHERE date > CURDATE() - INTERVAL 2 YEAR ORDER BY date DESC");
   $ret = array();
   while ($item = $result->fetch()) {
     $ret[] = $item;
