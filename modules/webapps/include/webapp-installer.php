@@ -51,11 +51,6 @@ function directory_in_use($directory)
 function upgradeable($appname, $version)
 {
   DEBUG("Is {$appname}-{$version} upgradeable?");
-  if ($appname == 'Drupal6') 
-  {
-    DEBUG("found Drupal-6.*!");
-    return 'drupal6';
-  }
   if ($appname == 'Drupal7') 
   {
     DEBUG("found Drupal-7.*!");
@@ -64,16 +59,6 @@ function upgradeable($appname, $version)
   if ($appname == 'Drupal')
   {
     DEBUG("found Drupal!");
-    if (substr($version, 0, 2) == '5.')
-    {
-      DEBUG("found Drupal-5.*!");
-      return 'drupal5';
-    }
-    if (substr($version, 0, 2) == '6.')
-    {
-      DEBUG("found Drupal-6.*!");
-      return 'drupal6';
-    }
     if (substr($version, 0, 2) == '7.')
     {
       DEBUG("found Drupal-7.*!");
