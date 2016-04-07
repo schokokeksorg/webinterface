@@ -24,7 +24,6 @@ function do_ajax_cert_login() {
 
 function get_logins_by_cert($cert) 
 {
-	$cert = str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert);
 	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=?", array($cert));
 	if ($result->rowCount() < 1)
 		return NULL;
@@ -42,7 +41,7 @@ function get_cert_by_id($id)
   $id = (int) $id;
 	if ($id == 0)
 	  system_failure('no ID');
-	$result = db_query("SELECT id,dn,issuer,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
+	$result = db_query("SELECT id,dn,issuer,serial,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
 	if ($result->rowCount() < 1)
 		return NULL;
 	$ret = $result->fetch();
@@ -55,7 +54,7 @@ function get_certs_by_username($username)
 {
 	if ($username == '')
 	  system_failure('empty username');
-	$result = db_query("SELECT id,dn,issuer,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
+	$result = db_query("SELECT id,dn,issuer,serial,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
 	if ($result->rowCount() < 1)
 		return NULL;
 	while ($row = $result->fetch()) {
@@ -65,7 +64,7 @@ function get_certs_by_username($username)
 }
 
 
-function add_clientcert($certdata, $dn, $issuer, $startpage=NULL)
+function add_clientcert($certdata, $dn, $issuer, $serial, $startpage=NULL)
 {
   $type = NULL;
   $username = NULL;
@@ -91,14 +90,15 @@ function add_clientcert($certdata, $dn, $issuer, $startpage=NULL)
 
   $args = array(":dn" => $dn,
                 ":issuer" => $issuer,
+                ":serial" => $serial,
                 ":certdata" => $certdata,
                 ":type" => $type,
                 ":username" => $username,
                 ":startpage" => $startpage);
   DEBUG($args);
 
-  db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `cert`, `type`, `username`, `startpage`) 
-VALUES (:dn, :issuer, :certdata, :type, :username, :startpage)", $args);
+  db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `cert`, `type`, `username`, `startpage`) 
+VALUES (:dn, :issuer, :serial, :certdata, :type, :username, :startpage)", $args);
 
 }
 

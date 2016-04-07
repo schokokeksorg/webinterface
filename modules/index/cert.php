@@ -31,6 +31,7 @@ if (isset($_GET['clear']))
   unset($_SESSION['clientcert_cert']);
   unset($_SESSION['clientcert_dn']);
   unset($_SESSION['clientcert_issuer']);
+  unset($_SESSION['clientcert_serial']);
 }
 
 $username = NULL;
@@ -50,7 +51,8 @@ if (isset($_SESSION['clientcert_cert']))
   output('<div style="margin: 1em; padding: 1em; border: 2px solid green;">');
   output('<p>Es wurde folgendes Client-Zertifikat von Ihrem Browser gesendet:</p>
 <div style="margin-left: 2em;"><strong>DN:</strong> '.filter_input_general($_SESSION['clientcert_dn']).'<br />
-<strong>Aussteller-DN:</strong> '.filter_input_general($_SESSION['clientcert_issuer']).'</div>
+<strong>Aussteller-DN:</strong> '.filter_input_general($_SESSION['clientcert_issuer']).'<br />
+<strong>Seriennummer:</strong> '.filter_input_general($_SESSION['clientcert_serial']).'</div>
 <p>Soll dieses Zertifikat für den Zugang für <strong>'.$username.'</strong> verwendet werden?</p>');
   output(html_form('clientcert_add', 'certsave.php', 'action=new', '<p><input type="submit" name="submit" value="Ja, dieses Zertifikat einrichten" /> &#160; '.internal_link('cert', 'Nein', 'clear').'</p>'));
   output('</div>');
@@ -63,7 +65,7 @@ if ($certs != NULL) {
   output('<p>Sie haben bereits Zertifikate für den Zugang eingerichtet.</p>
   <ul>');
   foreach ($certs AS $cert) {
-   	output('<li>'.$cert['dn'].'<br /><em>ausgestellt von </em>'.$cert['issuer']);
+   	output('<li>'.$cert['dn'].' / Seriennummer '.$cert['serial'].'<br /><em>ausgestellt von </em>'.$cert['issuer']);
     output('<br />'.internal_link('certsave', 'Dieses Zertifikat löschen', 'action=delete&id='.$cert['id']));
     output('</li>');
   }

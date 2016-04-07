@@ -31,15 +31,8 @@ require_once('inc/error.php');
 require_once('inc/theme.php');
 
 
-function prepare_cert($cert)
-{
-	return str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', ' ', "\n"), array(), $cert);
-}
-
-
 function get_logins_by_cert($cert) 
 {
-	$cert = prepare_cert($cert);
 	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
 	if ($result->rowCount() < 1)
 		return NULL;
@@ -63,11 +56,13 @@ if (! isset($_SERVER['SSL_CLIENT_CERT']) && isset($_SERVER['REDIRECT_SSL_CLIENT_
 if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']) && check_path($_REQUEST['backto']))
 {
   DEBUG('recording client-cert');
-  if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) && isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) && isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']))
+  if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) && isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) && 
+      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']))
   {
-    $_SESSION['clientcert_cert'] = prepare_cert($_SERVER[$redirect.'SSL_CLIENT_CERT']);
+    $_SESSION['clientcert_cert'] = $_SERVER[$redirect.'SSL_CLIENT_CERT'];
     $_SESSION['clientcert_dn'] = $_SERVER[$redirect.'SSL_CLIENT_S_DN'];
     $_SESSION['clientcert_issuer'] = $_SERVER[$redirect.'SSL_CLIENT_I_DN'];
+    $_SESSION['clientcert_serial'] = $_SERVER[$redirect.'SSL_CLIENT_M_SERIAL'];
     header('Location: '.$prefix.$_REQUEST['backto'].encode_querystring(''));
     die();
   }
@@ -109,7 +104,8 @@ else
 {
   if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) && 
       isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) && $_SERVER[$redirect.'SSL_CLIENT_S_DN'] != '' && 
-      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && $_SERVER[$redirect.'SSL_CLIENT_I_DN'] != '') {
+      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && $_SERVER[$redirect.'SSL_CLIENT_I_DN'] != '' &&
+      isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']) && $_SERVER[$redirect.'SSL_CLIENT_M_SERIAL'] != '') {
     $ret = get_logins_by_cert($_SERVER[$redirect.'SSL_CLIENT_CERT']);
     if ($ret === NULL) {
       login_screen('Ihr Browser hat ein Client-Zertifikat gesendet, dieses ist aber noch nicht für den Zugang hinterlegt. Melden Sie sich bitte per Benutzername und Passwort an.');

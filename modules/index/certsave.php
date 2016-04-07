@@ -26,12 +26,13 @@ if ($_GET['action'] == 'new')
   if (! isset($_SESSION['clientcert_cert']))
     system_failure('Kein Zertifikat');
   
-  add_clientcert($_SESSION['clientcert_cert'], $_SESSION['clientcert_dn'], $_SESSION['clientcert_issuer']);
+  add_clientcert($_SESSION['clientcert_cert'], $_SESSION['clientcert_dn'], $_SESSION['clientcert_issuer'], $_SESSION['clientcert_serial']);
 
   // Räume session auf
   unset($_SESSION['clientcert_cert']);
   unset($_SESSION['clientcert_dn']);
   unset($_SESSION['clientcert_issuer']);
+  unset($_SESSION['clientcert_serial']);
   header('Location: cert');
 }
 elseif ($_GET['action'] == 'delete')
@@ -53,7 +54,7 @@ elseif ($_GET['action'] == 'delete')
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure("action=delete&id={$cert['id']}", "Möchten Sie das Zertifikat »{$cert['dn']}« wirklich löschen?");
+    are_you_sure("action=delete&id={$cert['id']}", "Möchten Sie das Zertifikat »{$cert['dn']}« (Seriennummer {$cert['serial']}) wirklich löschen?");
   }
   elseif ($sure === true)
   {
