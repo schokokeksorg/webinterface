@@ -57,12 +57,18 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
 {
   DEBUG('recording client-cert');
   if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) && isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) && 
-      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']))
+      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']) &&
+      isset($_SERVER[$redirect.'SSL_CLIENT_V_START']) && isset($_SERVER[$redirect.'SSL_CLIENT_V_END'])
+      )
   {
     $_SESSION['clientcert_cert'] = $_SERVER[$redirect.'SSL_CLIENT_CERT'];
     $_SESSION['clientcert_dn'] = $_SERVER[$redirect.'SSL_CLIENT_S_DN'];
     $_SESSION['clientcert_issuer'] = $_SERVER[$redirect.'SSL_CLIENT_I_DN'];
     $_SESSION['clientcert_serial'] = $_SERVER[$redirect.'SSL_CLIENT_M_SERIAL'];
+    $vstart = new DateTime($_SERVER[$redirect.'SSL_CLIENT_V_START']);
+    $_SESSION['clientcert_valid_from'] = date_format($vstart, 'Y-m-d');
+    $vend = new DateTime($_SERVER[$redirect.'SSL_CLIENT_V_END']);
+    $_SESSION['clientcert_valid_until'] = date_format($vend, 'Y-m-d');
     header('Location: '.$prefix.$_REQUEST['backto'].encode_querystring(''));
     die();
   }

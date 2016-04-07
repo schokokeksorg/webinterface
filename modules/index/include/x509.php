@@ -41,7 +41,7 @@ function get_cert_by_id($id)
   $id = (int) $id;
 	if ($id == 0)
 	  system_failure('no ID');
-	$result = db_query("SELECT id,dn,issuer,serial,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
+	$result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
 	if ($result->rowCount() < 1)
 		return NULL;
 	$ret = $result->fetch();
@@ -54,7 +54,7 @@ function get_certs_by_username($username)
 {
 	if ($username == '')
 	  system_failure('empty username');
-	$result = db_query("SELECT id,dn,issuer,serial,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
+	$result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
 	if ($result->rowCount() < 1)
 		return NULL;
 	while ($row = $result->fetch()) {
@@ -64,7 +64,7 @@ function get_certs_by_username($username)
 }
 
 
-function add_clientcert($certdata, $dn, $issuer, $serial, $startpage=NULL)
+function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $startpage=NULL)
 {
   $type = NULL;
   $username = NULL;
@@ -91,14 +91,16 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $startpage=NULL)
   $args = array(":dn" => $dn,
                 ":issuer" => $issuer,
                 ":serial" => $serial,
+                ":vstart" => $vstart,
+                ":vend" => $vend,
                 ":certdata" => $certdata,
                 ":type" => $type,
                 ":username" => $username,
                 ":startpage" => $startpage);
   DEBUG($args);
 
-  db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `cert`, `type`, `username`, `startpage`) 
-VALUES (:dn, :issuer, :serial, :certdata, :type, :username, :startpage)", $args);
+  db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `valid_from`, `valid_until`, `cert`, `type`, `username`, `startpage`) 
+VALUES (:dn, :issuer, :serial, :vstart, :vend, :certdata, :type, :username, :startpage)", $args);
 
 }
 
