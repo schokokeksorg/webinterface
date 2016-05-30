@@ -32,6 +32,9 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $num_warn = 0;
     foreach ($certs as $c)
     {
+      if (cert_is_letsencrypt($c['id'])) {
+        continue;
+      }
       if ($c['valid_until'] <= date('Y-m-d')) {
         $num_expired++;
       } elseif ($c['valid_until'] <= date('Y-m-d', time()+(30*24*3600))) {
