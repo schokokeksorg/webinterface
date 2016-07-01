@@ -100,5 +100,6 @@ if (! $new )
   }
   
   $output .= '</ul>';
+  output("<p>".internal_link('dyndns_hostnames', "Liste ändern...", "id={$_REQUEST['id']}")."</p>");
 }
 

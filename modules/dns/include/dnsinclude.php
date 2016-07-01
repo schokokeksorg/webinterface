@@ -62,6 +62,9 @@ function create_dyndns_account($handle, $password_http, $sshkey)
 
   $handle = filter_input_username($handle);
   $sshkey = filter_input_general($sshkey);
+  if (strlen($sshkey) == 0) {
+    $sshkey = NULL;
+  }
 
   $pwhash = NULL;
   if ($password_http)
@@ -71,11 +74,12 @@ function create_dyndns_account($handle, $password_http, $sshkey)
            "(:uid, :handle, :pwhash, :sshkey)",
            array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey));
   $dyndns_id = db_insert_id();
-  $masterdomain = new Domain(config('masterdomain'));
-  db_query("INSERT INTO dns.custom_records (type, domain, hostname, dyndns, ttl) VALUES ".
-           "('a', :dom, :hostname, :dyndns, 120)",
-           array(":dom" => $masterdomain->id, ":hostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'], ":dyndns" => $dyndns_id));
-  logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "inserted account");
+  //$masterdomain = new Domain(config('masterdomain'));
+  //db_query("INSERT INTO dns.custom_records (type, domain, hostname, dyndns, ttl) VALUES ".
+  //         "('a', :dom, :hostname, :dyndns, 120)",
+  //         array(":dom" => $masterdomain->id, ":hostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'], ":dyndns" => $dyndns_id));
+  logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "inserted account {$dyndns_id}");
+  return $dyndns_id;
 }
 
 

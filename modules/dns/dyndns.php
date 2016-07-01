@@ -16,6 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/base.php');
 require_once('inc/security.php');
+require_once('inc/icons.php');
 
 require_role(ROLE_SYSTEMUSER);
 
@@ -45,7 +46,7 @@ foreach ($dyndns AS $entry) {
       $method = 'HTTP';
     else
       $method = '<em>keine</em>';
-  output("<tr><td>".internal_link('dyndns_edit', $handle, "id={$entry['id']}")."</td><td>{$method}</td><td>{$entry['address']}</td><td>{$entry['lastchange']}</td><td>".internal_link('save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Account löschen" />', "id={$entry['id']}&type=dyndns&action=delete")."</td></tr>\n");
+  output("<tr><td>".internal_link('dyndns_edit', $handle, "id={$entry['id']}")."</td><td>{$method}</td><td>{$entry['address']}</td><td>{$entry['lastchange']}</td><td>".internal_link('save', icon_delete("Account löschen"), "id={$entry['id']}&type=dyndns&action=delete").' '.internal_link('dyndns_hostnames', other_icon("world_link.png", "Hostnames verwalten"), "id={$entry['id']}")."</td></tr>\n");
 }
 output('</table>');
 
