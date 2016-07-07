@@ -268,6 +268,10 @@ function save_vmail_account($account)
       system_failure('Bitte wählen Sie eine Ihrer Domains aus!');
       return false;
     }
+    if ($id == NULL && get_vmail_id_by_emailaddr($account['local'].'@'.$domainname)) {
+      system_failure('Diese E-Mail-Adresse gibt es bereits.');
+      return false;
+    }
   }
   
   $forwards = array();
