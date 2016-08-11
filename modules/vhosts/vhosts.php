@@ -48,10 +48,12 @@ foreach ($vhosts as $vh) {
 
 if (count($vhosts) > 0)
 {
+  /*
   if ($letsencrypt) {
     warning("Sie haben für eine oder mehrere Domains die Nutzung eines Let's-Encrypt-Zertifikats aktiviert. Wir haben diese Funktion nach allgemeiner Verfügbarkeit von Let's Encrypt umgehend freigeschaltet und sind mit der ersten Erfahrungen sehr zufrieden. Dennoch befindet sich Let's Encrypt momentan im Beta-Betrieb (d.h. Testbetrieb). Störungen sind daher nicht auszuschließen.");
     warning("Die Bereitstellung eines Zertifikats von Let's Encrypt kann momentan bis zu 15 Minuten in Anspruch nehmen.");
   }
+  */
   if (count($vhosts) > 10) {
     addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
   }
