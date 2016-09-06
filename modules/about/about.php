@@ -30,6 +30,7 @@ output('<p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webh
   <li><a href="http://www.famfamfam.com/lab/icons/silk/">Das »Silk«-Iconset von Mark James</a>, lizensiert unter <a href="http://creativecommons.org/licenses/by/2.5/">CC-by 2.5</a></li>
   <li>Icons vom <a href="http://www.phpmyadmin.net/">phpMyAdmin-Projekt</a>, lizensiert unter <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU GPL 2.0</a></li>
   <li>Das Logo der <a href="http://www.jabber.org/">Jabber Software Foundation</a>, lizensiert unter <a href="http://creativecommons.org/licenses/by/2.5/">CC-by 2.5</a></li>
+  <li>Das Logo <a href="https://letsencrypt.org/">von Let\'s Encrypt, der freien und automatisierten Zertifizierungsstelle der Internet Security Research Group (ISRG).</a></li>
 </ul>
 
 <p>Diese Urheberinformation ist nach bestem Wissen erstellt. Sollten Sie Fehler erkennen oder verwenden wir Ihre Arbeit ohne dies hier zu erwähnen, dann <a href="http://www.schokokeks.org/kontakt">kontaktieren Sie uns</a> bitte.</p>
