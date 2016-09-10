@@ -87,17 +87,16 @@ if ($_GET['action'] == 'edit')
   if ($_POST['vhost_type'] == 'regular' && isset($_POST['php']))
   {
     switch ($_POST['php']) {
-      case 'php54':
-        $php = 'php54';
-        break;
-      case 'php55':
-        $php = 'php55';
-        break;
       case 'php56':
         $php = 'php56';
         break;
-      case 'fpm70': # FIXME: FPM soll bald der default sein, momentan nur einzelne Versionen
+      case 'php70':
+      case 'fpm70':
         $php = 'fpm70';
+        break;
+      case 'php71':
+      case 'fpm71':
+        $php = 'fpm71';
         break;
       /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
     }

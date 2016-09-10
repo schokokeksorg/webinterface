@@ -159,17 +159,16 @@ if (count($vhosts) > 0)
         case NULL:
           $php = icon_disabled('PHP ausgeschaltet');
           break;
-        case 'php54':
-          $php = icon_enabled_warning('PHP in veralteter Version aktiviert');
-          break;
-        case 'php55':
-          $php = icon_enabled_phpxx('PHP in Version 5.5 eingeschaltet', 5, 5);
-          break;
         case 'php56':
           $php = icon_enabled_phpxx('PHP in Version 5.6 eingeschaltet', 5, 6);
           break;
-        case 'fpm70': # FIXME: FPM soll bald default sein
+        case 'php70':
+        case 'fpm70':
           $php = icon_enabled_phpxx('PHP in Version 7.0 eingeschaltet', 7, 0);
+          break;
+        case 'php71':
+        case 'fpm71':
+          $php = icon_enabled_phpxx('PHP in Version 7.1 eingeschaltet', 7, 1);
           break;
       }
       output("<td>{$php}</td>");
