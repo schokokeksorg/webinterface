@@ -34,7 +34,7 @@ if (!preg_match('/((daily_|hourly_|ctry_)?(usage|agent|search|ref|url|site)(_[0-
   system_failure("Ungültiger Dateiname: »".filter_input_general($_REQUEST['file'])."«");
 }
 
-$path = '/home/stats/webalizer/data/' . $vhost['fqdn'];
+$path = '/home/stats/webalizer/data/' . idn_to_ascii($vhost['fqdn']);
 $file = $path . '/' . $_REQUEST['file'];
 
 if ( is_file($file) )
