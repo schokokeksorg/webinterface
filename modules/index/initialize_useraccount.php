@@ -20,6 +20,13 @@ require_once('inc/security.php');
 title("Passwort setzen");
 $show = 'token';
 
+if (isset($_SESSION['role']) && $_SESSION['role'] != ROLE_ANONYMOUS) {
+  @session_destroy();
+  
+  header('Location: '.$PHP_SELF);
+  die(); 
+}
+
 if (isset($_REQUEST['token']))
 {
   $token = $_REQUEST['token'];
