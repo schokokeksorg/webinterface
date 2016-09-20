@@ -54,6 +54,10 @@
     var ssl = $('#ssl option:selected').val();
     if (ssl == 'forward') {
       $('#hsts_block').show();
+      var cert = $('#cert option:selected').val();
+      if (cert == '0') {
+        $('#cert').val('-1');
+      }
     } else
       $('#hsts_block').hide();
   }

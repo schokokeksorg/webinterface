@@ -182,7 +182,7 @@ $form .= "
 
 <h4 style=\"clear: right; margin-top: 3em;\">Allgemeine Optionen</h4>
 <div style=\"margin-left: 2em;\">
-    <h5>Verschlüsselte Verbindung erzwingen</h5>
+    <h5>Sichere Verbindung erzwingen</h5>
     <div style=\"margin-left: 2em;\">
     <select name=\"ssl\" id=\"ssl\">
       <option value=\"none\" ".($vhost['ssl'] == NULL ? 'selected="selected"' : '')." >Nein</option>
