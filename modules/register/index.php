@@ -9,7 +9,7 @@ Written 2008-2014 by schokokeks.org Hosting, namely
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
 You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
-http://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
@@ -35,7 +35,7 @@ output("<p>Da wir bei schokokeks.org Hosting immer auf volle Transparenz und Kun
 
 
 $form = '<p>'.label('mobile', 'Handynummer:').' '.textinput('mobile').'</p>
-<p>'.checkbox('terms', 'yes', false, 'Ich habe die <a href="http://www.schokokeks.org/agb">AGB</a> gelesen und erkläre hiermit meine Absicht, einen Zugang bei schokokeks.org unverbindlich zum Test des Angebots anzufordern.').'</p>
+<p>'.checkbox('terms', 'yes', false, 'Ich habe die <a href="https://schokokeks.org/agb">AGB</a> gelesen und erkläre hiermit meine Absicht, einen Zugang bei schokokeks.org unverbindlich zum Test des Angebots anzufordern.').'</p>
 <p>Sie erhalten nach dem Anfordern des Zugangs eine SMS auf Ihre angegebene Handynummer. Diese SMS enthält einen Code, den Sie auf der folgenden Seite eingeben müssen. Nach Eingabe des Codes wird Ihr Zugang umgehend freigeschaltet.</p>
 <p>'.submit('Testzugang anfordern').'</p>';
 

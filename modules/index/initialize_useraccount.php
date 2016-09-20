@@ -9,7 +9,7 @@ Written 2008-2014 by schokokeks.org Hosting, namely
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
 You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
-http://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
@@ -84,7 +84,7 @@ if ($show == 'password')
 elseif ($show == 'agb')
 {
   title("Bestätigung unserer AGB");
-  output('<p>Die Nutzung unseres Angebots ist an unsere <a href="http://www.schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>'.
+  output('<p>Die Nutzung unseres Angebots ist an unsere <a href="https://schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>'.
   html_form('initialize_useraccount_agb', '', '', '<p style="display: none"><input type="hidden" name="uid" value="'.$uid.'" />
   <input type="hidden" name="token" value="'.$token.'" /></p>
   <p><span class="login_label">&#160;</span><input type="checkbox" name="agb" value="1" /> Ja, ich akzeptiere die AGB.<p>
