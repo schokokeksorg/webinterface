@@ -286,8 +286,10 @@ function newkey($pubkey, $handle)
   $keyfile = $key_dir.'/'.$handle.'.pub';
   file_put_contents($keyfile, $pubkey);
   
-  $proc = popen("/usr/bin/ssh-keygen -l -f '{$keyfile}'", 'r');
+  DEBUG("checking public key $keyfile");
+  $proc = popen("/usr/bin/ssh-keygen -l -f '{$keyfile}' 2>&1", 'r');
   $output = fread($proc, 512);
+  DEBUG($output);
   pclose($proc);
   if (preg_match('/.* is not a public key file.*/', $output)) {
     unlink($keyfile);
