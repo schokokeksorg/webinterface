@@ -1,0 +1,7 @@
+{
+    "name": "schokokeks/webinterface",
+    "license": "CC0",
+    "require": {
+        "bjeavons/zxcvbn-php": "^0.2"
+    }
+}
