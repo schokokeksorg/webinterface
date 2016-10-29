@@ -63,7 +63,7 @@ function create_list($listname, $maildomain, $admin)
     system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
   $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname=?", array($listname));
   if ($result->rowCount() > 0)
-    system_failure('Eine Liste mit diesem Namen existiert bereits (unter dieser oder einer anderen Domain). Jeder Listenname kann nur einmal verwendet werden.');
+    system_failure('Eine Liste mit diesem Namen existiert bereits auf unserem Mailinglisten-Server (unter einer Ihrer Domains oder unter einer Domain eines anderen Kunden). Jeder Listenname kann auf dem gesamten Server nur einmal verwendet werden.');
 
   $args = array(":listname" => $listname,
                 ":maildomain" => $maildomain,
