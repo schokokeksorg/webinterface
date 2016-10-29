@@ -15,49 +15,19 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/error.php');
+require_once('vendor/autoload.php');
 
 
-function strong_password($password)
+function strong_password($password, $user = array())
 {
-  if ($password == '' || strlen($password) < 4) {
-    DEBUG("Passwort zu kurz!");
-    return "Passwort ist zu kurz!";
+  $passwordchecker = new ZxcvbnPhp\Zxcvbn();
+  $strength = $passwordchecker->passwordStrength($password, $user);
+
+  if ($strength['score'] < 2) {
+    return "Das Passwort ist zu einfach!";
   }
 
-  if (! function_exists("crack_opendict"))
-  {
-    DEBUG("cracklib not available!");
-    return true;
-  }
-  if (config('use_cracklib') === NULL or config('use_cracklib') === false) {
-    DEBUG('Cracklib deaktiviert');
-    return true;
-  }
-  DEBUG("Öffne Wörterbuch: ".config('cracklib_dict'));
-  if (! ($dict = crack_opendict(config('cracklib_dict'))))
-  {
-    logger(LOG_ERR, "inc/security", "cracklib", "could not open cracklib-dictionary »".config('cracklib_dict')."«");
-    #system_failure("Kann Crack-Lib-Wörterbuch nicht öffnen: ".config('cracklib_dict'));
-    DEBUG('cracklib tut nicht, dann wird das PW akzeptiert');
-    warning('Das Passwort konnte aufgrund eines internen Fehlers nicht auf die Passwortstärke geprüft werden.');
-    return true;
-  }
-  // Führe eine Überprüfung des Passworts durch
-  $check = crack_check($dict, $password);
-
-  $message = crack_getlastmessage();
-  crack_closedict($dict);
-
-  if ($check === True)
-  {
-    DEBUG("Passwort ok");
-    return true;
-  }
-  else
-  {
-    DEBUG("Passwort nicht ok: {$message}");
-    return $message;
-  }
+  return true;
 }
 
 
