@@ -53,7 +53,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
                           'weight'  => 80, 
                           'file'    => 'certs', 
                           'icon'    => 'secure.png', 
-                          'title'   => 'SSL-Zertifikate',
+                          'title'   => 'HTTPS-Zertifikate',
                           'alert'   => $alert );
   }
 }

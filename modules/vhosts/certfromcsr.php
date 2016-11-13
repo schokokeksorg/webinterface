@@ -23,7 +23,7 @@ title("Zertifikat zum CSR hinzufügen");
 
 $csr = csr_details($_REQUEST['id']);
 
-output("<p>Wenn Ihr CSR von der Zertifizierungsstelle akzeptiert und unterschrieben wurde, erhalten Sie ein SSL-Zertifikat zurück.
+output("<p>Wenn Ihr CSR von der Zertifizierungsstelle akzeptiert und unterschrieben wurde, erhalten Sie ein Zertifikat zurück.
 Dieses hat in etwa die Form
 <pre>-----BEGIN CERTIFICATE-----
 ...

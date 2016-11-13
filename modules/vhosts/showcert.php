@@ -68,7 +68,7 @@ else
   $key = $data['key'];
 
   title('Zertifikat anzeigen');
-  output("<p>Untenstehend sehen Sie Ihr SSL-Zertifikat und evtl. den dazu gehörigen privaten 
+  output("<p>Untenstehend sehen Sie Ihr Zertifikat und evtl. den dazu gehörigen privaten 
   Schlüssel. Sofern Sie den privaten Schlüssel auf Ihrer Festplatte speichern, stellen 
   Sie bitte sicher, dass dieser vor unbefugtem Zugriff geschützt ist. Der private 
   Schlüssel ist selbst <strong>nicht verschlüsselt</strong> und nicht mit einem 

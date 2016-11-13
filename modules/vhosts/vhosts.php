@@ -57,7 +57,7 @@ if (count($vhosts) > 0)
   if (count($vhosts) > 10) {
     addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
   }
-  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>SSL</th><th>Traffic<sup>*</sup></th><th>PHP</th><th>Lokaler Pfad<sup>**</sup></th></tr>\n");
+  output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>HTTPS</th><th>Traffic<sup>*</sup></th><th>PHP</th><th>Lokaler Pfad<sup>**</sup></th></tr>\n");
 
   $even = True;
 
@@ -106,13 +106,13 @@ if (count($vhosts) > 0)
   
     if ($vhost['ssl'] == 'http')
     {
-      output("<td>".icon_disabled('SSL ausgeschaltet')."</td>");
+      output("<td>".icon_disabled('HTTPS ausgeschaltet')."</td>");
     }
     elseif (strstr($vhost['options'], "letsencrypt") && $vhost['cert'])
     {
       $forward = '';
       if ($vhost['ssl'] == 'forward') {
-        $forward = " ".other_icon("refresh.png", 'Auf SSL umleiten');
+        $forward = " ".other_icon("refresh.png", 'Auf HTTPS umleiten');
       } else {
         $forward = " ".other_icon("warning.png", 'Ungeschützter Aufruf weiterhin möglich');
       }
@@ -120,7 +120,7 @@ if (count($vhosts) > 0)
     }
     elseif ($vhost['cert'])
     {
-      output("<td>".other_icon("secure.png", "SSL mit eigenem Zertifikat")."</td>");
+      output("<td>".other_icon("secure.png", "HTTPS mit eigenem Zertifikat")."</td>");
     }
     elseif (strstr($vhost['options'], "letsencrypt")) {
       // Letsencrypt gewählt aber noch nicht aktiv
@@ -129,7 +129,7 @@ if (count($vhosts) > 0)
     }
     else
     {
-      output("<td>".icon_enabled('SSL eingeschaltet')."</td>");
+      output("<td>".icon_enabled('HTTPS eingeschaltet')."</td>");
     }
 
     $traffic = traffic_month($vhost['id']);
@@ -196,5 +196,8 @@ else // keine VHosts vorhanden
 }
 
 addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
+
+output('<p>Bei passenden Einstellungen wird für jede Ihrer Websites automatisch ein Zertifikat von Let\'s Encrypt verwaltet und regelmäßig erneuert. Wenn Sie ein Zertifikat einsetzen möchten, das von einer anderen Zertifizierungsstelle ausgestellt ist, können Sie dieses hier hochladen.</p>');
+addnew('newcert', 'Ein eigenes HTTPS-Zertifikat eintragen');
 
 ?>

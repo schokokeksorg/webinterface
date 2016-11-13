@@ -14,13 +14,18 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+require_once('include/certs.php');
+
 $role = $_SESSION['role'];
 
 if ($role & ROLE_SYSTEMUSER)
 {
     $menu["vhosts_vhosts"] = array("label" => "Websites", "file" => "vhosts", "weight" => 2);
-    $menu["vhosts_certs"] = array("label" => "SSL-Zertifikate", "file" => "certs", "weight" => 10, "submenu" => "vhosts_vhosts");
     $menu["vhosts_stats"] = array("label" => "Zugriffs-Statistiken", "file" => "stats", "weight" => 12, "submenu" => "vhosts_vhosts");
+  
+    if (user_has_manual_certs() or ($section == 'vhosts_certs')) {
+      $menu["vhosts_certs"] = array("label" => "TLS-Zertifikate", "file" => "certs", "weight" => 10, "submenu" => "vhosts_vhosts");
+    }
 }
 
 ?>

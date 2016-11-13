@@ -17,9 +17,9 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once("certs.php");
 require_role(ROLE_SYSTEMUSER);
 
-title("SSL-Zertifikate");
+title("Zertifikate");
 
-output('<p>Bei '.config('company_name').' können Sie Ihre eigenen SSL-Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die SNI-Technik.
+output('<p>Bei '.config('company_name').' können Sie Ihre eigenen Zertifikate nutzen. Wir verwenden dafür (wenn nicht anders vereinbart) die SNI-Technik.
 Beim Anlegen von Webserver-Konfigurationen können Sie dann eines Ihrer Zertifikate für jede Konfiguration auswählen.</p>
 
 <h4>Ihre bisher vorhandenen Zertifikate</h4>

@@ -40,7 +40,7 @@ $section = 'vhosts_certs';
 
 output($hint.'
 <h4>CSR automatisch erzeugen</h4>
-<p>Mit unserem CSR-Generator können Sie einen Certificate-signing-request (CSR) automatisch erzeugen lassen. Nutzen Sie diese Möglichkeit bitte nur, wenn Sie ein so genanntes "Domain validated"-Zertifikat beantragen werden, das keine persönlichen Daten bzw. Firmendaten enthält. Kostenlose Zertifikate von CAcert oder StartSSL können Sie mit dieser Funktion erzeugen.</p>');
+<p>Mit unserem CSR-Generator können Sie einen Certificate-signing-request (CSR) automatisch erzeugen lassen. Nutzen Sie diese Möglichkeit bitte nur, wenn Sie ein so genanntes "Domain validated"-Zertifikat beantragen werden, das keine persönlichen Daten bzw. Firmendaten enthält.</p>');
 
 if ($oldcert) {
   $cn = urlencode($cert['cn']);
@@ -51,7 +51,7 @@ if ($oldcert) {
 
 
 output('<h4>Vorhandenes Zertifikat eintragen</h4>
-<p>Sie können Ihr eigenes SSL-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
+<p>Sie können Ihr eigenes TLS-Zertifikat hinterlegen, das Sie dann für eine oder mehrere Webserver-Konfigurationen verwenden können.</p>
 ');
 
 

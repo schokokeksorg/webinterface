@@ -43,6 +43,19 @@ function user_csr()
   return $ret;
 }
 
+function user_has_manual_certs()
+{
+  foreach (user_certs() as $c) {
+    if (!cert_is_letsencrypt($c['id'])) {
+      return true;
+    }
+  }
+  foreach (user_csr() as $c) {
+    return true;
+  }
+}
+
+
 function cert_details($id)
 {
   $id = (int) $id;
