@@ -180,7 +180,7 @@ $form .= "
 <br />
 </div>
 
-<h4 style=\"clear: right; margin-top: 3em;\">Allgemeine Optionen</h4>
+<h4 style=\"clear: right; margin-top: 3em;\">Optionen</h4>
 <div style=\"margin-left: 2em;\">
     <h5>Sichere Verbindung erzwingen</h5>
     <div style=\"margin-left: 2em;\">
@@ -191,8 +191,30 @@ $form .= "
       <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Ja, immer auf HTTPS umleiten</option>
     </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"http://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure#HSTS\">HSTS</a>:</label> ".html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value)." <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span>
     </span>
-    </div>
-    <h5>Logfiles <span class=\"warning\">*</span></h5>
+    </div>";
+
+  $certs = user_certs();
+  $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen', -1 => 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt');
+  foreach ($certs as $c)
+  {
+    $certselect[$c['id']] = $c['subject'];
+  }
+  if (strstr($vhost['options'], 'letsencrypt')) {
+    $vhost['certid'] = -1;
+  }
+  $form .= "
+    <h5>verwendetes Zertifikat</h5>
+    <div style=\"margin-left: 2em;\">
+    ".html_select('cert', $certselect, $vhost['certid'])."
+</div>
+<p class=\"warning\"><b>Datenschutz-Hinweis:</b><br>
+Alle erstellten HTTPS-Zertifikate werden
+automatisch in den für jeden zugänglichen Certificate-Transparency-Logs abgelegt.
+Die zugehörigen Subdomains sind damit auch öffentlich.
+Sie können die Logs mit dem Service <a href=\"https://crt.sh/\">crt.sh</a> durchsuchen.</p>";
+
+  $form.="
+    <h5>Logfiles</h5>
     <div style=\"margin-left: 2em;\">
       <select name=\"logtype\" id=\"logtype\">
         <option value=\"none\" ".($vhost['logtype'] == NULL ? 'selected="selected"' : '')." >keine Logfiles</option>
@@ -203,11 +225,9 @@ $form .= "
       <input type=\"checkbox\" id=\"stats\" name=\"stats\" value=\"1\" ".($vhost['stats'] != NULL ? ' checked="checked" ' : '')." />&#160;<label for=\"stats\">Statistiken/Auswertungen erzeugen</label>
     </div>
     <p>Logfiles werden unter <b>/var/log/apache2/".$_SESSION['userinfo']['username']."</b> abgelegt.</p>
-</div>
     ";
 
 $ipaddrs = user_ipaddrs();
-$certs = user_certs();
 $available_users = available_suexec_users();
 $available_servers = additional_servers();
 $available_servers[] = my_server_id();
@@ -224,20 +244,6 @@ if (!$vhost['server']) {
   $vhost['server'] = my_server_id();
 }
 
-$extended = '';
-  $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen', -1 => 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt');
-  foreach ($certs as $c)
-  {
-    $certselect[$c['id']] = $c['subject'];
-  }
-  if (strstr($vhost['options'], 'letsencrypt')) {
-    $vhost['certid'] = -1;
-  }
-  $extended .= "
-    <h5>verwendetes Zertifikat</h5>
-    <div style=\"margin-left: 2em;\">
-    ".html_select('cert', $certselect, $vhost['certid'])."
-    </div>";
   if (count($ipaddrs))
   {
     $ipselect = array(0 => 'System-Standard');
@@ -245,7 +251,7 @@ $extended = '';
     {
       $ipselect[$i] = $i;
     }
-    $extended .= "
+    $form .= "
       <h5>IP-Adresse</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
@@ -258,7 +264,7 @@ $extended = '';
     {
       $userselect[$u['uid']] = $u['username'];
     }
-    $extended .= "
+    $form .= "
       <h5>SuExec-Benutzeraccount</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
@@ -266,7 +272,7 @@ $extended = '';
   }
   if (count($available_servers) > 1)
   {
-    $extended .= "
+    $form .= "
       <h5>Einrichten auf Server</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('server', $selectable_servers, $vhost['server'])."
@@ -280,27 +286,18 @@ if ($have_v6)
     $ipv6_address = '<strong>IPv6-Adresse dieser Subdomain:</strong> '.autoipv6_address($vhost['id'], $vhost['autoipv6']);
   $checked = ($vhost['autoipv6'] > 0) ? ' checked="checked"' : '';
   $checked2 = ($vhost['autoipv6'] == 2) ? ' checked="checked"' : '';
-  $extended .= '<h5>IPv6</h5>
+  $form .= '<h5>IPv6</h5>
 <div style="margin-left: 2em;">
 <input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label><br />
 <input type="checkbox" name="ipv6_separate" id="ipv6_separate" value="yes" '.$checked2.'/>&#160;<label for="ipv6_separate">Für diese Website eine eigene IPv6-Adresse reservieren</label><br />
 '.$ipv6_address.'
 </div>';
 }
-if ($extended)
-  $form .= "
-<h4 style=\"margin-top: 3em;\">Erweiterte Optionen</h4>
-<div style=\"margin-left: 2em;\">
-".$extended."</div>";
-
 
 
 
 $form .= '
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts', 'Abbrechen').'</p>
-  <p class="warning"><span class="warning">*</span>Es ist im Moment fraglich, ob die Speicherung von Logfiles mit IP-Adressen auf Webservern
-  zulässig ist. Wir weisen alle Nutzer darauf hin, dass sie selbst dafür verantwortlich sind, bei geloggten Nutzerdaten die
-  Seitenbesucher darauf hinzuweisen. Wir empfehlen, wenn möglich, Logfiles abzuschalten oder anonymes Logging einzusetzen.</p>
 ';
 output(html_form('vhosts_edit_vhost', 'save', 'action=edit&vhost='.$vhost['id'], $form));
 
