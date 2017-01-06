@@ -60,7 +60,7 @@ foreach ($results AS $app) {
     $vulnlink = $app['vulninfo'];
     $doclink = get_upgradeinstructions($app['appname']);
     if (substr($vulnlink, 0, 3) == 'CVE') {
-      $vulnlink = 'http://cve.mitre.org/cgi-bin/cvename.cgi?name='.$vulnlink;
+      $vulnlink = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name='.$vulnlink;
     }
     output("<img src='{$prefix}images/error.png' />\n");
     output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
