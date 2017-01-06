@@ -22,7 +22,7 @@ require_role(ROLE_SYSTEMUSER);
 
 title('Mailinglisten');
 
-output('<p>Mit <a href="http://www.gnu.org/software/mailman/index.html">Mailman</a> bieten wir Ihnen eine umfangreiche Lösung für E-Mail-Verteilerlisten an.</p>
+output('<p>Mit <a href="https://www.gnu.org/software/mailman/index.html">Mailman</a> bieten wir Ihnen eine umfangreiche Lösung für E-Mail-Verteilerlisten an.</p>
 <p>Auf dieser Seite können Sie Ihre Mailinglisten verwalten.</p>
 ');
 
