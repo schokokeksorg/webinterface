@@ -26,7 +26,18 @@ function user_customer_match($cust, $user)
   return false;
 }
 
-
+function find_username($input) 
+{
+  $args = array(":user" => $input);
+  $result = db_query("SELECT username FROM system.useraccounts WHERE username=:user AND kundenaccount=1", $args);
+  if ($result->rowCount() > 0)
+  {
+    $line = $result->fetch();
+    return $line['username'];
+  } else {
+    return false;
+  }
+}
 
 function customer_has_email($customerno, $email)
 {
@@ -108,7 +119,7 @@ function create_token($username)
   
   $args = array(":uid" => $uid,
                 ":token" => random_string(16));
-  db_query("INSERT INTO system.usertoken VALUES (:uid} NOW(), NOW() + INTERVAL 1 DAY, :token)", $args);
+  db_query("INSERT INTO system.usertoken VALUES (:uid, NOW(), NOW() + INTERVAL 1 DAY, :token)", $args);
   return true;
 }
 

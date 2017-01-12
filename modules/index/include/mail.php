@@ -30,6 +30,9 @@ Bitte besuchen Sie folgende Adresse um Ihr Passwort neu zu setzen:
 
 Mit freundlichen Grüßen,
 Ihre Admins von '.config('company_name');
+
+  $msg .= "\n\nDiese Anforderung haben wir am ".date("r")." von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
+
   send_mail($email, "Passwortanforderung fuer schokokeks.org", $msg);
 }
 
@@ -75,7 +78,7 @@ function send_mail($address, $subject, $body)
 {
   if (strstr($subject, "\n") !== false)
     die("Zeilenumbruch im subject!");
-  $header = "From: ".config('company_name')." Web Administration <noreply@".config('masterdomain').">\r\nReply-To: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: 8bit";
+  $header = "From: ".config('company_name')." Web Administration <noreply@".config('masterdomain').">\r\nReply-To: ".config('adminmail')."\r\nCc: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: 8bit";
   mail($address, $subject, $body, $header);
 }
 

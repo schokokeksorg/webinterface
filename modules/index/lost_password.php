@@ -19,31 +19,27 @@ title("Neues Passwort beantragen");
 //require_once('inc/error.php');
 //system_failure("Diese Funktion ist noch nicht fertiggestellt.");
 
-if (isset($_POST['customerno']) && isset($_POST['username']))
+if (isset($_POST['username']))
 {
   require_once('newpass.php');
-  if (user_customer_match($_POST['customerno'], $_POST['username']))
+  $username = find_username($_POST['username']);
+  if ($username)
   {
-    if (create_token($_POST['username']))
+    if (create_token($username))
     {
       require_once('mail.php');
       require_once('inc/base.php');
-      send_user_token($_POST['username']);
-      logger(LOG_INFO, "modules/index/lost_password", "pwrecovery", "token sent for customer »{$_POST['customerno']}/{$_POST['username']}«");
-      success_msg('Die angegebenen Daten waren korrekt, Sie sollten umgehend eine E-Mail erhalten.');
+      send_user_token($username);
+      logger(LOG_INFO, "modules/index/lost_password", "pwrecovery", "token sent for customer »{$_POST['username']}/{$username}«");
     }
   }
-  else
-  {
-    input_error("Die eingegebenen Daten waren nicht korrekt. Sollten Sie die Daten nicht mehr kennen, wenden Sie sich bitte an einen Administrator.");
-  }
+  success_msg('Sofern die eingegebenen Daten korrekt waren, erhalten Sie umgehend eine E-Mail.');
 }
 
-output('<p>Wenn Sie Ihr Kundenpasswort nicht mehr kennen, können Sie hier ein neues Passwort beantragen. Sie müssen dafür Ihre Kundennummer und Ihren Benutzernamen kennen. Kennen Sie diese Daten nicht, wenden Sie sich bitte <a href="mailto:'.config('adminmail').'">an die Administratoren</a>.</p>
-<p>Nach dem Ausfüllen dieses Formulars erhalten Sie eine E-Mail mn die bei uns hinterlegte E-Mail-Adresse. Diese Mail enthält einem Link, den Sie in Ihrem Browser öffnen müssen. Dort können Sie dann ein neues Passwort eingeben.</p>
+output('<p>Wenn Sie Ihr Benutzer-Passwort nicht mehr kennen, können Sie hier ein neues Passwort beantragen. Sie müssen dafür Ihren Benutzernamen kennen. Kennen Sie diese Daten nicht, wenden Sie sich bitte <a href="mailto:'.config('adminmail').'">an die Administratoren</a>.</p>
+<p>Nach dem Ausfüllen dieses Formulars erhalten Sie eine E-Mail an die bei uns hinterlegte E-Mail-Adresse. Diese Mail enthält einem Link, den Sie in Ihrem Browser öffnen müssen. Dort können Sie dann ein neues Passwort eingeben.</p>
 <p><span style="font-weight: bold;">Hinweis:</span> Sie können auf diesem Weg nur das Passwort des Hauptbenutzers neu anfordern. Sind Sie Mitbenutzer eines anderen Kunden, dann kann dieser Ihr Passwort neu setzen.</p>
 <form action="" method="post">
-<p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>
 <p><span class="login_label">Benutzername:</span> <input type="text" name="username" size="30" /></p>
 <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort anfordern" /></p>
 </form>');
