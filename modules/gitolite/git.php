@@ -22,7 +22,7 @@ require_role(ROLE_SYSTEMUSER);
 $section = 'git_git';
 title("GIT-Zugänge");
 
-output("<p>Das verteilte Versionskontrollsystem <a href=\"http://www.git-scm.org\">GIT</a> ist ein populäres Werkzeug um Programmcode zu verwalten. Mit dieser Oberfläche können Sie GIT-repositories erstellen und den Zugriff für mehrere Benutzer festlegen.</p>");
+output("<p>Das verteilte Versionskontrollsystem <a href=\"https://git-scm.org\">GIT</a> ist ein populäres Werkzeug um Programmcode zu verwalten. Mit dieser Oberfläche können Sie GIT-repositories erstellen und den Zugriff für mehrere Benutzer festlegen.</p>");
 output("<p>Wir verwenden das beliebte System »gitolite« um diese Funktionalität anzubieten. Gitolite erlaubt bei Bedarf weitaus feingliedrigere Kontrolle als dieses Webinterface. Fragen Sie bitte den Support, wenn Sie Interesse daran haben zusätzliche Berechtigungen einzurichten.</p>");
 
 $repos = list_repos();
@@ -41,7 +41,7 @@ foreach ($repos as $repo => $settings) {
   $public = isset($settings['users']['gitweb']) && $settings['users']['gitweb'] == 'R';
   $public_string = '';
   if ($public) {
-    $public_url = 'http://'.config('gitserver').'/'.$repo.'.git';
+    $public_url = 'https://'.config('gitserver').'/'.$repo.'.git';
     $git_url = 'git://'.config('gitserver').'/'.$repo.'.git';
     $public_string = '<br />(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a> und '.$git_url.')';
   }
