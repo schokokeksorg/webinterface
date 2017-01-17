@@ -87,6 +87,7 @@ $(function() {
 
 
   $('#ssl').change(showhsts);
+  $('#hsts_select').show();
   showhsts();
   if ($('#hsts_preset option:selected').val() != 'custom') {
     $('#hsts_seconds').hide();

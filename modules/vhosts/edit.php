@@ -189,7 +189,7 @@ $form .= "
       ".($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein HTTPS anbieten</option>" : '')."
       ".($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">Konfiguration nur für HTTPS verwenden</option>" : '')."
       <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Ja, immer auf HTTPS umleiten</option>
-    </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure#HSTS\">HSTS</a>:</label> ".html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value)." <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span>
+    </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure#HSTS\">HSTS</a>:</label> <span id=\"hsts_select\" style=\"display: none\">".html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value)."</span> <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span>
     </span>
     </div>";
 
