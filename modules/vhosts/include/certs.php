@@ -196,12 +196,24 @@ validTo_time_t => 1267190790
 
   */
   DEBUG($certdata);
+  DEBUG("SAN: ".$certdata['extensions']['subjectAltName']);
   //return array('subject' => $certdata['name'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']));
   $issuer = $certdata['issuer']['CN'];
   if (isset($certdata['issuer']['O'])) {
     $issuer = $certdata['issuer']['O'];
   }
-  return array('subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN']);
+  $san = array();
+  $raw_san = explode(', ', $certdata['extensions']['subjectAltName']);
+  foreach ($raw_san as $name) {
+    if (! substr($name, 0, 4) == 'DNS:') {
+      warning('Unparsable SAN: '.$name);
+      continue;
+    }
+    $san[] = str_replace('DNS:', '', $name);
+  }
+  $san = implode("\n", $san);
+  DEBUG("SAN: <pre>".$san."</pre>");
+  return array('subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN'], 'san' => $san);
 }
 
 
@@ -211,8 +223,8 @@ function save_cert($info, $cert, $key)
   openssl_x509_export($cert, $cert);
   $uid = (int) $_SESSION['userinfo']['uid'];
 
-  db_query("INSERT INTO vhosts.certs (uid, subject, cn, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :valid_from, :valid_until, :chain, :cert, :key)", 
-        array(":uid" => $uid, ":subject" => filter_input_general($info['subject']), ":cn" => filter_input_general($info['cn']), ":valid_from" => $info['valid_from'], 
+  db_query("INSERT INTO vhosts.certs (uid, subject, cn, san, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :san, :valid_from, :valid_until, :chain, :cert, :key)", 
+        array(":uid" => $uid, ":subject" => filter_input_general($info['subject']), ":cn" => filter_input_general($info['cn']), ":san" => $info['san'], ":valid_from" => $info['valid_from'], 
               ":valid_until" => $info['valid_until'], ":chain" => get_chain($cert), ":cert" => $cert, ":key" => $key));
 }
 
@@ -226,6 +238,7 @@ function refresh_cert($id, $info, $cert, $key = NULL)
   $oldcert = cert_details($id);
   $args = array(":subject" => filter_input_general($info['subject']),
                 ":cn" => filter_input_general($info['cn']),
+                ":san" => $san,
                 ":cert" => $cert,
                 ":valid_from" => $info['valid_from'],
                 ":valid_until" => $info['valid_until'],
@@ -238,7 +251,7 @@ function refresh_cert($id, $info, $cert, $key = NULL)
     $keyop = ", `key`=:key";
     $args[":key"] = $key;
   }
-  db_query("UPDATE vhosts.certs SET subject=:subject, cn=:cn, cert=:cert{$keyop}, valid_from=:valid_from, valid_until=:valid_until, chain=:chain WHERE id=:id", $args);
+  db_query("UPDATE vhosts.certs SET subject=:subject, cn=:cn, san=:san, cert=:cert{$keyop}, valid_from=:valid_from, valid_until=:valid_until, chain=:chain WHERE id=:id", $args);
 }
 
 
@@ -349,13 +362,14 @@ function save_csr($cn, $bits, $replace=NULL)
   }
   $domains = split_cn($cn);
   $cn = $domains[0];
+  $san = implode("\n", $domains);
   $csr = NULL;
   $key = NULL;
   list($csr, $key) = create_csr(implode(',',$domains), $bits);
   
   $uid = (int) $_SESSION['userinfo']['uid'];
-  db_query("INSERT INTO vhosts.csr (uid, hostname, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :bits, :replace, :csr, :key)",
-           array(":uid" => $uid, ":cn" => $cn, ":bits" => $bits, 
+  db_query("INSERT INTO vhosts.csr (uid, hostname, san, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :san, :bits, :replace, :csr, :key)",
+           array(":uid" => $uid, ":cn" => $cn, ":san" => $san, ":bits" => $bits, 
                  ":replace" => $replace, ":csr" => $csr, ":key" => $key));
   $id = db_insert_id();
   return $id;  
