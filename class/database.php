@@ -55,8 +55,9 @@ class DB extends PDO {
           strtoupper(substr($stmt, 0, 7)) == "REPLACE" ||
           strpos(strtoupper($stmt), "WHERE") > 0) { // Das steht nie am Anfang
         $backtrace = debug_backtrace();
-        if (config("enable_debug")) {
-          warning("Unsafe SQL statement in {$backtrace[1]['file']} line {$backtrace[1]['line']}");
+        $wherepart = substr(strtoupper($stmt), strpos(strtoupper($stmt), "WHERE"));
+        if ((strpos($wherepart, '"') > 0 || strpos($wherepart, "'") > 0) && config("enable_debug")) {
+          warning("Possibly unsafe SQL statement in {$backtrace[1]['file']} line {$backtrace[1]['line']}:\n$stmt");
         }
       }
       return parent::query($stmt);
@@ -132,7 +133,7 @@ function db_query($stmt, $params = NULL)
   } catch (PDOException $e) {
     global $debugmode;
     if ($debugmode) {
-      system_failure("MySQL-Fehler: ".$e->getMessage()."\nQuery:\n".$stmt);
+      system_failure("MySQL-Fehler: ".$e->getMessage()."\nQuery:\n".$stmt."\nParameters:\n".print_r($params, true));
     } else {
       system_failure("Datenbankfehler");
     }
