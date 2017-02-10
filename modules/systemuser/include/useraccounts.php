@@ -45,7 +45,7 @@ function primary_useraccount()
 
 function available_shells()
 {
-  $result = db_query("SELECT path, name FROM system.shells WHERE usable=1");
+  $result = db_query("SELECT path, name FROM system.shells WHERE usable=?", array(1));
   $ret = array();
   while ($s = $result->fetch())
   {

@@ -70,7 +70,7 @@ function invoice_items($id)
 function upcoming_items()
 {
   $c = (int) $_SESSION['customerinfo']['customerno'];
-  $result = db_query("SELECT anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde=? ORDER BY startdatum ASC", array($c));
+  $result = db_query("SELECT quelle, id, anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde=? ORDER BY startdatum ASC", array($c));
   $ret = array();
   while($line = $result->fetch())
 	  array_push($ret, $line);
@@ -289,5 +289,68 @@ function find_iban($blz, $kto)
   return $iban;
 }
 
+
+function get_customerquota()
+{
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+  $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid", array(":cid" => $cid));
+  $data = $result->fetch();
+  return $data["quota"];
+}
+
+function save_more_storage($items, $storage) {
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+  
+  $queries = array();  
+
+  if ($storage < 1024 || $storage > 10240) {
+    input_error('Speicherplatz nicht im erwarteten Bereich');
+  }
+  $oldcustomerquota = get_customerquota();
+  if ($oldcustomerquota > 20480) {
+    # Über 20 GB soll die Automatik nichts machen
+    system_failure("Ihr Speicherplatz kann über diese Funktion nicht weiter erhöht werden. Bitte wenden Sie sich an die Administratoren.");
+  }
+  $result = db_query("SELECT quota FROM system.customerquota WHERE lastchange > CURDATE()");
+  if ($result->rowcount() > 0) {
+    system_failure("Ihr Speicherplatz wurde heute bereits verändert. Sie können dies nur einmal am Tag machen.");
+  }
+
+  $queries[] = array("UPDATE system.customerquota SET quota=quota+:storage WHERE cid=:cid", array(":storage" => $storage, ":cid" => $cid));
+
+  foreach ($items as $data) {
+    if ($data['anzahl'] == 0) {
+      continue;
+    }
+    $data['kunde'] = $cid;
+    $data['notizen'] = 'Bestellt via Webinterface';
+    if (!isset($data['anzahl']) ||
+        !isset($data['beschreibung']) ||
+        !isset($data['datum']) ||
+        !array_key_exists('kuendigungsdatum', $data) ||
+        !isset($data['betrag']) ||
+        !isset($data['monate'])) {
+      DEBUG($data);
+      input_error("Ungültige Daten");
+      return;
+    }
+ 
+    $param = array();
+    foreach ($data as $k => $v) {
+      $param[':'.$k] = $v;
+    }
+
+    $queries[] = array("INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES ".
+                       "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param);
+  }
+
+  if (count($queries) < 2) {
+    system_failure("irgendwas stimmt jetzt nicht");
+  }
+  
+  foreach ($queries as $q) {
+    db_query($q[0], $q[1]);
+  }
+}
 
 ?>

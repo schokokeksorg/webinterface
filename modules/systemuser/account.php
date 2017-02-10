@@ -32,6 +32,7 @@ else
 {
   $accounts = list_useraccounts();
   $shells = available_shells();
+
   output("<p>Folgende Benutzeraccounts haben Sie bisher:</p>");
   output("<table><tr><th>Benutzeraccount</th><th>Speicherplatz<sup>*</sup></th><th>Aktionen</th></tr>");
   foreach ($accounts as $acc)
@@ -74,6 +75,15 @@ else
     output("</td></tr>\n");
   }
   output("</table><p><sup>*</sup>) Die Werte für den verbrauchten Speicherplatz werden periodisch eingelesen und hier erst verspätet angezeigt!</p>");
+  $customerquota = get_customer_quota();
+  $freequota = $customerquota['max'] - $customerquota['assigned'];
+  if ($freequota > 10) { // Gewisse Unschärfe
+    output('<p class="warning"><b>Hinweis:</b><br/>Ihnen steht mehr Speicherplatz zur Verfügung als Ihren Benutzeraccounts zugewiesen ist. Sie können den Speicherplatz der einzelnen Benutzerkonten noch erhöhen.</p>');
+  } else {
+    if (have_module('invoice')) {
+      addnew('../invoice/more_storage?section=systemuser_account', 'Mehr Speicherplatz bestellen');
+    }
+  }
 }
 
 

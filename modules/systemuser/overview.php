@@ -27,6 +27,7 @@ $acc = get_account_details($_SESSION['userinfo']['uid'], $_SESSION['userinfo']['
 $usedquota = get_used_quota($acc['uid']);
 $quota = array();
 $multiserver = count($usedquota) > 1;
+$need_more_storage = false;
 foreach ($usedquota as $q)
 {
       $mailbar = '';
@@ -40,6 +41,9 @@ foreach ($usedquota as $q)
       }  
 
       $percent = round(( ($q["systemquota_used"]+$q["mailquota"]) / $q["systemquota"] ) * 100 );
+      if ($percent > 90) {
+        $need_more_storage = true;
+      }
       $color = ( $percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green" ));
       $width = 2 * min($percent, 100) - $mailwidth;
      
@@ -62,6 +66,9 @@ output("<h5>Stammdaten</h5>
 ");
 output("</div>\n");
 output("<h5>Speicherplatz</h5><div style=\"margin-left: 2em;\">{$quotastring}</div>");
+if (have_module('invoice') && $need_more_storage) {
+   addnew('../invoice/more_storage?section='.$section, 'Mehr Speicherplatz bestellen');
+}
     
 output("<p>Die Werte für den verbrauchten Speicherplatz werden periodisch eingelesen und hier verzögert angezeigt!</p>");
 
