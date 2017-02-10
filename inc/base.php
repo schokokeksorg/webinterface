@@ -186,11 +186,12 @@ function output($arg)
 }
 
 
-function random_string($nc, $a='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
-    $l=strlen($a)-1; $r='';
-    while($nc-->0) $r.=$a{mt_rand(0,$l)};
-    return $r;
- }
+function random_string($num) 
+{
+    // Durch base64 wird der String länger, daher geben wir nur einen Substring zurück.
+    $data = base64_encode(random_bytes($num));
+    return substr($data, 0, $num);
+}
 
 
 function are_you_sure($query_string, $question)
@@ -240,8 +241,9 @@ function generate_form_token($form_id)
     DEBUG("Uh? Session not running? Wtf?");
     system_failure("Internal error!");
   }
-  if (! isset($_SESSION['session_token']))
+  if (! isset($_SESSION['session_token'])) {
     $_SESSION['session_token'] = random_string(10);
+  }
   return hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
 }
 

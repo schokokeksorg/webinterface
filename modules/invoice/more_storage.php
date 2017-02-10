@@ -135,7 +135,7 @@ output('</table>');
 
 output('<p>Wir behalten uns vor, diese Rechnungsposten mit anderen sinngleichen Posten zusammen zu führen.</p>');
 
-$handle = bin2hex(random_bytes(10));
+$handle = random_string(10);
 
 $_SESSION['more_storage_handle'] = $handle;
 $_SESSION['more_storage_items'] = $items;
