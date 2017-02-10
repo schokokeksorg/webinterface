@@ -186,11 +186,10 @@ function output($arg)
 }
 
 
-function random_string($num) 
+function random_string($len) 
 {
-    // Durch base64 wird der String länger, daher geben wir nur einen Substring zurück.
-    $data = base64_encode(random_bytes($num));
-    return substr($data, 0, $num);
+  $s = str_replace('+', '.', base64_encode(random_bytes(ceil($len*3/4))));
+  return substr($s, 0, $len);
 }
 
 
