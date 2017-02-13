@@ -21,6 +21,17 @@ require_once('inc/base.php');
 require_once('inc/security.php');
 require_once('inc/error.php');
 
+$url = 'https://partner.http.net/api/domain/v1/json/';
+$available_methods = array("domainStatus","domainUpdate");
+
+function httpnet_request($method, $data) {
+  if (! in_array($method, $avalable_methods)) {
+    system_failure("invalid API method: $method");
+  }
+  //$data
+}
+
+
 
 function terions_available($domainname) 
 {
