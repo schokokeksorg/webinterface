@@ -307,8 +307,8 @@ function save_more_storage($items, $storage) {
     input_error('Speicherplatz nicht im erwarteten Bereich');
   }
   $oldcustomerquota = get_customerquota();
-  if ($oldcustomerquota > 20480) {
-    # Über 20 GB soll die Automatik nichts machen
+  if ($oldcustomerquota > 102400) {
+    # Über 100 GB soll die Automatik nichts machen
     system_failure("Ihr Speicherplatz kann über diese Funktion nicht weiter erhöht werden. Bitte wenden Sie sich an die Administratoren.");
   }
   $result = db_query("SELECT quota FROM system.customerquota WHERE lastchange > CURDATE()");
@@ -351,6 +351,10 @@ function save_more_storage($items, $storage) {
   foreach ($queries as $q) {
     db_query($q[0], $q[1]);
   }
+  $allstorage = $oldcustomerquota+$storage;
+  $emailaddr = $_SESSION['customerinfo']['email'];
+  $message = "Hallo,\n\nsoeben wurde im Webinterface von ".config('company_name')." eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.";
+  mail($emailaddr, 'Auftragsbestätigung: Mehr Speicherplatz bei schokokeks.org', $message, "X-schokokeks-org-message: notify\nFrom: ".config('company_name').' <'.config('adminmail').">\nBcc: ".config('adminmail')."\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
 }
 
 ?>
