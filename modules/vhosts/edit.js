@@ -90,6 +90,9 @@
         }
 
     }
+    if ($('#hostname').val() != '') {
+        show_block = false;
+    }
     if (show_block) {
         $('#hsts_preload_options').show();
     } else {
@@ -123,7 +126,7 @@ $(function() {
     $('#hsts_seconds').hide();
   }
   $('#hsts_preset').change(hsts_preset);
-  $('#hsts_select').change(show_hsts_opts);
+  $('#hsts').change(show_hsts_opts);
   $('#hsts_subdomains').change(show_hsts_opts);
   show_hsts_opts();
   
