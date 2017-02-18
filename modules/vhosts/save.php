@@ -151,11 +151,19 @@ if ($_GET['action'] == 'edit')
   }
 
   $hsts = NULL;
+  $hsts_subdomains = false;
+  $hsts_preload = false;
   if (isset($_POST['hsts'])) {
     if (is_numeric($_POST['hsts']) && (int) $_POST['hsts'] > -2) {
       $hsts = (int) $_POST['hsts'];
     } else {
       system_failure('Es wurde ein ungültiger HSTS-Wert eingegeben. Dort sind nur Sekunden erlaubt.');
+    }
+    if (isset($_POST['hsts_subdomains']) and $_POST['hsts_subdomains'] == 1) {
+      $hsts_subdomains = true;
+      if (isset($_POST['hsts_preload']) and $_POST['hsts_preload'] == 1) {
+        $hsts_preload = true;
+      }
     }
   }
  
@@ -208,12 +216,18 @@ if ($_GET['action'] == 'edit')
   $new_options = array();
   foreach ($old_options AS $op)
   {
-    if ($op != 'aliaswww') {
+    if ($op != 'aliaswww' && $op != 'hsts_subdomains' && $op != 'hsts_preload') {
       array_push($new_options, $op);
     }
   }
   if ($aliaswww) {
     array_push($new_options, 'aliaswww');
+  }
+  if ($hsts_subdomains) {
+    array_push($new_options, 'hsts_subdomains');
+  }
+  if ($hsts_preload) {
+    array_push($new_options, 'hsts_preload');
   }
   $letsencrypt = ($cert == 0 ? false : ($cert == -1 || cert_is_letsencrypt($cert)));
 

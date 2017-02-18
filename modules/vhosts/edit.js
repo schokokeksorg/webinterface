@@ -58,8 +58,10 @@
       if (cert == '0') {
         $('#cert').val('-1');
       }
-    } else
+    } else {
       $('#hsts_block').hide();
+    }
+    show_hsts_opts();
   }
 
   function hsts_preset( event ) {
@@ -72,6 +74,34 @@
     } else {
       $('#hsts_seconds').hide();
       $('#hsts').val(seconds);
+    }
+  }
+  
+  function show_hsts_opts( event ) {
+    var ssl = $('#ssl option:selected').val();
+    show_block = false;
+    preload_enabled = false;
+    if ( ssl == 'forward') {
+        if ($('#hsts').val() > 0) {
+            show_block = true;
+            if ($('#hsts_subdomains').prop('checked')) {
+                preload_enabled = true;
+            }
+        }
+
+    }
+    if (show_block) {
+        $('#hsts_preload_options').show();
+    } else {
+        $('#hsts_preload_options').hide();
+        $('#hsts_subdomains').prop('checked', false);
+        $('#hsts_preload').prop('checked', false);
+    }
+    if (preload_enabled) {
+        $('#hsts_preload').prop('disabled', false);
+    } else {
+        $('#hsts_preload').prop('disabled', true);
+        $('#hsts_preload').prop('checked', false);
     }
   }
 
@@ -93,6 +123,9 @@ $(function() {
     $('#hsts_seconds').hide();
   }
   $('#hsts_preset').change(hsts_preset);
+  $('#hsts_select').change(show_hsts_opts);
+  $('#hsts_subdomains').change(show_hsts_opts);
+  show_hsts_opts();
   
 });
 
