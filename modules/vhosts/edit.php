@@ -91,8 +91,20 @@ foreach ($applist as $app)
 $form = "
 <h4 style=\"margin-top: 2em;\">Name des VHost</h4>
     <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" /><strong>.</strong>".domainselect($vhost['domain_id']);
-$form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>
-
+$form .= "<br /><span class=\"buttonset ui-buttonset\" id=\"buttonset-aliaswww\">
+    <input type=\"radio\" name=\"aliaswww\" id=\"aliaswww_forwardwww\" value=\"forwardwww\"/><label for=\"aliaswww_forwardwww\">Auf www-Präfix umleiten</label>
+    <input type=\"radio\" name=\"aliaswww\" id=\"aliaswww_forwardnowww\" value=\"forwardnowww\"/><label for=\"aliaswww_forwardnowww\">www-Präfix auf Stammdomain umleiten</label>
+    <input type=\"radio\" name=\"aliaswww\" id=\"aliaswww_aliaswww\" value=\"aliaswww\"/><label for=\"aliaswww_aliaswww\">www-Präfix als Alias einrichten</label>
+    <input type=\"radio\" name=\"aliaswww\" id=\"aliaswww_nowww\" value=\"nowww\"/><label for=\"aliaswww_nowww\">Kein www-Präfix erzeugen</label>
+    </span><br/>
+    <label for=\"aliaswww\">Soll auch ein www-Präfix erzeugt werden?</label> <select name=\"aliaswww\" id=\"aliaswww\">
+        <option value=\"forwardwww\">Auf www-Präfix umleiten</option>
+        <option value=\"forwardnowww\">www-Präfix auf Stammdomain umleiten</option>
+        <option value=\"aliaswww\">www-Präfix als Alias einrichten</option>
+        <option value=\"nowww\">Kein www-Präfix erzeugen</option>
+    </select>
+    
+</div>
 <div class=\"vhostsidebyside\">
 <div class=\"vhostoptions\" id=\"options_docroot\" ".($vhost_type=='regular' || $vhost_type=='dav' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>

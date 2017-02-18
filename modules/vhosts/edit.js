@@ -116,6 +116,8 @@ $(function() {
   $('#use_default_docroot').change(useDefaultDocroot);
   useDefaultDocroot();
 
+  $(".buttonset").buttonset();
+
   $('.usageoption').change(showAppropriateLines);
 
 
