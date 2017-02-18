@@ -126,7 +126,7 @@ $(function() {
     $('#hsts_seconds').hide();
   }
   $('#hsts_preset').change(hsts_preset);
-  $('#hsts').change(show_hsts_opts);
+  $('#hsts_select').change(show_hsts_opts);
   $('#hsts_subdomains').change(show_hsts_opts);
   show_hsts_opts();
   
