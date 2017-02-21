@@ -107,6 +107,16 @@
         $('#hsts_preload').prop('checked', false);
     }
   }
+  
+
+  function showAliasWWWOptions( event ) {
+    if ($('#aliaswww').prop('checked')) {
+        $('#aliaswww_option').show();
+    } else {
+        $('#aliaswww_option').hide();
+    
+    }
+  }
 
 
 $(function() {
@@ -116,10 +126,10 @@ $(function() {
   $('#use_default_docroot').change(useDefaultDocroot);
   useDefaultDocroot();
 
-  $(".buttonset").buttonset();
-
   $('.usageoption').change(showAppropriateLines);
 
+  $('#aliaswww').change(showAliasWWWOptions);
+  showAliasWWWOptions();
 
   $('#ssl').change(showhsts);
   $('#hsts_select').show();

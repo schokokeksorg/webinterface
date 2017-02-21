@@ -103,7 +103,7 @@ function empty_vhost()
   $vhost['ipv4'] = NULL;
   $vhost['autoipv6'] = 2; // 1 => Eine IP pro User, 2 => Eine IP pro VHost
 
-  $vhost['options'] = '';
+  $vhost['options'] = 'forwardwww';
   $vhost['stats'] = NULL;
   return $vhost;
 }

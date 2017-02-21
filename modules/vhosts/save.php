@@ -61,9 +61,15 @@ if ($_GET['action'] == 'edit')
     $domainname = $_SESSION['userinfo']['username'].".".config('masterdomain');
   }
 
-  if (! (isset($_POST['options']) && is_array($_POST['options'])))
-    $_POST['options'] = array();
-  $aliaswww = in_array('aliaswww', $_POST['options']);
+  $aliaswww = (isset($_POST['aliaswww']) && $_POST['aliaswww'] == 'aliaswww');
+  $forwardwww = NULL;
+  if ($aliaswww && isset($_POST['forwardwww'])) {
+    if ($_POST['forwardwww'] == 'forwardwww') {
+      $forwardwww = 'forwardwww';
+    } elseif ($_POST['forwardwww'] == 'forwardnowww') {
+      $forwardwww = 'forwardnowww';
+    }
+  }
 
   $docroot = '';
   if ($_POST['vhost_type'] == 'regular' || $_POST['vhost_type'] == 'dav')
@@ -216,12 +222,15 @@ if ($_GET['action'] == 'edit')
   $new_options = array();
   foreach ($old_options AS $op)
   {
-    if ($op != 'aliaswww' && $op != 'hsts_subdomains' && $op != 'hsts_preload') {
+    if (! in_array($op, array('aliaswww', 'forwardwww', 'hsts_subdomains', 'hsts_preload'))) {
       array_push($new_options, $op);
     }
   }
   if ($aliaswww) {
     array_push($new_options, 'aliaswww');
+    if ($forwardwww) {
+        array_push($new_options, $forwardwww);
+    }
   }
   if ($hsts_subdomains) {
     array_push($new_options, 'hsts_subdomains');
