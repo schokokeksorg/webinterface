@@ -49,8 +49,8 @@ if ($hosting['brutto'] == 0) {
 $customerquota = get_customerquota();
 
 $count = 1024;
-if (isset($_POST['count']) && (int) $_POST['count'] > 0) {
-  $count = (int) $_POST['count'];
+if (isset($_REQUEST['count']) && (int) $_REQUEST['count'] > 0) {
+  $count = (int) $_REQUEST['count'];
 }
 
 output("<p>Ihr aktuell zugeteilter Speicherplatz (ggf. inklusive Mitbenutzer) beträgt <strong>${customerquota} MB</strong>. Sie können weiteren Speicherplatz hinzubuchen.</p>");
