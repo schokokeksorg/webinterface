@@ -109,6 +109,11 @@ function verify_input_ipv6( $input )
     system_failure("Ungültige IPv6-Adresse");
 }
 
+function verify_input_recorddata( $input )
+{
+  if (strstr($input, "\\") || strstr($input, '"'))
+    system_failure("Ungültige Zeichen");
+}
 
 function filter_quotes( $input )
 {
