@@ -89,17 +89,7 @@ if (count($domains) > 0)
                 $color = ( $percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green" ));
                 $width = 2 * min($percent, 100);
                 $quotachart = "<div style=\"margin: 2px 0; padding: 0; width: 200px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; padding: 0;\">&#160;</div></div> {$acc['quota_used']} MB von {$acc['quota']} MB belegt";
-	      	$spam = 'ohne Spamfilter';
-	        switch ($acc['spamfilter'])
-	  	{
-		        case 'folder':  $spam = 'Spam in Unterordner';
-					break;
-			case 'tag':	$spam = 'Spam markieren';
-					break;
-			case 'delete':	$spam = 'Spam nicht zustellen';
-					break;
-	        }
-	        array_push($actions, "Ablegen in Mailbox ({$spam})<br />".$quotachart);
+	        array_push($actions, "Ablegen in Mailbox<br />".$quotachart);
 	      }
         if ($acc['autoresponder']) {
             $now = date( 'Y-m-d' );
@@ -122,16 +112,8 @@ if (count($domains) > 0)
         }
 	      foreach ($acc['forwards'] AS $fwd)
 	      {
-	      	$spam = 'ohne Spamfilter';
-	        switch ($fwd['spamfilter'])
-	  	{
-			case 'tag':	$spam = 'Spam markieren';
-					break;
-			case 'delete':	$spam = 'Spam nicht zustellen';
-					break;
-	        }
 		$fwd['destination'] = filter_input_general($fwd['destination']);
-	        array_push($actions, "Weiterleitung an <strong>{$fwd['destination']}</strong> ({$spam})");
+	        array_push($actions, "Weiterleitung an <strong>{$fwd['destination']}</strong>");
 	      }
 	      $dest = '';
 	      if (count($actions) > 0)

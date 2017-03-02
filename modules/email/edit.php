@@ -62,9 +62,7 @@ $numforwards = max(count($account['forwards']), 1);
 
 $form = '';
 
-if ($accountlogin) {
-  $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
-} else {
+if (! $accountlogin) {
   if ($id != 0) {
     $domainlist = get_vmail_domains();
     $domain = NULL;
@@ -95,8 +93,6 @@ if ($accountlogin) {
     <p><input class=\"option_group\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
     <div style=\"margin-left: 2em;\" id=\"mailbox_config\" class=\"option_group\">
     <p>Passwort für Abruf:&#160;<input style=\"color: #aaa;\" type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
-
-  $form.= "<p class=\"spamfilter_options\">Unerwünschte E-Mails (Spam, Viren) in diesem Postfach ".html_select('spamfilter_action', array("none" => 'nicht filtern', "folder" => 'in Unterordner »Spam« ablegen', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen (löschen)'), $account['spamfilter'])."</p>";
 
   $quota = config('vmail_basequota');
   if ($is_mailbox and $account['quota']) {
@@ -204,11 +200,11 @@ $form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\" class=\"option_
 $form .= '<div id="forward_entries">
 ';
 if (! isset($account['forwards'][0])) {
-  $account['forwards'][0] = array('destination' => '', 'spamfilter' => 'delete');
+  $account['forwards'][0] = array('destination' => '');
 }
 while (count($account['forwards']) < 10) {
   // Dummy-Einträge für Leute ohne JavaScript
-  $account['forwards'][] = array('destination' => '', 'spamfilter' => 'delete');
+  $account['forwards'][] = array('destination' => '');
 }
 for ($i = 0 ; $i < max($numforwards,10) ; $i++)
 {
@@ -216,9 +212,6 @@ for ($i = 0 ; $i < max($numforwards,10) ; $i++)
   $form .= "<div class=\"vmail-forward\" id=\"vmail_forward_{$num}\">
   <div style=\"float: right;\" class=\"delete_forward\">".icon_delete("Diese Weiterleitung entfernen")."</div>
   <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
-  <p>Spam-Mails an diese Adresse ".html_select('spamfilter_action_'.$num, array("none" => 'nicht filtern', "tag" => 'markieren und zustellen', "delete" => 'nicht zustellen'), $account['forwards'][$i]['spamfilter'])."</p>
-  <p class=\"warning\" style=\"display: none;\"></p>
-  <p>Bitte beachten Sie unsere Hinweise zu <a href=\"https://wiki.schokokeks.org/E-Mail/Weiterleitungen\">Weiterleitungen und Spamfiltern</a>.</p>
   </div>\n";
 }
 $form .= '</div>';

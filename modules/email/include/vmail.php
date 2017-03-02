@@ -22,21 +22,9 @@ require_once('hasdomain.php');
 require_once('common.php');
 
 
-$forced_spamfilter_domains = array(
-  't-online.de', 'gmx.de', 'gmx.net', 'web.de', 'gmail.com', 'googlemail.com',
-  'googlemail.de', 'freenet.de', 'aol.com', 'yahoo.com', 'gmx.at', 'ymail.com', 
-  'hotmail.com', 'mail.de', 'email.de', 'online.de', 'outlook.com', 'me.com', 'yahoo.de'
-  );
-
-
 function forward_type($target) {
-  global $forced_spamfilter_domains;
   list($l, $d) = explode('@', strtolower($target), 2);
   DEBUG('Weiterleitung an '.$l.' @ '.$d);
-  if (in_array($d, $forced_spamfilter_domains)) {
-    // Domain in der Liste => Spam darf nicht weiter geleitet werden
-    return 'critical';
-  }
   $result = db_query("SELECT id FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld) = ?", array($d));
   if ($result->rowCount() > 0) {
     // Lokale Domain
@@ -56,8 +44,6 @@ function empty_account()
 		'domain' => NULL,
 		'password' => NULL,
     'smtpreply' => NULL,
-		'spamfilter' => 'folder',
-		'spamexpire' => 7,
     'quota' => config('vmail_basequota'),
     'quota_threshold' => 20,
 		'forwards' => array(),
@@ -102,7 +88,7 @@ function get_account_details($id, $checkuid = true)
     $uid_check = "useraccount=:uid AND ";
     $args[":uid"] = $uid;
   }
-  $result = db_query("SELECT id, local, domain, password, smtpreply, spamfilter, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id=:id LIMIT 1", $args);
+  $result = db_query("SELECT id, local, domain, password, smtpreply, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id=:id LIMIT 1", $args);
 	if ($result->rowCount() == 0)
 		system_failure('Ungültige ID oder kein eigener Account');
 	$acc = empty_account();
@@ -113,9 +99,9 @@ function get_account_details($id, $checkuid = true)
 	  $acc[$key] = $value;
 	}
 	if ($acc['forwards'] > 0) {
-	  $result = db_query("SELECT id, spamfilter, destination FROM mail.vmail_forward WHERE account=?", array($acc['id']));
+	  $result = db_query("SELECT id, destination FROM mail.vmail_forward WHERE account=?", array($acc['id']));
 	  while ($item = $result->fetch()){
-	    array_push($acc['forwards'], array("id" => $item['id'], 'spamfilter' => $item['spamfilter'], 'destination' => $item['destination']));
+	    array_push($acc['forwards'], array("id" => $item['id'], 'destination' => $item['destination']));
 	  }
 	}
   if ($acc['autoresponder'] > 0) {
@@ -277,16 +263,10 @@ function save_vmail_account($account)
   $forwards = array();
   if (count($account['forwards']) > 0) 
   {
-    for ($i=0;$i < count($account['forwards']); $i++)
-    {
-      if ($account['forwards'][$i]['spamfilter'] != 'tag' && $account['forwards'][$i]['spamfilter'] != 'delete') {
-        $account['forwards'][$i]['spamfilter'] = NULL;
-      }
       $account['forwards'][$i]['destination'] = filter_input_general($account['forwards'][$i]['destination']);
       if (! check_emailaddr($account['forwards'][$i]['destination'])) {
         system_failure('Das Weiterleitungs-Ziel »'.$account['forwards'][$i]['destination'].'« ist keine E-Mail-Adresse!');
       }
-    }
   }
 
   if ($accountlogin) {
@@ -311,20 +291,6 @@ function save_vmail_account($account)
     }
   }  
 
-  $spam = NULL;
-  switch ($account['spamfilter'])
-  {
-    case 'folder':
-      $spam = "folder";
-      break;
-    case 'tag':
-      $spam = "tag";
-      break;
-    case 'delete':
-      $spam = "delete";
-      break;
-  }
-  
   if (!$accountlogin) {
     $free = config('vmail_basequota');
     if ($newaccount) {
@@ -351,7 +317,6 @@ function save_vmail_account($account)
   }
   
   $account['local'] = strtolower($account['local']);
-  $account['spamexpire'] = (int) $account['spamexpire'];
   # Leerstring wird zu NULL
   $account['smtpreply'] = ($account['smtpreply'] ? $account['smtpreply'] : NULL);
 
@@ -359,8 +324,6 @@ function save_vmail_account($account)
                 ":domain" => $account['domain'],
                 ":password" => $password,
                 ":smtpreply" => $account['smtpreply'],
-                ":spamfilter" => $spam,
-                ":spamexpire" => $account['spamexpire'],
                 ":quota" => $account['quota'], 
                 ":quota_threshold" => $account['quota_threshold'],
                 ":id" => $id
@@ -369,7 +332,7 @@ function save_vmail_account($account)
   if ($newaccount)
   {
     unset($args[":id"]);
-    $query = "INSERT INTO mail.vmail_accounts (local, domain, spamfilter, spamexpire, password, smtpreply, quota, quota_threshold) VALUES (:local, :domain, :spamfilter, :spamexpire, :password, :smtpreply, :quota, :quota_threshold)";
+    $query = "INSERT INTO mail.vmail_accounts (local, domain, password, smtpreply, quota, quota_threshold) VALUES (:local, :domain, :password, :smtpreply, :quota, :quota_threshold)";
   } else {
     if ($set_password)
       $pw=", password=:password";
@@ -377,7 +340,7 @@ function save_vmail_account($account)
       unset($args[":password"]);
       $pw='';
     }
-    $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, smtpreply=:smtpreply, spamfilter=:spamfilter, spamexpire=:spamexpire, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
+    $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, smtpreply=:smtpreply, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
   }
   db_query($query, $args); 
   if ($newaccount) {
@@ -412,19 +375,18 @@ function save_vmail_account($account)
     
 
 
-  if (! $newaccount)
+  if (! $newaccount) {
     db_query("DELETE FROM mail.vmail_forward WHERE account=?", array($id));
+   }
 
   if (count($account['forwards']) > 0)
   {
-    $forward_query = "INSERT INTO mail.vmail_forward (account,spamfilter,destination) VALUES (:account, :spamfilter, :destination)";
-    for ($i=0;$i < count($account['forwards']); $i++)
-    { 
-      db_query($forward_query, array(":account" => $id, ":spamfilter" => $account['forwards'][$i]['spamfilter'], ":destination" => $account['forwards'][$i]['destination']));
+    $forward_query = "INSERT INTO mail.vmail_forward (account,destination) VALUES (:account, :destination)";
+    for ($i=0;$i < count($account['forwards']); $i++) { 
+      db_query($forward_query, array(":account" => $id, ":destination" => $account['forwards'][$i]['destination']));
     }
   }
-  if ($newaccount && $password)
-  {
+  if ($newaccount && $password) {
     $servername = get_server_by_id($server);
     $emailaddr = 'vmail-'.$account['local'].'%'.$domainname.'@'.$servername;
     $username = $account['local'].'@'.$domainname;

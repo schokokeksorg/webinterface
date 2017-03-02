@@ -36,17 +36,7 @@ $content .= "<div><div style=\"margin: 2px 0; padding: 0; width: 200px; border: 
 $content .= '<h3>Einstellungen</h3>
 <p>Eingehende E-Mails für Ihre Adresse werden wie folgt verarbeitet:</p>';
 
-$spam = 'ohne Spamfilter';
-switch ($acc['spamfilter'])
-{
-  case 'folder':  $spam = 'Spam in Unterordner';
-    break;
-	case 'tag':	$spam = 'Spam markieren';
-		break;
-	case 'delete':	$spam = 'Spam nicht zustellen';
-  	break;
-}
-$content .= '<p>'.other_icon('go.png')." Ablegen in Ihrer Mailbox ({$spam})</p>";
+$content .= '<p>'.other_icon('go.png')." Ablegen in Ihrer Mailbox</p>";
 
 
 if ($acc['autoresponder']) {
@@ -71,16 +61,8 @@ if ($acc['autoresponder']) {
 
 foreach ($acc['forwards'] AS $fwd)
 {
- 	$spam = 'ohne Spamfilter';
-  switch ($fwd['spamfilter'])
-	{
-	  case 'tag':	$spam = 'Spam markieren';
-			break;
-		case 'delete':	$spam = 'Spam nicht zustellen';
-			break;
-	}
 	$fwd['destination'] = filter_input_general($fwd['destination']);
-  $content .= '<p>'.other_icon('go.png')." Weiterleitung an <strong>{$fwd['destination']}</strong> ({$spam})</p>"; 
+  $content .= '<p>'.other_icon('go.png')." Weiterleitung an <strong>{$fwd['destination']}</strong></p>"; 
 }
 
 

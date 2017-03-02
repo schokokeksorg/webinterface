@@ -115,42 +115,6 @@ function hideUnchecked() {
 }
 
 
-function checkForwardCallback( result ) {
-  target = result.target;
-  type = result.type;
-  element = null;
-  $('div.vmail-forward input').each(function () {
-    if ($(this).val() == target) {
-      element = $(this).closest('div.vmail-forward');
-    }
-  });
-  if (! element) {
-    // Der User hat noch weiter getippt
-    return;
-  }
-  if (type == 'critical') {
-    element.find('select option[value="delete"]').prop('selected', true);
-    element.find('select option[value="none"]').prop('disabled', true);
-    element.find('select option[value="tag"]').prop('disabled', true);
-    element.find('select option[value="delete"]').prop('disabled', false);
-    element.find('.warning').text('Weiterleitungen zu einigen großen E-Mail-Providern dürfen nur mit aktiviertem Spamfilter eingerichtet werden.');
-    element.find('.warning').show()
-  } else if (type == 'local') {
-    //element.find('select option[value="none"]').prop('selected', true);
-    element.find('select option[value="none"]').prop('disabled', false);
-    element.find('select option[value="tag"]').prop('disabled', false);
-    element.find('select option[value="delete"]').prop('disabled', false);
-    element.find('.warning').hide()
-  } else {
-    //element.find('select option[value="delete"]').prop('selected', true);
-    element.find('select option[value="none"]').prop('disabled', false);
-    element.find('select option[value="tag"]').prop('disabled', false);
-    element.find('select option[value="delete"]').prop('disabled', false);
-    element.find('.warning').hide()
-  }
-  $('#submit').prop('disabled', false);
-}
-
 function checkForward( ) {
   input = $(this);
   val = input.val();
@@ -160,11 +124,6 @@ function checkForward( ) {
     return;
   }
   div = input.closest('div.vmail-forward');
-  $('#submit').prop('disabled', true);
-  $.getJSON("checkforward?target="+val, checkForwardCallback)
-    .fail( function () {
-      $('#submit').prop('disabled', false);
-      });
 }
 
 

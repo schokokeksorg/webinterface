@@ -60,7 +60,6 @@ if ($_GET['action'] == 'edit')
     if ($_POST['mailbox'] != 'yes')
     {
       $account['password'] = NULL;
-      $account['spamfilter'] = 'none';
     }
     if (isset($_POST['quota'])) {
       $account['quota'] = $_POST['quota'];
@@ -72,7 +71,6 @@ if ($_GET['action'] == 'edit')
     }
 
   }
-  $account['spamfilter'] = $_POST['spamfilter_action'];
 
   $ar = empty_autoresponder_config();
   $valid_from_date = time();
@@ -158,10 +156,10 @@ if ($_GET['action'] == 'edit')
     while (true)
     {
       // Die ersten 50 Einträge in jedem Fall prüfen, danach nur so lange zusätzliche Einträge vorhanden
-      if (! isset($_POST['forward_to_'.$num]) && ! isset($_POST['spamfilter_action_'.$num]) && $num > 50)
+      if (! isset($_POST['forward_to_'.$num])) && $num > 50)
         break;
       if (isset($_POST['forward_to_'.$num]) && chop($_POST['forward_to_'.$num]) != '') {
-        $fwd = array("spamfilter" => $_POST['spamfilter_action_'.$num], "destination" => chop($_POST['forward_to_'.$num]));
+        $fwd = array("destination" => chop($_POST['forward_to_'.$num]));
         array_push($account['forwards'], $fwd);
       }
       $num++;
