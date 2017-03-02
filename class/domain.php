@@ -51,13 +51,13 @@ class Domain extends KeksData
   function ensure_customerdomain()
   {
     if (! $this->is_customerdomain() )
-      system_failure('Die Domain »'.$this->data['fqdn'].'« gehört nicht Ihrem Kundenaccount.');
+      system_failure('Diese Domain gehört nicht Ihrem Kundenaccount.');
   }
 
   function ensure_userdomain()
   {
     if (! $this->is_userdomain() )
-      system_failure('Die Domain »'.$this->data['fqdn'].'« gehört nicht Ihrem Benutzeraccount.');
+      system_failure('Diese Domain gehört nicht Ihrem Benutzeraccount.');
   }
 
   function is_customerdomain()
