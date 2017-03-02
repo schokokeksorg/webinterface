@@ -228,6 +228,7 @@ function save_dns_record($id, $record)
     $record['hostname'] = NULL;
   }
   verify_input_hostname($record['hostname'], true);
+  verify_input_recorddata($record['data']);
   if ($record['ttl'] &&  (int) $record['ttl'] < 1)
     system_failure('Fehler bei TTL');
   switch ($record['type']) 
