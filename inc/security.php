@@ -134,6 +134,33 @@ function verify_shell( $input )
 }
 
 
+function filter_ssh_key($key)
+{
+  $keyparts = explode(" ", trim($key));
+
+  if ((count($keyparts) > 3) || (count($keyparts) < 2)) {
+    system_failure("Ungültiger SSH-Key!");
+  }
+
+  if (preg_match("/^[a-z0-9]+-[a-z0-9-]+$/", $keyparts[0]) === 0) {
+    system_failure("Ungültiger SSH-Key!");
+  }
+
+  if (base64_decode($keyparts[1], 1) == false) {
+    system_failure("Ungültiger SSH-Key!");
+  }
+
+  if ((count($keyparts) === 3) && (preg_match("/^[a-z0-9@]+$/", $keyparts[2]) === 0)) {
+    system_failure("Ungültiger SSH-Key!");
+  }
+
+  if (count($keyparts) === 2) {
+    return $keyparts[0]." ".$keyparts[1];
+  } else {
+    return $keyparts[0]." ".$keyparts[1]." ".$keyparts[2];
+  }
+}
+
 
 function check_path( $input )
 {
