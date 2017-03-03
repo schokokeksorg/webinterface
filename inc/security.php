@@ -51,7 +51,11 @@ function verify_input_general( $input )
 
 function filter_input_username( $input )
 {
-  return preg_replace("/[^[:alnum:]\_\.\+\-]/", "", $input );
+  $username=preg_replace("/[^[:alnum:]\_\.\+\-]/", "", $input);
+  if ($username === "") {
+    system_failure("Leerer Benutzername!");
+  }
+  return $username;
 }
 
 function verify_input_username( $input )
