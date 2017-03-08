@@ -21,6 +21,7 @@ require_once('inc/error.php');
 
 require_once('class/domain.php');
 
+$caa_properties= array( 0 => "issue", 1 => "issuewild", 2 => "iodef" );
 
 function get_dyndns_accounts() 
 {
@@ -144,7 +145,7 @@ function get_dyndns_records($id)
   return $data;
 }
 
-$valid_record_types = array('a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp');
+$valid_record_types = array('a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp', 'caa');
 
 
 function blank_dns_record($type)
@@ -211,7 +212,7 @@ function get_domain_auto_records($domainname)
 }
 
 
-$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp');
+$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp', 'caa');
 
 function save_dns_record($id, $record)
 {
@@ -292,6 +293,13 @@ function save_dns_record($id, $record)
         system_failure('text entry missing');
       break;
 
+    case 'caa':
+      $record['dyndns'] = NULL;
+      $record['spec'] = max( (int) $record['spec'], 1);
+      $record['ip'] = NULL;
+      if (! $record['data'] )
+        system_failure('text entry missing');
+      break;
 
     case 'srv':
       system_failure('not implemented yet');

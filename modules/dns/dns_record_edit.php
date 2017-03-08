@@ -130,10 +130,24 @@ if ($type == 'sshfp')
     if ($key == $data['spec']) $option .= 'selected="selected"';
     $option .= '>'.$alg.' ('.$key.')</option>';
   }
- 
+
   $form .= '
 <tr><td><label for="spec">Algorithmus:</label></td><td><select name="spec" id="spec">'.$option.'</select></td></tr>
 <tr><td><label for="data">Fingerabdruck:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
+';
+}
+
+if ($type == 'caa')
+{
+  $option="";
+  foreach ($caa_properties as $key => $property) {
+    $option .= '<option value="'.$key.'" ';
+    if ($key == $data['spec']) $option .= 'selected="selected"';
+    $option .= '>'.$property.' ('.$key.')</option>';
+  }
+  $form .= '
+<tr><td><label for="spec">Property tag:</label></td><td><select name="spec" id="spec">'.$option.'</select></td></tr>
+<tr><td><label for="data">Inhalt:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
 ';
 }
 

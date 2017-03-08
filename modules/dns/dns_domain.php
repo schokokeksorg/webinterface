@@ -65,9 +65,13 @@ foreach ($records AS $rec)
   {
     $data = (int) $rec['spec'] . ' 1 ' . $data;
   }
+  if ($rec['type'] == 'caa')
+  {
+    $data = $caa_properties[(int) $rec['spec']] . ' 0 "' . $data.'"';
+  }
   $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
   $link = $rec['fqdn'];
-  if (!in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp'))) {
+  if (!in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp', 'caa'))) {
       $editable = false;
   }
   if ($editable) {
@@ -106,6 +110,7 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <li>'.internal_link('dns_record_edit', 'NS (Nameserver)', 'id=new&type=ns&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'TXT', 'id=new&type=txt&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'SSHFP', 'id=new&type=sshfp&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'CAA', 'id=new&type=caa&domain='.$domain->id).'</li>
 </ul>
 
 <h4>Automatische DNS-Records</h4>
