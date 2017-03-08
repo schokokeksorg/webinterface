@@ -295,7 +295,6 @@ function save_dns_record($id, $record)
 
     case 'caa':
       $record['dyndns'] = NULL;
-      $record['spec'] = max( (int) $record['spec'], 1);
       $record['ip'] = NULL;
       if (! $record['data'] )
         system_failure('text entry missing');
