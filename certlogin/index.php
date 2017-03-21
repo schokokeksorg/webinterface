@@ -149,7 +149,9 @@ else
     }
     output('</ul>');
   } else {
-    login_screen('Ihr Browser hat kein Client-Zertifikat gesendet. Eventuell müssen Sie in den Einstellungen des Browsers diese Funktion einschalten.');
+    warning('Ihr Browser hat kein Client-Zertifikat gesendet. Eventuell müssen Sie in den Einstellungen des Browsers diese Funktion einschalten.');
+    redirect('/');
+    die();
   }
 }
 
