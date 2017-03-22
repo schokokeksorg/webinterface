@@ -383,6 +383,9 @@ function save_vmail_account($account)
   {
     $forward_query = "INSERT INTO mail.vmail_forward (account,destination) VALUES (:account, :destination)";
     for ($i=0;$i < count($account['forwards']); $i++) { 
+      if (! isset($account['forwards'][$i]['destination'])) {
+        continue;
+      }
       db_query($forward_query, array(":account" => $id, ":destination" => $account['forwards'][$i]['destination']));
     }
   }
