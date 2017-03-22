@@ -156,7 +156,7 @@ if ($_GET['action'] == 'edit')
     while (true)
     {
       // Die ersten 50 Einträge in jedem Fall prüfen, danach nur so lange zusätzliche Einträge vorhanden
-      if (! isset($_POST['forward_to_'.$num])) && $num > 50)
+      if (! isset($_POST['forward_to_'.$num]) && $num > 50)
         break;
       if (isset($_POST['forward_to_'.$num]) && chop($_POST['forward_to_'.$num]) != '') {
         $fwd = array("destination" => chop($_POST['forward_to_'.$num]));
