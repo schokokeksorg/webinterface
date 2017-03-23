@@ -311,7 +311,7 @@ function save_more_storage($items, $storage) {
     # Über 100 GB soll die Automatik nichts machen
     system_failure("Ihr Speicherplatz kann über diese Funktion nicht weiter erhöht werden. Bitte wenden Sie sich an die Administratoren.");
   }
-  $result = db_query("SELECT quota FROM system.customerquota WHERE lastchange > CURDATE()");
+  $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid AND lastchange > CURDATE()", array(":cid" => $cid));
   if ($result->rowcount() > 0) {
     system_failure("Ihr Speicherplatz wurde heute bereits verändert. Sie können dies nur einmal am Tag machen.");
   }
