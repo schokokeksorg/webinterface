@@ -4,21 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bfc2fe6f39e33437d3ea24fb49f1f8ed",
-    "content-hash": "e38087576ed3d0c20699567373a626a1",
+    "content-hash": "1a699b93929084a4d5108b5e93e5d5ba",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bjeavons/zxcvbn-php.git",
-                "reference": "e9e242d76fc32de68af3b7e360b7179af05ced9e"
+                "reference": "331a88932d1a399c989967d3399a4a40eb182fd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bjeavons/zxcvbn-php/zipball/e9e242d76fc32de68af3b7e360b7179af05ced9e",
-                "reference": "e9e242d76fc32de68af3b7e360b7179af05ced9e",
+                "url": "https://api.github.com/repos/bjeavons/zxcvbn-php/zipball/331a88932d1a399c989967d3399a4a40eb182fd5",
+                "reference": "331a88932d1a399c989967d3399a4a40eb182fd5",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +49,7 @@
                 "password",
                 "zxcvbn"
             ],
-            "time": "2016-09-08 17:29:46"
+            "time": "2017-01-06T15:43:33+00:00"
         }
     ],
     "packages-dev": [],
