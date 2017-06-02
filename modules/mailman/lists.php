@@ -84,6 +84,6 @@ else
 addnew('newlist', 'Neue Mailingliste anlegen');
 output("
 <p><strong>Hinweise:</strong><br />
-<sup>1</sup>) Sie können später im Webinterface von Mailman einen abweichenden oder auch mehrere Verwalter eintragen. Die Information auf dieser Seite wird dann nicht automatisch geändert sondern bezeichnet den Verwalter, den Sie beim Anlegen der Liste benannt haben.<br />
+<sup>1</sup>) Sie können später im Webinterface von Mailman einen abweichenden oder auch mehrere Verwalter eintragen. Die Information auf dieser Seite wird zyklisch synchronisiert.<br />
 <sup>2</sup>) Die Größe der Archive wird in regelmäßigen Abständen eingelesen. Der hier angezeigte Wert ist möglicherweise nicht mehr aktuell.</p>\n");
 

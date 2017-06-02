@@ -46,7 +46,7 @@ elseif ($_GET['action'] == 'newpw') {
   $sure = user_is_sure();
   if ($sure === NULL)
   {
-    are_you_sure('action=newpw&id='.$list['id'], 'Möchten Sie für die Mailingliste »<strong>'.$list['listname'].'</strong>@'.$list['fqdn'].'« ein neues Passwort anfordern?');
+    are_you_sure('action=newpw&id='.$list['id'], 'Möchten Sie für die Mailingliste »<strong>'.$list['listname'].'</strong>@'.$list['fqdn'].'« ein neues Passwort anfordern? (Das neue Passwort wird dem Listenverwalter zugeschickt.)');
   }
   elseif ($sure === true)
   {
