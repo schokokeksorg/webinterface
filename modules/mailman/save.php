@@ -41,7 +41,26 @@ if ($_GET['action'] == 'new')
     header('Location: lists');
 }
 
-elseif ($_GET['action'] == 'delete')
+elseif ($_GET['action'] == 'newpw') {
+  $list = get_list($_GET['id']);
+  $sure = user_is_sure();
+  if ($sure === NULL)
+  {
+    are_you_sure('action=newpw&id='.$list['id'], 'Möchten Sie für die Mailingliste »<strong>'.$list['listname'].'</strong>@'.$list['fqdn'].'« ein neues Passwort anfordern?');
+  }
+  elseif ($sure === true)
+  {
+    request_new_password($list['id']);
+    if (! $debugmode)
+      header('Location: lists');
+  }
+  elseif ($sure === false)
+  {
+    if (! $debugmode)
+      header('Location: lists');
+  }
+}
+elseif ($_GET['action'] == 'delete') {
   $list = get_list($_GET['id']);
   $sure = user_is_sure();
   if ($sure === NULL)
@@ -59,7 +78,7 @@ elseif ($_GET['action'] == 'delete')
     if (! $debugmode)
       header('Location: lists');
   }
-
+}
 else
 {
   system_failure('Function not implemented');

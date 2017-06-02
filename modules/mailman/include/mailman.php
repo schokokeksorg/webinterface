@@ -52,6 +52,12 @@ function delete_list($id)
   db_query("UPDATE mail.mailman_lists SET status='delete' WHERE owner=:uid AND id=:id", $args);
 }
 
+function request_new_password($id)
+{
+  $args = array(":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid']);
+  db_query("UPDATE mail.mailman_lists SET status='newpw' WHERE owner=:uid AND id=:id", $args);
+}
 
 function create_list($listname, $maildomain, $admin)
 {

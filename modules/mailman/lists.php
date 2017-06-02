@@ -55,15 +55,21 @@ if (! empty($lists))
       $style = ' style="text-decoration: underline;" ';
       $status = 'Wird angelegt';
     }
+    elseif ($list['status'] == 'newpw')
+    {
+      $style = ' style="font-style: italic;" ';
+      $status = 'Neues Passwort angefordert';
+    }
     elseif ($list['status'] == 'failure')
     {
       $style = ' style="font-style: italic;" ';
       $status = 'Fehler bei der Erstellung';
     }
+    
 
     output("<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$list['admin']}</td><td>{$status}</td><td style=\"text-align: right;\">{$sizestr}</td>");
     if ($list['status'] == 'running')
-      output("<td>".internal_link('save', icon_delete("Mailingliste löschen"), "action=delete&id={$list['id']}")." <a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")."</a></td></tr>\n");
+      output("<td>".internal_link('save', icon_edit("Neues Passwort anfordern"), "action=newpw&id={$list['id']}").internal_link('save', icon_delete("Mailingliste löschen"), "action=delete&id={$list['id']}")." <a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")."</a></td></tr>\n");
     else
       output("<td>&#160;</td></tr>\n");
   }
