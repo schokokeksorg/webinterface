@@ -22,7 +22,7 @@ require_once('inc/security.php');
 function get_lists()
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=?", array($uid));
+  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=? ORDER BY listname", array($uid));
   $ret = array();
   while ($list = $result->fetch())
     $ret[] = $list;
