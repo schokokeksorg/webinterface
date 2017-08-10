@@ -100,7 +100,7 @@ function populate_bankinfo(result) {
 
 function searchbank() 
 {
-  var iban = $(\'#iban\').val();
+  var iban = $(\'#iban\').val().replace(/\s/g, \'\');
   if (iban.substr(0,2) == "DE" && iban.length == 22) {
     $("#bankname").prop("disabled", true);
     $("#bic").prop("disabled", true);

@@ -52,7 +52,7 @@ if ($_GET['action'] == 'new')
   if (empty($_REQUEST['iban'])) {
     system_failure('Es wurde keine IBAN angegeben.');
   }
-  $iban = $_REQUEST['iban'];
+  $iban = str_replace(' ', '', $_REQUEST['iban']);
   if (! verify_iban($iban)) {
     system_failure("Die IBAN scheint nicht korrekt zu sein!");
   }
