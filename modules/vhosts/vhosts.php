@@ -156,19 +156,23 @@ if (count($vhosts) > 0)
       $php = $vhost['php'];
       switch ($php)
       {
+        /* To create new PHP icon:
+           convert ok.png -gravity center -draw "text 0,0 '7.2'" ok-php72.png
+        */
         case NULL:
           $php = icon_disabled('PHP ausgeschaltet');
           break;
         case 'php56':
           $php = icon_enabled_phpxx('PHP in Version 5.6 eingeschaltet', 5, 6);
           break;
-        case 'php70':
         case 'fpm70':
           $php = icon_enabled_phpxx('PHP in Version 7.0 eingeschaltet', 7, 0);
           break;
-        case 'php71':
         case 'fpm71':
           $php = icon_enabled_phpxx('PHP in Version 7.1 eingeschaltet', 7, 1);
+          break;
+        case 'fpm72':
+          $php = icon_enabled_phpxx('PHP in Version 7.2 eingeschaltet', 7, 2);
           break;
       }
       output("<td>{$php}</td>");
