@@ -123,7 +123,7 @@ function db_query($stmt, $params = NULL)
   global $_db;
   __ensure_connected();
   $backtrace = debug_backtrace();
-  DEBUG($backtrace[0]['file'].':'.$backtrace[0]['line'].': '.$stmt);
+  DEBUG($backtrace[0]['file'].':'.$backtrace[0]['line'].': '.htmlspecialchars($stmt));
   if ($params) {
     DEBUG($params);
   }

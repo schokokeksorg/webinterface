@@ -12,3 +12,4 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^go/(.*)$  dispatch.php?go=$1&%{QUERY_STRING}
 RewriteRule ^init(.*)$  go/index/initialize_useraccount?token=$1&%{QUERY_STRING} [R]
+RewriteRule ^verify(.*)$  go/index/verify?token=$1&%{QUERY_STRING} [R]
