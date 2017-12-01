@@ -51,7 +51,10 @@ function we_have_an_error()
 {
   global $input_error;
 
-  return (count($input_error) > 0);
+  if (isset($input_error))
+    return (count($input_error) > 0);
+  else
+    return 0;
 }
 
 
