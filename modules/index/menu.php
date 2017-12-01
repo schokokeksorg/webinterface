@@ -25,6 +25,9 @@ if ($role == ROLE_ANONYMOUS) {
   if ($role & (ROLE_SYSTEMUSER | ROLE_CUSTOMER)) {
     $menu["index_chpass"] = array("label" => "Passwort ändern", "file" => "chpass", "weight" => 98);
   }
+  if ($role & ROLE_CUSTOMER) {
+    $menu["index_chdetails"] = array("label" => "Adressen ändern", "file" => "chdetails", "weight" => 1, "submenu" => "index_index");
+  }
 
   $menu["index_logout"] = array("label" => "Logout", "file" => "logout", "weight" => 99);
   $menu["index_index"] = array("label" => "Übersicht", "file" => "index", "weight" => 0);

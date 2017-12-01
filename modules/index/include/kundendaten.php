@@ -62,3 +62,12 @@ function update_mailaddress($daten)
 }
 
 
+function lese_kundendaten()
+{
+    require_role(ROLE_CUSTOMER);
+    $customerno = $_SESSION['customerinfo']['customerno'];
+    $result = db_query("SELECT id, anrede, firma, vorname, nachname, adresse, adresse2, adresszusatz, land, plz, ort, email, email_newsletter, email_rechnung, email_extern, telefon, mobile, telefax FROM kundendaten.kunden WHERE id=?", array($customerno));
+    return $result->fetch();    
+}
+
+
