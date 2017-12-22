@@ -51,7 +51,10 @@ function we_have_an_error()
 {
   global $input_error;
 
-  return (count($input_error) > 0);
+  if (isset($input_error))
+    return (count($input_error) > 0);
+  else
+    return 0;
 }
 
 
@@ -123,12 +126,14 @@ function require_role($roles)
 }
 
 
-function login_screen($why)
+function login_screen($why = NULL)
 {
-  if (have_module('index')) {
-    if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
-      require_once('modules/index/include/x509.php');
-      do_ajax_cert_login();
+  if (! $why) {
+    if (have_module('index')) {
+      if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
+        require_once('modules/index/include/x509.php');
+        do_ajax_cert_login();
+      }
     }
   }
   require_once('inc/theme.php');

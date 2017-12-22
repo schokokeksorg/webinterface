@@ -29,21 +29,8 @@ require_once('inc/base.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
 require_once('inc/theme.php');
+require_once('modules/index/include/x509.php');
 
-
-function get_logins_by_cert($cert) 
-{
-	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
-	if ($result->rowCount() < 1)
-		return NULL;
-	else {
-		$ret = array();
-		while ($row = $result->fetch()) {
-			$ret[] = $row;
-		}
-		return $ret;
-	}
-}
 
 DEBUG('$_SERVER:');
 DEBUG($_SERVER);
