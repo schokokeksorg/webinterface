@@ -395,7 +395,7 @@ $tld_ns = array();
 
 function check_dns($domainname, $tld) {
   global $tld_ns;
-  $domain=idn_to_ascii($domainname.".".$tld);
+  $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
 
   if (! isset($tld_ns[$tld])) {
     $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');

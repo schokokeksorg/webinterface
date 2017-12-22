@@ -103,7 +103,7 @@ function __ensure_connected()
     try {
       DEBUG("Neue Datenbankverbindung!");
       $_db = new DB();
-      $_db->query("SET NAMES utf8");
+      $_db->query("SET NAMES utf8mb4");
       $_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       $_db->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
     } catch (PDOException $e) {
