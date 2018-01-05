@@ -193,7 +193,7 @@ function get_max_mailboxquota($server, $oldquota) {
   $result = db_query("SELECT systemquota - (COALESCE(systemquota_used,0) + COALESCE(mailquota,0)) AS free FROM system.v_quota WHERE uid=:uid AND server=:server", array(":uid" => $uid, ":server" => $server));
   $item = $result->fetch();
   DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
-  return $item['free'] + ($oldquota - config('vmail_basequota'));
+  return max(0, $item['free'] + ($oldquota - config('vmail_basequota')));
 }
 
 
@@ -305,6 +305,10 @@ function save_vmail_account($account)
     $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
     if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
       $newquota = $free + config('vmail_basequota');
+      if ($account['quota'] >= $oldaccount['quota'] && $newquota < $oldaccount['quota']) {
+        # Wenn das Limit künstlich reduziert wurde, dann maximal auf den alten Wert.
+        $newquota = $oldaccount['quota'];
+      }
       warning("Ihr Speicherplatz reicht für diese Postfach-Größe nicht mehr aus. Ihr Postfach wurde auf {$newquota} MB reduziert. Bitte beachten Sie, dass damit Ihr Benutzerkonto keinen freien Speicherplatz mehr aufweist!");
     }
   
