@@ -8,7 +8,7 @@ $title = 'Report';
 $year = date("Y")-1;
 
 $typeresult = db_query("SELECT id, description FROM buchhaltung.types");
-$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to", array(":from" => $year."-01-01", ":to" => $year."-12-31"));
+$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", array(":from" => $year."-01-01", ":to" => $year."-12-31"));
 
 $types = array();
 $data = array();

@@ -8,7 +8,7 @@ $title = 'Report';
 $year = date("Y")-1;
 
 $typeresult = db_query("SELECT id, description FROM buchhaltung.types");
-$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to", array(":from" => $year."-01-01", ":to" => $year."-12-31"));
+$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", array(":from" => $year."-01-01", ":to" => $year."-12-31"));
 
 $types = array();
 $data_by_type = array();
@@ -35,7 +35,7 @@ foreach ($types as $id => $t) {
         continue;
     }
     output("<h3>$t</h3>");
-    output("<table>");
+    output('<table style="font-size: 10pt;">');
     $umsatz19proz = 0.0;
     $umsatz0proz = 0.0;
     $umsatzandereproz = 0.0;
@@ -79,7 +79,7 @@ foreach ($types as $id => $t) {
     }
     $netsum = str_replace('.', ',', sprintf('%.2f €', $netsum));
     $ustsum = str_replace('.', ',', sprintf('%.2f €', $ustsum));
-    output("<tr><td colspan=\"2\" style=\"font-weight: bold;text-align: right;\">Summe dieser Kategorie:</td><td style=\"font-weight: bold;text-align: right;\">$netsum</td><td style=\"font-weight: bold;text-align: right;\">$ustsum</td><td></td></tr>\n");
+    output("<tr><td colspan=\"2\" style=\"font-weight: bold;text-align: right;\">Summe $t:</td><td style=\"font-weight: bold;text-align: right;\">$netsum</td><td style=\"font-weight: bold;text-align: right;\">$ustsum</td><td></td></tr>\n");
     output('</table>');
 }
 
