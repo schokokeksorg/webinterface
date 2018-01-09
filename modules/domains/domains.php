@@ -68,7 +68,13 @@ foreach ($user_domains as $domain)
   $features = implode(', ', $features);
   if (! $features)
     $features = '<em>unbenutzt</em>';
-  output("  <tr><td>{$domain->fqdn}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
+  $punycode = idn_to_ascii($domain->fqdn, 0, INTL_IDNA_VARIANT_UTS46);
+  if ($punycode != $domain->fqdn) {
+    $punycode = "<br/>($punycode)";
+  } else {
+    $punycode = '';
+  }
+  output("  <tr><td>{$domain->fqdn}{$punycode}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
 }
 output('</table>');
 output("<br />");
