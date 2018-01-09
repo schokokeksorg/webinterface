@@ -83,6 +83,8 @@ class Domain extends KeksData
       if (array_key_exists($key, $data))
         $this->data[$key] = $data[$key];
     $this->data['fqdn'] = $data['domainname'].'.'.$data['tld'];
+    $this->data['punycode'] = idn_to_ascii($this->data['fqdn'], 0, INTL_IDNA_VARIANT_UTS46);
+    $this->data['is_idn'] = ($this->data['fqdn'] != $this->data['punycode']);
     $this->data['reg_date'] = $data['registrierungsdatum'];
     $this->data['cancel_date'] = $data['kuendigungsdatum'];
   }

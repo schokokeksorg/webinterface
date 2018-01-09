@@ -68,8 +68,8 @@ foreach ($user_domains as $domain)
   $features = implode(', ', $features);
   if (! $features)
     $features = '<em>unbenutzt</em>';
-  $punycode = idn_to_ascii($domain->fqdn, 0, INTL_IDNA_VARIANT_UTS46);
-  if ($punycode != $domain->fqdn) {
+  $punycode = $domain->punycode;
+  if ($domain->is_idn) {
     $punycode = "<br/>($punycode)";
   } else {
     $punycode = '';
