@@ -73,6 +73,7 @@ $odd = !$odd;
 $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="'.$c['telefax'].'"></td></tr>';
 $odd = !$odd;
 
+$html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speichern" /></td></tr>';
 $html .= '</table>';
 
 
