@@ -19,7 +19,7 @@ function verify_mail_token($token)
 {
   db_query("DELETE FROM kundendaten.mailaddress_token WHERE expire<NOW()");
   $args = array(":token" => $token);
-  $result = db_query("SELECT kunde, typ, email FROM kundendaten.mailaddress_token WHERE token=:token AND expire>NOW()", $args);
+  $result = db_query("SELECT handle, email FROM kundendaten.mailaddress_token WHERE token=:token AND expire>NOW()", $args);
   if ($result->rowCount() > 0)
   {
     $line = $result->fetch();
@@ -33,41 +33,17 @@ function verify_mail_token($token)
 
 function update_mailaddress($daten)
 {
-    $kunde = $daten['kunde'];
-    $typ = $daten['typ'];
+    $kunde = $daten['handle'];
     $email = $daten['email'];
 
-    $dbfield = NULL;
-    if ($typ == 'regular') {
-        $dbfield = 'email';
-    } elseif ($typ == 'rechnung') {
-        $dbfield = 'email_rechnung';    
-    } elseif ($typ == 'newsletter') {
-        $dbfield = 'email_newsletter';    
-    } elseif ($typ == 'extern') {
-        $dbfield = 'email_extern';
-    }
-    if ($dbfield == NULL) {
-        system_failure('Ungültige Daten hinterlegt. Bitte die Änderung nochmal von vorne vornehmen.');
-    }
-    
     if (! check_emailaddr($email)) {
         system_failure('Es ist eine ungültige Adresse hinterlegt. So wird das nichts. Bitte die Änderung von vorne machen.');
     } 
 
-    $args = array(':kunde' => $kunde,
+    $args = array(':handle' => $handle,
                   ':email' => $email);
-    db_query("UPDATE kundendaten.kunden SET $dbfield=:email WHERE id=:kunde", $args);
+    db_query("UPDATE kundendaten.handles SET email=:email WHERE id=:handle", $args);
     
-}
-
-
-function lese_kundendaten()
-{
-    require_role(ROLE_CUSTOMER);
-    $customerno = $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, anrede, firma, vorname, nachname, adresse, adresse2, adresszusatz, land, plz, ort, email, email_newsletter, email_rechnung, email_extern, telefon, mobile, telefax FROM kundendaten.kunden WHERE id=?", array($customerno));
-    return $result->fetch();    
 }
 
 
