@@ -14,11 +14,11 @@ https://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('kundendaten.php');
+require_once('verify.php');
 require_once('inc/security.php');
 
 title("E-Mail-Adresse bestätigen");
-$show = 'token';
+$section = 'handles_list';
 
 if (isset($_REQUEST['token']))
 {

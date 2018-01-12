@@ -39,3 +39,16 @@ function get_kundenhandles() {
     return $ret;
 }
 
+
+function update_pending($handleid) {
+    $handleid = (int) $handleid;
+    $result = db_query("SELECT email FROM kundendaten.mailaddress_token WHERE handle=?", array($handleid));
+    if ($result->rowCount() == 0) {
+        return NULL;
+    }
+    $res = $result->fetch();
+    return $res['email'];
+}
+
+
+

@@ -33,7 +33,7 @@ function verify_mail_token($token)
 
 function update_mailaddress($daten)
 {
-    $kunde = $daten['handle'];
+    $handle = $daten['handle'];
     $email = $daten['email'];
 
     if (! check_emailaddr($email)) {
