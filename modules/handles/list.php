@@ -47,7 +47,7 @@ foreach ($handles as $id => $handle) {
     $email = $handle['email'];
     $new_email = update_pending($id);
     if ($new_email) {
-        $email = $new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
+        $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
     output("<tr><td>{$handle['id']}</td><td><strong>{$handle['name']}</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
 }
