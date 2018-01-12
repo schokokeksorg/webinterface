@@ -185,6 +185,19 @@ function output($arg)
   $output .= $arg;
 }
 
+function footnote($explaination)
+{
+    global $footnotes;
+    if (!isset($footnotes) || !is_array($footnotes)) {
+        $footnotes = array();
+    }
+    $fnid = array_search($explaination, $footnotes);
+    if (!$fnid) {
+        $footnotes[] = $explaination;
+    }
+    $fnid = array_search($explaination, $footnotes);
+    return str_repeat('*', ($fnid+1));
+}
 
 function random_string($len) 
 {

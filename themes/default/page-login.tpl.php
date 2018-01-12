@@ -66,6 +66,13 @@ if ($messages) {
 <p><em><a href="../../certlogin/?destination=go/<?php echo $go; ?>"  >Mit einem Client-Zertifikat anmelden</a></em> (<a href="../../go/index/certinfo"  >Wie geht das?</a>)</p>
 
 
+<?php if ($footnotes) {
+    echo '<div class="footnotes">';
+    foreach ($footnotes as $num => $explaination) {
+       echo str_repeat('*', $num+1).': '.$explaination;
+    }
+    echo '</div>';
+} ?>
 </div>
 
 <div class="foot">

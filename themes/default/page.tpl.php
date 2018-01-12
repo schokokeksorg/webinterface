@@ -61,6 +61,13 @@ if ($headline) {
 
 <?php echo $content; ?>
 
+<?php if ($footnotes) {
+    echo '<div class="footnotes">';
+    foreach ($footnotes as $num => $explaination) {
+       echo str_repeat('*', $num+1).': '.$explaination;
+    }
+    echo '</div>';
+} ?>
 </div>
 <div class="foot">
 <p>Sollten Sie auf dieser Administrations-Oberfläche ein Problem entdecken oder Hilfe benötigen, schreiben Sie bitte eine einfache eMail an <a href="mailto:root@schokokeks.org">root@schokokeks.org</a>. Unser <a href="https://schokokeks.org/kontakt">Impressum</a> finden Sie auf der <a href="https://schokokeks.org/">öffentlichen Seite</a>. Lizenzinformationen zu diesem Webinterface und verwendeten Rechten finden Sie <a href="<?php echo $BASE_PATH; ?>go/about/about">indem Sie hier klicken</a>.</p>

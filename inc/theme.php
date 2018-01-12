@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 function show_page($path = NULL) 
 {
-  global $go, $title, $headline, $output, $module, $page, $html_header;
+  global $go, $title, $headline, $output, $module, $page, $html_header, $footnotes;
   if ($path) {
   	$module = $path;
   }
