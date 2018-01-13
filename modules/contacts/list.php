@@ -53,11 +53,11 @@ foreach ($contacts as $id => $contact) {
     if ($new_email) {
         $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    output("<tr><td>{$contact['id']}</td><td><strong>{$contact['name']}</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
+    output("<tr><td>{$contact['id']}</td><td><strong>".internal_link('edit', $contact['name'], 'id='.$contact['id'])."</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
 }
 output('</table>');
 output("<br />");
-addnew('edit', 'Neuen Kontakt erstellen', 'action=new');
+addnew('edit', 'Neuen Kontakt erstellen', 'id=new');
 
 
 ?>

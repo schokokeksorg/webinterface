@@ -61,8 +61,7 @@ function get_contact($id)
     if ($result->rowCount() == 0) {
         system_failure("Kontakt nicht gefunden oder gehört nicht diesem Kunden");
     }
-    $res = $result->fetch()
-    $contact = $res[0];
+    $contact = $result->fetch();
     return $contact;
 }
 

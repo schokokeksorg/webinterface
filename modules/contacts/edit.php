@@ -21,20 +21,56 @@ require_once('session/start.php');
 
 
 require_role(array(ROLE_CUSTOMER));
+$section = 'contacts_list';
 
 $new = False;
-if ($_REQUEST['action'] == 'new') {
+if ($_REQUEST['id'] == 'new') {
     title("Adresse anlegen");
     $new = True;
 } else {
     title("Adresse bearbeiten");
 }
 
-$contact = new_contact();
+$c = new_contact();
 if (! $new) {
-    $contact = get_contact($_REQUEST['id']);
+    $c = get_contact($_REQUEST['id']);
 }
 
+$readonly = '';
+// Wenn das Handle beim NIC angemeldet ist, kann man Name und Land nicht mehr ändern
+if ($c['nic_handle'] != NULL) {
+    $readonly = ' disabled="disabled" ';
+    output('<p>Da diese Adresse als möglicher Domaininhaber bei der Domain-Regristry angemeldet ist, können Name/Firmenname und Land nicht mehr geändert werden. Legen Sie ggf. eine neue Adresse an und ändern Sie den Domain-Inhaber entsprechend.</p>');
+}
+$odd = false;
+$html = '<table>';
+$html .= '    <tr class="'.($odd == true ? 'odd' : 'even').'"><td>Firmenname:</td><td><input type="text" name="firma" id="firma" value="'.$c['company'].'" '.$readonly.' /></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td>'.($c['company'] ? 'Ansprechpartner' : 'Name').':</td><td><input type="text" name="name" id="name" value="'.$c['name'].'" '.$readonly.' /></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="adresse">Adresse:</label></td><td><textarea rows="3" name="adresse" id="adresse">'.$c['address'].'</textarea></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="plz">Land / PLZ:</label></td><td><input size="2" type="text" name="land" id="land" value="'.$c['country'].'" '.$readonly.' />-</strong><input type="text" name="plz" id="plz" value="'.$c['zip'].'"></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="ort">Ort:</label></td><td><input type="text" name="ort" id="ort" value="'.$c['city'].'"></td></tr>';
+$odd = !$odd;
 
 
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="email">E-Mail-Adresse:</label></td><td><input type="text" name="email" id="email" value="'.$c['email'].'"></td></tr>';
+$odd = !$odd;
 
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefonnummer:</label></td><td><input type="text" name="telefon" id="telefon" value="'.$c['phone'].'"></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Mobil:</label></td><td><input type="text" name="mobile" id="mobile" value="'.$c['mobile'].'"></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="'.$c['fax'].'"></td></tr>';
+$odd = !$odd;
+
+$html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speichern" /></td></tr>';
+$html .= '</table>';
+
+
+output(html_form('chdetails_all', 'chdetails_save', '', $html));
+
+
+?>
