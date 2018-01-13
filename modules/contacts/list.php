@@ -57,7 +57,7 @@ foreach ($contacts as $id => $contact) {
 }
 output('</table>');
 output("<br />");
-
+addnew('edit', 'Neuen Kontakt erstellen', 'action=new');
 
 
 ?>

@@ -30,9 +30,45 @@ function api_fetch_contact($nic_id)
 */
 
 
+function new_contact() {
+    return array("id" => NULL,
+        "state" => NULL,
+        "lastchange" => time(),
+        "nic_handle" => NULL,
+        "nic_id" => NULL,
+        "company" => NULL,
+        "name" => NULL,
+        "address" => NULL,
+        "zip" => NULL,
+        "city" => NULL,
+        "country" => "DE",
+        "phone" => NULL,
+        "mobile" => NULL,
+        "fax" => NULL,
+        "email" => NULL,
+        "pgp_id" => NULL,
+        "pgp_key" => NULL,
+        "customer" => $_SESSION['customerinfo']['customerno']);
+}
+
+
+function get_contact($id)
+{
+    $args = array(
+        "cid" => (int) $_SESSION['customerinfo']['customerno'],
+        "id" => (int) $id);
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id AND customer=:cid", $args);
+    if ($result->rowCount() == 0) {
+        system_failure("Kontakt nicht gefunden oder gehört nicht diesem Kunden");
+    }
+    $res = $result->fetch()
+    $contact = $res[0];
+    return $contact;
+}
+
 function get_contacts() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, state, lastchange, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id FROM kundendaten.contacts WHERE customer=? ORDER BY id", array($cid));
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE customer=? ORDER BY id", array($cid));
     $ret = array();
     while ($contact = $result->fetch()) {
         $ret[$contact['id']] = $contact;
