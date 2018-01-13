@@ -3,7 +3,7 @@
 This file belongs to the Webinterface of schokokeks.org Hosting.
 Please see https://source.schokokeks.org for the newest source files.
 
-Written 2008-2014 by schokokeks.org Hosting, namely
+Written 2008-2018 by schokokeks.org Hosting, namely
   Bernd Wurst <bernd@schokokeks.org>
   Hanno Böck <hanno@schokokeks.org>
 
