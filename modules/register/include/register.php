@@ -37,23 +37,10 @@ function create_customer($data)
     return NULL;
   }
 
-  $anrede = db_escape_string($data['anrede']);
-  $firma = db_escape_string($data['firma']);
-  $vorname = db_escape_string($data['vorname']);
-  $nachname = db_escape_string($data['nachname']);
-  $email = db_escape_string($data['email']);
-
-  logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: {$anrede} / {$firma} / {$vorname} / {$nachname} / {$email}");
+  logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: ".print_r($data, true));
   
-  $anrede = maybe_null($anrede);
-  $firma = maybe_null($firma);
-  $vorname = maybe_null($vorname);
-  $nachname = maybe_null($nachname);
-
-  db_query("BEGIN");
-  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES ({$firma}, {$nachname}, {$vorname}, {$anrede}, {$email}, CURDATE(), 3)");
+  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES (:firma, :nachname, :vorname, :anrede, :email, CURDATE(), 3)", $data);
   $customerno = db_insert_id();
-  db_query("COMMIT");
   return $customerno;
 
 }

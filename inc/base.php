@@ -119,21 +119,15 @@ function server_names()
 }
 
 
-// FIXME
-// Diese Funktion funktioniert nicht für preprared statements
 function maybe_null($value)
 {
-  if (config("enable_debug")) {
-    $backtrace = debug_backtrace();
-    warning("call to maybe_null() in {$backtrace[1]['file']} line {$backtrace[1]['line']}");
-  }
-  if ($value == NULL)
-    return 'NULL';
+  if (! $value)
+    return NULL;
 
   if (strlen( (string) $value ) > 0)
-    return "'".db_escape_string($value)."'";
+    return (string) $value;
   else
-    return 'NULL';
+    return NULL;
 }
 
 
