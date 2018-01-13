@@ -30,32 +30,32 @@ function api_fetch_contact($nic_id)
 */
 
 
-function get_handles() {
+function get_contacts() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, state, lastchange, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id FROM kundendaten.handles WHERE customer=? ORDER BY id", array($cid));
+    $result = db_query("SELECT id, state, lastchange, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id FROM kundendaten.contacts WHERE customer=? ORDER BY id", array($cid));
     $ret = array();
-    while ($handle = $result->fetch()) {
-        $ret[$handle['id']] = $handle;
+    while ($contact = $result->fetch()) {
+        $ret[$contact['id']] = $contact;
     }
     DEBUG($ret);
     return $ret;
 }
 
 
-function get_kundenhandles() {
+function get_kundenkontakte() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT handle_kunde, handle_extern, handle_rechnung FROM kundendaten.kunden WHERE id=?", array($cid));
+    $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung FROM kundendaten.kunden WHERE id=?", array($cid));
     $res = $result->fetch();
-    $ret = array("kunde" => $res['handle_kunde'],
-                 "extern" => $res['handle_extern'],
-                 "rechnung" => $res['handle_rechnung']);
+    $ret = array("kunde" => $res['contact_kunde'],
+                 "extern" => $res['contact_extern'],
+                 "rechnung" => $res['contact_rechnung']);
     return $ret;
 }
 
 
-function update_pending($handleid) {
-    $handleid = (int) $handleid;
-    $result = db_query("SELECT email FROM kundendaten.mailaddress_token WHERE handle=?", array($handleid));
+function update_pending($contactid) {
+    $contactid = (int) $contactid;
+    $result = db_query("SELECT email FROM kundendaten.mailaddress_token WHERE contact=?", array($contactid));
     if ($result->rowCount() == 0) {
         return NULL;
     }

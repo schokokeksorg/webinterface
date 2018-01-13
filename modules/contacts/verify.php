@@ -18,7 +18,7 @@ require_once('verify.php');
 require_once('inc/security.php');
 
 title("E-Mail-Adresse bestätigen");
-$section = 'handles_list';
+$section = 'contacts_list';
 
 if (isset($_REQUEST['token']))
 {

@@ -14,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('handles.php');
+require_once('contacts.php');
 require_once('inc/debug.php');
 
 require_once('session/start.php');
@@ -25,35 +25,35 @@ require_role(array(ROLE_CUSTOMER));
 title("Adressen verwalten");
 
 
-$handles = get_handles();
-$kundenhandles = get_kundenhandles();
+$contacts = get_contacts();
+$kundenkontakte = get_kundenkontakte();
 
 output('<p>Sie haben aktuell diese Adressen gespeichert:</p>
 <table>
 <tr><th>#</th><th>Name</th><th>Adresse</th><th>E-Mail</th><th>Verwendung</th><th>Aktionen</th></tr>
 ');
-foreach ($handles as $id => $handle) {
-    $adresse = nl2br($handle['address']."\n".$handle['country'].'-'.$handle['zip'].' '.$handle['city']);
+foreach ($contacts as $id => $contact) {
+    $adresse = nl2br($contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
     $usage = array();
-    if ($id == $kundenhandles['kunde']) {
+    if ($id == $kundenkontakte['kunde']) {
         $usage[] = 'Stamm-Adresse';
     }
-    if ($id == $kundenhandles['extern']) {
+    if ($id == $kundenkontakte['extern']) {
         $usage[] = 'Ersatz-Adresse';
     }
-    if ($id == $kundenhandles['rechnung']) {
+    if ($id == $kundenkontakte['rechnung']) {
         $usage[] = 'Rechnungs-Adresse';
     }
-    if ($handle['nic_handle']) {
+    if ($contact['nic_handle']) {
         $usage[] = 'Domain-Kontakt';
     }
     $usage = join(', ', $usage);
-    $email = $handle['email'];
+    $email = $contact['email'];
     $new_email = update_pending($id);
     if ($new_email) {
         $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    output("<tr><td>{$handle['id']}</td><td><strong>{$handle['name']}</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
+    output("<tr><td>{$contact['id']}</td><td><strong>{$contact['name']}</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
 }
 output('</table>');
 output("<br />");

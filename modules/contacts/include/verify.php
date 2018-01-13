@@ -19,7 +19,7 @@ function verify_mail_token($token)
 {
   db_query("DELETE FROM kundendaten.mailaddress_token WHERE expire<NOW()");
   $args = array(":token" => $token);
-  $result = db_query("SELECT handle, email FROM kundendaten.mailaddress_token WHERE token=:token AND expire>NOW()", $args);
+  $result = db_query("SELECT contact, email FROM kundendaten.mailaddress_token WHERE token=:token AND expire>NOW()", $args);
   if ($result->rowCount() > 0)
   {
     $line = $result->fetch();
@@ -33,16 +33,16 @@ function verify_mail_token($token)
 
 function update_mailaddress($daten)
 {
-    $handle = $daten['handle'];
+    $contact = $daten['contact'];
     $email = $daten['email'];
 
     if (! check_emailaddr($email)) {
         system_failure('Es ist eine ungültige Adresse hinterlegt. So wird das nichts. Bitte die Änderung von vorne machen.');
     } 
 
-    $args = array(':handle' => $handle,
+    $args = array(':contact' => $contact,
                   ':email' => $email);
-    db_query("UPDATE kundendaten.handles SET email=:email WHERE id=:handle", $args);
+    db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:contact", $args);
     
 }
 
