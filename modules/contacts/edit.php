@@ -70,7 +70,7 @@ $html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speich
 $html .= '</table>';
 
 
-output(html_form('chdetails_all', 'chdetails_save', '', $html));
+output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id'], $html));
 
 
 ?>
