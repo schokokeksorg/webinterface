@@ -17,6 +17,19 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/debug.php');
 require_role(array(ROLE_CUSTOMER));
 
+/*
+require_once('external/http.net/domainRobotApi.php');
+
+function api_fetch_contact($nic_id)
+{
+  if (! config('http.net-apikey')) {
+    system_failure("Kein API-Key vorhanden!");
+  }
+  $api = new domainRobotApi(config('http.net-apikey'));
+}
+*/
+
+
 function get_handles() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $result = db_query("SELECT id, state, lastchange, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id FROM kundendaten.handles WHERE customer=? ORDER BY id", array($cid));

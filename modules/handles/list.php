@@ -34,16 +34,20 @@ output('<p>Sie haben aktuell diese Adressen gespeichert:</p>
 ');
 foreach ($handles as $id => $handle) {
     $adresse = nl2br($handle['address']."\n".$handle['country'].'-'.$handle['zip'].' '.$handle['city']);
-    $usage = '';
+    $usage = array();
     if ($id == $kundenhandles['kunde']) {
-        $usage .= 'Stamm-Adresse';
+        $usage[] = 'Stamm-Adresse';
     }
     if ($id == $kundenhandles['extern']) {
-        $usage .= 'Ersatz-Adresse';
+        $usage[] = 'Ersatz-Adresse';
     }
     if ($id == $kundenhandles['rechnung']) {
-        $usage .= 'Rechnungs-Adresse';
+        $usage[] = 'Rechnungs-Adresse';
     }
+    if ($handle['nic_handle']) {
+        $usage[] = 'Domain-Kontakt';
+    }
+    $usage = join(', ', $usage);
     $email = $handle['email'];
     $new_email = update_pending($id);
     if ($new_email) {
