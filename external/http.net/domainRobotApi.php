@@ -161,7 +161,7 @@ class domainRobotNameserver extends domainRobotDefaultObject {
 
 class domainRobotApi {
 
-	private $location = "https://regspeed.de/api/domain/v1/soap";
+	private $location = "https://partner.http.net/api/domain/v1/soap/";
 
 	private $authToken;
         private $soap = NULL;
