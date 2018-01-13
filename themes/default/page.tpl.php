@@ -64,7 +64,7 @@ if ($headline) {
 <?php if ($footnotes) {
     echo '<div class="footnotes">';
     foreach ($footnotes as $num => $explaination) {
-       echo str_repeat('*', $num+1).': '.$explaination;
+       echo '<p>'.str_repeat('*', $num+1).': '.$explaination.'</p>';
     }
     echo '</div>';
 } ?>

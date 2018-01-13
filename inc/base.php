@@ -192,7 +192,9 @@ function footnote($explaination)
         $footnotes = array();
     }
     $fnid = array_search($explaination, $footnotes);
-    if (!$fnid) {
+    DEBUG($footnotes);
+    if ($fnid === FALSE) {
+        DEBUG("Footnote »{$explaination}« is not in footnotes!");
         $footnotes[] = $explaination;
     }
     $fnid = array_search($explaination, $footnotes);
