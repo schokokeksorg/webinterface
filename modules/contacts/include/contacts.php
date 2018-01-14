@@ -99,7 +99,11 @@ function get_kundenkontakte() {
 
 function save_emailaddress($id, $email) 
 {
-    // FIXME
+    // Speichert eine E-Mail-Adresse direkt, z.B. wenn diese schonmal geprüt wurde
+    $args = array("cid" => (int) $_SESSION['customerinfo']['customerno'],
+        "id" => (int) $id,
+        "email" => $email);
+    db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:id AND customer=:cid", $args);    
 }
 
 function save_contact($c)

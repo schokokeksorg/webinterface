@@ -48,12 +48,16 @@ foreach ($contacts as $id => $contact) {
         $usage[] = 'Domain-Kontakt';
     }
     $usage = join(', ', $usage);
+    $name = $contact['name'];
+    if ($contact['company']) {
+        $name = $contact['company']."<br />".$contact['name'];
+    }
     $email = $contact['email'];
     $new_email = update_pending($id);
     if ($new_email) {
         $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    output("<tr><td>{$contact['id']}</td><td><strong>".internal_link('edit', $contact['name'], 'id='.$contact['id'])."</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
+    output("<tr><td>{$contact['id']}</td><td><strong>".internal_link('edit', $name, 'id='.$contact['id'])."</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
 }
 output('</table>');
 output("<br />");
