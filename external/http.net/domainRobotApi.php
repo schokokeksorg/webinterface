@@ -171,9 +171,12 @@ class domainRobotApi {
 
 	private $transactionId = NULL;
 
-	public function __construct($authToken)
+	public function __construct($authToken, $location = NULL)
 	{
 		$this->authToken = $authToken;
+        if ($location) {
+            $this->location = $location;
+        }
 		try {
 			if ($client = new SOAPClient(__DIR__."/domainrobot.wsdl", array('trace' => true, 'location' => $this->location, 'connection_timeout' => 10, 'features' => SOAP_SINGLE_ELEMENT_ARRAYS)))
 			{

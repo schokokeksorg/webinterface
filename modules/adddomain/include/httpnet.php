@@ -38,7 +38,7 @@ function terions_available($domainname)
   if (! config('http.net-apikey')) {
     system_failure("Kein API-Key vorhanden!");
   }
-  $api = new domainRobotApi(config('http.net-apikey'));
+  $api = new domainRobotApi(config('http.net-apikey'), config('http.net-apiurl'));
   $result = $api->domainStatus($domainname);
   if (isset($api->getValue()[0])) {
     return ($api->getValue()[0]->status == 'available');
