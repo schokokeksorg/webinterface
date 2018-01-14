@@ -57,17 +57,22 @@ $c['fax'] = maybe_null($_REQUEST['telefax']);
 
 // FIXME: PGP-ID/Key fehlen
 
+// Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
+// dann hinterher das Token erzeugen und senden. Weil wir für das Token die 
+// Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach 
+// dem Speichern.
+
+$id = save_contact($c);
+$c['id'] = $id;
 
 if ($c['email'] != $_REQUEST['email']) {
-   
+    if (have_mailaddress($_REQUEST['email'])) {
+        save_emailaddress($c['id'], $_REQUEST['email']);
+    } else {
+        send_emailchange_token($c['id'], $_REQUEST['email']);
+    }
 }
 
-// e-mail-Adresse geändert?
-// -> token generieren / senden
-// ...
-// speichern
 
-
-
-
-
+if (! $debugmode)
+    header("Location: list");

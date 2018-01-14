@@ -76,6 +76,16 @@ function get_contacts() {
     return $ret;
 }
 
+function have_mailaddress($email) 
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $result = db_query("SELECT id FROM kundendaten.contacts WHERE customer=? AND email=?", array($cid, $email));
+    if ($result->rowCount() > 0) {
+        return true;
+    }
+    return false;
+}
+
 
 function get_kundenkontakte() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
@@ -87,6 +97,65 @@ function get_kundenkontakte() {
     return $ret;
 }
 
+function save_emailaddress($id, $email) 
+{
+    // FIXME
+}
+
+function save_contact($c)
+{
+    for ($i=0;array_key_exists($i, $c);$i++) {
+        unset($c[$i]);
+    }
+    unset($c['state']);
+    unset($c['lastchange']);
+    unset($c['nic_id']);
+    unset($c['nic_handle']);
+    unset($c['email']);
+    $c['customer'] = (int) $_SESSION['customerinfo']['customerno'];
+    if ($c['id']) {
+        // Kontakt bestaht schon, Update
+        db_query("UPDATE kundendaten.contacts SET company=:company, name=:name, address=:address, zip=:zip, city=:city, country=:country, phone=:phone, mobile=:mobile, fax=:fax, pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:id AND customer=:customer", $c);
+    } else {
+        unset($c['id']);
+        // Neu anlegen
+        db_query("INSERT INTO kundendaten.contacts (customer, company, name, address, zip, city, country, phone, mobile, fax, pgp_id, pgp_key) VALUES (:customer, :company, :name, :address, :zip, :city, :country, :phone, :mobile, :fax, :pgp_id, :pgp_key)", $c);
+        $c['id'] = db_insert_id();
+    }
+    return $c['id'];
+}
+
+
+function send_emailchange_token($id, $email)
+{
+    if (! check_emailaddr($email)) {
+        system_falure("Die E-Mail-Adresse scheint nicht gültig zu sein.");
+    }
+    $args = array("id" => (int) $id,
+        "email" => $email,
+        "token" => random_string(20));
+
+    db_query("INSERT INTO kundendaten.mailaddress_token (token, expire, contact, email) VALUES (:token, NOW() + INTERVAL 1 DAY, :id, :email)" , $args);
+    DEBUG('Token erzeugt: '.print_r($args, true));
+    $message = 'Diese E-Mail-Adresse wurde angegeben als möglicher Domaininhaber oder Kundenkontakt bei schokokeks.org Hosting.
+
+Bitte bestätigen Sie mit einem Klick auf den nachfolgenden Link, dass diese E-Mail-Adresse funktioniert und verwendet werden soll:
+
+    '.config('webinterface_url').'/verify'.$args['token'].'
+
+Wenn Sie diesen Link nicht innerhalb von 24 Stunden abrufen, wird Ihre Adresse gelöscht und nicht verwendet.
+Sollten Sie mit der Verwendung Ihrer E-Mail-Adresse nicht einverstanden sein, so ignorieren Sie daher bitte diese Nachricht oder teilen Sie uns dies mit.
+
+-- 
+schokokeks.org GbR, Bernd Wurst, Johannes Böck
+Köchersberg 32, 71540 Murrhardt
+
+https://schokokeks.org
+';
+    # send welcome message
+    mail($email, '=?UTF-8?Q?Best=C3=A4tigung_Ihrer_E-Mail-Adresse?=', $message, "X-schokokeks-org-message: verify\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
+ 
+}
 
 function update_pending($contactid) {
     $contactid = (int) $contactid;
