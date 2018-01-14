@@ -36,6 +36,12 @@ function get_domain_offer($domainname)
 
   $cid = (int) $_SESSION['customerinfo']['customerno'];
 
+  $result = db_query("SELECT id FROM kundendaten.domains WHERE domainname=:domainname AND tld=:tld", array("domainname" => $basename, "tld" => $tld));
+  if ($result->rowCount() != 0) {
+    warning('Diese Domain ist in unserem System bereits vorhanden und kann daher nicht noch einmal eingetragen werden.');
+    return;
+  }
+
   $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
 
   $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
