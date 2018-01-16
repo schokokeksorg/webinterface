@@ -15,8 +15,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('contacts.php');
+require_once('numbers.php');
 require_once('inc/debug.php');
-require_once('vendor/autoload.php');
 
 require_once('session/start.php');
 
@@ -54,25 +54,37 @@ $c['zip'] = maybe_null($_REQUEST['plz']);
 $c['city'] = maybe_null($_REQUEST['ort']);
 
     
+
 if ($_REQUEST['telefon']) {
-    $phoneNumberUtil = \libphonenumber\PhoneNumberUtil::getInstance();
-    try {
-        $phoneNumber = $phoneNumberUtil->parse($_REQUEST['telefon'], $_REQUEST['land'], null, true);
-    } catch (Exception $e) {
-        system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
-    }
-    if ($phoneNumberUtil->isValidNumber($phoneNumber)) {
-        $c['phone'] = $phoneNumberUtil->format($phoneNumber, 1);
+    $num = format_number($_REQUEST['telefon'], $_REQUEST['land']);
+    if ($num) {
+        $c['phone'] = $num;
     } else {
         system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
-        $c['phone'] = NULL;
     }
 } else {
     $c['phone'] = NULL;
 }
-//$c['phone'] = maybe_null($_REQUEST['telefon']);
-$c['mobile'] = maybe_null($_REQUEST['mobile']);
-$c['fax'] = maybe_null($_REQUEST['telefax']);
+if ($_REQUEST['mobile']) {
+    $num = format_number($_REQUEST['mobile'], $_REQUEST['land']);
+    if ($num) {
+        $c['mobile'] = $num;
+    } else {
+        system_failure('Die eingegebene Mobiltelefonnummer scheint nicht gültig zu sein!');
+    }
+} else {
+    $c['mobile'] = NULL;
+}
+if ($_REQUEST['telefax']) {
+    $num = format_number($_REQUEST['telefax'], $_REQUEST['land']);
+    if ($num) {
+        $c['fax'] = $num;
+    } else {
+        system_failure('Die eingegebene Faxnummer scheint nicht gültig zu sein!');
+    }
+} else {
+    $c['fax'] = NULL;
+}
 
 // FIXME: PGP-ID/Key fehlen
 
