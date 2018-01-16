@@ -71,6 +71,19 @@ function get_contacts() {
     return $ret;
 }
 
+
+function possible_domainholders() {
+    $allcontacts = get_contacts();
+    $ret = array();
+    foreach ($allcontacts as $id => $c) {
+        if ($c['name'] && $c['address'] && $c['zip'] && $c['city'] && $c['country'] && $c['phone'] && $c['email']) {
+            $ret[$id] = $c;
+        }
+    }
+    return $ret;
+}
+
+
 function have_mailaddress($email) 
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];

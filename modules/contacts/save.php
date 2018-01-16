@@ -16,6 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contacts.php');
 require_once('inc/debug.php');
+require_once('vendor/autoload.php');
 
 require_once('session/start.php');
 
@@ -51,7 +52,25 @@ $c['address'] = maybe_null($_REQUEST['adresse']);
 $c['country'] = maybe_null(strtoupper($_REQUEST['land']));
 $c['zip'] = maybe_null($_REQUEST['plz']);
 $c['city'] = maybe_null($_REQUEST['ort']);
-$c['phone'] = maybe_null($_REQUEST['telefon']);
+
+    
+if ($_REQUEST['telefon']) {
+    $phoneNumberUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+    try {
+        $phoneNumber = $phoneNumberUtil->parse($_REQUEST['telefon'], $_REQUEST['land'], null, true);
+    } catch (Exception $e) {
+        system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
+    }
+    if ($phoneNumberUtil->isValidNumber($phoneNumber)) {
+        $c['phone'] = $phoneNumberUtil->format($phoneNumber, 1);
+    } else {
+        system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
+        $c['phone'] = NULL;
+    }
+} else {
+    $c['phone'] = NULL;
+}
+//$c['phone'] = maybe_null($_REQUEST['telefon']);
 $c['mobile'] = maybe_null($_REQUEST['mobile']);
 $c['fax'] = maybe_null($_REQUEST['telefax']);
 
