@@ -16,6 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contacts.php');
 require_once('inc/debug.php');
+require_once('inc/icons.php');
 
 require_once('session/start.php');
 
@@ -57,7 +58,13 @@ foreach ($contacts as $id => $contact) {
     if ($new_email) {
         $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    output("<tr><td>{$contact['id']}</td><td><strong>".internal_link('edit', $name, 'id='.$contact['id'])."</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>...</td></tr>");
+    $actions = array(
+        internal_link('edit', icon_edit('Adresse bearbeiten'), 'id='.$contact['id']),
+        internal_link('edit', other_icon('page_copy.png', 'Kopie erstellen'), 'id=new&copy='.$contact['id']),
+        
+    );
+    
+    output("<tr><td>{$contact['id']}</td><td><strong>".internal_link('edit', $name, 'id='.$contact['id'])."</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>".implode(' ', $actions)."</td></tr>");
 }
 output('</table>');
 output("<br />");

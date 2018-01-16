@@ -18,15 +18,10 @@ require_once('inc/debug.php');
 require_role(array(ROLE_CUSTOMER));
 
 /*
-require_once('external/http.net/domainRobotApi.php');
-
-function api_fetch_contact($nic_id)
-{
-  if (! config('http.net-apikey')) {
-    system_failure("Kein API-Key vorhanden!");
-  }
-  $api = new domainRobotApi(config('http.net-apikey'));
-}
+Todo:
+    - Wenn ein Domain-Handle aktualisiert wird, das beim Provider ändern
+    - "separate Rechnungsadresse einrichten" / "Zusätzliche Adresse für den Notfall"
+    - Domaininhaber festlegen    
 */
 
 

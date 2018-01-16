@@ -34,6 +34,9 @@ if ($_REQUEST['id'] == 'new') {
 $c = new_contact();
 if (! $new) {
     $c = get_contact($_REQUEST['id']);
+} elseif (isset($_REQUEST['copy'])) {
+    $c = get_contact($_REQUEST['copy']);
+    $c['nic_handle'] = NULL;
 }
 
 $readonly = '';
