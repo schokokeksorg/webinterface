@@ -16,6 +16,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contacts.php');
 require_once('inc/debug.php');
+require_once('inc/jquery.php');
+javascript();
 
 require_once('session/start.php');
 
@@ -62,11 +64,11 @@ $odd = !$odd;
 $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="email">E-Mail-Adresse:</label></td><td><input type="text" name="email" id="email" value="'.$c['email'].'"></td></tr>';
 $odd = !$odd;
 
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefonnummer:</label></td><td><input type="text" name="telefon" id="telefon" value="'.$c['phone'].'"></td></tr>';
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefonnummer:</label></td><td><input type="text" name="telefon" id="telefon" value="'.$c['phone'].'"><span id="telefon_feedback"></span></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Mobil:</label></td><td><input type="text" name="mobile" id="mobile" value="'.$c['mobile'].'"></td></tr>';
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Mobil:</label></td><td><input type="text" name="mobile" id="mobile" value="'.$c['mobile'].'"><span id="mobile_feedback"></span></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="'.$c['fax'].'"></td></tr>';
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="'.$c['fax'].'"><span id="telefax_feedback"></span></td></tr>';
 $odd = !$odd;
 
 $html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speichern" /></td></tr>';
