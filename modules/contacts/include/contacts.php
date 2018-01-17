@@ -17,6 +17,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/debug.php');
 require_role(array(ROLE_CUSTOMER));
 
+require_once('api.php');
+
 /*
 Todo:
     - Wenn ein Domain-Handle aktualisiert wird, das beim Provider ändern
@@ -76,13 +78,20 @@ function possible_domainholders() {
     $allcontacts = get_contacts();
     $ret = array();
     foreach ($allcontacts as $id => $c) {
-        if ($c['name'] && $c['address'] && $c['zip'] && $c['city'] && $c['country'] && $c['phone'] && $c['email']) {
+        if (possible_domainholder($c)) {
             $ret[$id] = $c;
         }
     }
     return $ret;
 }
 
+function possible_domainholder($c)
+{
+    if ($c['name'] && $c['address'] && $c['zip'] && $c['city'] && $c['country'] && $c['phone'] && $c['email']) {
+        return true;
+    }
+    return false;
+}
 
 function have_mailaddress($email) 
 {
@@ -116,22 +125,25 @@ function save_emailaddress($id, $email)
 
 function save_contact($c)
 {
+    if ($c['nic_id']) {
+        if (! possible_domainholder($c)) {
+            system_failure("Sie haben ein Feld geleert, das für die Eigenschaft als Domaininhaber erhalten bleiben muss. Ihre Änderungen wurden nicht gespeichert.");
+        }
+    }
     for ($i=0;array_key_exists($i, $c);$i++) {
         unset($c[$i]);
     }
     unset($c['state']);
     unset($c['lastchange']);
-    unset($c['nic_id']);
-    unset($c['nic_handle']);
     unset($c['email']);
     $c['customer'] = (int) $_SESSION['customerinfo']['customerno'];
     if ($c['id']) {
         // Kontakt bestaht schon, Update
-        db_query("UPDATE kundendaten.contacts SET company=:company, name=:name, address=:address, zip=:zip, city=:city, country=:country, phone=:phone, mobile=:mobile, fax=:fax, pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:id AND customer=:customer", $c);
+        db_query("UPDATE kundendaten.contacts SET nic_id=:nic_id, nic_handle=:nic_handle, company=:company, name=:name, address=:address, zip=:zip, city=:city, country=:country, phone=:phone, mobile=:mobile, fax=:fax, pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:id AND customer=:customer", $c);
     } else {
         unset($c['id']);
         // Neu anlegen
-        db_query("INSERT INTO kundendaten.contacts (customer, company, name, address, zip, city, country, phone, mobile, fax, pgp_id, pgp_key) VALUES (:customer, :company, :name, :address, :zip, :city, :country, :phone, :mobile, :fax, :pgp_id, :pgp_key)", $c);
+        db_query("INSERT INTO kundendaten.contacts (nic_id, nic_handle, customer, company, name, address, zip, city, country, phone, mobile, fax, pgp_id, pgp_key) VALUES (:nic_id, :nic_handle, :customer, :company, :name, :address, :zip, :city, :country, :phone, :mobile, :fax, :pgp_id, :pgp_key)", $c);
         $c['id'] = db_insert_id();
     }
     return $c['id'];

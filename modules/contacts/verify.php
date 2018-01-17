@@ -28,6 +28,8 @@ if (isset($_REQUEST['token']))
     system_failure('Die E-Mail-Adresse konnte nicht verifiziert werden. Vielleicht ist der Link bereits abgelaufen.');
   } else  {
     update_mailaddress($daten);
+    $c = get_contact($daten['contact']);
+    upload_contact($c);
     success_msg('Die E-Mail-Adresse wurde erfolgreich geändert');
     header('Location: /');
   }

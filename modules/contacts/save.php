@@ -39,8 +39,18 @@ if (! $new) {
     $c = get_contact($_REQUEST['id']);
 }
 
+if (!isset($_REQUEST['firma'])) {
+    $_REQUEST['firma'] = $c['company'];
+}
+if (!isset($_REQUEST['name'])) {
+    $_REQUEST['name'] = $c['name'];
+}
+if (!isset($_REQUEST['land'])) {
+    $_REQUEST['land'] = $c['country'];
+}
+
 if ($c['nic_handle'] != NULL) {
-    if (c['name'] != $_REQUEST['name'] || $c['company'] != $_REQUEST['firma'] || $c['country'] != $_REQUEST['land']) {
+    if ($c['name'] != $_REQUEST['name'] || $c['company'] != $_REQUEST['firma'] || $c['country'] != $_REQUEST['land']) {
         system_failure('Name/Firma/Land kann bei diesem Kontakt nicht geändert werden.');
     }
 }
@@ -102,6 +112,10 @@ if ($c['email'] != $_REQUEST['email']) {
     } else {
         send_emailchange_token($c['id'], $_REQUEST['email']);
     }
+}
+if ($c['nic_id']) {
+    $c = get_contact($c['id']);
+    upload_contact($c);
 }
 
 
