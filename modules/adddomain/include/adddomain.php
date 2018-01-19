@@ -56,7 +56,7 @@ function get_domain_offer($domainname)
   $data["gebuehr"] = $temp["gebuehr"];
   $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
   
-  $available = terions_available($domainname);
+  $available = api_domain_available($domainname);
   if (! $available) {
     warning('Die Domain »'.$domainname.'« ist leider nicht verfügbar.');
     return;

@@ -14,36 +14,16 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('external/http.net/domainRobotApi.php');
-
-require_once('inc/debug.php');
 require_once('inc/base.php');
-require_once('inc/security.php');
-require_once('inc/error.php');
-
-$url = 'https://partner.http.net/api/domain/v1/json/';
-$available_methods = array("domainStatus","domainUpdate");
-
-function httpnet_request($method, $data) {
-  if (! in_array($method, $avalable_methods)) {
-    system_failure("invalid API method: $method");
-  }
-  //$data
-}
+require_once('inc/api.php');
 
 
-
-function terions_available($domainname) 
+function api_domain_available($domainname) 
 {
-  if (! config('http.net-apikey')) {
-    system_failure("Kein API-Key vorhanden!");
-  }
-  $api = new domainRobotApi(config('http.net-apikey'), config('http.net-apiurl'));
-  $result = $api->domainStatus($domainname);
-  if (isset($api->getValue()[0])) {
-    return ($api->getValue()[0]->status == 'available');
-  }
-  return false;
+    $args = array("domainNames" => array($domainname));
+    $result = api_request('domainStatus', $args);
+    $resp = $result["responses"][0];
+    return ($resp["status"] == "available");
 }
 
 
