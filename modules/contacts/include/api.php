@@ -58,6 +58,9 @@ function contact_to_apicontact($c)
     $ac['emailAddress'] = $c['email'];
     $ac['phoneNumber'] = $c['phone'];
     $ac['faxNumber'] = $c['fax'];
+    if ($c['state'] == 'deleted') {
+        $ac['hidden'] = true;
+    }
 
     return $ac;
 }

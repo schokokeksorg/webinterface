@@ -30,11 +30,12 @@ $contacts = get_contacts();
 $kundenkontakte = get_kundenkontakte();
 
 output('<p>Sie haben aktuell diese Adressen gespeichert:</p>
-<table>
-<tr><th>#</th><th>Name</th><th>Adresse</th><th>E-Mail</th><th>Verwendung</th><th>Aktionen</th></tr>
-');
+<div class="contact-list">');
 foreach ($contacts as $id => $contact) {
-    $adresse = nl2br($contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
+    $adresse = nl2br("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
+    if (! $contact['city']) {
+        $adresse = '';
+    }
     $usage = array();
     if ($id == $kundenkontakte['kunde']) {
         $usage[] = 'Stamm-Adresse';
@@ -58,16 +59,18 @@ foreach ($contacts as $id => $contact) {
     if ($new_email) {
         $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    $actions = array(
-        internal_link('edit', icon_edit('Adresse bearbeiten'), 'id='.$contact['id']),
-        internal_link('edit', other_icon('page_copy.png', 'Kopie erstellen'), 'id=new&copy='.$contact['id']),
+    $actions = array();
+    $actions[] = internal_link('edit', icon_edit('Adresse bearbeiten')." Bearbeiten", 'id='.$contact['id']);
+    if ($id != $kundenkontakte['kunde'] && ! is_domainholder($id)) {
+        // Die Stamm-Adresse kann man nicht löschen und verwendete Domain-Kontakte auch nicht
+        $actions[] = internal_link('save', icon_delete('Adresse löschen')." Löschen", 'action=delete&id='.$contact['id']);
+    }
+    $actions[] = internal_link('edit', other_icon('page_copy.png', 'Kopie erstellen')." Kopie erstellen", 'id=new&copy='.$contact['id']);
         
-    );
-    
-    output("<tr><td>{$contact['id']}</td><td><strong>".internal_link('edit', $name, 'id='.$contact['id'])."</strong></td><td>$adresse</td><td>$email</td><td>$usage</td><td>".implode(' ', $actions)."</td></tr>");
+    $email = implode("<br>\n", array_filter(array($email, $contact['phone'], $contact['fax'], $contact['mobile'])));
+    output("<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p><p class=\"contact-usage\">Verwendung als $usage</p><p class=\"contact-actions\">".implode(' ', $actions)."</p></div>");
 }
-output('</table>');
-output("<br />");
+output("</div><br />");
 addnew('edit', 'Neuen Kontakt erstellen', 'id=new');
 
 

@@ -24,100 +24,136 @@ require_once('session/start.php');
 require_role(array(ROLE_CUSTOMER));
 $section = 'contacts_list';
 
-check_form_token('contacts_edit');
-
-$new = False;
-if ($_REQUEST['id'] == 'new') {
-    title("Adresse anlegen");
-    $new = True;
-} else {
-    title("Adresse bearbeiten");
-}
-
-$c = new_contact();
-if (! $new) {
-    $c = get_contact($_REQUEST['id']);
-}
-
-if (!isset($_REQUEST['firma'])) {
-    $_REQUEST['firma'] = $c['company'];
-}
-if (!isset($_REQUEST['name'])) {
-    $_REQUEST['name'] = $c['name'];
-}
-if (!isset($_REQUEST['land'])) {
-    $_REQUEST['land'] = $c['country'];
-}
-
-if ($c['nic_handle'] != NULL) {
-    if ($c['name'] != $_REQUEST['name'] || $c['company'] != $_REQUEST['firma'] || $c['country'] != $_REQUEST['land']) {
-        system_failure('Name/Firma/Land kann bei diesem Kontakt nicht geändert werden.');
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+    $contact = get_contact($_REQUEST['id']);
+    
+    $adresse = nl2br("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
+    if (! $contact['city']) {
+        $adresse = '';
     }
-}
-
-
-$c['company'] = maybe_null($_REQUEST['firma']);
-$c['name'] = maybe_null($_REQUEST['name']);
-$c['address'] = maybe_null($_REQUEST['adresse']);
-$c['country'] = maybe_null(strtoupper($_REQUEST['land']));
-$c['zip'] = maybe_null($_REQUEST['plz']);
-$c['city'] = maybe_null($_REQUEST['ort']);
-
+    $name = $contact['name'];
+    if ($contact['company']) {
+        $name = $contact['company']."<br />".$contact['name'];
+    }
+    $email = implode("<br>\n", array_filter(array($contact['email'], $contact['phone'], $contact['fax'], $contact['mobile'])));
+ 
+    $contact_string = "<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p></div>";
     
 
-if ($_REQUEST['telefon']) {
-    $num = format_number($_REQUEST['telefon'], $_REQUEST['land']);
-    if ($num) {
-        $c['phone'] = $num;
-    } else {
-        system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
+    $sure = user_is_sure();
+    if ($sure === NULL)
+    {
+       are_you_sure("action=delete&id={$contact['id']}", "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
     }
+    elseif ($sure === true)
+    {
+       delete_contact($contact['id']);
+       if (! $debugmode)
+           header("Location: list");
+    }
+    elseif ($sure === false)
+    {
+        if (! $debugmode)
+            header("Location: list");
+    }
+
+
 } else {
-    $c['phone'] = NULL;
-}
-if ($_REQUEST['mobile']) {
-    $num = format_number($_REQUEST['mobile'], $_REQUEST['land']);
-    if ($num) {
-        $c['mobile'] = $num;
+    check_form_token('contacts_edit');
+
+    $new = False;
+    if ($_REQUEST['id'] == 'new') {
+        title("Adresse anlegen");
+        $new = True;
     } else {
-        system_failure('Die eingegebene Mobiltelefonnummer scheint nicht gültig zu sein!');
+        title("Adresse bearbeiten");
     }
-} else {
-    $c['mobile'] = NULL;
-}
-if ($_REQUEST['telefax']) {
-    $num = format_number($_REQUEST['telefax'], $_REQUEST['land']);
-    if ($num) {
-        $c['fax'] = $num;
+
+    $c = new_contact();
+    if (! $new) {
+        $c = get_contact($_REQUEST['id']);
+    }
+
+    if (!isset($_REQUEST['firma'])) {
+        $_REQUEST['firma'] = $c['company'];
+    }
+    if (!isset($_REQUEST['name'])) {
+        $_REQUEST['name'] = $c['name'];
+    }
+    if (!isset($_REQUEST['land'])) {
+        $_REQUEST['land'] = $c['country'];
+    }
+
+    if ($c['nic_handle'] != NULL) {
+        if ($c['name'] != $_REQUEST['name'] || $c['company'] != $_REQUEST['firma'] || $c['country'] != $_REQUEST['land']) {
+            system_failure('Name/Firma/Land kann bei diesem Kontakt nicht geändert werden.');
+        }
+    }
+
+
+    $c['company'] = maybe_null($_REQUEST['firma']);
+    $c['name'] = maybe_null($_REQUEST['name']);
+    $c['address'] = maybe_null($_REQUEST['adresse']);
+    $c['country'] = maybe_null(strtoupper($_REQUEST['land']));
+    $c['zip'] = maybe_null($_REQUEST['plz']);
+    $c['city'] = maybe_null($_REQUEST['ort']);
+
+        
+
+    if ($_REQUEST['telefon']) {
+        $num = format_number($_REQUEST['telefon'], $_REQUEST['land']);
+        if ($num) {
+            $c['phone'] = $num;
+        } else {
+            system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
+        }
     } else {
-        system_failure('Die eingegebene Faxnummer scheint nicht gültig zu sein!');
+        $c['phone'] = NULL;
     }
-} else {
-    $c['fax'] = NULL;
-}
-
-// FIXME: PGP-ID/Key fehlen
-
-// Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
-// dann hinterher das Token erzeugen und senden. Weil wir für das Token die 
-// Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach 
-// dem Speichern.
-
-$id = save_contact($c);
-$c['id'] = $id;
-
-if ($c['email'] != $_REQUEST['email']) {
-    if (have_mailaddress($_REQUEST['email'])) {
-        save_emailaddress($c['id'], $_REQUEST['email']);
+    if ($_REQUEST['mobile']) {
+        $num = format_number($_REQUEST['mobile'], $_REQUEST['land']);
+        if ($num) {
+            $c['mobile'] = $num;
+        } else {
+            system_failure('Die eingegebene Mobiltelefonnummer scheint nicht gültig zu sein!');
+        }
     } else {
-        send_emailchange_token($c['id'], $_REQUEST['email']);
+        $c['mobile'] = NULL;
     }
-}
-if ($c['nic_id']) {
-    $c = get_contact($c['id']);
-    upload_contact($c);
-}
+    if ($_REQUEST['telefax']) {
+        $num = format_number($_REQUEST['telefax'], $_REQUEST['land']);
+        if ($num) {
+            $c['fax'] = $num;
+        } else {
+            system_failure('Die eingegebene Faxnummer scheint nicht gültig zu sein!');
+        }
+    } else {
+        $c['fax'] = NULL;
+    }
+
+    // FIXME: PGP-ID/Key fehlen
+
+    // Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
+    // dann hinterher das Token erzeugen und senden. Weil wir für das Token die 
+    // Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach 
+    // dem Speichern.
+
+    $id = save_contact($c);
+    $c['id'] = $id;
+
+    if ($c['email'] != $_REQUEST['email']) {
+        if (have_mailaddress($_REQUEST['email'])) {
+            save_emailaddress($c['id'], $_REQUEST['email']);
+        } else {
+            send_emailchange_token($c['id'], $_REQUEST['email']);
+        }
+    }
+    if ($c['nic_id']) {
+        $c = get_contact($c['id']);
+        upload_contact($c);
+    }
 
 
-if (! $debugmode)
-    header("Location: list");
+    if (! $debugmode)
+        header("Location: list");
+}

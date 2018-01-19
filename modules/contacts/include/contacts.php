@@ -64,7 +64,7 @@ function get_contact($id)
 
 function get_contacts() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE customer=? ORDER BY id", array($cid));
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY id", array($cid));
     $ret = array();
     while ($contact = $result->fetch()) {
         $ret[$contact['id']] = $contact;
@@ -73,6 +73,15 @@ function get_contacts() {
     return $ret;
 }
 
+
+function is_domainholder($contactid) {
+    $contactid = (int) $contactid;
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE owner=? OR admin_c=?", array($contactid, $contactid));
+    if ($result->rowCount() > 0) {
+        return true;
+    }
+    return false;
+}
 
 function possible_domainholders() {
     $allcontacts = get_contacts();
@@ -192,4 +201,14 @@ function update_pending($contactid) {
 }
 
 
+
+function delete_contact($id) {
+    $c = get_contact($id);
+    if ($c['nic_id']) {
+        // Lösche bei der Registry
+        $c['state'] = 'deleted';
+        upload_contact($c);
+    }
+    db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", array($c['id']));
+}
 
