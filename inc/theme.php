@@ -16,7 +16,15 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 function show_page($path = NULL) 
 {
-  global $go, $title, $headline, $output, $module, $page, $html_header, $footnotes;
+  global $prefix, $go, $title, $headline, $output, $module, $page, $html_header, $footnotes;
+
+  $styles = array();
+  if (file_exists("modules/{$module}/style.css")) {
+      $styles[] = "modules/{$module}/style.css";
+  }
+  foreach ($styles as $style) {
+      html_header('<link rel="stylesheet" href="'.$prefix.$style.'" type="text/css" />'."\n");
+  }
   if ($path) {
   	$module = $path;
   }

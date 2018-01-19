@@ -38,8 +38,9 @@ foreach (config('modules') as $module)
     DEBUG("Modul {$module} hat keine Menüeinträge");
     continue;
   }
-  DEBUG("<h4>$module</h4>");
-  DEBUG($menu);
+  // Menüeinträge spammen den debug-output zu
+  //DEBUG("<h4>$module</h4>");
+  //DEBUG($menu);
   // $menu["foo"]["file"] enthält den Link
   foreach (array_keys($menu) as $key)
   {
