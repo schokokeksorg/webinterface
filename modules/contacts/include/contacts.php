@@ -21,7 +21,6 @@ require_once('api.php');
 
 /*
 Todo:
-    - Wenn ein Domain-Handle aktualisiert wird, das beim Provider ändern
     - "separate Rechnungsadresse einrichten" / "Zusätzliche Adresse für den Notfall"
     - Domaininhaber festlegen    
 */

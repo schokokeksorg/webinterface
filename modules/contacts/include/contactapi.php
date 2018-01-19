@@ -16,31 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contacts.php');
 require_once('inc/debug.php');
-
-function api_request($method, $input_data) 
-{
-    $url = config('http.net-apiurl').'domain/v1/json/'.$method;
-    $input_data['authToken'] = config('http.net-apikey');
-    DEBUG('======= API REQUEST ==========');
-    DEBUG($url);
-    DEBUG($input_data);
-    $curl = curl_init($url);
-    $json = json_encode($input_data);
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-    $result = curl_exec($curl);
-    if ($result === FALSE) {
-        system_failure("API-Anfrage kaputt");
-    }
-    DEBUG('==============================');
-    DEBUG($result);
-    $output_data = json_decode($result, true);
-    DEBUG($output_data);
-    return $output_data;
-}
-
+require_once('inc/api.php');
 
 
 function contact_to_apicontact($c) 
