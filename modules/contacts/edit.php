@@ -75,7 +75,11 @@ $html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speich
 $html .= '</table>';
 
 
-output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id'], $html));
+$back = 'list';
+if (isset($_REQUEST['back'])) {
+    $back = urldecode($_REQUEST['back']);
+}
+output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id']."&back=".urlencode($back), $html));
 
 
 ?>

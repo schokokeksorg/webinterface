@@ -24,6 +24,11 @@ require_once('session/start.php');
 require_role(array(ROLE_CUSTOMER));
 $section = 'contacts_list';
 
+$back = 'list';
+if (isset($_REQUEST['back'])) {
+    $back = urldecode($_REQUEST['back']);
+}
+
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $contact = get_contact($_REQUEST['id']);
     
@@ -32,18 +37,18 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $sure = user_is_sure();
     if ($sure === NULL)
     {
-       are_you_sure("action=delete&id={$contact['id']}", "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
+       are_you_sure("action=delete&id={$contact['id']}&back=".urlencode($back), "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
     }
     elseif ($sure === true)
     {
        delete_contact($contact['id']);
        if (! $debugmode)
-           header("Location: list");
+           header("Location: ".$back);
     }
     elseif ($sure === false)
     {
         if (! $debugmode)
-            header("Location: list");
+            header("Location: ".$back);
     }
 
 
@@ -150,5 +155,5 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
 
     if (! $debugmode)
-        header("Location: list");
+        header("Location: ".$back);
 }

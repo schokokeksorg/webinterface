@@ -74,7 +74,11 @@ foreach ($user_domains as $domain)
   } else {
     $punycode = '';
   }
-  output("  <tr><td>{$domain->fqdn}{$punycode}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
+  $domainname = "{$domain->fqdn}{$punycode}";
+  if ($_SESSION['role'] & ROLE_CUSTOMER) {
+      $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
+  }
+  output("  <tr><td>{$domainname}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
 }
 output('</table>');
 output("<br />");
