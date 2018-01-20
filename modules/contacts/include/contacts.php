@@ -16,6 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/debug.php');
 require_role(array(ROLE_CUSTOMER));
+require_once('class/domain.php');
 
 require_once('contactapi.php');
 
@@ -240,4 +241,15 @@ function delete_contact($id) {
     }
     db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", array($c['id']));
 }
+
+
+function domainlist_by_contact($c) {
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE owner=? OR admin_c=?", array($c['id'], $c['id']));
+    $ret = array();
+    while ($domain = $result->fetch()) {
+        $ret[] = new Domain( (int) $domain['id'] );
+    }
+    return $ret;
+}
+
 

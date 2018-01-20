@@ -49,6 +49,9 @@ function upload_contact($c)
         // Update
         $data = array("contact" => $ac);
         $result = api_request('contactUpdate', $data);
+        if ($result['status'] != 'success') {
+            system_failure("Es gab ein Problem beim Hochladen der Adresse zum Domainregistrar. Das sollte nicht sein!");
+        }
     } else {
         // create
         $data = array("contact" => $ac);

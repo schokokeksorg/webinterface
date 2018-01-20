@@ -31,19 +31,29 @@ $kundenkontakte = get_kundenkontakte();
 
 output('<p>Sie haben aktuell diese Adressen gespeichert:</p>
 <div class="contact-list">');
-foreach ($contacts as $id => $contact) {
-    $adresse = nl2br("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
+
+$liste = array_merge(array($kundenkontakte['kunde']), array_keys($contacts));
+$kundenadresse_displayed = false;
+foreach ($liste as $id) {
+    if ($kundenadresse_displayed && $id == $kundenkontakte['kunde']) {
+        continue;
+    }
+    $cssclass = '';
+    $contact = $contacts[$id];
+    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
     if (! $contact['city']) {
         $adresse = '';
     }
     $usage = array();
     if ($id == $kundenkontakte['kunde']) {
+        $cssclass='mainaddress';
+        $kundenadresse_displayed = true;
         $usage[] = 'Stamm-Adresse';
     }
     if ($id == $kundenkontakte['extern']) {
         $usage[] = 'Ersatz-Adresse';
     }
-    if ($id == $kundenkontakte['rechnung']) {
+    if ($id == $kundenkontakte['rechnung'] || ($id == $kundenkontakte['kunde'] && $kundenkontakte['rechnung'] == NULL)) {
         $usage[] = 'Rechnungs-Adresse';
     }
     if ($contact['nic_handle']) {
@@ -51,8 +61,8 @@ foreach ($contacts as $id => $contact) {
     }
     $usage = join(', ', $usage);
     $name = $contact['name'];
-    if ($contact['company']) {
-        $name = $contact['company']."<br />".$contact['name'];
+    if (nl2br(filter_input_general($contact['company']))) {
+        $name = filter_input_general($contact['company'])."<br />".nl2br(filter_input_general($contact['name']));
     }
     $email = $contact['email'];
     $new_email = update_pending($id);
@@ -69,10 +79,10 @@ foreach ($contacts as $id => $contact) {
     $actions[] = internal_link('useas', other_icon('attach.png')." Benutzen als...", 'id='.$contact['id']);
         
     $email = implode("<br>\n", array_filter(array($email, $contact['phone'], $contact['fax'], $contact['mobile'])));
-    output("<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p><p class=\"contact-usage\">Verwendung als $usage</p><p class=\"contact-actions\">".implode("<br>\n", $actions)."</p></div>");
+    output("<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p><p class=\"contact-usage\">Verwendung als $usage</p><p class=\"contact-actions\">".implode("<br>\n", $actions)."</p></div>");
 }
 output("</div><br />");
-addnew('edit', 'Neuen Kontakt erstellen', 'id=new');
+addnew('edit', 'Neue Adresse erstellen', 'id=new');
 
 
 ?>

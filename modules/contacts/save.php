@@ -27,13 +27,13 @@ $section = 'contacts_list';
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $contact = get_contact($_REQUEST['id']);
     
-    $adresse = nl2br("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
+    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
     if (! $contact['city']) {
         $adresse = '';
     }
-    $name = $contact['name'];
+    $name = filter_input_general($contact['name']);
     if ($contact['company']) {
-        $name = $contact['company']."<br />".$contact['name'];
+        $name = filter_input_general($contact['company'])."<br />".filter_input_general($contact['name']);
     }
     $email = implode("<br>\n", array_filter(array($contact['email'], $contact['phone'], $contact['fax'], $contact['mobile'])));
  
@@ -91,17 +91,17 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     }
 
 
-    $c['company'] = maybe_null($_REQUEST['firma']);
-    $c['name'] = maybe_null($_REQUEST['name']);
-    $c['address'] = maybe_null($_REQUEST['adresse']);
-    $c['country'] = maybe_null(strtoupper($_REQUEST['land']));
-    $c['zip'] = maybe_null($_REQUEST['plz']);
-    $c['city'] = maybe_null($_REQUEST['ort']);
+    $c['company'] = verify_input_general(maybe_null($_REQUEST['firma']));
+    $c['name'] = verify_input_general(maybe_null($_REQUEST['name']));
+    $c['address'] = verify_input_general(maybe_null($_REQUEST['adresse']));
+    $c['country'] = verify_input_general(maybe_null(strtoupper($_REQUEST['land'])));
+    $c['zip'] = verify_input_general(maybe_null($_REQUEST['plz']));
+    $c['city'] = verify_input_general(maybe_null($_REQUEST['ort']));
 
         
 
     if ($_REQUEST['telefon']) {
-        $num = format_number($_REQUEST['telefon'], $_REQUEST['land']);
+        $num = format_number(verify_input_general($_REQUEST['telefon']), $_REQUEST['land']);
         if ($num) {
             $c['phone'] = $num;
         } else {
@@ -111,7 +111,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $c['phone'] = NULL;
     }
     if ($_REQUEST['mobile']) {
-        $num = format_number($_REQUEST['mobile'], $_REQUEST['land']);
+        $num = format_number(verify_input_general($_REQUEST['mobile']), $_REQUEST['land']);
         if ($num) {
             $c['mobile'] = $num;
         } else {
@@ -121,7 +121,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $c['mobile'] = NULL;
     }
     if ($_REQUEST['telefax']) {
-        $num = format_number($_REQUEST['telefax'], $_REQUEST['land']);
+        $num = format_number(verify_input_general($_REQUEST['telefax']), $_REQUEST['land']);
         if ($num) {
             $c['fax'] = $num;
         } else {
@@ -143,7 +143,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
     if ($c['email'] != $_REQUEST['email']) {
         if (have_mailaddress($_REQUEST['email'])) {
-            save_emailaddress($c['id'], $_REQUEST['email']);
+            save_emailaddress($c['id'], verify_input_general($_REQUEST['email']));
         } else {
             send_emailchange_token($c['id'], $_REQUEST['email']);
         }

@@ -32,7 +32,11 @@ div.contact {
     border: 1px solid black;
     width: 18em;
     margin: 1em;
-    padding: 0.1em 1em;    
+    padding: 3px 10px;    
+}
+div.contact.mainaddress {
+    border: 2px solid red;
+    padding: 2px 9px;
 }
 
 p.contact-id {

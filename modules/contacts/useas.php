@@ -64,13 +64,13 @@ if (isset($_REQUEST['useas'])) {
         }
     }
 } else {
-    $adresse = nl2br("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']);
+    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
     if (! $contact['city']) {
         $adresse = '';
     }
-    $name = $contact['name'];
+    $name = filter_input_general($contact['name']);
     if ($contact['company']) {
-        $name = $contact['company']."<br />".$contact['name'];
+        $name = filter_input_general($contact['company'])."<br />".filter_input_general($contact['name']);
     }
     $email = implode("<br>\n", array_filter(array($contact['email'], $contact['phone'], $contact['fax'], $contact['mobile'])));
 
@@ -86,7 +86,7 @@ if (isset($_REQUEST['useas'])) {
             addnew('useas', 'Diese Adresse als Haupt-Adresse des Kontoinhabers festlegen.', 'id='.$_REQUEST['id'].'&useas=kunde');
         }
         if ($id == $kundenkontakte['extern']) {
-            output("<p>Diese Adresse ist die Ersatz-Adresse bei Störungen! ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=extern&action=delete')."</p>");
+            output("<p>Diese Adresse ist die Ersatz-Adresse bei Störungen. ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=extern&action=delete')."</p>");
         } else {
             addnew('useas', 'Diese Adresse als Ersatz-Adresse des Kontoinhabers für Störungen festlegen.', 'id='.$_REQUEST['id'].'&useas=extern');
         }
@@ -98,10 +98,25 @@ if (isset($_REQUEST['useas'])) {
     }
 
 
+    output("<h4>Verwendung als Domaininhaber bzw. -Verwalter</h4>");
     if (possible_domainholder($contact)) {
-        output("<h4>Verwendung als Domaininhaber bzw. -Verwalter</h4>");
+        $domains = domainlist_by_contact($contact);
+        foreach ($domains as $d) {
+            $funktion = array();
+            if ($contact['id'] == $d->owner) {
+                $funktion[] = 'Inhaber';
+            }
+            if ($contact['id'] == $d->admin_c) {
+                $funktion[] = 'Verwalter';
+            }
+            $funktion = implode(' und ', $funktion);
 
-        output("<p>Kann als Domaininhaber verwendet werden!</p>");
+            output('<p>Ist <strong>'.$funktion.'</strong> bei der Domain <strong>'.$d->fqdn.'</strong>.</p>');
+        }
+
+
+    } else {
+        output("<p>Zur Verwendung als Domaininhaber müssen Name, vollständige Adresse, E-Mail-Adresse sowie Telefonnummer angegeben sein.</p>");
     }
 
 

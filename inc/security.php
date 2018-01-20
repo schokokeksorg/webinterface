@@ -42,9 +42,11 @@ function filter_input_general( $input )
 
 function verify_input_general( $input )
 {
-  if (filter_input_general($input) != $input) {
+  if (filter_input_general($input) !== $input) {
     system_failure("Ihre Daten enthielten ungültige Zeichen!");
     logger(LOG_WARNING, 'inc/security', 'verify_input_general', 'Ungültige Daten: '.$input);
+  } else {
+      return $input;
   }
 }
 
