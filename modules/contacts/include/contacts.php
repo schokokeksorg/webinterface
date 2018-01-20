@@ -22,7 +22,8 @@ require_once('contactapi.php');
 
 /*
 Todo:
-    - "separate Rechnungsadresse einrichten" / "Zusätzliche Adresse für den Notfall"
+    - Ausgabe-Funktion abstrahieren
+    - Telefonnummern bei Ausgabe durch filter_input_general schieben
     - Domaininhaber festlegen    
 */
 
@@ -251,5 +252,29 @@ function domainlist_by_contact($c) {
     }
     return $ret;
 }
+
+
+function display_contact($contact, $additional_html='', $cssclass='')
+{
+    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
+    if (! $contact['city']) {
+        $adresse = '';
+    }
+    $name = filter_input_general($contact['name']);
+    if ($contact['company']) {
+        $name = filter_input_general($contact['company'])."<br />".filter_input_general($contact['name']);
+    }
+    $email = filter_input_general($contact['email']);
+    $new_email = update_pending($contact['id']);
+    if ($new_email) {
+        $email = "<strike>$email</strike><br/>".filter_input_general($new_email).footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
+    }
+    $email = implode("<br>\n", array_filter(array($email, filter_input_general($contact['phone']), filter_input_general($contact['fax']), filter_input_general($contact['mobile']))));
+ 
+
+    $contact_string = "<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>{$additional_html}</div>";
+    return $contact_string;
+}
+
 
 

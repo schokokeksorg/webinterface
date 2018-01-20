@@ -27,18 +27,7 @@ $section = 'contacts_list';
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $contact = get_contact($_REQUEST['id']);
     
-    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
-    if (! $contact['city']) {
-        $adresse = '';
-    }
-    $name = filter_input_general($contact['name']);
-    if ($contact['company']) {
-        $name = filter_input_general($contact['company'])."<br />".filter_input_general($contact['name']);
-    }
-    $email = implode("<br>\n", array_filter(array($contact['email'], $contact['phone'], $contact['fax'], $contact['mobile'])));
- 
-    $contact_string = "<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p></div>";
-    
+    $contact_string = display_contact($contact);
 
     $sure = user_is_sure();
     if ($sure === NULL)
@@ -90,6 +79,12 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         }
     }
 
+    $kundenkontakte = get_kundenkontakte();
+    if ($c['id'] == $kundenkontakte['kunde']) {
+        if (!$_REQUEST['name'] && !$_REQUEST['firma']) {
+            system_failure('Beim Inhaber darf nicht Firmenname und Name leer sein.');
+        }
+    }
 
     $c['company'] = verify_input_general(maybe_null($_REQUEST['firma']));
     $c['name'] = verify_input_general(maybe_null($_REQUEST['name']));

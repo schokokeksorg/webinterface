@@ -47,5 +47,9 @@ p.contact-id {
     padding: 0;
 }
 
+p.contact-usage {
+    font-style: italic;
+}
+
 p.contact-actions {
 }

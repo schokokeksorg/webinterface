@@ -40,10 +40,6 @@ foreach ($liste as $id) {
     }
     $cssclass = '';
     $contact = $contacts[$id];
-    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
-    if (! $contact['city']) {
-        $adresse = '';
-    }
     $usage = array();
     if ($id == $kundenkontakte['kunde']) {
         $cssclass='mainaddress';
@@ -56,18 +52,13 @@ foreach ($liste as $id) {
     if ($id == $kundenkontakte['rechnung'] || ($id == $kundenkontakte['kunde'] && $kundenkontakte['rechnung'] == NULL)) {
         $usage[] = 'Rechnungs-Adresse';
     }
-    if ($contact['nic_handle']) {
+    if (is_domainholder($id)) {
         $usage[] = 'Domain-Kontakt';
     }
-    $usage = join(', ', $usage);
-    $name = $contact['name'];
-    if (nl2br(filter_input_general($contact['company']))) {
-        $name = filter_input_general($contact['company'])."<br />".nl2br(filter_input_general($contact['name']));
-    }
-    $email = $contact['email'];
-    $new_email = update_pending($id);
-    if ($new_email) {
-        $email = "<strike>$email</strike><br/>".$new_email.footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
+    if ($usage) {
+        $usage = "Verwendet als ".join(', ', $usage);
+    } else {
+        $usage = "Zur Zeit unbenutzt";
     }
     $actions = array();
     $actions[] = internal_link('edit', icon_edit('Adresse bearbeiten')." Bearbeiten", 'id='.$contact['id']);
@@ -77,9 +68,8 @@ foreach ($liste as $id) {
     }
     $actions[] = internal_link('edit', other_icon('page_copy.png')." Kopie erstellen", 'id=new&copy='.$contact['id']);
     $actions[] = internal_link('useas', other_icon('attach.png')." Benutzen als...", 'id='.$contact['id']);
-        
-    $email = implode("<br>\n", array_filter(array($email, $contact['phone'], $contact['fax'], $contact['mobile'])));
-    output("<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p><p class=\"contact-usage\">Verwendung als $usage</p><p class=\"contact-actions\">".implode("<br>\n", $actions)."</p></div>");
+    
+    output(display_contact($contact, "<p class=\"contact-usage\">$usage</p><p class=\"contact-actions\">".implode("<br>\n", $actions)."</p>", $cssclass));
 }
 output("</div><br />");
 addnew('edit', 'Neue Adresse erstellen', 'id=new');

@@ -42,7 +42,9 @@ if (isset($_REQUEST['useas'])) {
             system_failure("Man kann eine Kunden-Adresse nicht löschen, bitte eine neue als Ersatz festlegen!");
         } else {
             set_kundenkontakt('kunde', $id);
-            redirect('useas?id='.$id);
+            //redirect('useas?id='.$id);
+            // usability: Dann kann man da eh nichts mehr machen, also zurück zur Übersicht
+            redirect('list');
         }
     }
     if ($_REQUEST['useas'] == 'extern') {
@@ -64,19 +66,7 @@ if (isset($_REQUEST['useas'])) {
         }
     }
 } else {
-    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
-    if (! $contact['city']) {
-        $adresse = '';
-    }
-    $name = filter_input_general($contact['name']);
-    if ($contact['company']) {
-        $name = filter_input_general($contact['company'])."<br />".filter_input_general($contact['name']);
-    }
-    $email = implode("<br>\n", array_filter(array($contact['email'], $contact['phone'], $contact['fax'], $contact['mobile'])));
-
-    $contact_string = "<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p></div>";
-
-    output($contact_string);
+    output(display_contact($contact));
 
     output('<h4>Verwendung als Kundenkontakt</h4>');
     if ($id == $kundenkontakte['kunde']) {
