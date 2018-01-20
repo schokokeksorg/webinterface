@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/debug.php');
 require_role(array(ROLE_CUSTOMER));
 
-require_once('api.php');
+require_once('contactapi.php');
 
 /*
 Todo:
@@ -111,6 +111,36 @@ function have_mailaddress($email)
     return false;
 }
 
+
+function possible_kundenkontakt($c) {
+    if ($c['name'] && $c['email']) {
+        return true;
+    }
+}
+
+
+function set_kundenkontakt($typ, $id) {
+    if (! $id) {
+        $id = NULL;
+    } else {
+        $id = (int) $id;
+    }
+    $args = array(
+        "kunde" => (int) $_SESSION['customerinfo']['customerno'],
+        "contact" => $id
+        );
+    $field = NULL;
+    if ($typ == 'kunde') {
+        $field = 'contact_kunde';
+    } elseif ($typ == 'extern') {
+        $field = 'contact_extern';
+    } elseif ($typ == 'rechnung') {
+        $field = 'contact_rechnung';
+    } else {
+        system_failure("Falscher Typ!");
+    }
+    db_query("UPDATE kundendaten.kunden SET ".$field."=:contact WHERE id=:kunde", $args);
+}
 
 function get_kundenkontakte() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];

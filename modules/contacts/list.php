@@ -63,12 +63,13 @@ foreach ($contacts as $id => $contact) {
     $actions[] = internal_link('edit', icon_edit('Adresse bearbeiten')." Bearbeiten", 'id='.$contact['id']);
     if ($id != $kundenkontakte['kunde'] && ! is_domainholder($id)) {
         // Die Stamm-Adresse kann man nicht löschen und verwendete Domain-Kontakte auch nicht
-        $actions[] = internal_link('save', icon_delete('Adresse löschen')." Löschen", 'action=delete&id='.$contact['id']);
+        $actions[] = internal_link('save', icon_delete()." Löschen", 'action=delete&id='.$contact['id']);
     }
-    $actions[] = internal_link('edit', other_icon('page_copy.png', 'Kopie erstellen')." Kopie erstellen", 'id=new&copy='.$contact['id']);
+    $actions[] = internal_link('edit', other_icon('page_copy.png')." Kopie erstellen", 'id=new&copy='.$contact['id']);
+    $actions[] = internal_link('useas', other_icon('attach.png')." Benutzen als...", 'id='.$contact['id']);
         
     $email = implode("<br>\n", array_filter(array($email, $contact['phone'], $contact['fax'], $contact['mobile'])));
-    output("<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p><p class=\"contact-usage\">Verwendung als $usage</p><p class=\"contact-actions\">".implode(' ', $actions)."</p></div>");
+    output("<div class=\"contact\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p><p class=\"contact-usage\">Verwendung als $usage</p><p class=\"contact-actions\">".implode("<br>\n", $actions)."</p></div>");
 }
 output("</div><br />");
 addnew('edit', 'Neuen Kontakt erstellen', 'id=new');
