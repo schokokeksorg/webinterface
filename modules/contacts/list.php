@@ -32,18 +32,18 @@ $kundenkontakte = get_kundenkontakte();
 output('<p>Sie haben aktuell diese Adressen gespeichert:</p>
 <div class="contact-list">');
 
-$liste = array_merge(array($kundenkontakte['kunde']), array_keys($contacts));
-$kundenadresse_displayed = false;
+$liste = array_merge(array_filter(array($kundenkontakte['kunde'], $kundenkontakte['rechnung'], $kundenkontakte['extern'])), array_keys($contacts));
+$already_displayed = array();
 foreach ($liste as $id) {
-    if ($kundenadresse_displayed && $id == $kundenkontakte['kunde']) {
+    if (in_array($id, $already_displayed)) {
         continue;
     }
+    $already_displayed[] = $id;
     $cssclass = '';
     $contact = $contacts[$id];
     $usage = array();
     if ($id == $kundenkontakte['kunde']) {
         $cssclass='mainaddress';
-        $kundenadresse_displayed = true;
         $usage[] = 'Stamm-Adresse';
     }
     if ($id == $kundenkontakte['extern']) {

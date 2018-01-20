@@ -235,6 +235,16 @@ function update_pending($contactid) {
 
 function delete_contact($id) {
     $c = get_contact($id);
+    $kundenkontakte = get_kundenkontakte();
+    if ($id == $kundenkontakte['kunde']) {
+        system_failure("Die Stamm-Adresse kann nicht gelöscht werden, bitte erst eine andere Adresse als Stamm-Adresse festlegen!");
+    }
+    if ($id == $kundenkontakte['rechnung']) {
+        set_kundenkontakt('rechnung', NULL);
+    }
+    if ($id == $kundenkontakte['extern']) {
+        set_kundenkontakt('extern', NULL);
+    }
     if ($c['nic_id']) {
         // Lösche bei der Registry
         $c['state'] = 'deleted';
