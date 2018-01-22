@@ -75,7 +75,7 @@ foreach ($user_domains as $domain)
     $punycode = '';
   }
   $domainname = "{$domain->fqdn}{$punycode}";
-  if ($_SESSION['role'] & ROLE_CUSTOMER) {
+  if ($_SESSION['role'] & ROLE_CUSTOMER && $domain->provider=='terions') {
       $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
   }
   output("  <tr><td>{$domainname}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
