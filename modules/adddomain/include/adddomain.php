@@ -88,19 +88,18 @@ function register_domain($domainname, $uid)
   if (! $useraccount) {
     system_failure('Kein User gesetzt');
   }
-
+  
   $args = array(":cid" => $cid,
                 ":useraccount" => $useraccount,
                 ":basename" => $data['basename'],
-                ":tld" => $data['tld'],
-                ":gebuehr" => $data['gebuehr']);
-  db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail, provider, betrag, brutto) VALUES ".
-           "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto', 'terions', :gebuehr, 1) ", $args);
+                ":tld" => $data['tld']);
+  db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail) VALUES ".
+           "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto') ", $args);
   $domid = db_insert_id();
-  if ($data['setup']) {
+  /*if ($data['setup']) {
     $args = array(":cid" => $cid, ":setup" => $data['setup'], ":text" => 'Einmalige Setup-Gebühren für Domain "'.$data['domainname'].'"');
     db_query("INSERT INTO kundendaten.leistungen (kunde,periodisch,datum,betrag,brutto,beschreibung,anzahl) VALUES (:cid, 0, CURDATE(), :setup, 1, :text, 1)", $args);
-  }
+  }*/
   # Umstellen auf vmail
   change_domain($domid, 'virtual');
 }
