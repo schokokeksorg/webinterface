@@ -14,8 +14,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/base.php');
 require_once('inc/debug.php');
+require_once('domainapi.php');
 
 
 function mailman_subdomains($domain)
@@ -78,6 +78,13 @@ function web_in_use($domain)
   $result = db_query("SELECT id FROM vhosts.vhost WHERE domain=?", array($domain));
   $result2 = db_query("SELECT id FROM vhosts.alias WHERE domain=?", array($domain));
   return ($result->rowCount() > 0 || $result2->rowCount() > 0);
+}
+
+function domain_ownerchange($fqdn, $owner, $admin_c) 
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE CONCAT_WS('.', domainname, tld)=? AND kunde=?", array($owner, $admin_c, $fqdn, $cid));
+    api_upload_domain($fqdn);
 }
 
 

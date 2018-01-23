@@ -27,7 +27,7 @@ require_once('contacts.php');
 
 $dom = NULL;
 if (isset($_REQUEST['id'])) {
-    api_update_domain($_REQUEST['id']);
+    api_download_domain($_REQUEST['id']);
     $dom = new Domain( (int) $_REQUEST['id']);
     if ($dom->provider == 'external' || $dom->provider != 'terions') {
         system_failure("<p>Diese Domain ist extern registriert!</p>");

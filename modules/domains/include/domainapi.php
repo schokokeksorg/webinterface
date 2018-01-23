@@ -20,7 +20,7 @@ use_module('contacts');
 require_once('contacts.php');
 require_once('contactapi.php');
 
-function api_update_domain($id) {
+function api_download_domain($id) {
     $result = db_query("SELECT id, CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c, registrierungsdatum, kuendigungsdatum FROM kundendaten.domains WHERE id=?", array($id));
     if ($result->rowCount() < 1) {
         system_failure('Domain nicht gefunden');
@@ -56,5 +56,45 @@ function api_update_domain($id) {
         db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=?", array($owner, $admin_c, $id));
     }
 }
+
+
+function api_upload_domain($fqdn)
+{
+    $result = db_query("SELECT id,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($fqdn));
+    if ($result->rowCount() < 1) {
+        system_failure("Unbekannte Domain");
+    }
+    $dom = $result->fetch();
+    $owner = get_contact($dom['owner']);
+    if (! $owner['nic_id']) {
+        upload_contact($owner);
+        $owner = get_contact($dom['owner']);
+    }
+    $admin_c = get_contact($dom['admin_c']);
+    if (! $admin_c['nic_id']) {
+        upload_contact($admin_c);
+        $admin_c = get_contact($dom['admin_c']);
+    }
+    $owner = $owner['nic_id'];
+    $admin_c = $admin_c['nic_id'];
+
+    $data = array("domainName" => $dom['fqdn']);
+    $result = api_request('domainInfo', $data);
+    if ($result['status'] != 'success') {
+        system_failure("Abfrage nicht erfolgreich!");
+    }
+    $apidomain = $result['response'];
+    foreach ($apidomain['contacts'] as $key => $ac) {
+        if ($ac['type'] == 'owner') {
+            $apidomain['contacts'][$key]['contact'] = $owner;
+        }
+        if ($ac['type'] == 'admin') {
+            $apidomain['contacts'][$key]['contact'] = $admin_c;
+        }
+    }
+    $args = array("domain" => $apidomain);
+    api_request('domainUpdate', $args);
+
+}   
 
 

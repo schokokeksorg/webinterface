@@ -27,7 +27,11 @@ $sesskey = $_SESSION['contacts_choose_key'];
 if (isset($_REQUEST['id'])) {
     $c = get_contact($_REQUEST['id']);
     $_SESSION[$sesskey] = $c['id'];
-    redirect($_SESSION['contacts_choose_redirect']);
+    $redirect = $_SESSION['contacts_choose_redirect'];
+    unset($_SESSION['contacts_choose_header']);
+    unset($_SESSION['contacts_choose_key']);
+    unset($_SESSION['contacts_choose_redirect']);
+    redirect($redirect);
 }
 
 

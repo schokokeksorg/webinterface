@@ -31,9 +31,12 @@ if (!$dom) {
 }
 
 DEBUG($dom);
-/* DAS TUT NICHT! */
-$dom->owner = $_SESSION['domains_update_owner'];
-$dom->admin_c = $_SESSION['domains_update_admin_c'];
-$dom->save();
+domain_ownerchange($_SESSION['domains_update_domainname'], $_SESSION['domains_update_owner'], $_SESSION['domains_update_admin_c']);
 
-print_r($_SESSION);
+
+unset($_SESSION['domains_update_domainname']);
+unset($_SESSION['domains_update_owner']);
+unset($_SESSION['domains_update_admin_c']);
+unset($_SESSION['domains_update_detach']);
+
+redirect('domains');
