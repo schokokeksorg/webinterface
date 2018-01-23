@@ -282,7 +282,14 @@ function have_module($modname)
 
 function use_module($modname) 
 {
-    global $prefix;
+    global $prefix, $needed_modules;
+    if (! isset($needed_modules)) {
+        $needed_modules = array();
+    }
+    if (in_array($modname, $needed_modules)) {
+        return;
+    }
+    $needed_modules[] = $modname;
     if (! have_module($modname)) {
         system_failure("Soll nicht verfügbares Modul laden!");
     }

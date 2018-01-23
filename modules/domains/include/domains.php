@@ -81,3 +81,23 @@ function web_in_use($domain)
 }
 
 
+function update_possible($domain) {
+    $dom = new Domain((int) $domain);
+    if ($dom->provider != 'terions' || $dom->billing=='external') {
+        // Domain nicht über uns verwaltet
+        return false;
+    }
+    $result = db_query("SELECT aenderung_eigentuemer, ruecksprache FROM misc.domainpreise WHERE tld=?", array($dom->tld));
+    if ($result->rowCount() < 1) {
+        // Endung nicht bei uns in der Liste erfasst
+        return false;
+    }
+    $data = $result->fetch();
+    if ($data['aenderung_eigentuemer'] != NULL || $data['ruecksprache'] == 'Y') {
+        // Endung mit speziellen Eigenheiten
+        return false;
+    }
+    return true;
+}
+
+

@@ -156,7 +156,7 @@ function get_kundenkontakte() {
 
 function save_emailaddress($id, $email) 
 {
-    // Speichert eine E-Mail-Adresse direkt, z.B. wenn diese schonmal geprüt wurde
+    // Speichert eine E-Mail-Adresse direkt, z.B. wenn diese schonmal geprüft wurde
     $args = array("cid" => (int) $_SESSION['customerinfo']['customerno'],
         "id" => (int) $id,
         "email" => $email);

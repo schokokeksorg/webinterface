@@ -41,6 +41,45 @@ function contact_to_apicontact($c)
     return $ac;
 }
 
+function apicontact_to_contact($ac) 
+{
+    $c = new_contact();
+    $c['nic_id'] = $ac['id'];
+    $c['nic_handle'] = $ac['handle'];
+    $c['name'] = maybe_null($ac['name']);
+    $c['company'] = maybe_null($ac['organization']);
+    $c['address'] = implode("\n", $ac['street']);
+    $c['zip'] = $ac['postalCode'];
+    $c['city'] = $ac['city'];
+    $c['country'] = strtoupper($ac['country']);
+    $c['email'] = $ac['emailAddress'];
+    $c['phone'] = $ac['phoneNumber'];
+    $c['fax'] = maybe_null($ac['faxNumber']);
+    if ($ac['hidden'] === true) {
+        $c['state'] = 'deleted';
+    }
+    return $c;
+}
+
+
+
+function download_contact($nic_id) {
+    $data = array("contactId" => $nic_id);
+    $result = api_request('contactInfo', $data);
+    if ($result['status'] != 'success') {
+        system_failure("Abfrage nicht erfolgreich!");
+    }
+    $c = apicontact_to_contact($result['response']);
+    $result = db_query("SELECT id FROM kundendaten.contacts WHERE nic_id=?", array($nic_id));
+    if ($result->rowCount() > 0) {
+        $data = $result->fetch();
+        $c['id'] = $data['id'];
+    }
+    $id = save_contact($c);
+    save_emailaddress($id, $c['email']);
+    return $id;
+}
+
 
 function upload_contact($c)
 {
