@@ -17,14 +17,12 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/debug.php');
 
-require_once('class/keksdata.php');
 
-
-class Domain extends KeksData
+class Domain
 {
+    protected $data = array();
   function __construct($init = NULL)
   {
-    $this->default_table = 'kundendaten.domains';
     $this->setup();
     switch (gettype($init))
     {
@@ -39,13 +37,44 @@ class Domain extends KeksData
     }
   }
 
-  function loadByName($name)
+  function __set($key, $value)
   {
-    $name = db_escape_string($name);
-    $res = $this->getData("*", "CONCAT_WS('.', domainname, tld)='{$name}' LIMIT 1");
-    if (count($res) < 1)
-      return false;
-    $this->parse($res[0]);
+    if (array_key_exists($key, $this->data)) {
+      $this->data[$key] = $value;
+    } elseif (isset($this->$key)) {
+      $this->$key = $value;
+    } else {
+      $this->data[$key] = $value;
+    }
+  }
+
+
+  function __get($key)
+  {
+    if (array_key_exists($key, $this->data))
+      return $this->data[$key];
+    elseif (isset($this->$key))
+      return $this->$key;
+    // else werfe fehler
+  }
+
+
+  function loadByID($id)
+  {
+      $res = db_query("SELECT * FROM kundendaten.domains WHERE id=?", array($id));
+      if ($res->rowCount() < 1)
+         return false;
+      $data = $res->fetch();
+      $this->parse($data);
+  }
+
+   function loadByName($name)
+  {
+      $res = db_query("SELECT * FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($name));
+      if ($res->rowCount() < 1)
+         return false;
+      $data = $res->fetch();
+      $this->parse($data);
   }
 
   function ensure_customerdomain()
@@ -75,6 +104,20 @@ class Domain extends KeksData
     $uid = (int) $_SESSION['userinfo']['uid'];
     return ($this->useraccount == $uid);
   }
+
+  function setup()
+  {
+    $fields = array();
+    $res = db_query("DESCRIBE kundendaten.domains");
+    while ($f = $res->fetch(PDO::FETCH_OBJ))
+    {
+      $fields[$f->Field] = $f->Default;
+    }
+    $this->data = $fields;
+    $this->data['id'] = NULL;
+  }
+
+
 
   function parse($data)
   {
@@ -142,4 +185,3 @@ function get_jabberable_domains()
 
 }
 
-?>

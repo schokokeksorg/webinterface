@@ -14,9 +14,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/base.php');
-require_once('class/customer.php');
-
 function list_system_users()
 {
   require_role(ROLE_SYSADMIN);
@@ -40,6 +37,17 @@ function list_customers()
   while ($item = $result->fetch(PDO::FETCH_OBJ))
     array_push($ret, $item);
   return $ret;
+}
+
+function customer_details($id) 
+{
+    $id = (int) $id; 
+    $result = db_query("SELECT id, IF(firma IS NULL, CONCAT_WS(' ', vorname, nachname), CONCAT(firma, ' (', CONCAT_WS(' ', vorname, nachname), ')')) AS name FROM kundendaten.kunden WHERE id=?", array($id));
+    if ($result->rowCount() < 1) {
+        return NULL;
+    }
+    $kunde = $result->fetch();
+    return $kunde;
 }
 
 
@@ -102,15 +110,15 @@ function build_results($term) {
   $result = array_unique(find_customers($term));
   sort($result);
   foreach ($result as $val) {
-    $c = new Customer((int) $val);
-    if ($c->id == $term) {
-      $add(10, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
+    $c = customer_details($val);
+    if ($c['id'] == $term) {
+      $add(10, "c{$c['id']}", "Kunde {$c['id']}: {$c['name']}");
     } else {
-      $add(90, "c{$c->id}", "Kunde {$c->id}: {$c->fullname}");
+      $add(90, "c{$c['id']}", "Kunde {$c['id']}: {$c['name']}");
     }
-    $users = find_users_for_customer($c->id);
+    $users = find_users_for_customer($c['id']);
     foreach ($users as $u) {
-      $realname = $c->fullname;
+      $realname = $c['name'];
       if ($u['name']) {
         $realname = $u['name'];
       }
