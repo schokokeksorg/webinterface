@@ -280,6 +280,22 @@ function have_module($modname)
 }
 
 
+function use_module($modname) 
+{
+    global $prefix;
+    if (! have_module($modname)) {
+        system_failure("Soll nicht verfügbares Modul laden!");
+    }
+    /* setup module include path */
+    ini_set('include_path',ini_get('include_path').':./modules/'.$modname.'/include:');
+    $style = 'modules/'.$modname.'/style.css';
+    if (file_exists($style)) {
+        html_header('<link rel="stylesheet" href="'.$prefix.$style.'" type="text/css" />'."\n");
+    }
+
+}
+
+
 function encode_querystring($querystring)
 {
   global $debugmode;

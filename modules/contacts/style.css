@@ -57,6 +57,17 @@ div.contact.mainaddress {
     padding: 2px 9px;
 }
 
+div.contact.modified::after {
+    content: "(noch nicht gespeichert)";
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+}
+div.contact.modified {
+    border: 2px solid red;
+    padding: 2px 9px;
+}
+
 p.contact-id {
     text-align: right;
     float: right;
