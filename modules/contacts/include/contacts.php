@@ -65,7 +65,7 @@ function get_contact($id)
 
 function get_contacts() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY id", array($cid));
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY COALESCE(company, name)", array($cid));
     $ret = array();
     while ($contact = $result->fetch()) {
         $ret[$contact['id']] = $contact;
@@ -264,7 +264,7 @@ function domainlist_by_contact($c) {
 }
 
 
-function display_contact($contact, $additional_html='', $cssclass='')
+function contact_as_string($contact)
 {
     $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
     if (! $contact['city']) {
@@ -282,7 +282,14 @@ function display_contact($contact, $additional_html='', $cssclass='')
     $email = implode("<br>\n", array_filter(array($email, filter_input_general($contact['phone']), filter_input_general($contact['fax']), filter_input_general($contact['mobile']))));
  
 
-    $contact_string = "<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\"><p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>{$additional_html}</div>";
+    $contact_string = "<p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>";
+    return $contact_string;
+}
+
+function display_contact($contact, $additional_html='', $cssclass='')
+{
+    $html = contact_as_string($contact);
+    $contact_string = "<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\">{$html}{$additional_html}</div>";
     return $contact_string;
 }
 

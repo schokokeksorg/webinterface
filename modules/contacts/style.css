@@ -34,6 +34,24 @@ div.contact {
     margin: 1em;
     padding: 3px 10px;    
 }
+
+a.contacts-choose {
+    color: initial;
+    text-decoration: none;
+}
+a div.contact {
+    min-height: 10em;
+}
+a div.contact:hover {
+    border: 2px solid blue;
+    padding: 2px 9px;
+}
+
+a.contacts-choose:hover {
+    color: initial;
+    text-decoration: none;
+}
+
 div.contact.mainaddress {
     border: 2px solid red;
     padding: 2px 9px;
