@@ -17,8 +17,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/security.php');
 
-include("external/php-iban/php-iban.php");
-
 
 function my_invoices()
 {
