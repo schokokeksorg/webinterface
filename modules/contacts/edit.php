@@ -47,6 +47,9 @@ if ($c['nic_handle'] != NULL) {
     $readonly = ' disabled="disabled" ';
     output('<p>Da diese Adresse als möglicher Domaininhaber bei der Domain-Regristry angemeldet ist, können Name/Firmenname und Land nicht mehr geändert werden. Legen Sie ggf. eine neue Adresse an und ändern Sie den Domain-Inhaber entsprechend.</p>');
 }
+if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
+    output('<p>Für einen Domaininhaber muss mindestens Name, vollständige Adresse, E-Mail-Adresse und Telefonnummer angegeben werden.</p>');
+}
 $odd = false;
 $html = '<table>';
 $html .= '    <tr class="'.($odd == true ? 'odd' : 'even').'"><td>Firmenname:</td><td><input type="text" name="firma" id="firma" value="'.$c['company'].'" '.$readonly.' /></td></tr>';
@@ -79,7 +82,12 @@ $back = 'list';
 if (isset($_REQUEST['back'])) {
     $back = urldecode($_REQUEST['back']);
 }
-output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id']."&back=".urlencode($back), $html));
+$domainholder = '';
+if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
+    $domainholder='&domainholder=1';
+}
+
+output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id']."&back=".urlencode($back).$domainholder, $html));
 
 
 ?>

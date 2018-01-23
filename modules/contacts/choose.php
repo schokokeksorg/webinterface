@@ -53,6 +53,7 @@ foreach ($contacts as $c) {
 
 output('</div>');
 
+addnew('edit', 'Neue Adresse erstellen', 'id=new&back=choose&domainholder=1');
 
 
 

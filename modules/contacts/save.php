@@ -97,7 +97,12 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $c['country'] = verify_input_general(maybe_null(strtoupper($_REQUEST['land'])));
     $c['zip'] = verify_input_general(maybe_null($_REQUEST['plz']));
     $c['city'] = verify_input_general(maybe_null($_REQUEST['ort']));
-
+    if ($new) {
+        $c['email'] = verify_input_general(maybe_null($_REQUEST['email']));
+        if (!check_emailaddr($c['email'])) {
+            system_failure("Ungültige E-Mail-Adresse!");
+        }
+    }
         
 
     if ($_REQUEST['telefon']) {
@@ -133,6 +138,16 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
     // FIXME: PGP-ID/Key fehlen
 
+
+    if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
+        if (!possible_domainholder($c)) {
+            DEBUG("Kein möglicher Domaininhaber:");
+            DEBUG($c);
+            warning('Zur Verwendung als Domaininhaber fehlen noch Angaben.');
+            redirect('edit?id='.$_REQUEST['id'].'&back='.$_REQUEST['back'].'&domainholder=1');
+        }
+    }
+
     // Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
     // dann hinterher das Token erzeugen und senden. Weil wir für das Token die 
     // Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach 
@@ -141,7 +156,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $id = save_contact($c);
     $c['id'] = $id;
 
-    if ($c['email'] != $_REQUEST['email']) {
+    if ($new || $c['email'] != $_REQUEST['email']) {
         if (have_mailaddress($_REQUEST['email'])) {
             save_emailaddress($c['id'], verify_input_general($_REQUEST['email']));
         } else {
