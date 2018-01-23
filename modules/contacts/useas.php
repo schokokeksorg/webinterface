@@ -101,7 +101,7 @@ if (isset($_REQUEST['useas'])) {
             }
             $funktion = implode(' und ', $funktion);
 
-            output('<p>Ist <strong>'.$funktion.'</strong> bei der Domain <strong>'.$d->fqdn.'</strong>.</p>');
+            output('<p>Ist <strong>'.$funktion.'</strong> bei der Domain <strong>'.$d->fqdn.'</strong>. '.internal_link('../domains/update', icon_edit()." Inhaber dieser Domain ändern", 'id='.$d->id).'</p>');
         }
 
 
