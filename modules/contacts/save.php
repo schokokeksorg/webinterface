@@ -146,6 +146,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             warning('Zur Verwendung als Domaininhaber fehlen noch Angaben.');
             redirect('edit?id='.$_REQUEST['id'].'&back='.$_REQUEST['back'].'&domainholder=1');
         }
+        if (!have_mailaddress($_REQUEST['email'])) {
+            warning("Die neu angelegte Adresse kann erst dann als Domaininhaber genutzt werden, wenn die E-Mail-Adresse bestätigt wurde.");
+        }
     }
 
     // Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
