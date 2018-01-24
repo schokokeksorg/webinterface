@@ -151,9 +151,15 @@ function sync_legacy_contactdata()
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $kundenkontakte = get_kundenkontakte();
     $kunde = get_contact($kundenkontakte['kunde']);
+    $vorname = NULL;
+    $nachname = NULL;
+    if ($kunde['name']) {
+        $vorname = explode(' ', $kunde['name'], 2)[0];
+        $nachname = explode(' ', $kunde['name'], 2)[1];
+    }
     $args = array("firma" => $kunde['company'],
-            "vorname" => explode(' ', $kunde['name'], 2)[0],
-            "nachname" => explode(' ', $kunde['name'], 2)[1],
+            "vorname" => $vorname,
+            "nachname" => $nachname,
             "adresse" => $kunde['address'],
             "plz" => $kunde['zip'],
             "ort" => $kunde['city'],
@@ -301,7 +307,8 @@ function delete_contact($id) {
 
 
 function domainlist_by_contact($c) {
-    $result = db_query("SELECT id FROM kundendaten.domains WHERE owner=? OR admin_c=?", array($c['id'], $c['id']));
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE (owner=? OR admin_c=?) AND kunde=?", array($c['id'], $c['id'], $cid));
     $ret = array();
     while ($domain = $result->fetch()) {
         $ret[] = new Domain( (int) $domain['id'] );
