@@ -142,7 +142,51 @@ function set_kundenkontakt($typ, $id) {
         system_failure("Falscher Typ!");
     }
     db_query("UPDATE kundendaten.kunden SET ".$field."=:contact WHERE id=:kunde", $args);
+    sync_legacy_contactdata();
 }
+
+
+function sync_legacy_contactdata()
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $kundenkontakte = get_kundenkontakte();
+    $kunde = get_contact($kundenkontakte['kunde']);
+    $args = array("firma" => $kunde['company'],
+            "vorname" => explode(' ', $kunde['name'], 2)[0],
+            "nachname" => explode(' ', $kunde['name'], 2)[1],
+            "adresse" => $kunde['address'],
+            "plz" => $kunde['zip'],
+            "ort" => $kunde['city'],
+            "land" => $kunde['country'],
+            "telefon" => $kunde['phone'],
+            "mobile" => $kunde['mobile'],
+            "telefax" => $kunde['fax'],
+            "email" => $kunde['email'],
+            "cid" => $cid);
+    db_query("UPDATE kundendaten.kunden SET firma=:firma, vorname=:vorname, nachname=:nachname, adresse=:adresse,
+            plz=:plz, ort=:ort, land=:land, telefon=:telefon, mobile=:mobile, telefax=:telefax, email=:email
+            WHERE id=:cid", $args);
+    if ($kundenkontakte['extern']) {
+        $extern = get_contact($kundenkontakte['extern'])['email'];
+        if ($extern) {
+            db_query("UPDATE kundendaten.kunden SET email_extern=? WHERE id=?", array($extern, $cid));
+        }
+        
+    }
+    if ($kundenkontakte['rechnung']) {
+        $kunde = get_contact($kundenkontakte['rechnung']);
+        $args = array("firma" => $kunde['company'],
+                "name" => $kunde['name'],
+                "adresse" => $kunde['address'],
+                "plz" => $kunde['zip'],
+                "ort" => $kunde['city'],
+                "email" => $kunde['email'],
+                "cid" => $cid);
+        db_query("UPDATE kundendaten.kunden SET re_firma=:firma, re_name=:name, re_adresse=:adresse,
+                re_plz=:plz, re_ort=:ort, email_rechnung=:email WHERE id=:cid", $args);
+    }
+}
+
 
 function get_kundenkontakte() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
@@ -186,6 +230,8 @@ function save_contact($c)
         db_query("INSERT INTO kundendaten.contacts (nic_id, nic_handle, customer, company, name, address, zip, city, country, phone, mobile, fax, pgp_id, pgp_key) VALUES (:nic_id, :nic_handle, :customer, :company, :name, :address, :zip, :city, :country, :phone, :mobile, :fax, :pgp_id, :pgp_key)", $c);
         $c['id'] = db_insert_id();
     }
+    // FIXME: Das sollte eigentlich nicht bei jedem einzelnen Speicherovrgang passieren
+    sync_legacy_contactdata();
     return $c['id'];
 }
 
