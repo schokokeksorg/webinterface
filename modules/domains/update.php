@@ -64,7 +64,6 @@ title("Änderung der Domain {$dom->fqdn}");
 $section = 'domains_domains';
 output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
 
-
 $owner = get_contact($_SESSION['domains_update_owner']);
 $admin_c = get_contact($_SESSION['domains_update_admin_c']);
 $function = 'Inhaber';
@@ -83,7 +82,7 @@ if ($owner['id'] != $admin_c['id']) {
         $cssclass = 'modified';
     }
     output('<p><strong>Verwalter:</strong></p>'.display_contact($admin_c, '', $cssclass));
-    addnew('choose', 'Neuen Inhaber wählen', "type=admin_c");
+    addnew('choose', 'Neuen Verwalter wählen', "type=admin_c");
     output('<p class="delete">'.internal_link('update', 'Keinen separaten Verwalter festlegen', 'admin_c=none').'</p>');
 } else {
     addnew('choose', 'Einen separaten Verwalter wählen', "type=admin_c&detach=1");
