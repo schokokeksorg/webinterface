@@ -14,7 +14,7 @@ if (isset($_SESSION['contacts_upload'])) {
     unset($_SESSION['contacts_choose_key']);
     unset($_SESSION['contacts_choose_header']);
     unset($_SESSION['contacts_choose_redirect']);
-
+    upload_contact($c);
     output('<p>Kontakt gewählt:</p>'.display_contact($c));
 } else {
     $_SESSION['contacts_choose_header'] = 'Wählen Sie einen Kontakt zum Hochladen.';

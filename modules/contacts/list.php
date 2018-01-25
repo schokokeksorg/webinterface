@@ -60,16 +60,7 @@ foreach ($liste as $id) {
     } else {
         $usage = "Zur Zeit unbenutzt";
     }
-    $actions = array();
-    $actions[] = internal_link('edit', icon_edit('Adresse bearbeiten')." Bearbeiten", 'id='.$contact['id']);
-    if ($id != $kundenkontakte['kunde'] && ! is_domainholder($id)) {
-        // Die Stamm-Adresse kann man nicht löschen und verwendete Domain-Kontakte auch nicht
-        $actions[] = internal_link('save', icon_delete()." Löschen", 'action=delete&id='.$contact['id']);
-    }
-    $actions[] = internal_link('edit', other_icon('page_copy.png')." Kopie erstellen", 'id=new&copy='.$contact['id']);
-    $actions[] = internal_link('useas', other_icon('attach.png')." Benutzen als...", 'id='.$contact['id']);
-    
-    output(display_contact($contact, "<p class=\"contact-usage\">$usage</p><p class=\"contact-actions\">".implode("<br>\n", $actions)."</p>", $cssclass));
+    output(internal_link('useas', display_contact($contact, "<p class=\"contact-usage\">$usage</p>", $cssclass), 'id='.$contact['id'], 'class="contacts-choose"'));
 }
 output("</div><br />");
 addnew('edit', 'Neue Adresse erstellen', 'id=new');
