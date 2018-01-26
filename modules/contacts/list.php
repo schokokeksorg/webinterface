@@ -39,11 +39,11 @@ foreach ($liste as $id) {
         continue;
     }
     $already_displayed[] = $id;
-    $cssclass = '';
+    $cssclass = 'contact-mainlist ';
     $contact = $contacts[$id];
     $usage = array();
     if ($id == $kundenkontakte['kunde']) {
-        $cssclass='mainaddress';
+        $cssclass .= 'mainaddress';
         $usage[] = 'Stamm-Adresse';
     }
     if ($id == $kundenkontakte['extern']) {

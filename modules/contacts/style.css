@@ -39,9 +39,15 @@ a.contacts-choose {
     color: initial;
     text-decoration: none;
 }
+
 a div.contact {
     min-height: 10em;
 }
+
+a div.contact-mainlist {
+    min-height: 15em;
+}
+
 a div.contact:hover {
     border: 2px solid blue;
     padding: 2px 9px;
