@@ -36,6 +36,10 @@ output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
 ');
 foreach ($user_domains as $domain)
 {
+  $mailserver_lock = '';
+  if ($domain->mailserver_lock == 1) {
+      $mailserver_lock = '<br><strong>Mail-Verarbeitung eingeschränkt!</strong>'.footnote('Diese Domain ist extern registriert und wurde noch nicht bestätigt. Momentan ist daher der Mail-Empfang auf dieser Domain nicht möglich.');
+  }
   $regdate = $domain->reg_date;
   if ($domain->provider != 'terions')
     $regdate = '<em>Extern registriert</em>';
@@ -77,8 +81,10 @@ foreach ($user_domains as $domain)
   $domainname = "{$domain->fqdn}{$punycode}";
   if ((!$domain->cancel_date || $domain->cancel_date > date('Y-m-d')) && have_module('contacts') && $_SESSION['role'] & ROLE_CUSTOMER && update_possible($domain->id)) {
       $domainname = internal_link('update', $domainname, 'id='.$domain->id);
+  } elseif ($_SESSION['role'] & ROLE_CUSTOMER && $domain->mailserver_lock == 1) {
+      $domainname = internal_link('verify', $domainname, 'id='.$domain->id);
   }
-  output("  <tr><td>{$domainname}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
+  output("  <tr><td>{$domainname}</td><td>{$regdate}</td><td>{$features}{$mailserver_lock}</td></tr>\n");
 }
 output('</table>');
 output("<br />");

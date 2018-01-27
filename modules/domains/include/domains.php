@@ -107,4 +107,56 @@ function update_possible($domain) {
     return true;
 }
 
+function unset_mailserver_lock($dom) {
+    $id = $dom->id;
+    db_query("UPDATE kundendaten.domains SET secret=NULL, mailserver_lock=0 WHERE id=?", array($id));
+}
+
+function create_domain_secret($dom) {
+    $id = $dom->id;
+    $secret = md5(random_string(20));
+    db_query("UPDATE kundendaten.domains SET secret=? WHERE id=?", array($secret, $id));
+    $dom->secret = $secret;
+    return $secret;
+}
+
+function get_txt_record($hostname, $domainname, $tld) {
+  $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+
+  $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
+  $line = explode("\n", $resp, 2)[0];
+  $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
+
+  $resp = shell_exec('dig @'.$NS.' -t ns '.$domain.'.');
+  $lines = explode("\n", $resp);
+  
+  $NS = NULL;
+  $NS_IP = NULL;
+  $sec = NULL;
+  foreach ($lines as $l) {
+      if (preg_match("/;; AUTHORITY SECTION:.*/", $l)) {
+          $sec = 'auth';
+      } elseif (preg_match("/;; ADDITIONAL SECTION:.*/", $l)) {
+          $sec = 'add';
+      }
+      if ($sec == 'auth' && preg_match("/^.*\\sIN\\s+NS\\s+\\S+$/", $l)) {
+          $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $l);
+      }
+      if ($sec == 'add' && $NS && preg_match("/^.*\\sIN\\s+A\\s+\\S+$/", $l)) {
+          $NS_IP = preg_replace("/^.*\\sIN\\s+A\\s+(\\S+)$/", '\1', $l);
+      }
+  }
+
+  if ($NS_IP) {
+      $NS = $NS_IP;
+  }
+
+  DEBUG('dig @'.$NS.' +short -t txt '.$hostname.'.'.$domain.'.');
+  $resp = shell_exec('dig @'.$NS.' +short -t txt '.$hostname.'.'.$domain.'.');
+  $TXT = trim($resp, "\n \"");
+  DEBUG($TXT);
+  return $TXT;
+}
+
+
 
