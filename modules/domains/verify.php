@@ -34,6 +34,11 @@ if ($dom->mailserver_lock === 0) {
 if ($dom->provider == 'terions') {
     system_failure("Diese Domain ist bereits über uns registriert und sollte schon freigeschaltet sein. Wenden Sie sich im Zweifel bitte an den Support.");
 }
+if (has_own_ns($dom->domainname, $dom->tld)) {
+    unset_mailserver_lock($dom);
+    success_msg("Die Domain {$dom->fqdn} wurde erfolgreich bestätigt und kann nun in vollem Umfang verwendet werden.");
+    redirect("domains");
+}
 if (!$dom->secret) {
     create_domain_secret($dom);
 }

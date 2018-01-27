@@ -120,7 +120,8 @@ function create_domain_secret($dom) {
     return $secret;
 }
 
-function get_txt_record($hostname, $domainname, $tld) {
+
+function get_auth_dns($domainname, $tld) {
   $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
 
   $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
@@ -146,11 +147,36 @@ function get_txt_record($hostname, $domainname, $tld) {
           $NS_IP = preg_replace("/^.*\\sIN\\s+A\\s+(\\S+)$/", '\1', $l);
       }
   }
+  return array("$NS" => $NS_IP);
+}
 
-  if ($NS_IP) {
-      $NS = $NS_IP;
+
+function has_own_ns($domainname, $tld)
+{
+  $nsdata = get_auth_dns($domainname, $tld);
+  $NS = NULL;
+  foreach ($nsdata as $host => $ip) {
+      $NS=$host;
   }
+  DEBUG($NS);
+  if (in_array($NS, array('ns1.schokokeks-dns.de.', 'ns2.schokokeks-dns.de.', 'ns3.schokokeks-dns.de.'))) {
+      DEBUG('Domain hat unsere DNS-Server!');
+      return true;
+  }
+  return false;
+}
 
+
+function get_txt_record($hostname, $domainname, $tld) {
+  $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+  $nsdata = get_auth_dns($domainname, $tld);
+  $NS = NULL;
+  foreach ($nsdata as $host => $ip) {
+      $NS = $host;
+      if ($ip) {
+          $NS = $ip;
+      }
+  }
   DEBUG('dig @'.$NS.' +short -t txt '.$hostname.'.'.$domain.'.');
   $resp = shell_exec('dig @'.$NS.' +short -t txt '.$hostname.'.'.$domain.'.');
   $TXT = trim($resp, "\n \"");
