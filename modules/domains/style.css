@@ -1,0 +1,21 @@
+
+p.domain-unavailable {
+    padding: 1em;
+    background: #faa;
+    border: 2px solid #f00;
+    font-weight: bold;
+    font-size: 200%;
+}
+p.domain-available {
+    padding: 1em;
+    background: #afa;
+    border: 2px solid #0f0;
+    font-weight: bold;
+    font-size: 200%;
+}
+
+div#buttons {
+    display: none;
+}
+
+

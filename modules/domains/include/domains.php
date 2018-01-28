@@ -185,4 +185,75 @@ function get_txt_record($hostname, $domainname, $tld) {
 }
 
 
+function list_useraccounts()
+{
+  $customerno = (int) $_SESSION['customerinfo']['customerno'];
+  $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde=?", array($customerno));
+  $ret = array();
+  while ($item = $result->fetch())
+  {
+    $ret[] = $item;
+  }
+  DEBUG($ret);
+  return $ret;
+}
+
+
+function get_domain_offer($domainname) 
+{
+  $domainname = filter_input_hostname($domainname);
+  $domainname = preg_replace('/^www\./', '', $domainname);
+
+  $basename = preg_replace('/([^\.]+)\..*$/', '\1', $domainname);
+  DEBUG('Found Basename: '.$basename);
+  $tld = preg_replace('/^[^\.]*\./', '', $domainname);
+  DEBUG('Found TLD: '.$tld);
+
+  $cid = (int) $_SESSION['customerinfo']['customerno'];
+
+  $result = db_query("SELECT id FROM kundendaten.domains WHERE domainname=:domainname AND tld=:tld", array("domainname" => $basename, "tld" => $tld));
+  if ($result->rowCount() != 0) {
+    warning('Diese Domain ist in unserem System bereits vorhanden und kann daher nicht noch einmal eingetragen werden.');
+    return;
+  }
+
+  $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
+
+  $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
+  if ($result->rowCount() != 1) {
+    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
+  }
+  if ($result->rowCount() != 1) {
+    warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
+    return;
+  }
+  $temp = $result->fetch();
+  $data["gebuehr"] = $temp["gebuehr"];
+  $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
+  
+  return $data;
+}
+
+
+function insert_domain_external($domain, $dns)
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    if (strpos($domain, ' ') !== false) {
+        system_failure("Ungültige Zeichen im Domainname");
+    }
+    $parts = explode('.', $domain);
+    if (count($parts) !== 2) {
+        system_failure("Ungültiger Domainname");
+    }
+    $domainname = $parts[0];
+    $tld = $parts[1];
+    db_query("INSERT INTO kundendaten.domains (kunde, domainname, tld, billing, provider, dns, mailserver_lock) VALUES 
+        (?, ?, ?, 'external', 'other', 0, 1)", array($cid, $domainname, $tld));
+    $id = db_insert_id();
+    if ($dns) {
+        db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", array($id));
+    }
+    return $id;
+}
+
 

@@ -88,7 +88,7 @@ foreach ($user_domains as $domain)
 }
 output('</table>');
 output("<br />");
-
+addnew('adddomain', 'Neue Domain bestellen / hinzufügen');
 
 
 ?>

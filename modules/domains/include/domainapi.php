@@ -98,3 +98,22 @@ function api_upload_domain($fqdn)
 }   
 
 
+function api_domain_available($domainname) 
+{
+    $args = array("domainNames" => array($domainname));
+    $result = api_request('domainStatus', $args);
+    $resp = $result["responses"][0];
+    return $resp["status"];
+    /*
+    alreadyRegistered 	You (or a sub account) already registered the domain
+    registered 	Somebody else registered domain
+    nameContainsForbiddenCharacter 	Domain name contains invalid characters
+    available 	Domain is available for registration
+    suffixDoesNotExist 	Domain suffix does not exist
+    suffixCannotBeRegistered 	You are not allowed to register a domain with this suffix
+    canNotCheck 	System is currently unable to check availability
+    unknown 	Other problems or difficulties occured
+    */
+}
+
+
