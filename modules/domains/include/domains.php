@@ -151,6 +151,19 @@ function get_auth_dns($domainname, $tld) {
 }
 
 
+function own_ns() {
+    $auth = dns_get_record(config('masterdomain'), DNS_NS);
+    $own_ns = array();
+    foreach ($auth as $ns) {
+        $own_ns[] = $ns['target'];
+    }
+
+    return $own_ns;  
+}
+
+
+
+
 function has_own_ns($domainname, $tld)
 {
   $nsdata = get_auth_dns($domainname, $tld);
@@ -159,7 +172,7 @@ function has_own_ns($domainname, $tld)
       $NS=$host;
   }
   DEBUG($NS);
-  if (in_array($NS, array('ns1.schokokeks-dns.de.', 'ns2.schokokeks-dns.de.', 'ns3.schokokeks-dns.de.'))) {
+  if (in_array($NS, own_ns())) {
       DEBUG('Domain hat unsere DNS-Server!');
       return true;
   }
@@ -238,6 +251,7 @@ function get_domain_offer($domainname)
 function insert_domain_external($domain, $dns)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $uid = (int) $_SESSION['userinfo']['uid'];
     if (strpos($domain, ' ') !== false) {
         system_failure("Ungültige Zeichen im Domainname");
     }
@@ -247,8 +261,8 @@ function insert_domain_external($domain, $dns)
     }
     $domainname = $parts[0];
     $tld = $parts[1];
-    db_query("INSERT INTO kundendaten.domains (kunde, domainname, tld, billing, provider, dns, mailserver_lock) VALUES 
-        (?, ?, ?, 'external', 'other', 0, 1)", array($cid, $domainname, $tld));
+    db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, provider, dns, mailserver_lock) VALUES 
+        (?, ?, ?, ?, 'external', 'other', 0, 1)", array($cid, $uid, $domainname, $tld));
     $id = db_insert_id();
     if ($dns) {
         db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", array($id));
