@@ -220,5 +220,5 @@ function check_emailaddr( $input )
 
 function check_domain( $input )
 {
-  return (bool) preg_match("/[a-z0-9\.\-]+\.[a-z]{2,4}$/i", $input );
+  return (bool) preg_match("/[a-z0-9\.\-]+\.[a-z\-]{2,63}$/i", $input );
 }
