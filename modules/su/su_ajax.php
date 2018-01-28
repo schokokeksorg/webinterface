@@ -31,18 +31,15 @@ $term = $_GET['term'];
 
 $allentries = build_results($term);
 
-$lines = array();
+$out = array();
+
 foreach ($allentries as $entry) {
-  $lines[] = "  { \"id\": \"".filter_input_general($entry['id'])."\", \"value\": \"".filter_input_general($entry['value'])."\" }";
+  $out[] = array('id' => $entry['id'], 'value' => $entry['value']);
 }
 
 
-
 header("Content-Type: application/json");
-echo "[\n";
-echo implode(",\n", $lines);
-echo '
-]';
+echo json_encode($out);
 die();
 
 
