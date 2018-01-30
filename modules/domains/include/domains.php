@@ -15,7 +15,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/debug.php');
-require_once('domainapi.php');
 
 
 function mailman_subdomains($domain)
@@ -82,6 +81,7 @@ function web_in_use($domain)
 
 function domain_ownerchange($fqdn, $owner, $admin_c) 
 {
+    require_once('domainapi.php');
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE CONCAT_WS('.', domainname, tld)=? AND kunde=?", array($owner, $admin_c, $fqdn, $cid));
     api_upload_domain($fqdn);

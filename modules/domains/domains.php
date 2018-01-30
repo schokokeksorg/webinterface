@@ -75,7 +75,7 @@ foreach ($user_domains as $domain)
     $punycode = '';
   }
   $domainname = "{$domain->fqdn}{$punycode}";
-  if ($_SESSION['role'] & ROLE_CUSTOMER && update_possible($domain->id)) {
+  if (have_module('contacts') && $_SESSION['role'] & ROLE_CUSTOMER && update_possible($domain->id)) {
       $domainname = internal_link('update', $domainname, 'id='.$domain->id);
   }
   output("  <tr><td>{$domainname}</td><td>{$regdate}</td><td>{$features}</td></tr>\n");
