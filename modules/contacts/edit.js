@@ -1,3 +1,5 @@
+var old_email;
+
 function populate_number(result) {
   var field = result.field;
   if (result.valid == 1) {
@@ -25,8 +27,23 @@ function check_number( field )
     }
 }
 
+function email_change() {
+    var new_email = $('#email').val();
+    if (new_email != old_email) {
+        $('#designated-row').show();
+    } else {
+        $('#designated-row').hide();
+    }
+}
+
 $(function() {
     $('#telefon').on("change paste", check_number("telefon") );
     $('#mobile').on("change paste", check_number("mobile") );
     $('#telefax').on("change paste", check_number("telefax") );
+    
+    if ($('#designated-row')) {
+        $('#designated-row').hide();
+        $('#email').on("change paste", email_change);
+        old_email = $('#email').val();
+    }
 });

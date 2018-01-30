@@ -40,6 +40,7 @@ if (! $new) {
     $c = get_contact($_REQUEST['copy']);
     $c['nic_handle'] = NULL;
 }
+$domains = domainlist_by_contact($c);
 
 $readonly = '';
 // Wenn das Handle beim NIC angemeldet ist, kann man Name und Land nicht mehr ändern
@@ -74,8 +75,14 @@ $odd = !$odd;
 $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="'.$c['fax'].'"><span id="telefax_feedback"></span></td></tr>';
 $odd = !$odd;
 
+if ($domains) {
+    $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'" id="designated-row"><td><label for="designated"><strong>Inhaberwechsel:</strong></label></td><td><input type="checkbox" name="designated" id="designated" value="yes"><label for="designated">Die Änderung der E-Mail-Adresse bewirkt rechtlich einen Inhaberwechsel. Ich bestätige, dass mir eine explizite Zustimmung des alten und neuen Inhabers für diese Änderung vorliegt. Eine Speicherung der Änderungen ist nur mit dieser Zustimmung möglich.</label></td></tr>';
+    $odd = !$odd;
+}
+
 $html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speichern" /></td></tr>';
 $html .= '</table>';
+
 
 
 $back = 'list';
@@ -88,6 +95,15 @@ if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
 }
 
 output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id']."&back=".urlencode($back).$domainholder, $html));
+
+if ($domains) {
+    output('<p>Folgende Domains sind von dieser Änderung betroffen:</p>
+            <ul>');
+    foreach ($domains as $dom) {
+        output('<li>'.$dom->fqdn.'</li>');
+    }
+    output('</ul>');
+}
 
 
 ?>

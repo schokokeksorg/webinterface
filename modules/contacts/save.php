@@ -151,6 +151,13 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         }
     }
 
+    $domains = domainlist_by_contact($c);
+    if ($domains) {
+        if ($c['email'] != $_REQUEST['email'] && !(isset($_REQUEST['designated']) && $_REQUEST['designated'] == 'yes')) {
+            system_failure("Sie müssen die explizite Zustimmung des Domaininhabers bestätigen um diese Änderungen zu speichern.");
+        }
+    }
+
     // Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
     // dann hinterher das Token erzeugen und senden. Weil wir für das Token die 
     // Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach 
