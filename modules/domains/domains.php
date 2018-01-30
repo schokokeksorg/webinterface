@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/debug.php');
 
-require_once('session/start.php');
+require_once('inc/icons.php');
 
 require_once('class/domain.php');
 require_once('domains.php');
@@ -28,28 +28,42 @@ if ($_SESSION['role'] & ROLE_CUSTOMER)
 else
   $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
 
+$useraccounts = array();
+if ($_SESSION['role'] & ROLE_CUSTOMER) {
+    $useraccounts = list_useraccounts();
+}
+
 title("Domains");
 
-output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
-<table>
-<tr><th>Domainname</th><th>Status</th><th>Funktionen</th></tr>
-');
+output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>');
+
+output('<div class="domain-list">');
 foreach ($user_domains as $domain)
 {
+  $status = 'regular';
+  $locked = '';
   $mailserver_lock = '';
   if ($domain->mail != 'none' && $domain->mailserver_lock == 1) {
+      $locked = 'locked';
       $mailserver_lock = '<br><strong>Mail-Verarbeitung eingeschränkt!</strong>'.footnote('Diese Domain ist extern registriert und wurde noch nicht bestätigt. Momentan ist daher der Mail-Empfang auf dieser Domain nicht möglich.');
   }
   $regdate = $domain->reg_date;
-  if ($domain->provider != 'terions')
+  if ($domain->provider != 'terions') {
+    $status = 'external';
     $regdate = '<em>Extern registriert</em>';
-  elseif ($domain->reg_date == NULL)
+  } elseif ($domain->reg_date == NULL) {
+    $status = 'pretransfer';
     $regdate = '<em>Umzug bevorstehend</em>';
-  else
+  } else {
+      $status = 'regular';
     $regdate = 'Registriert seit '.$regdate;
-
+    }
   if ($domain->cancel_date) {
+      $status = 'cancel-scheduled';
     $regdate .= '<br />Gekündigt zum '.$domain->cancel_date;
+  }
+  if ($domain->cancel_date && $domain->cancel_date < date('Y-m-d')) {
+      $status = 'cancelled';
   }
 
   $features = array();
@@ -74,7 +88,7 @@ foreach ($user_domains as $domain)
     $features = '<em>unbenutzt</em>';
   $punycode = $domain->punycode;
   if ($domain->is_idn) {
-    $punycode = "<br/>($punycode)";
+    $punycode = "<br/><span class=\"punycode\">($punycode)</span>";
   } else {
     $punycode = '';
   }
@@ -84,9 +98,23 @@ foreach ($user_domains as $domain)
   } elseif ($_SESSION['role'] & ROLE_CUSTOMER && $domain->mailserver_lock == 1) {
       $domainname = internal_link('verify', $domainname, 'id='.$domain->id);
   }
-  output("  <tr><td>{$domainname}</td><td>{$regdate}</td><td>{$features}{$mailserver_lock}</td></tr>\n");
+  $domainuser = '';
+    if ($_SESSION['role'] & ROLE_CUSTOMER && count($useraccounts) > 1) {
+        // Mehrere User vorhanden
+        $username = '';
+        foreach ($useraccounts as $u) {
+            if ($u['uid'] == $domain->useraccount) {
+                $username = $u['username'];
+            }
+        }
+        if (!$username) {
+            $username = '<em>unbekannt</em>';
+        }
+        $domainuser = '<p class="domain-user">Verfügbar für Benutzer <strong>'.$username.'</strong> '.internal_link('chguser', icon_edit().' Ändern', "id={$domain->id}").'</p>';
+    }
+  output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p>".$domainuser."<p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
 }
-output('</table>');
+output('</div>');
 output("<br />");
 addnew('adddomain', 'Neue Domain bestellen / hinzufügen');
 
