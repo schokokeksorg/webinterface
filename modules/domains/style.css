@@ -12,20 +12,19 @@ div.domain-item {
     margin: 10px;
 }
 
-div.domain-item.regular, div.domain-item.regular a {
+div.domain-item.regular {
     border-color: #0a0;
     background-color: #dfd;
 }
 
-div.domain-item.external, div.domain-item.external a {
+div.domain-item.external {
     border-color: #00a;
     background-color: #ddf;
 }
 
-div.domain-item.cancel-scheduled, div.domain-item.cancel-scheduled a {
+div.domain-item.cancel-scheduled {
     border-color: red;
     background-color: #fdd;
-    padding: 4px;
 }
 div.cancel-scheduled p.regdate {
     color: red;
