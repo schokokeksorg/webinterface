@@ -38,6 +38,15 @@ if (isset($_REQUEST['domain'])) {
         warning('Leerzeichen sind in Domainnamen nicht erlaubt.');
         redirect('');
     }
+    $dom = new Domain();
+    if ($dom->loadByName($_REQUEST['domain']) !== false) {
+        if ($dom->is_customerdomain()) {
+            warning('Diese Domain ist bereits in Ihrem Kundenkonto eingetragen!');
+        } else {
+            warning('Diese Domain ist bei einem anderen Kunden von uns in Nutzung. Kontaktieren Sie den Support, wenn Sie eine Domain in ein anderes Kundenkonto übertragen möchten.');
+        }
+        redirect('');
+    }
     $avail = api_domain_available($_REQUEST['domain']);
     if ($avail == 'available') {
         output('<p class="domain-available">Die Domain '.filter_input_general($_REQUEST['domain']).' ist verfügbar!</p>');
@@ -98,11 +107,19 @@ if (isset($_REQUEST['domain'])) {
         <p><strong>Beachten Sie:</strong> Um diese Domain nutzen zu können, benötigen Sie bei Ihrem bisherigen Domainregistrar die Möglichkeit, DNS-Records anzulegen oder die zuständigen DNS-Server zu ändern. Sie können dann entweder unsere DNS-Server nutzen oder einzelne DNS-Records auf unsere Server einrichten.</p>');
 
         output('<p>Mit Betätigen des unten stehenden Knopfes bestätigen Sie, dass Sie entweder der Domaininhaber sind oder mit expliziter Zustimmung des Domaininhabers handeln.</p>');
-        $form = '<p class="buttonset" id="buttonset-external">
+        $form = '
+            <p class="buttonset" id="buttonset-external">
             <input type="radio" name="dns" id="option-dns-enable" value="enable" />
             <label for="option-dns-enable">Lokalen DNS-Server aktivieren</label>
             <input type="radio" name="dns" id="option-dns-disable" value="disable" checked="checked" />
             <label for="option-dns-disable">Weiterhin externen DNS verwenden</label>
+            </p>
+
+            <p class="buttonset" id="buttonset-email">
+            <input type="radio" name="email" id="option-email-enable" value="enable" checked="checked" />
+            <label for="option-email-enable">E-Mail-Nutzung aktivieren</label>
+            <input type="radio" name="email" id="option-email-disable" value="disable" />
+            <label for="option-email-disable">Nicht für E-Mail nutzen</label>
             </p>';
 
         $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($_REQUEST['domain']).'">
@@ -118,6 +135,8 @@ if (isset($_REQUEST['domain'])) {
             case 'nameContainsForbiddenCharacter':
                 output('<p>Der Domainname enthält unerlaubte Zeichen.</p>');
                 break;
+            case 'extensionDoesNotExist':
+            case 'extensionCannotBeRegistered':
             case 'suffixDoesNotExist':
             case 'suffixCannotBeRegistered':
                 output('<p>Diese Endung ist nicht verfügbar.</p>');
