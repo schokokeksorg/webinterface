@@ -27,7 +27,7 @@ if (!isset($_REQUEST['domain'])) {
     system_failure('Kein Domainname übergeben');
 }
 
-$id = insert_domain_external($_REQUEST['domain'], ($_REQUEST['dns'] === 'enable'));
+$id = insert_domain_external($_REQUEST['domain'], ($_REQUEST['dns'] === 'enable'), ($_REQUEST['email'] === 'enable'));
 
 redirect('verify?id='.$id);
 

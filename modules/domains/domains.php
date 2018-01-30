@@ -37,7 +37,7 @@ output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>
 foreach ($user_domains as $domain)
 {
   $mailserver_lock = '';
-  if ($domain->mailserver_lock == 1) {
+  if ($domain->mail != 'none' && $domain->mailserver_lock == 1) {
       $mailserver_lock = '<br><strong>Mail-Verarbeitung eingeschränkt!</strong>'.footnote('Diese Domain ist extern registriert und wurde noch nicht bestätigt. Momentan ist daher der Mail-Empfang auf dieser Domain nicht möglich.');
   }
   $regdate = $domain->reg_date;

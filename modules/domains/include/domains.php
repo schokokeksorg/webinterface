@@ -212,6 +212,7 @@ function list_useraccounts()
 }
 
 
+
 function get_domain_offer($domainname) 
 {
   $domainname = filter_input_hostname($domainname);
@@ -248,7 +249,7 @@ function get_domain_offer($domainname)
 }
 
 
-function insert_domain_external($domain, $dns)
+function insert_domain_prereg($domain, $transfer=false)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $uid = (int) $_SESSION['userinfo']['uid'];
@@ -261,11 +262,41 @@ function insert_domain_external($domain, $dns)
     }
     $domainname = $parts[0];
     $tld = $parts[1];
-    db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, provider, dns, mailserver_lock) VALUES 
-        (?, ?, ?, ?, 'external', 'other', 0, 1)", array($cid, $uid, $domainname, $tld));
+    $status = 'prereg';
+    if ($transfer) {
+        $status = 'pretransfer';
+    }
+    db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
+        (?, ?, ?, ?, ?, 'regular', 'other', 1, 'auto', 1)", array($status, $cid, $uid, $domainname, $tld));
+    $id = db_insert_id();
+    $vmailserver = (int) $_SESSION['userinfo']['server'];
+    db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES (?, ?)", array($id, $vmailserver));
+    return $id;
+}
+
+
+function insert_domain_external($domain, $dns = false, $mail = true)
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $uid = (int) $_SESSION['userinfo']['uid'];
+    if (strpos($domain, ' ') !== false) {
+        system_failure("Ungültige Zeichen im Domainname");
+    }
+    $parts = explode('.', $domain);
+    if (count($parts) !== 2) {
+        system_failure("Ungültiger Domainname");
+    }
+    $domainname = $parts[0];
+    $tld = $parts[1];
+    db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
+        ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", array($cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')));
     $id = db_insert_id();
     if ($dns) {
         db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", array($id));
+    }
+    if ($mail) {
+        $vmailserver = (int) $_SESSION['userinfo']['server'];
+        db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES (?, ?)", array($id, $vmailserver));
     }
     return $id;
 }

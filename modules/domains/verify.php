@@ -55,7 +55,7 @@ title("Externe Domain {$dom->fqdn}");
 $section = 'domains_domains';
 output('<p>Die Domain '.$dom->fqdn.' ist momentan extern registriert und verwendet auch externe DNS-Server. Um Missbrauch zu verhindern, kann diese Domain daher bislang nicht als E-Mail-Domain benutzt werden. Um die Domain als E-Mail-Domain zu nutzen, können Sie diese zu uns umziehen, beim Registrar die DNS-Server von '.config('company_name').' einsetzen oder die Inhaberschaft bestätigen durch das Setzen eines passenden DNS-Records.</p>');
 output('<h4>Domain-Transfer ausführen</h4>
-<p></p>'); //FIXME
+<p>'.internal_link('domainreg', 'Domain-Transfer ausführen', "domain={$dom->fqdn}").'</p>');
 if ($dom->dns == 1 || have_module('dns')) {
     output('<h4>DNS-Server von '.config('company_name').' nutzen</h4>');
     if ($dom->dns == 0) {
@@ -70,6 +70,7 @@ if ($dom->dns == 1 || have_module('dns')) {
             output('<li>'.$ns.'</li>');
         }
         output('</ul>');
+        output('<p>Nachdem die Änderungen bei der Registrierungsstelle übernommen wurden (das kann mehrere Stunden dauern), reicht ein erneuter Aufruf dieser Seite um die Sperrung aufzuheben.</p>');
     }
 }
 output('<h4>Inhaberschaft bestätigen</h4>');
