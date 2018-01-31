@@ -28,13 +28,13 @@ if (isset($_GET['type'])) {
     }
     $_SESSION['contacts_choose_header'] = 'Wählen Sie einen neuen '.$t.' für die Domain '.$_SESSION['domains_update_domainname'];
     $_SESSION['contacts_choose_key'] = 'domains_update_'.$function;
-    $_SESSION['contacts_choose_redirect'] = '../domains/update';
+    $_SESSION['contacts_choose_redirect'] = '../domains/detail';
     redirect('../contacts/choose');
 } else {
     unset($_SESSION['contacts_choose_key']);
     unset($_SESSION['contacts_choose_header']);
     unset($_SESSION['contacts_choose_redirect']);
-    redirect("update.php");
+    redirect("detail");
 }
 
 

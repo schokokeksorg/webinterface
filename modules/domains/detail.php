@@ -19,50 +19,175 @@ require_once('inc/icons.php');
 
 require_once('class/domain.php');
 require_once('domains.php');
-require_once('modules/contacts/include/contacts.php');
+require_once('domainapi.php');
 
 require_role(ROLE_CUSTOMER);
 
-if (!isset($_REQUEST['id'])) {
-    system_failure("Ungültiger Aufruf!");
+$dom = NULL;
+if (isset($_REQUEST['id'])) {
+    $dom = new Domain( (int) $_REQUEST['id']);
+    $_SESSION['domains_update_domainname'] = $dom->fqdn;
+} elseif (isset($_SESSION['domains_update_domainname'])) {
+    $dom = new Domain($_SESSION['domains_update_domainname']);
+} else {
+    system_failure("Keine Domain angegeben");
 }
-
-
-$dom = new Domain( (int) $_REQUEST['id']);
+if (!$dom) {
+    system_failure("Keine Domain gewählt!");
+}
+$dom->ensure_customerdomain();
 
 title("Domain {$dom->fqdn}");
 $section = 'domains_domains';
 
-if ($dom->provider == 'external') {
-    output("<p>Diese Domain ist extern registriert!</p>");
+// Block zuständiger Useraccount
+
+$useraccounts = list_useraccounts();
+if ($_SESSION['role'] & ROLE_CUSTOMER && count($useraccounts) > 1) {
+    // Mehrere User vorhanden
+    $options = array();
+    foreach ($useraccounts as $u) {
+        $options[$u['uid']] = $u['username'];
+    }
+    if (!array_key_exists($dom->useraccount, $options)) {
+        $options[$dom->useraccount] = $dom->useraccount;
+    }
+    output('<h4>Zuständiges Benutzerkonto</h4>');
+    $form = '<p>Diese Domain nutzen im Benutzerkonto '.html_select('domainuser', $options, $dom->useraccount).' <input type="submit" name="submit" value="Änderung speichern"></p>';
+    output(html_form('update-user', 'update', 'action=chguser&id='.$dom->id, $form));
 }
-if ($dom->provider == 'terions') {
-    output("<p>Folgende Informationen sind bei dieser Domain hinterlegt:</p>");
-    if ($dom->owner && $dom->admin_c) {
-        $descr = 'Inhaber (OWNER)';
-        if ($dom->owner == $dom->admin_c) {
-            $descr = 'Inhaber';
-        }
-        $owner = get_contact($dom->owner);
-        $name = nl2br(filter_input_general($owner['name']));
-        if ($owner['company']) {
-            $name = nl2br(filter_input_general($owner['company']))."<br>\n".$name;
-        }
-        output("<p>{$descr}:<br><strong>{$name}</strong><br>(Adresse #{$owner['id']})<br>".internal_link("../contacts/edit", icon_edit()." Adresse bearbeiten", "back=".urlencode('../domains/detail?id='.$dom->id)."&id=".$owner['id'])."</p>");
 
-        if ($dom->owner != $dom->admin_c) {
-            $admin_c = get_contact($dom->admin_c);
-            $name = nl2br(filter_input_general($admin_c['name']));
-            if ($admin_c['company']) {
-                $name = nl2br(filter_input_general($admin_c['company']))."<br>\n".$name;
-            }
-            output("<p>Verwalter (ADMIN_C):<br><strong>{$name}</strong><br>(Adresse #{$admin_c['id']})<br>".internal_link("../contacts/edit", icon_edit()." Adresse bearbeiten", "back=".urlencode('../domains/detail?id='.$dom->id)."&id=".$admin_c['id'])."</p>");
-        }
 
-        #addnew("ownchange", "Inhaber dieser Domain ändern", "id=".$dom->id."&back=".urlencode('detail?id='.$dom->id));
+// Block Domain-Inhaber 
 
+if ($dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_date > date('Y-m-d'))) {
+    use_module('contacts');
+    require_once('contacts.php');
+
+    output('<h4>Inhaberwechsel der Domain</h4>');
+    output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
+
+    if (isset($_REQUEST['id'])) {
+        api_download_domain($_REQUEST['id']);
+        $_SESSION['domains_update_domainname'] = $dom->fqdn;
+        $_SESSION['domains_update_owner'] = $dom->owner;
+        $_SESSION['domains_update_admin_c'] = $dom->admin_c;
+    }
+    if (!update_possible($dom->id)) {
+        warning("Diese Domain verwendet eine unübliche Endung. Daher kann der Inhaber nicht auf diesem Weg verändert werden. Bitte kontaktieren Sie den Support.");
     } else {
-        output('<p>Die Inhaberdaten dieser Domain können nicht ausgelesen werden. Bitte wenden Sie sich für Änderungen an den Support!</p>');
+
+        if ($_SESSION['domains_update_admin_c'] == $dom->admin_c && 
+                $_SESSION['domains_update_owner'] != $dom->owner && 
+                (!isset($_SESSION['domains_update_detach']) || $_SESSION['domains_update_detach'] == 0)) {
+            // Wenn der Owner geändert wurde, der Admin aber nicht und das detach-Flag 
+            // nicht gesetzt ist, dann wird der Admin gleich dem Owner gesetzt
+            $_SESSION['domains_update_admin_c'] = $_SESSION['domains_update_owner'];
+        }
+
+        if (isset($_GET['admin_c']) && $_GET['admin_c'] == 'none') {
+            $_SESSION['domains_update_admin_c'] = $_SESSION['domains_update_owner'];
+            unset($_SESSION['domains_update_detach']);
+        }
+
+        $owner = get_contact($_SESSION['domains_update_owner']);
+        $admin_c = get_contact($_SESSION['domains_update_admin_c']);
+        $function = 'Inhaber';
+        if ($owner['id'] == $admin_c['id']) {
+            $function .= ' und Verwalter';
+        }
+        $cssclass = '';
+        if ($owner['id'] != $dom->owner) {
+            $cssclass = 'modified';
+        }
+        output('<p><strong>'.$function.':</strong></p>'.display_contact($owner, '', $cssclass));
+        addnew('choose', 'Neuen Inhaber wählen', "type=owner");
+        if ($owner['id'] != $admin_c['id']) {
+            $cssclass = '';
+            if ($admin_c['id'] != $dom->admin_c) {
+                $cssclass = 'modified';
+            }
+            output('<p><strong>Verwalter:</strong></p>'.display_contact($admin_c, '', $cssclass));
+            addnew('choose', 'Neuen Verwalter wählen', "type=admin_c");
+            output('<p class="delete">'.internal_link('update', 'Keinen separaten Verwalter festlegen', 'admin_c=none').'</p>');
+        } else {
+            addnew('choose', 'Einen separaten Verwalter wählen', "type=admin_c&detach=1");
+        }
+
+
+        if ($owner['id'] != $dom->owner || $admin_c['id'] != $dom->admin_c) {
+            if (isset($_GET['error']) && $_GET['error'] == '1') {
+                input_error('Sie müssen der Übertragung explizit zustimmen!');
+            }
+            $form = '<p>Es sind Änderungen vorgenommen worden, die noch nicht gespeichert wurden</p>';
+            $form .= '<p><input type="checkbox" name="accept" value="1" id="accept"><label for="accept"> Ich bestätige, dass ich die nachfolgenden Hinweise zur Kenntnis genommen habe.</p>
+                <p>Mit Speichern dieser Änderungen führen Sie möglicherweise einen Inhaberwechsel bei der Domain '.$dom->fqdn.' aus. Inhaberwechsel sind bei einigen Domainendungen (z.B. com/net/org) zustimmungspflichtig vom alten und vom neuen Inhaber. Die Registrierungsstelle kann nach eigenem Ermessen diese Zustimmung per separater E-Mail einfordern. Wird diese Zustimmung nicht oder verspätet erteilt, kann eine Domain gesperrt werden. Dieser Vorgang wird nicht von '.config('company_name').' kontrolliert.</p>
+                <p>Sie sind ferner darüber informiert, dass die Adresse des Domaininhabers öffentlich abrufbar ist.</p>';
+            $form .= '<p><input type="submit" name="sumbit" value="Änderungen speichern und Domaininhaber ändern"></p>';
+            output(html_form('domains_update', 'update', "action=ownerchange&id=".$dom->id, $form));
+        } 
     }
 }
-output("");
+
+// Block Externe Domain umziehen
+
+if ($dom->provider != 'terions') {
+    output('<h4>Domain-Transfer ausführen</h4>
+            <p>'.internal_link('domainreg', 'Domain-Transfer ausführen', "domain={$dom->fqdn}").'</p>');
+}
+
+// Block Domain bestätigen
+
+if ($dom->mailserver_lock == 1) {
+    if (has_own_ns($dom->domainname, $dom->tld)) {
+        unset_mailserver_lock($dom);
+        success_msg("Die Domain {$dom->fqdn} wurde erfolgreich bestätigt und kann nun in vollem Umfang verwendet werden.");
+        redirect("");
+    }
+    output('<h3>Mailserver-Sperre aktiv</h3>
+            <p>Bisher ist für diese Domain die Nutzung als Mail-Domain eingeschränkt, da wir noch keine Gewissheit haben, ob Sie der rechtmäßige Nutzer der Domain sind. Eine Domain, die für E-Mail-Aktivität genutzt werden soll, muss entweder die DNS-Server von '.config('company_name').' verwenden oder die Inhaberschaft muss durch einen passend gesetzten DNS-Record nachgewiesen werden. Nachfolgend werden die Möglichkeiten im Detail vorgestellt.</p>');
+    if (!$dom->secret) {
+        create_domain_secret($dom);
+    }
+
+    $TXT = get_txt_record('_schokokeks', $dom->domainname, $dom->tld);
+    if ($TXT == $dom->secret) {
+        unset_mailserver_lock($dom);
+        success_msg("Die Domain {$dom->fqdn} wurde erfolgreich bestätigt und kann nun in vollem Umfang verwendet werden.");
+        redirect("domains");
+    }
+
+    if ($dom->dns == 1 || have_module('dns')) {
+        output('<h4>DNS-Server von '.config('company_name').' nutzen</h4>');
+        output('<p>Wenn Sie die lokalen DNS-Server als zuständig einrichten, wird die Domain automatisch bestätigt.</p>');
+        if ($dom->dns == 0) {
+            output('<p>Bisher ist der lokale DNS-Server ausgeschaltet. Besuchen Sie die DNS-Einstellungen um dies zu ändern.</p>');
+            output('<p>'.internal_link('../dns/dns', 'DNS-Einstellungen aufrufen').'</p>');
+        } else {
+            $own_ns = own_ns();
+            asort($own_ns);
+            output('<p>Wenn Sie die DNS-Server von '.config('company_name').' nutzen möchten, dann richten Sie bei Ihrem Domain-Registrar bitte folgende DNS-Server als zuständig für diese Domain ein:</p>
+                    <ul>');
+            foreach ($own_ns as $ns) {
+                output('<li>'.$ns.'</li>');
+            }
+            output('</ul>');
+            output('<p>Nachdem die Änderungen bei der Registrierungsstelle übernommen wurden (das kann mehrere Stunden dauern), reicht ein erneuter Aufruf dieser Seite um die Sperrung aufzuheben.</p>');
+        }
+    }
+    output('<h4>Inhaberschaft bestätigen</h4>');
+    output('<p>Um eine extern registrierte Domain in vollem Umfang zu nutzen, ohne die lokalen DNS-Server als zuständig einzurichten, müssen Sie die Inhaberschaft bestätigen. Erst nach diesem Schritt können Sie diese Domain bei '.config('company_name').' als Mail-Domain nutzen.</p>');
+    
+    output('<p>Die Zeichenkette zur Bestätigung lautet <strong>'.$dom->secret.'</strong>.</p>');
+    output('<p>Richten Sie bitte auf dem zuständigen DNS-Server einen DNS-Record vom Typ TXT unter dem Hostname <strong>_schokokeks.'.$dom->fqdn.'</strong> ein und hinterlegen Sie dort diese Zeichenkette als Inhalt:</p>
+            <p><code>_schokokeks.'.$dom->fqdn.'.    IN TXT "'.$dom->secret.'"</code></p>
+            <p>Beachten Sie, dass Aktualisierungen am DNS-Server i.d.R. mit einigen Minuten verzögerung abgerufen werden können.</p>');
+#output('<p>Sie können diese entweder als DNS-Record vom Typ TXT unter dem Hostname <strong>_schokokeks.'.$dom->fqdn.'</strong> einrichten oder auf dem zuständigen Webserver eine Datei hinterlegen mit dem Code als Inhalt und der Abruf-URL <strong>http://'.$dom->fqdn.'/'.$dom->secret.'.txt</strong></p>');
+    output('<p>'.internal_link('', other_icon('refresh.png').' Diese Seite neu laden um den DNS-Record zu prüfen', "id={$dom->id}&ts=".time()).'</p>');
+    output('<p>Nach erfolgreicher Überprüfung kann der DNS-Eintrag wieder entfernt werden.</p>');
+
+}
+
+
+output('<p>'.internal_link('domains', 'Ohne Änderungen zurück').'</p>');
+

@@ -88,12 +88,8 @@ foreach ($user_domains as $domain)
     $punycode = '';
   }
   $domainname = "{$domain->fqdn}{$punycode}";
-  if ((!$domain->cancel_date || $domain->cancel_date > date('Y-m-d')) && have_module('contacts') && $_SESSION['role'] & ROLE_CUSTOMER && update_possible($domain->id)) {
-      $domainname = internal_link('update', $domainname, 'id='.$domain->id);
-  } elseif ($_SESSION['role'] & ROLE_CUSTOMER && $domain->mailserver_lock == 1) {
-      $domainname = internal_link('verify', $domainname, 'id='.$domain->id);
-  }
- output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
+  $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
+  output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
 }
 output('</div>');
 output("<br />");
