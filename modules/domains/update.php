@@ -62,6 +62,24 @@ if (isset($_GET['admin_c']) && $_GET['admin_c'] == 'none') {
 
 title("Änderung der Domain {$dom->fqdn}");
 $section = 'domains_domains';
+
+$useraccounts = list_useraccounts();
+if ($_SESSION['role'] & ROLE_CUSTOMER && count($useraccounts) > 1) {
+    // Mehrere User vorhanden
+    $options = array();
+    foreach ($useraccounts as $u) {
+        $options[$u['uid']] = $u['username'];
+    }
+    if (!array_key_exists($dom->useraccount, $options)) {
+        $options[$dom->useraccount] = $dom->useraccount;
+    }
+    output('<h4>Zuständiges Benutzerkonto</h4>');
+    $form = '<p>Diese Domain nutzen im Benutzerkonto '.html_select('domainuser', $options, $dom->useraccount).' <input type="submit" name="submit" value="Änderung speichern"></p>';
+    output(html_form('update-user', 'update_save', 'action=chguser&id='.$dom->id, $form));
+}
+
+
+output('<h4>Inhaberwechsel der Domain</h4>');
 output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
 
 $owner = get_contact($_SESSION['domains_update_owner']);
@@ -98,7 +116,7 @@ if ($owner['id'] != $dom->owner || $admin_c['id'] != $dom->admin_c) {
     <p>Mit Speichern dieser Änderungen führen Sie möglicherweise einen Inhaberwechsel bei der Domain '.$dom->fqdn.' aus. Inhaberwechsel sind bei einigen Domainendungen (z.B. com/net/org) zustimmungspflichtig vom alten und vom neuen Inhaber. Die Registrierungsstelle kann nach eigenem Ermessen diese Zustimmung per separater E-Mail einfordern. Wird diese Zustimmung nicht oder verspätet erteilt, kann eine Domain gesperrt werden. Dieser Vorgang wird nicht von '.config('company_name').' kontrolliert.</p>
     <p>Sie sind ferner darüber informiert, dass die Adresse des Domaininhabers öffentlich abrufbar ist.</p>';
     $form .= '<p><input type="submit" name="sumbit" value="Änderungen speichern und Domaininhaber ändern"></p>';
-    output(html_form('domains_update', 'update_save', "id=".$dom->id, $form));
+    output(html_form('domains_update', 'update_save', "action=ownerchange&id=".$dom->id, $form));
 } 
 
 output('<p>'.internal_link('domains', 'Ohne Änderungen zurück').'</p>');

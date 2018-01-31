@@ -22,21 +22,33 @@ require_once('domains.php');
 
 require_role(ROLE_CUSTOMER);
 
-if (!(isset($_POST['accept']) && $_POST['accept'] == '1')) {
-    redirect('update?error=1');
-}
-$dom = new Domain($_SESSION['domains_update_domainname']);
-if (!$dom) {
-    system_failure("Keine Domain gewählt!");
+if (!isset($_REQUEST['action'])) {
+    system_failure("Falscher Aufruf");
 }
 
-DEBUG($dom);
-domain_ownerchange($_SESSION['domains_update_domainname'], $_SESSION['domains_update_owner'], $_SESSION['domains_update_admin_c']);
+if ($_REQUEST['action'] == 'chguser') {
+    change_user((int)$_REQUEST['id'], $_REQUEST['domainuser']);
+    redirect('update?id='.(int)$_REQUEST['id']);
+}
+    
+if ($_REQUEST['action'] == 'ownerchange') {
+
+    if (!(isset($_POST['accept']) && $_POST['accept'] == '1')) {
+        redirect('update?error=1');
+    }
+    $dom = new Domain($_SESSION['domains_update_domainname']);
+    if (!$dom) {
+        system_failure("Keine Domain gewählt!");
+    }
+
+    DEBUG($dom);
+    domain_ownerchange($_SESSION['domains_update_domainname'], $_SESSION['domains_update_owner'], $_SESSION['domains_update_admin_c']);
 
 
-unset($_SESSION['domains_update_domainname']);
-unset($_SESSION['domains_update_owner']);
-unset($_SESSION['domains_update_admin_c']);
-unset($_SESSION['domains_update_detach']);
+    unset($_SESSION['domains_update_domainname']);
+    unset($_SESSION['domains_update_owner']);
+    unset($_SESSION['domains_update_admin_c']);
+    unset($_SESSION['domains_update_detach']);
 
-redirect('domains');
+    redirect('domains');
+}

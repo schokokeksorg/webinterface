@@ -28,11 +28,6 @@ if ($_SESSION['role'] & ROLE_CUSTOMER)
 else
   $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
 
-$useraccounts = array();
-if ($_SESSION['role'] & ROLE_CUSTOMER) {
-    $useraccounts = list_useraccounts();
-}
-
 title("Domains");
 
 output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>');
@@ -98,21 +93,7 @@ foreach ($user_domains as $domain)
   } elseif ($_SESSION['role'] & ROLE_CUSTOMER && $domain->mailserver_lock == 1) {
       $domainname = internal_link('verify', $domainname, 'id='.$domain->id);
   }
-  $domainuser = '';
-    if ($_SESSION['role'] & ROLE_CUSTOMER && count($useraccounts) > 1) {
-        // Mehrere User vorhanden
-        $username = '';
-        foreach ($useraccounts as $u) {
-            if ($u['uid'] == $domain->useraccount) {
-                $username = $u['username'];
-            }
-        }
-        if (!$username) {
-            $username = '<em>unbekannt</em>';
-        }
-        $domainuser = '<p class="domain-user">Verfügbar für Benutzer <strong>'.$username.'</strong> '.internal_link('chguser', icon_edit().' Ändern', "id={$domain->id}").'</p>';
-    }
-  output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p>".$domainuser."<p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
+ output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
 }
 output('</div>');
 output("<br />");

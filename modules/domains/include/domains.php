@@ -212,6 +212,24 @@ function list_useraccounts()
 }
 
 
+function change_user($domain, $uid) 
+{
+    $domain = new Domain($domain);
+    $domain->ensure_customerdomain();
+    $targetuser = NULL;
+    $useraccounts = list_useraccounts();
+    foreach ($useraccounts as $u) {
+        if ($u['uid'] == $uid) {
+            $targetuser = $u['uid'];
+            break;
+        }
+    }
+    if (! $targetuser) {
+        system_failure("Ungültiger Useraccount!");
+    }
+    db_query("UPDATE kundendaten.domains SET useraccount=? WHERE id=?", array($targetuser, $domain->id));
+}
+
 
 function get_domain_offer($domainname) 
 {
