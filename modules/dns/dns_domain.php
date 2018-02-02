@@ -14,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/base.php');
+require_once('inc/icons.php');
 require_once('inc/security.php');
 
 require_once('class/domain.php');
@@ -35,6 +35,7 @@ headline('DNS-Records für <em>'.filter_input_general($domain->fqdn).'</em>');
 
 $records = get_domain_records($domain->id);
 $auto_records = get_domain_auto_records($domain->fqdn);
+$cname_on_domain = false;
 
 output('<table><tr><th>Hostname</th><th>Typ</th><th>IP-Adresse/Inhalt</th><th>TTL</th><th>&#160;</th></tr>
 ');
@@ -74,10 +75,15 @@ foreach ($records AS $rec)
   if (!in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp', 'caa'))) {
       $editable = false;
   }
+  $delete = internal_link('dns_record_save', icon_delete('Record löschen'), "id={$rec['id']}&action=delete");
+  if ($rec['type'] == 'ns' && ! $rec['hostname']) {
+      $editable = false;
+      $delete = '';
+  }
   if ($editable) {
       $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
   }
-  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>".$data."</td><td>{$ttl} Sek.</td><td>".internal_link('dns_record_save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Record löschen" />', "id={$rec['id']}&action=delete")."</td></tr>\n");
+  output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>".$data."</td><td>{$ttl} Sek.</td><td>".$delete."</td></tr>\n");
 }  
 foreach ($auto_records AS $rec)
 {

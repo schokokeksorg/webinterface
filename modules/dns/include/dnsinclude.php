@@ -356,6 +356,7 @@ function enable_autorecords($domainid)
   $dom = $dom->id;
 
   db_query("UPDATE kundendaten.domains SET autodns=1 WHERE id=?", array($dom));
+  db_query("DELETE FROM dns.custom_records WHERE type='ns' AND domain=? AND hostname IS NULL", array($dom));
   warning("Die automatischen Einträge werden in Kürze aktiviert, bitte haben Sie einen Moment Geduld.");
 }
 
