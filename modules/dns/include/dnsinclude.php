@@ -265,9 +265,12 @@ function save_dns_record($id, $record)
         system_failure('MX hostname missing');
       $record['ip'] = NULL;
       break;
-    case 'cname':
     case 'ptr':
     case 'ns':
+      if (!$record['hostname']) {
+          system_failure("Die angestrebte Konfiguration wird nicht funktionieren, Speichern wurde daher verweigert.");
+      }
+    case 'cname':
       $record['dyndns'] = NULL;
       $record['spec'] = NULL;
       $record['ip'] = NULL;

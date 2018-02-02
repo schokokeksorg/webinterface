@@ -107,7 +107,7 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <ul>
 <li>'.internal_link('dns_record_edit', 'AAAA (IPv6-Adresse)', 'id=new&type=aaaa&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'CNAME (Aliasnamen)', 'id=new&type=cname&domain='.$domain->id).'</li>
-<li>'.internal_link('dns_record_edit', 'NS (Nameserver)', 'id=new&type=ns&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'NS (Nameserver, NUR FÜR SUBDOMAINS!)', 'id=new&type=ns&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'TXT', 'id=new&type=txt&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'SSHFP', 'id=new&type=sshfp&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'CAA', 'id=new&type=caa&domain='.$domain->id).'</li>
@@ -118,12 +118,15 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 
 if ($domain->autodns)
 {
-  output("<p>Automatische Einträge können nicht geändert werden. Möchten Sie davon abweichende Records setzen, so können Sie hiermit alle automatischen Einträge in normale Einträge konvertieren und die Erzeugung neuer automatischer Einträge abschalten. Diese Einstellung betrifft nur diese Domain und kann jederzeit geändert werden.</p>
+  output("<p>Für extrem ungewöhnliche Konfigurationen können Sie die Erzeugung von automatischen DNS-Records unter dieser Domain komplett abschalten. Dies ist i.d.R. falsch und wird zu Fehlfunktion führen. Nutzen Sie diese Einstellung auf eigene Gefahr.</p>
+  <p>Möchten Sie einzelne DNS-Einträge abweichend setzen, so legen Sie einfach oben den jeweils gewünschten Record an. Falls es gleichlautende automatische Einträge gibt, werden diese anschließend unterdrückt.</p>
+  <p>Warten Sie nach Änderung dieser Einstellung eine Minute und laden Sie danach die Seite neu.</p>
 <p>".internal_link('dns_save', 'Automatisch erzeugte Einträge umwandeln', "type=autodns&action=disable&dom={$domain->id}")."</p>");
 }
 else
 {
-  output("<p>Sie verwealten Ihre DNS-Einträge selbst. Wenn Sie möchten, können Sie die DNS-Einträge auch automatisch anhand der angelegten Webserver-VHosts und anderer Einstellungen festlegen lassen. Diese Eintäge können Sie dann nicht direkt ändern. Ihre bestehenden Einträge bleiben unberührt und zusätzlich erhalten. Bitte löschen Sie dadurch entstehende Duplikate!</p>
+  output("<p>Sie verwalten Ihre DNS-Einträge selbst. Wenn Sie möchten, können Sie die DNS-Einträge auch automatisch anhand der angelegten Webserver-VHosts und anderer Einstellungen festlegen lassen. Diese Eintäge können Sie dann nicht direkt ändern. Ihre bestehenden Einträge bleiben unberührt und zusätzlich erhalten. Bitte löschen Sie dadurch entstehende Duplikate!</p>
+  <p>Warten Sie nach Änderung dieser Einstellung eine Minute und laden Sie danach die Seite neu.</p>
 <p>".internal_link('dns_save', 'Automatisch erzeugte Einträge aktivieren', "type=autodns&action=enable&dom={$domain->id}")."</p>");
 }
 

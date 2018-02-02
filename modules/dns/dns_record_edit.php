@@ -73,6 +73,10 @@ if ($new)
 else
   title('DNS-Record bearbeiten');
 
+if (strtoupper($type) == 'NS') {
+  output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;" /><strong>Bitte beachten Sie:</strong> Das Ändern der DNS-Server für die Stammdomain wird nicht funktionieren. Bitte geben Sie unbedingt einen Hostname ein um eine Subdomain auf einen anderen DNS-Server zu delegieren.</p>');
+}
+
 if (strtoupper($type) == 'MX' && domain_is_maildomain($domain->id)) {
   output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;" /><strong>Bitte beachten Sie:</strong> Wenn Sie die Mail-Verarbeitung auf Servern von '.$config['company_name'].' nicht nutzen möchten, sollten Sie <a href="'.$prefix.'go/email/domains">die lokale Mail-Verarbeitung für diese Domain ausschalten</a>.</p>');
 }
