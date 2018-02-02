@@ -29,6 +29,6 @@ if (!isset($_REQUEST['domain'])) {
 
 $id = insert_domain_external($_REQUEST['domain'], ($_REQUEST['dns'] === 'enable'), ($_REQUEST['email'] === 'enable'));
 
-redirect('verify?id='.$id);
+redirect('detail?id='.$id);
 
 

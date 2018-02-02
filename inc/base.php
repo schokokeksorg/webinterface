@@ -80,8 +80,16 @@ function get_server_by_id($id) {
 function redirect($target)
 {
   global $debugmode;
-  if (! $debugmode)
+  if (! $debugmode) {
     header("Location: {$target}");
+  } else {
+      if (strpos($target, '?') === false) {
+        print 'REDIRECT: '.internal_link($target, $target);
+      } else {
+          list($file, $qs) = explode('?', $target, 2);
+          print 'REDIRECT: '.internal_link($file, $target, $qs);
+      }
+  }
   die();
 }
 
@@ -308,7 +316,6 @@ function encode_querystring($querystring)
   global $debugmode;
   if ($debugmode)
     $querystring = 'debug&'.$querystring;
-  DEBUG($querystring);
   $query = explode('&', $querystring);
   $new_query = array();
   foreach ($query AS $item)
@@ -323,7 +330,6 @@ function encode_querystring($querystring)
   $querystring = implode('&amp;', $new_query);
   if ($querystring)
     $querystring = '?'.$querystring;
-  DEBUG($querystring);
   return $querystring;
 }
 

@@ -266,30 +266,24 @@ function get_domain_offer($domainname)
   return $data;
 }
 
-
-function insert_domain_prereg($domain, $transfer=false)
+function set_domain_pretransfer($domain)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $uid = (int) $_SESSION['userinfo']['uid'];
-    if (strpos($domain, ' ') !== false) {
-        system_failure("Ungültige Zeichen im Domainname");
-    }
-    $parts = explode('.', $domain);
-    if (count($parts) !== 2) {
-        system_failure("Ungültiger Domainname");
-    }
-    $domainname = $parts[0];
-    $tld = $parts[1];
-    $status = 'prereg';
-    if ($transfer) {
-        $status = 'pretransfer';
-    }
-    db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
-        (?, ?, ?, ?, ?, 'regular', 'other', 1, 'auto', 1)", array($status, $cid, $uid, $domainname, $tld));
-    $id = db_insert_id();
-    $vmailserver = (int) $_SESSION['userinfo']['server'];
-    db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES (?, ?)", array($id, $vmailserver));
-    return $id;
+    $domain = (int) $domain;
+    db_query("UPDATE kundendaten.domains SET status='pretransfer', dns=1 WHERE id=? AND kunde=?", 
+            array($domain, $cid));
+}
+
+
+
+function set_domain_prereg($domain)
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $uid = (int) $_SESSION['userinfo']['uid'];
+    $domain = (int) $domain;
+    db_query("UPDATE kundendaten.domains SET status='prereg', dns=1 WHERE id=? AND kunde=?", 
+            array($domain, $cid));
 }
 
 

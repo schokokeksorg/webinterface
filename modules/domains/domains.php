@@ -43,7 +43,10 @@ foreach ($user_domains as $domain)
       $mailserver_lock = '<br><strong>Mail-Verarbeitung eingeschränkt!</strong>'.footnote('Diese Domain ist extern registriert und wurde noch nicht bestätigt. Momentan ist daher der Mail-Empfang auf dieser Domain nicht möglich.');
   }
   $regdate = $domain->reg_date;
-  if ($domain->provider != 'terions') {
+  if ($domain->status == 'prereg') {
+      $status = 'prereg';
+      $regdate = '<em>Registrierung nicht abgeschlossen</em>';
+  } elseif ($domain->provider != 'terions') {
     $status = 'external';
     $regdate = '<em>Extern registriert</em>';
   } elseif ($domain->reg_date == NULL) {

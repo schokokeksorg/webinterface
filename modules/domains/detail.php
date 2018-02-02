@@ -26,9 +26,9 @@ require_role(ROLE_CUSTOMER);
 $dom = NULL;
 if (isset($_REQUEST['id'])) {
     $dom = new Domain( (int) $_REQUEST['id']);
-    $_SESSION['domains_update_domainname'] = $dom->fqdn;
-} elseif (isset($_SESSION['domains_update_domainname'])) {
-    $dom = new Domain($_SESSION['domains_update_domainname']);
+    $_SESSION['domains_detail_domainname'] = $dom->fqdn;
+} elseif (isset($_SESSION['domains_detail_domainname'])) {
+    $dom = new Domain($_SESSION['domains_detail_domainname']);
 } else {
     system_failure("Keine Domain angegeben");
 }
@@ -69,29 +69,29 @@ if ($dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_d
 
     if (isset($_REQUEST['id'])) {
         api_download_domain($_REQUEST['id']);
-        $_SESSION['domains_update_domainname'] = $dom->fqdn;
-        $_SESSION['domains_update_owner'] = $dom->owner;
-        $_SESSION['domains_update_admin_c'] = $dom->admin_c;
+        $_SESSION['domains_detail_domainname'] = $dom->fqdn;
+        $_SESSION['domains_detail_owner'] = $dom->owner;
+        $_SESSION['domains_detail_admin_c'] = $dom->admin_c;
     }
     if (!update_possible($dom->id)) {
         warning("Diese Domain verwendet eine unübliche Endung. Daher kann der Inhaber nicht auf diesem Weg verändert werden. Bitte kontaktieren Sie den Support.");
     } else {
 
-        if ($_SESSION['domains_update_admin_c'] == $dom->admin_c && 
-                $_SESSION['domains_update_owner'] != $dom->owner && 
-                (!isset($_SESSION['domains_update_detach']) || $_SESSION['domains_update_detach'] == 0)) {
+        if ($_SESSION['domains_detail_admin_c'] == $dom->admin_c && 
+                $_SESSION['domains_detail_owner'] != $dom->owner && 
+                (!isset($_SESSION['domains_detail_detach']) || $_SESSION['domains_detail_detach'] == 0)) {
             // Wenn der Owner geändert wurde, der Admin aber nicht und das detach-Flag 
             // nicht gesetzt ist, dann wird der Admin gleich dem Owner gesetzt
-            $_SESSION['domains_update_admin_c'] = $_SESSION['domains_update_owner'];
+            $_SESSION['domains_detail_admin_c'] = $_SESSION['domains_detail_owner'];
         }
 
         if (isset($_GET['admin_c']) && $_GET['admin_c'] == 'none') {
-            $_SESSION['domains_update_admin_c'] = $_SESSION['domains_update_owner'];
-            unset($_SESSION['domains_update_detach']);
+            $_SESSION['domains_detail_admin_c'] = $_SESSION['domains_detail_owner'];
+            unset($_SESSION['domains_detail_detach']);
         }
 
-        $owner = get_contact($_SESSION['domains_update_owner']);
-        $admin_c = get_contact($_SESSION['domains_update_admin_c']);
+        $owner = get_contact($_SESSION['domains_detail_owner']);
+        $admin_c = get_contact($_SESSION['domains_detail_admin_c']);
         $function = 'Inhaber';
         if ($owner['id'] == $admin_c['id']) {
             $function .= ' und Verwalter';
@@ -109,7 +109,7 @@ if ($dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_d
             }
             output('<p><strong>Verwalter:</strong></p>'.display_contact($admin_c, '', $cssclass));
             addnew('choose', 'Neuen Verwalter wählen', "type=admin_c");
-            output('<p class="delete">'.internal_link('update', 'Keinen separaten Verwalter festlegen', 'admin_c=none').'</p>');
+            output('<p class="delete">'.internal_link('', 'Keinen separaten Verwalter festlegen', 'admin_c=none').'</p>');
         } else {
             addnew('choose', 'Einen separaten Verwalter wählen', "type=admin_c&detach=1");
         }
@@ -131,14 +131,20 @@ if ($dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_d
 
 // Block Externe Domain umziehen
 
-if ($dom->provider != 'terions') {
+if ($dom->status == 'prereg') {
+    output('<h4>Domain-Registrierung abschließen</h4>
+            <p>'.internal_link('domainreg', 'Domain registrieren', "domain={$dom->fqdn}").'</p>');
+} elseif ($dom->status == 'pretransfer') {
+    output('<h4>Domain-Umzug ausführen</h4>
+            <p>'.internal_link('domainreg', 'Umzugsautrag (ggf. nochmals) erteilen', "domain={$dom->fqdn}").'</p>');
+} elseif ($dom->provider != 'terions') {
     output('<h4>Domain-Transfer ausführen</h4>
             <p>'.internal_link('domainreg', 'Domain-Transfer ausführen', "domain={$dom->fqdn}").'</p>');
 }
 
 // Block Domain bestätigen
 
-if ($dom->mailserver_lock == 1) {
+if ($dom->mailserver_lock == 1 && $dom->status != 'prereg') {
     if (has_own_ns($dom->domainname, $dom->tld)) {
         unset_mailserver_lock($dom);
         success_msg("Die Domain {$dom->fqdn} wurde erfolgreich bestätigt und kann nun in vollem Umfang verwendet werden.");

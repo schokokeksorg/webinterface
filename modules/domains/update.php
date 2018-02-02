@@ -36,6 +36,7 @@ if ($_REQUEST['action'] == 'ownerchange') {
     if (!(isset($_POST['accept']) && $_POST['accept'] == '1')) {
         redirect('detail?error=1');
     }
+    check_form_token('domains_update');
     $dom = new Domain($_SESSION['domains_update_domainname']);
     if (!$dom) {
         system_failure("Keine Domain gewählt!");

@@ -60,16 +60,6 @@ if (isset($_REQUEST['domain'])) {
             <tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
             <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>
             <tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
-        $users = list_useraccounts();
-        if (count($users) > 1) {
-            $userselect = array();
-            foreach ($users as $u) {
-                $userselect[$u['uid']] = $u['username'].' / '.$u['name'];
-            }
-
-
-            $form .= '<tr><td>Benutzeraccount:</td><td>'.html_select('uid', $userselect).'</td></tr>';
-        }
         $form .='</table>';
 
 
