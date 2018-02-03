@@ -48,7 +48,7 @@ if (isset($_REQUEST['domain'])) {
         redirect('');
     }
     $avail = api_domain_available($_REQUEST['domain']);
-    if ($avail == 'available') {
+    if ($avail['status'] == 'available') {
         output('<p class="domain-available">Die Domain '.filter_input_general($_REQUEST['domain']).' ist verfügbar!</p>');
         # Neue Domain eintragen
         $data = get_domain_offer($_REQUEST['domain']);
@@ -58,8 +58,10 @@ if (isset($_REQUEST['domain'])) {
         $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
             <table>
             <tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
-            <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>
-            <tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
+            <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
+        if ($data['setup']) {
+            $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
+        }
         $form .='</table>';
 
 
@@ -67,34 +69,40 @@ if (isset($_REQUEST['domain'])) {
             <input type="submit" name="submit" value="Ich möchte diese Domain registrieren"></p>';
         output(html_form('domains_register', 'domainreg', '', $form));
         output('<p>'.internal_link('domains', 'Zurück').'</p>');
-    } elseif ($avail == 'registered' || $avail == 'alreadyRegistered') {
+    } elseif ($avail['status'] == 'registered' || $avail['status'] == 'alreadyRegistered') {
         output('<p class="domain-unavailable">Die Domain '.filter_input_general($_REQUEST['domain']).' ist bereits vergeben.</p>');
-        
+
         output('<h3>Domain zu '.config('company_name').' umziehen</h3>');
-        $data = get_domain_offer($_REQUEST['domain']);
-
-        if (! $data) {
-            // Die Include-Datei setzt eine passende Warning-Nachricht
-            output('<p>Eine Registrierung ist nicht automatisiert möglich. Bitte wenden Sie sich an den Support.');
+        if ($avail['status'] == 'registered' && $avail['transferMethod'] != 'authInfo') {
+            output('<p>Diese Domainendung kann nicht automatisiert übertragen werden. Bitte wenden Sie sich an den Support.</p>');
         } else {
+            $data = get_domain_offer($_REQUEST['domain']);
 
-            $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
-                <table>
-                <tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
-                <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>
-                <tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
-            $form .='</table>';
+            if (! $data) {
+                // Die Include-Datei setzt eine passende Warning-Nachricht
+                output('<p>Eine Registrierung ist nicht automatisiert möglich. Bitte wenden Sie sich an den Support.');
+            } else {
+
+                $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
+                    <table>
+                    <tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
+                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
+                if ($data['setup']) {
+                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
+                }
+                $form .='</table>';
 
 
-            $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($_REQUEST['domain']).'">
-                <input type="submit" name="submit" value="Ich möchte diese Domain zu '.config('company_name').' umziehen"></p>';
+                $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($_REQUEST['domain']).'">
+                    <input type="submit" name="submit" value="Ich möchte diese Domain zu '.config('company_name').' umziehen"></p>';
 
-            output(html_form('domains_transferin', 'domainreg', '', $form));
+                output(html_form('domains_transferin', 'domainreg', '', $form));
 
+            }
         }
         output('<h3>Diese Domain als externe Domain nutzen</h3>');
         output('<p>Sie können diese Domain für Konfigurationen bei uns nutzen ohne einen Transfer vorzunehmen.</p>
-        <p><strong>Beachten Sie:</strong> Um diese Domain nutzen zu können, benötigen Sie bei Ihrem bisherigen Domainregistrar die Möglichkeit, DNS-Records anzulegen oder die zuständigen DNS-Server zu ändern. Sie können dann entweder unsere DNS-Server nutzen oder einzelne DNS-Records auf unsere Server einrichten.</p>');
+                <p><strong>Beachten Sie:</strong> Um diese Domain nutzen zu können, benötigen Sie bei Ihrem bisherigen Domainregistrar die Möglichkeit, DNS-Records anzulegen oder die zuständigen DNS-Server zu ändern. Sie können dann entweder unsere DNS-Server nutzen oder einzelne DNS-Records auf unsere Server einrichten.</p>');
 
         output('<p>Mit Betätigen des unten stehenden Knopfes bestätigen Sie, dass Sie entweder der Domaininhaber sind oder mit expliziter Zustimmung des Domaininhabers handeln.</p>');
         $form = '
@@ -121,7 +129,7 @@ if (isset($_REQUEST['domain'])) {
     } else {
         output('<p class="domain-unavailable">Die Domain '.filter_input_general($_REQUEST['domain']).' kann nicht registriert werden.</p>');
 
-        switch ($avail) {
+        switch ($avail['status']) {
             case 'nameContainsForbiddenCharacter':
                 output('<p>Der Domainname enthält unerlaubte Zeichen.</p>');
                 break;
@@ -133,7 +141,6 @@ if (isset($_REQUEST['domain'])) {
                 break;
             default:
                 output('<p>Ein Fehler ist aufgetreten beim Prüfen der Verfügbarkeit. Eventuell geht es später wieder.</p>');
-
         }
     }
 

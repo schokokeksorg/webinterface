@@ -46,6 +46,12 @@ foreach ($user_domains as $domain)
   if ($domain->status == 'prereg') {
       $status = 'prereg';
       $regdate = '<em>Registrierung nicht abgeschlossen</em>';
+  } elseif ($domain->status == 'transferfailed') {
+    $status = 'pretransfer';
+    $regdate = '<em>Umzug gescheitert</em>';
+  } elseif ($domain->status == 'pretransfer') {
+    $status = 'pretransfer';
+    $regdate = '<em>Umzug bevorstehend</em>';
   } elseif ($domain->provider != 'terions') {
     $status = 'external';
     $regdate = '<em>Extern registriert</em>';

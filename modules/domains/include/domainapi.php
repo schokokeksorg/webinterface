@@ -20,6 +20,8 @@ use_module('contacts');
 require_once('contacts.php');
 require_once('contactapi.php');
 
+
+
 function api_download_domain($id) {
     $result = db_query("SELECT id, CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c, registrierungsdatum, kuendigungsdatum FROM kundendaten.domains WHERE id=?", array($id));
     if ($result->rowCount() < 1) {
@@ -55,6 +57,7 @@ function api_download_domain($id) {
     if ($owner != $dom['owner'] || $admin_c != $dom['admin_c']) {
         db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=?", array($owner, $admin_c, $id));
     }
+    return $apidomain;
 }
 
 
@@ -95,25 +98,67 @@ function api_upload_domain($fqdn)
     $args = array("domain" => $apidomain);
     api_request('domainUpdate', $args);
 
-}   
+}
 
+
+function api_register_domain($domainname, $authinfo=NULL) 
+{
+    $result = db_query("SELECT id,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($domainname));
+    if ($result->rowCount() < 1) {
+        system_failure("Unbekannte Domain");
+    }
+    $dom = $result->fetch();
+    $owner = get_contact($dom['owner']);
+    if (! $owner['nic_id']) {
+        upload_contact($owner);
+        $owner = get_contact($dom['owner']);
+    }
+    $admin_c = get_contact($dom['admin_c']);
+    if (! $admin_c['nic_id']) {
+        upload_contact($admin_c);
+        $admin_c = get_contact($dom['admin_c']);
+    }
+    $owner = $owner['nic_id'];
+    $admin_c = $admin_c['nic_id'];
+
+    // Frage die Masterdomain ab, von dort übernehmen wir Nameserver und zone/tech handles
+    $data = array("domainName" => config('masterdomain'));
+    $result = api_request('domainInfo', $data);
+    if ($result['status'] != 'success') {
+        system_failure("Abfrage nicht erfolgreich!");
+    }
+    $masterdomain = $result['response'];
+    $newdomain = array();
+    $newdomain['name'] = $domainname;
+    $newdomain['transferLockEnabled'] = true;
+    $newdomain['nameservers'] = $masterdomain['nameservers'];
+    $newdomain['contacts'] = $masterdomain['contacts'];
+
+    foreach ($masterdomain['contacts'] as $key => $ac) {
+        if ($ac['type'] == 'owner') {
+            $newdomain['contacts'][$key]['contact'] = $owner;
+        }
+        if ($ac['type'] == 'admin') {
+            $newdomain['contacts'][$key]['contact'] = $admin_c;
+        }
+    }
+    $result = NULL;
+    if ($dom['status'] == 'prereg') {
+        $args = array("domain" => $newdomain);
+        $result = api_request('domainCreate', $args);
+    } else {
+        $args = array("domain" => $newdomain, "transferData" => array("authInfo" => $authinfo));
+        $result = api_request('domainTransfer', $args);
+    }
+    
+}
 
 function api_domain_available($domainname) 
 {
     $args = array("domainNames" => array($domainname));
     $result = api_request('domainStatus', $args);
     $resp = $result["responses"][0];
-    return $resp["status"];
-    /*
-    alreadyRegistered 	You (or a sub account) already registered the domain
-    registered 	Somebody else registered domain
-    nameContainsForbiddenCharacter 	Domain name contains invalid characters
-    available 	Domain is available for registration
-    suffixDoesNotExist 	Domain suffix does not exist
-    suffixCannotBeRegistered 	You are not allowed to register a domain with this suffix
-    canNotCheck 	System is currently unable to check availability
-    unknown 	Other problems or difficulties occured
-    */
+    return $resp;
 }
 
 

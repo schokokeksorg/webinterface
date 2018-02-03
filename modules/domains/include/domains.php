@@ -81,10 +81,12 @@ function web_in_use($domain)
 
 function domain_ownerchange($fqdn, $owner, $admin_c) 
 {
-    require_once('domainapi.php');
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE CONCAT_WS('.', domainname, tld)=? AND kunde=?", array($owner, $admin_c, $fqdn, $cid));
-    api_upload_domain($fqdn);
+    if (update_possible($fqdn)) {
+        require_once('domainapi.php');
+        api_upload_domain($fqdn);
+    }
 }
 
 
@@ -240,14 +242,7 @@ function get_domain_offer($domainname)
   DEBUG('Found Basename: '.$basename);
   $tld = preg_replace('/^[^\.]*\./', '', $domainname);
   DEBUG('Found TLD: '.$tld);
-
   $cid = (int) $_SESSION['customerinfo']['customerno'];
-
-  $result = db_query("SELECT id FROM kundendaten.domains WHERE domainname=:domainname AND tld=:tld", array("domainname" => $basename, "tld" => $tld));
-  if ($result->rowCount() != 0) {
-    warning('Diese Domain ist in unserem System bereits vorhanden und kann daher nicht noch einmal eingetragen werden.');
-    return;
-  }
 
   $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
 

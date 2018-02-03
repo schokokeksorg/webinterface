@@ -45,8 +45,8 @@ if (isset($_REQUEST['domain'])) {
     // An diesem Punkt ist die Domain eingetragen als extern und ggf. mit Mailserver-Lock
     // Bei der Reg-Bestätigung wird das Lock entfernt und die Daten entsprechend gesetzt, inklusive Preise.
 
-    $_SESSION['domains_domainreg_owner'] = NULL;
-    $_SESSION['domains_domainreg_admin_c'] = NULL;
+    $_SESSION['domains_domainreg_owner'] = $dom->owner;
+    $_SESSION['domains_domainreg_admin_c'] = $dom->admin_c;
     $_SESSION['domains_domainreg_domainname'] = $domain;
     $_SESSION['domains_domainreg_detach'] = 0;
     
@@ -60,14 +60,18 @@ if (!$dom) {
     system_failure("Keine Domain");
 }
 
+$pricedata = get_domain_offer($dom->fqdn);
+if (!$pricedata) {
+    redirect('adddomain');
+}
 $mode=NULL;
 
 $avail = api_domain_available($dom->fqdn);
-if ($avail == 'available') {
+if ($avail['status'] == 'available') {
     set_domain_prereg($dom->id);
     $mode = 'reg';
     title("Domain registrieren");
-} elseif ($avail == 'registered' || $avail == 'alreadyRegistered') {
+} elseif ($avail['status'] == 'registered' || $avail['status'] == 'alreadyRegistered') {
     // FIXME: alreadyRegistered bedeutet, dass die Domain bereits über uns verwaltet wird. Das wird dann hier nicht funktionieren
     set_domain_pretransfer($dom->id);
     $mode = 'transfer';
@@ -115,6 +119,29 @@ if ($_SESSION['domains_domainreg_admin_c'] != $_SESSION['domains_domainreg_owner
 }
 
 
+$form = '';
+if ($mode == 'transfer') {
+    $form .= '<h4>Auth-Info-Code für den Transfer</h4>';
+    $form .= '<p><label for="authinfo">Auth-Info-Code für den Domainumzug:</label> <input type="text" name="authinfo" id="authinfo"></p>';
+    
+}
+
+$form .= '<h4>Kosten</h4>';
+
+$form .= '<p>Für die Verwaltung der Domain fallen folgende Kosten an:</p>
+<table>
+<tr><td>Domainname:</td><td><strong>'.$dom->fqdn.'</strong></td></tr>
+<tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$pricedata['gebuehr'].' €</td></tr>';
+if ($pricedata['setup']) {
+    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$pricedata['setup'].' €</td></tr>';
+}
+$form .='</table>';
+$form .= '<p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils ein Jahr. Er verlängert sich stets automatisch um ein weiteres Jahr, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
+
+$form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($dom->fqdn).'">
+<input type="submit" name="submit" value="Kostenpflichtigen Vertrag abschließen"></p>';
+output(html_form('domains_domainreg', 'domainreg_save', '', $form));
+output('<p>'.internal_link('domains', 'Zurück').'</p>');
 
 
 
