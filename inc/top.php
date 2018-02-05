@@ -35,7 +35,7 @@ foreach (config('modules') as $module)
     include("modules/{$module}/menu.php");
   if ($menu === false)
   {
-    DEBUG("Modul {$module} hat keine Menüeinträge");
+    #DEBUG("Modul {$module} hat keine Menüeinträge");
     continue;
   }
   // Menüeinträge spammen den debug-output zu
@@ -65,13 +65,13 @@ foreach (config('modules') as $module)
 }
 
 ksort($weighted_menuitem);
-DEBUG($weighted_menuitem);
+#DEBUG($weighted_menuitem);
 
 foreach ($submenu AS $weight => $data) {
   ksort($submenu[$weight]);
 }
 
-DEBUG($submenu);
+#DEBUG($submenu);
 
 // Verbiete das Laden in jeglichem Frameset
 header("X-FRAME-OPTIONS: DENY");

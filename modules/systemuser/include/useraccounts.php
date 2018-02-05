@@ -65,7 +65,7 @@ function list_useraccounts()
   {
     array_push($ret, $item);
   }
-  DEBUG($ret);
+  #DEBUG($ret);
   return $ret;
 }
 
@@ -90,7 +90,7 @@ function get_used_quota($uid)
   $ret = array();
   while ($line = $result->fetch())
     $ret[] = $line;
-  DEBUG($ret);
+  #DEBUG($ret);
   return $ret;
 }
 
