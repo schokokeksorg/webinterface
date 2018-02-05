@@ -233,18 +233,12 @@ function change_user($domain, $uid)
 }
 
 
-function get_domain_offer($domainname) 
+function get_domain_offer($tld) 
 {
-  $domainname = filter_input_hostname($domainname);
-  $domainname = preg_replace('/^www\./', '', $domainname);
-
-  $basename = preg_replace('/([^\.]+)\..*$/', '\1', $domainname);
-  DEBUG('Found Basename: '.$basename);
-  $tld = preg_replace('/^[^\.]*\./', '', $domainname);
-  DEBUG('Found TLD: '.$tld);
+  $tld = filter_input_hostname($tld);
   $cid = (int) $_SESSION['customerinfo']['customerno'];
 
-  $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
+  $data = array("tld" => $tld);
 
   $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
   if ($result->rowCount() != 1) {
@@ -286,15 +280,14 @@ function insert_domain_external($domain, $dns = false, $mail = true)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $uid = (int) $_SESSION['userinfo']['uid'];
-    if (strpos($domain, ' ') !== false) {
-        system_failure("Ungültige Zeichen im Domainname");
+    require_once("domainapi.php");
+    $info = api_domain_available($domain);
+    if (in_array($info['status'], array('nameContainsForbiddenCharacter', 'suffixDoesNotExist'))) {
+        system_failure("Diese Domain scheint ungültig zu sein!");
     }
-    $parts = explode('.', $domain);
-    if (count($parts) !== 2) {
-        system_failure("Ungültiger Domainname");
-    }
-    $domainname = $parts[0];
-    $tld = $parts[1];
+    $tld = $info['domainSuffix'];
+    $domainname = str_replace(".$tld", "", $info['domainNameUnicode']);
+    
     db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
         ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", array($cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')));
     $id = db_insert_id();

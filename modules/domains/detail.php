@@ -160,7 +160,7 @@ if ($dom->mailserver_lock == 1 && $dom->status != 'prereg') {
     if ($TXT == $dom->secret) {
         unset_mailserver_lock($dom);
         success_msg("Die Domain {$dom->fqdn} wurde erfolgreich bestätigt und kann nun in vollem Umfang verwendet werden.");
-        redirect("domains");
+        redirect("");
     }
 
     if ($dom->dns == 1 || have_module('dns')) {

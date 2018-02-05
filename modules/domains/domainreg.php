@@ -60,13 +60,18 @@ if (!$dom) {
     system_failure("Keine Domain");
 }
 
-$pricedata = get_domain_offer($dom->fqdn);
+$avail = api_domain_available($dom->fqdn);
+$tld = $avail['extension'];
+if ($tld != $dom->tld) {
+    system_failure("Fehler in den Daten! Bitte Support informieren");
+}
+
+$pricedata = get_domain_offer($tld);
 if (!$pricedata) {
     redirect('adddomain');
 }
 $mode=NULL;
 
-$avail = api_domain_available($dom->fqdn);
 if ($avail['status'] == 'available') {
     set_domain_prereg($dom->id);
     $mode = 'reg';

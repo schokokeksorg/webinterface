@@ -51,13 +51,13 @@ if (isset($_REQUEST['domain'])) {
     if ($avail['status'] == 'available') {
         output('<p class="domain-available">Die Domain '.filter_input_general($_REQUEST['domain']).' ist verfügbar!</p>');
         # Neue Domain eintragen
-        $data = get_domain_offer($_REQUEST['domain']);
+        $data = get_domain_offer($avail['domainSuffix']);
         if (!$data) {
             redirect('');
         }
         $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
             <table>
-            <tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
+            <tr><td>Domainname:</td><td><strong>'.filter_input_general($_REQUEST['domain']).'</strong></td></tr>
             <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
         if ($data['setup']) {
             $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
@@ -76,7 +76,7 @@ if (isset($_REQUEST['domain'])) {
         if ($avail['status'] == 'registered' && $avail['transferMethod'] != 'authInfo') {
             output('<p>Diese Domainendung kann nicht automatisiert übertragen werden. Bitte wenden Sie sich an den Support.</p>');
         } else {
-            $data = get_domain_offer($_REQUEST['domain']);
+            $data = get_domain_offer($avail['domainSuffix']);
 
             if (! $data) {
                 // Die Include-Datei setzt eine passende Warning-Nachricht
@@ -85,7 +85,7 @@ if (isset($_REQUEST['domain'])) {
 
                 $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
                     <table>
-                    <tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
+                    <tr><td>Domainname:</td><td><strong>'.filter_input_general($avail['domainNameUnicode']).'</strong></td></tr>
                     <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
                 if ($data['setup']) {
                     $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
@@ -93,7 +93,7 @@ if (isset($_REQUEST['domain'])) {
                 $form .='</table>';
 
 
-                $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($_REQUEST['domain']).'">
+                $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($avail['domainNameUnicode']).'">
                     <input type="submit" name="submit" value="Ich möchte diese Domain zu '.config('company_name').' umziehen"></p>';
 
                 output(html_form('domains_transferin', 'domainreg', '', $form));

@@ -83,6 +83,9 @@ function redirect($target)
   if (! $debugmode) {
     header("Location: {$target}");
   } else {
+      if ($target == '') {
+          $target = $_SERVER['REQUEST_URI'];
+      }
       if (strpos($target, '?') === false) {
         print 'REDIRECT: '.internal_link($target, $target);
       } else {
