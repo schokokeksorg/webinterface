@@ -135,12 +135,39 @@ if ($dom->status == 'prereg') {
     output('<h4>Domain-Registrierung abschließen</h4>
             <p>'.internal_link('domainreg', 'Domain registrieren', "domain={$dom->fqdn}").'</p>');
 } elseif ($dom->status == 'pretransfer') {
-    output('<h4>Domain-Umzug ausführen</h4>
+    output('<h4>Domain zu '.config('company_name').' umziehen</h4>
             <p>'.internal_link('domainreg', 'Umzugsautrag (ggf. nochmals) erteilen', "domain={$dom->fqdn}").'</p>');
 } elseif ($dom->provider != 'terions') {
-    output('<h4>Domain-Transfer ausführen</h4>
-            <p>'.internal_link('domainreg', 'Domain-Transfer ausführen', "domain={$dom->fqdn}").'</p>');
+    output('<h4>Domain zu '.config('company_name').' umziehen</h4>
+            <p>'.internal_link('domainreg', 'Domain-Transfer starten', "domain={$dom->fqdn}").'</p>');
 }
+
+
+// Block Domain löschen/kündigen
+
+$domain_in_use = mailman_subdomains($dom->id) || mail_in_use($dom->id) || web_in_use($dom->id) || $dom->jabber == 1;
+if (!$domain_in_use && ($dom->status == 'prereg' || $dom->status == 'pretransfer' || $dom->status == 'transferfailed' || $dom->status == 'external')) {
+    output('<h4>Domain wieder entfernen</h4>');
+    output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' entfernen', 'action=delete&domain='.$dom->id).'</p>');
+} elseif ($dom->provider == 'terions') {
+    output('<h4>Domain kündigen</h4>');
+    $info = api_download_domain($dom->id);
+    if ($info['authInfo']) {
+        output('<p>Das Auth-Info für diese Domain lautet: <strong>'.$info['authInfo'].'</strong></p>');
+        output('<p>Wenden Sie sich an den Support, wenn Sie den Domainumzug wieder sperren möchten.</p>');
+    } else {
+        output('<p>Hier können Sie die Domain zum Umzug freigeben.</p>');
+        $form = '<p><input type="hidden" name="domain" value="'.$dom->id.'"><input type="submit" name="submit" value="Die Domain '.$dom->fqdn.' zum Umzug freigeben"></p>';
+        output(html_form('domains_transfer', 'save', 'action=transfer', $form));
+    }
+    output('<p>Die aktuelle Laufzeit der Domain dauert noch bis '.$info['currentContractPeriodEnd'].'</p>');
+    if ($info['deletionDate']) {
+        output('<p>Es liegt aktuell eine Kündigung vor auf <strong>'.$info['deletionDate'].'</strong></p><p>Um die Kündigung aufzuheben, wenden Sie sich bitte an den Support.</p>');
+    } else {
+        output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' kündigen', 'action=cancel&domain='.$dom->id).'</p>');
+    }
+}
+
 
 // Block Domain bestätigen
 

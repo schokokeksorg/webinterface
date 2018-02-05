@@ -162,3 +162,36 @@ function api_domain_available($domainname)
 }
 
 
+function api_cancel_domain($domainname)
+{
+    $data = array("domainName" => $domainname);
+    $result = api_request('domainInfo', $data);
+    if ($result['status'] != 'success') {
+        system_failure("Abfrage nicht erfolgreich!");
+    }
+    $apidomain = $result['response'];
+    if (! $apidomain['latestDeletionDateWithoutRenew']) {
+        system_failure("Konnte Vertragsende nicht herausfinden.");
+    }
+    $args = array("domainName" => $domainname, "execDate" => $apidomain['latestDeletionDateWithoutRenew']);
+    $result = api_request('domainDelete', $args);
+    if ($result['status'] == 'error') {
+        //system_failure(print_r($result['errors'], true));
+    }
+ }
+
+
+function api_unlock_domain($domainname) 
+{
+    $data = array("domainName" => $domainname);
+    $result = api_request('domainInfo', $data);
+    if ($result['status'] != 'success') {
+        system_failure("Abfrage nicht erfolgreich!");
+    }
+    $apidomain = $result['response'];
+    $apidomain['transferLockEnabled'] = false;
+    $args = array("domain" => $apidomain);
+    api_request('domainUpdate', $args);
+}
+
+

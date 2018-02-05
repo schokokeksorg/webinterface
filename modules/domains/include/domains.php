@@ -301,4 +301,10 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     return $id;
 }
 
+function delete_domain($id)
+{
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    db_query("DELETE FROM kundendaten.domains WHERE id=? AND kunde=?", array($id, $cid)); 
+}
+
 
