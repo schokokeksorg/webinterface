@@ -22,13 +22,13 @@ function DEBUG($str)
 {
   global $debugmode;
   if ($debugmode)
-    if (is_array($str) || is_object($str))
-    {
+    if (is_array($str)) {
+      array_walk_recursive($str, function(&$v) { $v = htmlspecialchars($v); });
       echo "<pre>".print_r($str, true)."</pre>\n";
-    }
-    else
-    {
-      echo $str . "<br />\n";
+    } elseif (is_object($str)) {
+      echo "<pre>".print_r($str, true)."</pre>\n";
+    } else {
+      echo htmlspecialchars($str) . "<br />\n";
     }
 }
 
