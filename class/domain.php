@@ -70,7 +70,9 @@ class Domain
 
    function loadByName($name)
   {
-      $res = db_query("SELECT * FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($name));
+      $raw = $name;
+      $utf8 = idn_to_utf8($raw, 0, INTL_IDNA_VARIANT_UTS46);
+      $res = db_query("SELECT * FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=? OR CONCAT_WS('.', domainname, tld)=?", array($raw, $utf8));
       if ($res->rowCount() < 1)
          return false;
       $data = $res->fetch();
