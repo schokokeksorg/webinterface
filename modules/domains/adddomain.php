@@ -34,12 +34,21 @@ $form = '<p>Domainname: <input type="text" name="domain" size="50" /> <input typ
 output(html_form('adddomain_search', '', '', $form));
 
 if (isset($_REQUEST['domain'])) {
-    if (strpos($_REQUEST['domain'], ' ') !== false) {
+    $request = $_REQUEST['domain'];
+    verify_input_general($request);
+    if (substr($request, 0, 4) == 'www.') {
+        $request = str_replace('www.', '', $request);
+    }
+    if (strpos($request, ' ') !== false) {
         warning('Leerzeichen sind in Domainnamen nicht erlaubt.');
         redirect('');
     }
+    if (strpos($request, '.') === false) {
+        warning('Das ist kein Domainname.');
+        redirect('');
+    }
     $dom = new Domain();
-    if ($dom->loadByName($_REQUEST['domain']) !== false) {
+    if ($dom->loadByName($request) !== false) {
         if ($dom->is_customerdomain()) {
             warning('Diese Domain ist bereits in Ihrem Kundenkonto eingetragen!');
         } else {
@@ -47,9 +56,9 @@ if (isset($_REQUEST['domain'])) {
         }
         redirect('');
     }
-    $avail = api_domain_available($_REQUEST['domain']);
+    $avail = api_domain_available($request);
     if ($avail['status'] == 'available') {
-        output('<p class="domain-available">Die Domain '.filter_input_general($_REQUEST['domain']).' ist verfügbar!</p>');
+        output('<p class="domain-available">Die Domain '.filter_input_general($request).' ist verfügbar!</p>');
         # Neue Domain eintragen
         $data = get_domain_offer($avail['domainSuffix']);
         if (!$data) {
@@ -57,7 +66,7 @@ if (isset($_REQUEST['domain'])) {
         }
         $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
             <table>
-            <tr><td>Domainname:</td><td><strong>'.filter_input_general($_REQUEST['domain']).'</strong></td></tr>
+            <tr><td>Domainname:</td><td><strong>'.filter_input_general($request).'</strong></td></tr>
             <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
         if ($data['setup']) {
             $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
@@ -65,12 +74,12 @@ if (isset($_REQUEST['domain'])) {
         $form .='</table>';
 
 
-        $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($_REQUEST['domain']).'">
+        $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($request).'">
             <input type="submit" name="submit" value="Ich möchte diese Domain registrieren"></p>';
         output(html_form('domains_register', 'domainreg', '', $form));
         output('<p>'.internal_link('domains', 'Zurück').'</p>');
     } elseif ($avail['status'] == 'registered' || $avail['status'] == 'alreadyRegistered') {
-        output('<p class="domain-unavailable">Die Domain '.filter_input_general($_REQUEST['domain']).' ist bereits vergeben.</p>');
+        output('<p class="domain-unavailable">Die Domain '.filter_input_general($request).' ist bereits vergeben.</p>');
 
         output('<h3>Domain zu '.config('company_name').' umziehen</h3>');
         if ($avail['status'] == 'registered' && $avail['transferMethod'] != 'authInfo') {
@@ -120,14 +129,14 @@ if (isset($_REQUEST['domain'])) {
             <label for="option-email-disable">Nicht für E-Mail nutzen</label>
             </p>';
 
-        $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($_REQUEST['domain']).'">
+        $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($request).'">
             <input type="submit" name="submit" value="Diese Domain bei '.config('company_name').' verwenden"></p>';
 
         output(html_form('domains_external', 'useexternal', '', $form));
         output('</div>');
 
     } else {
-        output('<p class="domain-unavailable">Die Domain '.filter_input_general($_REQUEST['domain']).' kann nicht registriert werden.</p>');
+        output('<p class="domain-unavailable">Die Domain '.filter_input_general($request).' kann nicht registriert werden.</p>');
 
         switch ($avail['status']) {
             case 'nameContainsForbiddenCharacter':
