@@ -35,21 +35,13 @@ output(html_form('adddomain_search', '', '', $form));
 
 if (isset($_REQUEST['domain'])) {
     $request = idn_to_utf8($_REQUEST['domain'], 0, INTL_IDNA_VARIANT_UTS46);
-    verify_input_general($request);
-    $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
-    if (!check_domain($punycode)) {
-        warning("Ungültige Zeichen im Domainnamen!");
-        redirect('');
-    }
     if (substr($request, 0, 4) == 'www.') {
         $request = str_replace('www.', '', $request);
     }
-    if (strpos($request, ' ') !== false) {
-        warning('Leerzeichen sind in Domainnamen nicht erlaubt.');
-        redirect('');
-    }
-    if (strpos($request, '.') === false) {
-        warning('Das ist kein Domainname.');
+    verify_input_general($request);
+    $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
+    if (!check_domain($punycode)) {
+        warning("Ungültiger Domainname: ".filter_input_general($request));
         redirect('');
     }
     $dom = new Domain();

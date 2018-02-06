@@ -26,8 +26,18 @@ $section='domains_domains';
 if (!isset($_REQUEST['domain'])) {
     system_failure('Kein Domainname übergeben');
 }
+$request = idn_to_utf8($_REQUEST['domain'], 0, INTL_IDNA_VARIANT_UTS46);
+if (substr($request, 0, 4) == 'www.') {
+    $request = str_replace('www.', '', $request);
+}
+verify_input_general($request);
+$punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
+if (!check_domain($punycode)) {
+    warning("Ungültiger Domainname: ".filter_input_general($request));
+    redirect('');
+}
 
-$id = insert_domain_external($_REQUEST['domain'], ($_REQUEST['dns'] === 'enable'), ($_REQUEST['email'] === 'enable'));
+$id = insert_domain_external($request, ($_REQUEST['dns'] === 'enable'), ($_REQUEST['email'] === 'enable'));
 
 redirect('detail?id='.$id);
 

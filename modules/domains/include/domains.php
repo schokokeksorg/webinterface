@@ -239,9 +239,9 @@ function get_domain_offer($tld)
 
   $data = array("tld" => $tld);
 
-  $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
+  $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
   if ($result->rowCount() != 1) {
-    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
+    $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
   }
   if ($result->rowCount() != 1) {
     warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
@@ -249,6 +249,7 @@ function get_domain_offer($tld)
   }
   $temp = $result->fetch();
   $data["gebuehr"] = $temp["gebuehr"];
+  $data["interval"] = $temp["interval"];
   $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
   
   return $data;

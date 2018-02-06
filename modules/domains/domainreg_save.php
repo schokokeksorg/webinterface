@@ -30,7 +30,7 @@ if (! (isset($_REQUEST['domain']) && $_REQUEST['domain']) ||
     $_REQUEST['domain'] != $_SESSION['domains_domainreg_domainname']) {
     system_failure("Fehler im Programmablauf!");
 }
-
+// Validierung der Domain entfällt hier, weil wir nur bestehende Domain aus der Datenbank laden. Bei ungültiger Eingabe wird kein Treffer gefunden.
 $dom = new Domain((string) $_REQUEST['domain']);
 $dom->ensure_userdomain();
 

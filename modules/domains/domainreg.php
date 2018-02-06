@@ -27,15 +27,30 @@ require_once('contacts.php');
 
 $dom = NULL;
 if (isset($_REQUEST['domain'])) {
-    $domain = $_REQUEST['domain'];
-    if (strpos($domain, ' ') !== false) {
-        system_failure('Leerzeichen sind in Domainnamen nicht erlaubt.');
+    $request = idn_to_utf8($_REQUEST['domain'], 0, INTL_IDNA_VARIANT_UTS46);
+    if (substr($request, 0, 4) == 'www.') {
+        $request = str_replace('www.', '', $request);
+    }
+    verify_input_general($request);
+    $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
+    if (!check_domain($punycode)) {
+        warning("Ungültiger Domainname: ".filter_input_general($request));
+        redirect('');
     }
     $dom = new Domain();
-    if ($dom->loadByName($domain) === false) {
+    if ($dom->loadByName($request) !== false) {
+        if ($dom->is_customerdomain()) {
+            warning('Diese Domain ist bereits in Ihrem Kundenkonto eingetragen!');
+        } else {
+            warning('Diese Domain ist bei einem anderen Kunden von uns in Nutzung. Kontaktieren Sie den Support, wenn Sie eine Domain in ein anderes Kundenkonto übertragen möchten.');
+        }
+        redirect('');
+    }
+    $dom = new Domain();
+    if ($dom->loadByName($request) === false) {
         // Eintragen mit DNS und Mail
-        $id = insert_domain_external($domain, true, true);
-        $dom->loadByName($domain);
+        $id = insert_domain_external($request, true, true);
+        $dom->loadByName($request);
     } 
     $dom->ensure_customerdomain();
     if ($dom->provider == 'terions') {
@@ -47,7 +62,7 @@ if (isset($_REQUEST['domain'])) {
 
     $_SESSION['domains_domainreg_owner'] = $dom->owner;
     $_SESSION['domains_domainreg_admin_c'] = $dom->admin_c;
-    $_SESSION['domains_domainreg_domainname'] = $domain;
+    $_SESSION['domains_domainreg_domainname'] = $request;
     $_SESSION['domains_domainreg_detach'] = 0;
     
 } elseif (isset($_SESSION['domains_domainreg_domainname'])) {
@@ -141,7 +156,8 @@ if ($pricedata['setup']) {
     $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$pricedata['setup'].' €</td></tr>';
 }
 $form .='</table>';
-$form .= '<p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils ein Jahr. Er verlängert sich stets automatisch um ein weiteres Jahr, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
+$form .= '<p>Mit dieser Bestellung geben Sie eine verbindliche Willenserklärung ab, diese Domain registrieren zu wollen. Sie treten in ein Vertragsverhältnis zu '.config('company_name').' unter dem Vorbehalt, dass die Domain registriert werden kann. Die Hoheit über die Vergabe der Domains hat die jeweils zuständige Registrierungsstelle. Es gelten die Vergabe-Bedingungen der jeweils zuständigen Registrierungsstelle.</p>
+<p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils '.$pricedata['interval'].' Monate. Er verlängert sich stets automatisch um weitere '.$pricedata['interval'].' Monate, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
 
 $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($dom->fqdn).'">
 <input type="submit" name="submit" value="Kostenpflichtigen Vertrag abschließen"></p>';
