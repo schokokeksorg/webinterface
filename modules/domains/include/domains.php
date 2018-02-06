@@ -143,7 +143,7 @@ function get_auth_dns($domainname, $tld) {
           $sec = 'add';
       }
       if ($sec == 'auth' && preg_match("/^.*\\sIN\\s+NS\\s+\\S+$/", $l)) {
-          $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $l);
+          $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)\\.$/", '\1', $l);
       }
       if ($sec == 'add' && $NS && preg_match("/^.*\\sIN\\s+A\\s+\\S+$/", $l)) {
           $NS_IP = preg_replace("/^.*\\sIN\\s+A\\s+(\\S+)$/", '\1', $l);
@@ -173,7 +173,6 @@ function has_own_ns($domainname, $tld)
   foreach ($nsdata as $host => $ip) {
       $NS=$host;
   }
-  DEBUG($NS);
   if (in_array($NS, own_ns())) {
       DEBUG('Domain hat unsere DNS-Server!');
       return true;
