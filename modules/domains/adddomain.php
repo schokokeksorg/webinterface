@@ -58,23 +58,23 @@ if (isset($_REQUEST['domain'])) {
         output('<p class="domain-available">Die Domain '.filter_input_general($request).' ist verfügbar!</p>');
         # Neue Domain eintragen
         $data = get_domain_offer($avail['domainSuffix']);
-        if (!$data) {
-            redirect('');
-        }
-        $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
-            <table>
-            <tr><td>Domainname:</td><td><strong>'.filter_input_general($request).'</strong></td></tr>
-            <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
-        if ($data['setup']) {
-            $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
-        }
-        $form .='</table>';
+        if ($data === false) {
+            output('<p>Diese Endung ist für die automatische Registrierung nicht freigeschaltet. Bitte fragen Sie bei unserem Support nach den Konditionen und Bedingungen für diese Domain-Endung!</p>');
+        } else {
+            $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
+                <table>
+                <tr><td>Domainname:</td><td><strong>'.filter_input_general($request).'</strong></td></tr>
+                <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+            if ($data['setup']) {
+                $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+            }
+            $form .='</table>';
 
-
-        $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($request).'">
-            <input type="submit" name="submit" value="Ich möchte diese Domain registrieren"></p>';
-        output(html_form('domains_register', 'domainreg', '', $form));
-        output('<p>'.internal_link('domains', 'Zurück').'</p>');
+            $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($request).'">
+                <input type="submit" name="submit" value="Ich möchte diese Domain registrieren"></p>';
+            output(html_form('domains_register', 'domainreg', '', $form));
+            output('<p>'.internal_link('domains', 'Zurück').'</p>');
+        }
     } elseif ($avail['status'] == 'registered' || $avail['status'] == 'alreadyRegistered') {
         output('<p class="domain-unavailable">Die Domain '.filter_input_general($request).' ist bereits vergeben.</p>');
 
@@ -84,17 +84,16 @@ if (isset($_REQUEST['domain'])) {
         } else {
             $data = get_domain_offer($avail['domainSuffix']);
 
-            if (! $data) {
-                // Die Include-Datei setzt eine passende Warning-Nachricht
-                output('<p>Eine Registrierung ist nicht automatisiert möglich. Bitte wenden Sie sich an den Support.');
+            if ($data === false) {
+                output('<p>Diese Endung ist für die automatische Registrierung nicht freigeschaltet. Bitte fragen Sie bei unserem Support nach den Konditionen und Bedingungen für diese Domain-Endung!</p>');
             } else {
 
                 $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
                     <table>
                     <tr><td>Domainname:</td><td><strong>'.filter_input_general($avail['domainNameUnicode']).'</strong></td></tr>
-                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>';
+                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
                 if ($data['setup']) {
-                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>';
+                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
                 }
                 $form .='</table>';
 

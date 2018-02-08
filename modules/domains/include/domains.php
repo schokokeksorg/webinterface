@@ -244,8 +244,7 @@ function get_domain_offer($tld)
     $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
   }
   if ($result->rowCount() != 1) {
-    warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
-    return;
+    return false;
   }
   $temp = $result->fetch();
   $data["gebuehr"] = $temp["gebuehr"];

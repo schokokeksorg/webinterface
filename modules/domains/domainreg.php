@@ -151,9 +151,9 @@ $form .= '<h4>Kosten</h4>';
 $form .= '<p>Für die Verwaltung der Domain fallen folgende Kosten an:</p>
 <table>
 <tr><td>Domainname:</td><td><strong>'.$dom->fqdn.'</strong></td></tr>
-<tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$pricedata['gebuehr'].' €</td></tr>';
+<tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$pricedata['gebuehr'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
 if ($pricedata['setup']) {
-    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$pricedata['setup'].' €</td></tr>';
+    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$pricedata['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
 }
 $form .='</table>';
 $form .= '<p>Mit dieser Bestellung geben Sie eine verbindliche Willenserklärung ab, diese Domain registrieren zu wollen. Sie treten in ein Vertragsverhältnis zu '.config('company_name').' unter dem Vorbehalt, dass die Domain registriert werden kann. Die Hoheit über die Vergabe der Domains hat die jeweils zuständige Registrierungsstelle. Es gelten die Vergabe-Bedingungen der jeweils zuständigen Registrierungsstelle.</p>
