@@ -80,12 +80,12 @@ function get_server_by_id($id) {
 function redirect($target)
 {
   global $debugmode;
+  if ($target == '') {
+      $target = $_SERVER['REQUEST_URI'];
+  }
   if (! $debugmode) {
     header("Location: {$target}");
   } else {
-      if ($target == '') {
-          $target = $_SERVER['REQUEST_URI'];
-      }
       if (strpos($target, '?') === false) {
         print 'REDIRECT: '.internal_link($target, $target);
       } else {

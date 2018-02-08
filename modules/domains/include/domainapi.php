@@ -103,7 +103,7 @@ function api_upload_domain($fqdn)
 
 function api_register_domain($domainname, $authinfo=NULL) 
 {
-    $result = db_query("SELECT id,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($domainname));
+    $result = db_query("SELECT id,status,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($domainname));
     if ($result->rowCount() < 1) {
         system_failure("Unbekannte Domain");
     }

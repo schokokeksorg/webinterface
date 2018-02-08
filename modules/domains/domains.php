@@ -28,6 +28,16 @@ if ($_SESSION['role'] & ROLE_CUSTOMER)
 else
   $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
 
+// Session-Variablen aufräumen
+unset($_SESSION['domains_detail_domainname']);
+unset($_SESSION['domains_detail_owner']);
+unset($_SESSION['domains_detail_admin_c']);
+unset($_SESSION['domains_detail_detach']);
+unset($_SESSION['domains_domainreg_owner']);
+unset($_SESSION['domains_domainreg_admin_c']);
+unset($_SESSION['domains_domainreg_detach']);
+unset($_SESSION['domains_domainreg_domainname']);
+
 title("Domains");
 
 output('<p>In Ihrem Account werden die folgenden Domains verwaltet:</p>');

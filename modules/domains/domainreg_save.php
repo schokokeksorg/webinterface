@@ -48,5 +48,11 @@ if ($dom->status == 'pretransfer') {
 api_register_domain($dom->fqdn, $authinfo);
 
 success_msg('Die Registrierung wurde in Auftrag gegeben. Der Domain-Status sollte sich in den nächsten Minuten entsprechend ändern.');
+
+unset($_SESSION['domains_domainreg_owner']);
+unset($_SESSION['domains_domainreg_admin_c']);
+unset($_SESSION['domains_domainreg_detach']);
+unset($_SESSION['domains_domainreg_domainname']);
+
 redirect('domains');
 
