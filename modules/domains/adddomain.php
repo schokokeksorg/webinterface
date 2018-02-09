@@ -23,6 +23,9 @@ require_once('domainapi.php');
 require_once('domains.php');
 
 require_role(ROLE_CUSTOMER);
+if (! config('http.net-apikey')) {
+    system_failure("Dieses System ist nicht eingerichtet zum Hinzufügen von Domains");
+}
 
 title("Domain hinzufügen");
 $section='domains_domains';

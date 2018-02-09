@@ -19,9 +19,8 @@ require_once('inc/icons.php');
 
 require_once('class/domain.php');
 require_once('domains.php');
-require_once('domainapi.php');
 
-require_role(ROLE_CUSTOMER);
+require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
 
 $dom = NULL;
 if (isset($_REQUEST['id'])) {
@@ -35,7 +34,11 @@ if (isset($_REQUEST['id'])) {
 if (!$dom) {
     system_failure("Keine Domain gewählt!");
 }
-$dom->ensure_customerdomain();
+if (have_role(ROLE_CUSTOMER)) {
+    $dom->ensure_customerdomain();
+} else {
+    $dom->ensure_userdomain();
+}
 
 title("Domain {$dom->fqdn}");
 $section = 'domains_domains';
@@ -43,7 +46,7 @@ $section = 'domains_domains';
 // Block zuständiger Useraccount
 
 $useraccounts = list_useraccounts();
-if ($_SESSION['role'] & ROLE_CUSTOMER && count($useraccounts) > 1) {
+if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
     // Mehrere User vorhanden
     $options = array();
     foreach ($useraccounts as $u) {
@@ -60,9 +63,10 @@ if ($_SESSION['role'] & ROLE_CUSTOMER && count($useraccounts) > 1) {
 
 // Block Domain-Inhaber 
 
-if ($dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_date > date('Y-m-d'))) {
+if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_date > date('Y-m-d'))) {
     use_module('contacts');
     require_once('contacts.php');
+    require_once('domainapi.php');
 
     output('<h4>Inhaberwechsel der Domain</h4>');
     output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
@@ -131,17 +135,18 @@ if ($dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_d
 
 // Block Externe Domain umziehen
 
-if ($dom->status == 'prereg') {
-    output('<h4>Domain-Registrierung abschließen</h4>
-            <p>'.internal_link('domainreg', 'Domain registrieren', "domain={$dom->fqdn}").'</p>');
-} elseif ($dom->status == 'pretransfer') {
-    output('<h4>Domain zu '.config('company_name').' umziehen</h4>
-            <p>'.internal_link('domainreg', 'Umzugsautrag (ggf. nochmals) erteilen', "domain={$dom->fqdn}").'</p>');
-} elseif ($dom->provider != 'terions') {
-    output('<h4>Domain zu '.config('company_name').' umziehen</h4>
-            <p>'.internal_link('domainreg', 'Domain-Transfer starten', "domain={$dom->fqdn}").'</p>');
+if (have_role(ROLE_CUSTOMER) && config('http.net-apikey')) {
+    if ($dom->status == 'prereg') {
+        output('<h4>Domain-Registrierung abschließen</h4>
+                <p>'.internal_link('domainreg', 'Domain registrieren', "domain={$dom->fqdn}").'</p>');
+    } elseif ($dom->status == 'pretransfer') {
+        output('<h4>Domain zu '.config('company_name').' umziehen</h4>
+                <p>'.internal_link('domainreg', 'Umzugsautrag (ggf. nochmals) erteilen', "domain={$dom->fqdn}").'</p>');
+    } elseif ($dom->provider != 'terions') {
+        output('<h4>Domain zu '.config('company_name').' umziehen</h4>
+                <p>'.internal_link('domainreg', 'Domain-Transfer starten', "domain={$dom->fqdn}").'</p>');
+    }
 }
-
 
 // Block Domain löschen/kündigen
 
@@ -149,7 +154,8 @@ $domain_in_use = mailman_subdomains($dom->id) || mail_in_use($dom->id) || web_in
 if (!$domain_in_use && ($dom->status == 'prereg' || $dom->status == 'pretransfer' || $dom->status == 'transferfailed' || $dom->status == 'external')) {
     output('<h4>Domain wieder entfernen</h4>');
     output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' entfernen', 'action=delete&domain='.$dom->id).'</p>');
-} elseif ($dom->provider == 'terions') {
+} elseif (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions') {
+    require_once('domainapi.php');
     output('<h4>Domain kündigen</h4>');
     $info = api_download_domain($dom->id);
     if ($info['authInfo']) {

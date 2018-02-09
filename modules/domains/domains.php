@@ -23,7 +23,7 @@ require_once('domains.php');
 
 require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
-if ($_SESSION['role'] & ROLE_CUSTOMER)
+if (have_role(ROLE_CUSTOMER))
   $user_domains = get_domain_list($_SESSION['customerinfo']['customerno']);
 else
   $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
@@ -107,12 +107,17 @@ foreach ($user_domains as $domain)
     $punycode = '';
   }
   $domainname = "{$domain->fqdn}{$punycode}";
-  $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
+  if (have_role(ROLE_CUSTOMER)) {
+      $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
+  }
   output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
 }
 output('</div>');
 output("<br />");
-addnew('adddomain', 'Neue Domain bestellen / hinzufügen');
+
+if (have_role(ROLE_CUSTOMER) && config('http.net-apikey')) {
+    addnew('adddomain', 'Neue Domain bestellen / hinzufügen');
+}
 
 
 ?>

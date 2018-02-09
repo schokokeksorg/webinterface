@@ -69,6 +69,16 @@ function config($key, $localonly = false)
     return NULL;
 }
 
+function have_role($role) {
+    $have = $_SESSION['role'] & $role;
+    if ($have) {
+        DEBUG("Current user has role ".$role);
+    } else {
+        DEBUG("Current user does not have role ".$role);
+    }
+    return $have;
+}
+
 function get_server_by_id($id) {
   $id = (int) $id;
   $result = db_query("SELECT hostname FROM system.servers WHERE id=?", array($id));

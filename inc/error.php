@@ -112,17 +112,24 @@ function show_messages()
 
 function require_role($roles)
 {
-  if (! is_array($roles))
+  if (! is_array($roles)) {
     $roles = array($roles);
+  }
   $allow = false;
-  foreach ($roles as $role)
-    if ($role & $_SESSION['role'])
+  foreach ($roles as $role) {
+    if ($role & $_SESSION['role']) {
       $allow = true;
-  if (! $allow)
-    if ($_SESSION['role'] == ROLE_ANONYMOUS)
+    }
+  }
+  if (! $allow) {
+    if ($_SESSION['role'] == ROLE_ANONYMOUS) {
       login_screen();
-    else
+    } else {
+      $backtrace = debug_backtrace();
+      DEBUG($backtrace[0]['file'].':'.$backtrace[0]['line'].': Current user does not have any of the required roles: '.implode(",",$roles));
       login_screen("Diese Seite können Sie mit Ihren aktuellen Zugriffsrechten nicht benutzen, bitte melden Sie sich mit den benötigten Zugriffsrechten an!");
+    }
+  }
 }
 
 
