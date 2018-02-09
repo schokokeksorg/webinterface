@@ -38,7 +38,7 @@ if ($_POST['password1'] != '')
   elseif ($_POST['password2'] == '')
     input_error('Sie müssen das neue Passwort zweimal eingeben!');
   elseif (($check = strong_password($_POST['password1'])) !== true)
-    input_error("Das Passwort ist zu einfach (cracklib sagt: {$check})!");
+    input_error("Das Passwort ist zu einfach ({$check})!");
   else {
     change_mailaccount(get_mailaccount_id($_SESSION['mailaccount']), array('password' => $_POST['password1']));
     if (! $debugmode)

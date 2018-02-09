@@ -47,7 +47,7 @@ if (isset($_REQUEST['token']))
       elseif (preg_match('/["\'\\\\]/', $_POST['password']) === 1)
         input_error("Das Passwort enthält problematische Zeichen. Bitte keine Anführungszeichen und kein Backslash benutzen.");
       elseif (($result = strong_password($_POST['password'])) !== true)
-        input_error("Das Passwort ist zu einfach (cracklib sagt: {$result})!");
+        input_error("Das Passwort ist zu einfach ({$result})!");
       else
       {
         require_once('session/checkuser.php');

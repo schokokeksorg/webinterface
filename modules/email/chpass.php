@@ -41,7 +41,7 @@ if (isset($_POST['password1']) && $_POST['password1'] != '')
   elseif ($_POST['password2'] == '')
     input_error('Sie müssen das neue Passwort zweimal eingeben!');
   elseif (($check = strong_password($_POST['password1'])) !== true)
-    input_error("Das Passwort ist zu einfach (cracklib sagt: {$check})!");
+    input_error("Das Passwort ist zu einfach ({$check})!");
   else {
     if ($role & ROLE_VMAIL_ACCOUNT)
     {

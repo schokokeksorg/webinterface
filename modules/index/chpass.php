@@ -44,7 +44,7 @@ if (isset($_POST['password1']))
   elseif ($_POST['old_password'] == '')
     input_error('Altes Passwort nicht angegeben!');
   elseif (($check = strong_password($_POST['password1'])) !== true)
-    input_error("Das Passwort ist zu einfach (cracklib sagt: {$check})!");
+    input_error("Das Passwort ist zu einfach ({$check})!");
   else
   {
     if ($result & ROLE_SYSTEMUSER)

@@ -35,7 +35,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token']))
       elseif ($_POST['password'] == '')
         input_error("Es kann kein leeres Passwort gesetzt werden");
       elseif (($result = strong_password($_POST['password'])) !== true)
-        input_error("Das Passwort ist zu einfach (cracklib sagt: {$result})!");
+        input_error("Das Passwort ist zu einfach ({$result})!");
       else
       {
         require_once('session/checkuser.php');

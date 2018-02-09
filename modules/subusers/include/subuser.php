@@ -101,7 +101,7 @@ function new_subuser($username, $requested_modules, $password)
   
   $result = strong_password($password);
   if ($result !== true) {
-    system_failure("Unsicheres Passwort. Die Meldung von cracklib lautet: ".$result);
+    system_failure("Unsicheres Passwort: ".$result);
   }
 
   $args = array(":uid" => $_SESSION['userinfo']['uid'],
@@ -159,7 +159,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
   if ($password) {
     $result = strong_password($password);
     if ($result !== true) {
-      system_failure("Unsicheres Passwort. Die Meldung von cracklib lautet: ".$result);
+      system_failure("Unsicheres Passwort: ".$result);
     }
     $args[':password'] = hash("sha256", $password);
     $pwchange = ", password=:password";

@@ -30,18 +30,15 @@ $config['db_pass'] = 'password';
 
 $config['modules'] = array("index", "domains", "imap", "mysql", "jabber", "vhosts", "register", "systemuser", "su");
 
-$config['use_cracklib'] = true;
-$config['cracklib_dict'] = 'inc/cracklib_dict';
-
 $config['enable_debug'] = true;
 $config['logging'] = LOG_ERR;
 
 
-$config['mime_type'] = 'application/xhtml+xml';
+$config['mime_type'] = 'text/html';
 
 $config['session_name'] = 'CONFIG_SCHOKOKEKS_ORG';
 $config['theme'] = 'default';
-$config['jquery_ui_path'] = 'https://source.schokokeks.org/external/jquery/jquery-ui-1.10.0/';
+$config['jquery_ui_path'] = '/external/jquery';
 
 ini_set('display_errors','On');
 
