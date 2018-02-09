@@ -37,6 +37,8 @@ function warning($msg)
   if (!isset($_SESSION['warning']))
     $_SESSION['warning'] = array();
   array_push($_SESSION['warning'], $msg);
+  $backtrace = debug_backtrace();
+  DEBUG('WARNING:<br>'.$backtrace[0]['file'].':'.$backtrace[0]['line'].': '.$msg);
 }
 
 function success_msg($msg)

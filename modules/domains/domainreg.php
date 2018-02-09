@@ -41,13 +41,9 @@ if (isset($_REQUEST['domain'])) {
         redirect('');
     }
     $dom = new Domain();
-    if ($dom->loadByName($request) !== false) {
-        if ($dom->is_customerdomain()) {
-            warning('Diese Domain ist bereits in Ihrem Kundenkonto eingetragen!');
-        } else {
-            warning('Diese Domain ist bei einem anderen Kunden von uns in Nutzung. Kontaktieren Sie den Support, wenn Sie eine Domain in ein anderes Kundenkonto übertragen möchten.');
-        }
-        redirect('');
+    if ($dom->loadByName($request) !== false && !$dom->is_customerdomain()) {
+        warning('Diese Domain ist bei einem anderen Kunden von uns in Nutzung. Kontaktieren Sie den Support, wenn Sie eine Domain in ein anderes Kundenkonto übertragen möchten.');
+        redirect('adddomain');
     }
     $dom = new Domain();
     if ($dom->loadByName($request) === false) {
@@ -86,7 +82,9 @@ if ($tld != $dom->tld) {
 
 $pricedata = get_domain_offer($tld);
 if (!$pricedata) {
-    redirect('adddomain');
+    // Hier kommen wir hin, wenn eine externe Domain umgezogen wird, deren Endung wir nicht automatisch anbieten
+    warning('Die Domain '.$dom->fqdn.' kann nicht über dieses Webinterface umgezogen werden weil bei dieser Endung Besonderheiten zu beachten sind. Bitte kontaktieren Sie den Support.');
+    redirect('domains');
 }
 $mode=NULL;
 
