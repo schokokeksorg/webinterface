@@ -154,7 +154,7 @@ $domain_in_use = mailman_subdomains($dom->id) || mail_in_use($dom->id) || web_in
 if (!$domain_in_use && ($dom->status == 'prereg' || $dom->status == 'pretransfer' || $dom->status == 'transferfailed' || $dom->status == 'external')) {
     output('<h4>Domain wieder entfernen</h4>');
     output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' entfernen', 'action=delete&domain='.$dom->id).'</p>');
-} elseif (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions') {
+} elseif (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions' && (!$dom->cancel_date || ($dom->cancel_date > date('Y-m-d')))) {
     require_once('domainapi.php');
     output('<h4>Domain kündigen</h4>');
     $info = api_download_domain($dom->id);
