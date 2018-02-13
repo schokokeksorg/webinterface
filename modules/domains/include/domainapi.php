@@ -150,7 +150,10 @@ function api_register_domain($domainname, $authinfo=NULL)
         $args = array("domain" => $newdomain, "transferData" => array("authInfo" => $authinfo));
         $result = api_request('domainTransfer', $args);
     }
-    
+    if ($result['status'] == 'error') {
+        system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
+    }
+    return $result;    
 }
 
 function api_domain_available($domainname) 
