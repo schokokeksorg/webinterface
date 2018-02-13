@@ -107,7 +107,8 @@ else
       $uid = $ret[0]['username'];
       $role = find_role($uid, '', True);
       setup_session($role, $uid);
-      setcookie('CLIENTCERT_AUTOLOGIN', '1', time()+3600*24*365, '/');
+      DEBUG("Set Cookie!");
+      setcookie('CLIENTCERT_AUTOLOGIN', '1', strtotime("+ 1 year"), '/', '', true, true);
       $destination = 'go/index/index';
       if (check_path($ret[0]['startpage']))
         $destination = $ret[0]['startpage'];

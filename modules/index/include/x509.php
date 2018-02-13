@@ -25,13 +25,16 @@ function do_ajax_cert_login() {
 function get_logins_by_cert($cert) 
 {
 	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
-	if ($result->rowCount() < 1)
+	if ($result->rowCount() < 1) {
+        DEBUG("No certlogin found for this cert!");
 		return NULL;
-	else {
+	} else {
 		$ret = array();
 		while ($row = $result->fetch()) {
 			$ret[] = $row;
 		}
+        DEBUG("Logins for this cert:");
+        DEBUG($ret);
 		return $ret;
 	}
 }

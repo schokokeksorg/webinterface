@@ -120,7 +120,7 @@ function require_role($roles)
       $allow = true;
   if (! $allow)
     if ($_SESSION['role'] == ROLE_ANONYMOUS)
-      login_screen("Diese Seite können Sie erst benutzen, wenn Sie sich mit Ihren Zugangsdaten anmelden.");
+      login_screen();
     else
       login_screen("Diese Seite können Sie mit Ihren aktuellen Zugriffsrechten nicht benutzen, bitte melden Sie sich mit den benötigten Zugriffsrechten an!");
 }
@@ -129,12 +129,9 @@ function require_role($roles)
 function login_screen($why = NULL)
 {
   if (! $why) {
-    if (have_module('index')) {
       if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
-        require_once('modules/index/include/x509.php');
-        do_ajax_cert_login();
+          redirect("/certlogin/index.php?destination=".urlencode($_SERVER['REQUEST_URI']));
       }
-    }
   }
   require_once('inc/theme.php');
   if ($why) {
