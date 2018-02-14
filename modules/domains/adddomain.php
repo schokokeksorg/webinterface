@@ -134,7 +134,6 @@ if (isset($_REQUEST['domain'])) {
             <input type="submit" name="submit" value="Diese Domain bei '.config('company_name').' verwenden"></p>';
 
         output(html_form('domains_external', 'useexternal', '', $form));
-        output('</div>');
 
     } else {
         output('<p class="domain-unavailable">Die Domain '.filter_input_general($request).' kann nicht registriert werden.</p>');
