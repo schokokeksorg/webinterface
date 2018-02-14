@@ -347,6 +347,12 @@ function encode_querystring($querystring)
 }
 
 
+function beta_notice()
+{
+    output('<div class="beta"><h4>Achtung: Testbetrieb</h4><p>Diese Funktion ist im Testbetrieb. Bei Fehlfunktionen, Unklarheiten oder Verbesserungsvorschlägen bitten wir um kurze Nachricht an <a href="mailto:root@schokokeks.org">root@schokokeks.org</a></p></div>');
+}
+
+
 function addnew($file, $label, $querystring = '', $attribs = '')
 {
   output('<p class="addnew">'.internal_link($file, $label, $querystring, $attribs).'</p>');

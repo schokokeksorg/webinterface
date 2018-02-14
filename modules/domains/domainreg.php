@@ -38,7 +38,7 @@ if (isset($_REQUEST['domain'])) {
     $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
     if (!check_domain($punycode)) {
         warning("Ungültiger Domainname: ".filter_input_general($request));
-        redirect('');
+        redirect('adddomain');
     }
     $dom = new Domain();
     if ($dom->loadByName($request) !== false && !$dom->is_customerdomain()) {
@@ -99,6 +99,7 @@ if ($avail['status'] == 'available') {
     title("Domain-Transfer vornehmen");
 }
 
+beta_notice();
 
 output("<p>Domainname: <strong>".$dom->fqdn."</strong></p>");
 

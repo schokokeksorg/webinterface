@@ -418,3 +418,21 @@ tr.unpaid td {
   color: #fff;
 }
 
+div.beta {
+  color: #000;
+  font-size: 110%;
+  font-weight: bold;
+  padding: 10px;
+  border: 3px solid #ffb000;
+  background-color: #fffee9;
+}
+div.beta h4 {
+  color: #ffb000;
+  padding-left: 26px;
+  min-height: 18px;
+  background-image: url('../../images/warning.png');
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+
+
