@@ -1,0 +1,4 @@
+name = webmailtotp
+description = 2-Faktor-Authentifizierung für Webmail
+permission = Verwalten der 2-Faktor-Authentifizierung für Webmail-Zugriff
+
