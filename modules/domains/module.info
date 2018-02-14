@@ -1,0 +1,4 @@
+name = domains
+description = Domain-Übersicht und -Verwaltung
+permission = Domains registrieren und verwalten
+
