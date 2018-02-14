@@ -18,6 +18,9 @@ require_once('inc/debug.php');
 require_once('inc/security.php');
 require_once('inc/icons.php');
 
+require_once('inc/jquery.php');
+javascript();
+
 require_once('vhosts.php');
 
 title("Subdomains");
@@ -32,18 +35,27 @@ output("<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als
 ");
 
 
-$domain = NULL;
-if (isset($_REQUEST['domain']) && $_REQUEST['domain'] != '') {
-  $domain = $_REQUEST['domain'];
-  output('<p class="warning"><strong>Filter aktiv!</strong> Momentan werden nur Einstellungen für die Domain <strong>'.filter_input_general($domain).'</strong> angezeigt. Klicken Sie '.internal_link('', 'hier', 'domain=').' um alle Einstellungen anzuzeigen.</p>');
+$filter = "";
+if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
+  $filter = $_REQUEST['filter'];
 }
-$vhosts = list_vhosts($domain);
+if (isset($_REQUEST['clear']) && $_REQUEST['clear'] == 'X') {
+    $filter = "";
+}
+$vhosts = list_vhosts($filter);
+
+
 $traffic_sum = 0;
 $letsencrypt = false;
 foreach ($vhosts as $vh) {
   if (strstr($vh['options'], 'letsencrypt')) {
     $letsencrypt = true;
   }
+}
+// Filter-Funktion
+if (count($vhosts) > 10 || $filter) {
+    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.$filter.'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
+    output(html_form('vhosts_filter', 'vhosts', '', $form));
 }
 
 if (count($vhosts) > 0)
@@ -193,6 +205,9 @@ if (count($vhosts) > 0)
   }
   output('<p style="font-size: 90%;"><sup>*</sup>)&#160;Dieser Wert stellt den Datenverkehr dieser Website für die letzten 30 Tage dar.</p>');
   output('<p style="font-size: 90%;"><sup>**</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');
+}
+elseif ($filter) {
+  output("<p><strong><em>Keine Einträge für Ihre aktuellen Filterkrieterien.</em></strong></p>");
 }
 else // keine VHosts vorhanden
 {

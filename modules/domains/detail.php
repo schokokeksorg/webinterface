@@ -45,8 +45,12 @@ $section = 'domains_domains';
 
 // Block zuständiger Useraccount
 
+$is_current_user = true;
 $useraccounts = list_useraccounts();
 if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
+    if ($dom->useraccount != $_SESSION['userinfo']['uid']) {
+        $is_current_user = false;
+    }
     // Mehrere User vorhanden
     $options = array();
     foreach ($useraccounts as $u) {
@@ -60,6 +64,36 @@ if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
     output(html_form('update-user', 'update', 'action=chguser&id='.$dom->id, $form));
 }
 
+
+// Block Nutzung
+
+if ($is_current_user) {
+    $used = false;
+    output("<h4>Aktuelle Nutzung dieser Domain</h4>");
+    if (have_module('dns') && $dom->dns == 1 && dns_in_use($dom->id)) {
+        output("<p>Es sind manuell gesetzte DNS-Einträge unter dieser Domain aktiv. ".internal_link('../dns/dns_domain', '&#x2192; Bearbeiten', 'dom='.$dom->id)."</p>");
+        $used = true;
+    }
+    if (have_module('email') && mail_in_use($dom->id)) {
+        output("<p>Es gibt E-Mail-Postfächer unter dieser Domain ".internal_link('../email/vmail', '&#x2192; Bearbeiten', 'domain='.$dom->fqdn)."</p>");
+        $used = true;
+    }
+    if (have_module('mailman') && mailman_subdomains($dom->id)) {
+        output("<p>Diese Domain wird für Mailinglisten verwendet ".internal_link('../mailman/lists', '&#x2192; Bearbeiten')."</p>");
+        $used = true;
+    }
+    if (have_module('vhosts') && web_in_use($dom->id)) {
+        output("<p>Es gibt Website-Einstellungen für diese Domain ".internal_link('../vhosts/vhosts', '&#x2192; Bearbeiten', 'filter='.$dom->fqdn)."</p>");
+        $used = true;
+    }
+    if (have_module('jabber') && $dom->jabber == 1) {
+        output("<p>Diese Domain wird für Jabber verwendet ".internal_link('../jabber/accounts', '&#x2192; Bearbeiten')."</p>");
+        $used = true;
+    }
+    if (! $used) {
+        output('<p><em>Aktuell wird diese Domain nicht verwendet!</em></p>');
+    }
+}
 
 // Block Domain-Inhaber 
 

@@ -375,7 +375,7 @@ function html_form($form_id, $scriptname, $querystring, $content)
 {
   $querystring = encode_querystring($querystring);
   $ret = '';
-  $ret .= '<form action="'.$scriptname.$querystring.'" method="post">'."\n";
+  $ret .= '<form id="'.$form_id.'" action="'.$scriptname.$querystring.'" method="post">'."\n";
   $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="'.generate_form_token($form_id).'" /></p>'."\n";
   $ret .= $content;
   $ret .= '</form>';

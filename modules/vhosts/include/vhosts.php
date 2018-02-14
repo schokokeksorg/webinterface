@@ -50,14 +50,14 @@ function autoipv6_address($vhost_id, $mode = 1)
 }
 
 
-function list_vhosts($domainname=NULL)
+function list_vhosts($filter=NULL)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
   $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid ORDER BY domain,hostname";
   $params = array(":uid" => $uid);
-  if ($domainname) {
-    $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE domain=:domain AND uid=:uid ORDER BY hostname";
-    $params[":domain"] = $domainname;
+  if ($filter) {
+    $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE (vh.fqdn LIKE :filter OR vh.id IN (SELECT vhost FROM vhosts.v_alias WHERE fqdn LIKE :filter)) AND uid=:uid ORDER BY hostname";
+    $params[":filter"] = "%$filter%";
   }
   $result = db_query($query, $params);
   $ret = array();
