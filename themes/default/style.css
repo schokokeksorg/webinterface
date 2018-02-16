@@ -435,4 +435,18 @@ div.beta h4 {
   background-repeat: no-repeat;
 }
 
+div.tile-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.tile {
+    width: 25em;
+    border-left: 5px solid #0a0;
+    background-color: #dfd;
+    padding: 4px;
+    margin: 10px;
+}
+
 

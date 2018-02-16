@@ -70,34 +70,36 @@ if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
 if ($is_current_user) {
     $used = false;
     output("<h4>Aktuelle Nutzung dieser Domain</h4>");
+    output('<div class="tile-container">');
     if (have_module('dns') && $dom->dns == 1 && dns_in_use($dom->id)) {
-        output("<p>Es sind manuell gesetzte DNS-Einträge unter dieser Domain aktiv. ".internal_link('../dns/dns_domain', '&#x2192; Bearbeiten', 'dom='.$dom->id)."</p>");
+        output("<div class=\"tile usage\"><p><strong>".internal_link('../dns/dns_domain', "DNS-Server", 'dom='.$dom->id)."</strong></p><p>Manuelle DNS-Records vorhanden.</p></div>");
         $used = true;
     }
     if (have_module('email') && mail_in_use($dom->id)) {
         $vmail = count_vmail($dom->id);
         if ($vmail > 0) {
-            output("<p>Es gibt <strong>{$vmail}</strong> E-Mail-Postfächer unter dieser Domain ".internal_link('../email/vmail', '&#x2192; Bearbeiten', 'filter='.$dom->fqdn)."</p>");
+            output("<div class=\"tile\"><p><strong>".internal_link('../email/vmail', "E-Mail", 'filter='.$dom->fqdn)."</strong></p><p><strong>{$vmail}</strong> E-Mail-Postfächer unter dieser Domain</p></div>");
         } else {
-            output("<p>Manuelle Mail-Konfiguration ist aktiv. ".internal_link('../email/imap', '&#x2192; IMAP-Postfächer verwalten')."</p>");
+            output("<div class=\"tile\"><p><strong>".internal_link('../email/imap', "E-Mail")."</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p></div>");
         }
         $used = true;
     }
     if (have_module('mailman') && mailman_subdomains($dom->id)) {
-        output("<p>Diese Domain wird für Mailinglisten verwendet ".internal_link('../mailman/lists', '&#x2192; Bearbeiten')."</p>");
+        output("<div class=\"tile\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten")."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p></div>");
         $used = true;
     }
     if (have_module('vhosts') && web_in_use($dom->id)) {
-        output("<p>Es gibt Website-Einstellungen für diese Domain ".internal_link('../vhosts/vhosts', '&#x2192; Bearbeiten', 'filter='.$dom->fqdn)."</p>");
+        output("<div class=\"tile\"><p><strong>".internal_link('../vhosts/vhosts', "Websites", 'filter='.$dom->fqdn)."</strong></p><p>Es gibt Website-Einstellungen für diese Domain</p></div>");
         $used = true;
     }
     if (have_module('jabber') && $dom->jabber == 1) {
-        output("<p>Diese Domain wird für Jabber verwendet ".internal_link('../jabber/accounts', '&#x2192; Bearbeiten')."</p>");
+        output("<div class=\"tile\"><p><strong>".internal_link('../jabber/accounts', "Jabber/XMPP")."</strong></p><p>Diese Domain wird für Jabber verwendet</p></div>");
         $used = true;
     }
     if (! $used) {
         output('<p><em>Aktuell wird diese Domain nicht verwendet!</em></p>');
     }
+    output('</div>');
 }
 
 // Block Domain-Inhaber 

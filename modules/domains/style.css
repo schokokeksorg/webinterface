@@ -69,4 +69,7 @@ div#buttons {
     display: none;
 }
 
+div.tile,.usage {
+    width: 12em;
+}
 
