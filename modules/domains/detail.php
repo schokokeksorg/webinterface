@@ -75,7 +75,12 @@ if ($is_current_user) {
         $used = true;
     }
     if (have_module('email') && mail_in_use($dom->id)) {
-        output("<p>Es gibt E-Mail-Postfächer unter dieser Domain ".internal_link('../email/vmail', '&#x2192; Bearbeiten', 'filter='.$dom->fqdn)."</p>");
+        $vmail = count_vmail($dom->id);
+        if ($vmail > 0) {
+            output("<p>Es gibt <strong>{$vmail}</strong> E-Mail-Postfächer unter dieser Domain ".internal_link('../email/vmail', '&#x2192; Bearbeiten', 'filter='.$dom->fqdn)."</p>");
+        } else {
+            output("<p>Manuelle Mail-Konfiguration ist aktiv. ".internal_link('../email/imap', '&#x2192; IMAP-Postfächer verwalten')."</p>");
+        }
         $used = true;
     }
     if (have_module('mailman') && mailman_subdomains($dom->id)) {

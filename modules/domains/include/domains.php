@@ -63,6 +63,12 @@ function mail_in_use($domain)
   return ($result->rowCount() > 0);
 }
 
+function count_vmail($domain) {
+    $domain = (int) $domain;
+    $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain=?", array($domain));
+    return $result->rowCount();
+}
+
 function web_in_use($domain)
 {
   if ( ! in_array('vhosts', config('modules')))
