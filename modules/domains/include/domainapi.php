@@ -96,6 +96,7 @@ function api_upload_domain($fqdn)
         }
     }
     $args = array("domain" => $apidomain);
+    logger(LOG_INFO, "modules/domains/include/domainapi", "domains", "uploading domain »{$fqdn}«");
     api_request('domainUpdate', $args);
 
 }
@@ -145,12 +146,16 @@ function api_register_domain($domainname, $authinfo=NULL)
     $result = NULL;
     if ($dom['status'] == 'prereg') {
         $args = array("domain" => $newdomain);
+        logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "register new domain »{$newdomain['name']}«");
         $result = api_request('domainCreate', $args);
     } else {
         $args = array("domain" => $newdomain, "transferData" => array("authInfo" => $authinfo));
+        logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "transfer-in domain »{$newdomain['name']}« with authinfo »{$authinfo}«");
         $result = api_request('domainTransfer', $args);
     }
     if ($result['status'] == 'error') {
+        $errstr = $result['errors'][0]['text'];
+        logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "error registering domain: {$errstr}");
         system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
     }
     return $result;    
@@ -177,6 +182,7 @@ function api_cancel_domain($domainname)
         system_failure("Konnte Vertragsende nicht herausfinden.");
     }
     $args = array("domainName" => $domainname, "execDate" => $apidomain['latestDeletionDateWithoutRenew']);
+    logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "cancel domain »{$newdomainname}« at time {$apidomain['latestDeletionDateWithoutRenew']}");
     $result = api_request('domainDelete', $args);
     if ($result['status'] == 'error') {
         //system_failure(print_r($result['errors'], true));
@@ -194,6 +200,7 @@ function api_unlock_domain($domainname)
     $apidomain = $result['response'];
     $apidomain['transferLockEnabled'] = false;
     $args = array("domain" => $apidomain);
+    logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "allow transfer for domain »{$domainname}«");
     api_request('domainUpdate', $args);
 }
 
