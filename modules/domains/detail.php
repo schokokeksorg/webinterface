@@ -68,38 +68,50 @@ if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
 // Block Nutzung
 
 if ($is_current_user) {
-    $used = false;
     output("<h4>Aktuelle Nutzung dieser Domain</h4>");
     output('<div class="tile-container">');
-    if (have_module('dns') && $dom->dns == 1 && dns_in_use($dom->id)) {
-        output("<div class=\"tile usage\"><p><strong>".internal_link('../dns/dns_domain', "DNS-Server", 'dom='.$dom->id)."</strong></p><p>Manuelle DNS-Records vorhanden.</p></div>");
-        $used = true;
+    $everused = false;
+    if (have_module('dns') && $dom->dns == 1) {
+        $used = dns_in_use($dom->id);
+        output("<div class=\"tile usage ".($used ? "used" : "unused")."\"><p><strong>".internal_link('../dns/dns_domain', "DNS-Server", 'dom='.$dom->id)."</strong></p><p>".($used ? "Manuelle DNS-Records vorhanden." : "DNS-Records möglich")."</p></div>");
+        $everused = true;
     }
-    if (have_module('email') && mail_in_use($dom->id)) {
+    if (have_module('email') && ($dom->mail != 'none')) {
+        $used = mail_in_use($dom->id);
         $vmail = count_vmail($dom->id);
-        if ($vmail > 0) {
-            output("<div class=\"tile\"><p><strong>".internal_link('../email/vmail', "E-Mail", 'filter='.$dom->fqdn)."</strong></p><p><strong>{$vmail}</strong> E-Mail-Postfächer unter dieser Domain</p></div>");
+        if ($used) {
+            if ($vmail > 0) {
+                output("<div class=\"tile usage used\"><p><strong>".internal_link('../email/vmail', "E-Mail", 'filter='.$dom->fqdn)."</strong></p><p>E-Mail-Postfächer unter dieser Domain: <strong>{$vmail}</strong></p></div>");
+            } else {
+                output("<div class=\"tile usage unused\"><p><strong>".internal_link('../email/imap', "E-Mail")."</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p></div>");
+            }
         } else {
-            output("<div class=\"tile\"><p><strong>".internal_link('../email/imap', "E-Mail")."</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p></div>");
+            output("<div class=\"tile usage unused\"><p><strong>".internal_link('../email/vmail', "E-Mail", 'filter='.$dom->fqdn)."</strong></p><p>Bisher keine E-Mail-Postfächer unter dieser Domain.</p></div>");
         }
-        $used = true;
+        $everused = true;
     }
     if (have_module('mailman') && mailman_subdomains($dom->id)) {
-        output("<div class=\"tile\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten")."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p></div>");
+        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten")."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p></div>");
         $used = true;
+        $everused = true;
     }
-    if (have_module('vhosts') && web_in_use($dom->id)) {
-        output("<div class=\"tile\"><p><strong>".internal_link('../vhosts/vhosts', "Websites", 'filter='.$dom->fqdn)."</strong></p><p>Es gibt Website-Einstellungen für diese Domain</p></div>");
-        $used = true;
+    if (have_module('vhosts')) {
+        $used = web_in_use($dom->id);
+        output("<div class=\"tile usage ".($used ? "used" : "unused")."\"><p><strong>".internal_link('../vhosts/vhosts', "Websites", 'filter='.$dom->fqdn)."</strong></p><p>".($used ? "Es gibt Website-Einstellungen für diese Domain" : "Bisher keine Website eingerichtet")."</p></div>");
+        $everused = true;
     }
-    if (have_module('jabber') && $dom->jabber == 1) {
-        output("<div class=\"tile\"><p><strong>".internal_link('../jabber/accounts', "Jabber/XMPP")."</strong></p><p>Diese Domain wird für Jabber verwendet</p></div>");
-        $used = true;
-    }
-    if (! $used) {
-        output('<p><em>Aktuell wird diese Domain nicht verwendet!</em></p>');
+    if (have_module('jabber')) {
+        if ($dom->jabber == 1) {
+            output("<div class=\"tile usage used\"><p><strong>".internal_link('../jabber/accounts', "Jabber/XMPP")."</strong></p><p>Diese Domain wird für Jabber verwendet</p></div>");
+        } else {
+            output("<div class=\"tile usage unused\"><p><strong>".internal_link('../jabber/new_domain', "Jabber/XMPP")."</strong></p><p>Diese Domain wird bisher nicht für Jabber verwendet</p></div>");
+        }
+        $everused = true;
     }
     output('</div>');
+    if (! $everused) {
+        output('<p><em>Keine Nutzung dieser Domain (die hier angezeigt wird)</em></p>');
+    }
 }
 
 // Block Domain-Inhaber 
