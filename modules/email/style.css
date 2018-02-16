@@ -1,0 +1,12 @@
+
+input#filter {
+    padding-right: 25px;
+}
+button#clear {
+    width: 20px;
+    margin-left: -22px;
+    margin-right: 1em;
+    padding: 0 5px;
+    background-color: #fff;
+    border: 0;
+}

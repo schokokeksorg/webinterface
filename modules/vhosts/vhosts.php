@@ -39,9 +39,6 @@ $filter = "";
 if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
   $filter = $_REQUEST['filter'];
 }
-if (isset($_REQUEST['clear']) && $_REQUEST['clear'] == 'X') {
-    $filter = "";
-}
 $vhosts = list_vhosts($filter);
 
 

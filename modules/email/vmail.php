@@ -18,6 +18,8 @@ require_once('inc/base.php');
 require_once('inc/icons.php');
 require_once('inc/security.php');
 require_role(ROLE_SYSTEMUSER);
+require_once('inc/jquery.php');
+javascript();
 
 require_once('hasdomain.php');
 
@@ -44,6 +46,10 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
 else
 {
 
+$filter = NULL;
+if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
+    $filter = $_REQUEST['filter'];
+}
 
 require_once('vmail.php');
 
@@ -67,82 +73,108 @@ addnew("edit", "Neue E-Mail-Adresse anlegen");
 
 if (count($domains) > 0)
 {
-  output('
-<p>Folgende E-Mail-Konten sind aktuell eingerichtet:</p>
-');
-  foreach ($domains as $dom) 
-  {
-    output('
-      <h4>'.$dom['domainname'].' <small>('.other_icon('information.png', 'Zugangsdaten anzeigen').' '.internal_link('logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($dom['server']).'&type=vmail').')</small></h4>
-      <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;">');
-    if (array_key_exists($dom['id'], $sorted_by_domains)) {
-      $accounts_on_domain = $sorted_by_domains[$dom['id']];
+    // Filter-Funktion
+    if (count($all_accounts) > 10 || $filter) {
+        $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.$filter.'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
+        output(html_form('vmail_filter', 'vmail', '', $form));
+    }
 
-	    foreach ($accounts_on_domain AS $this_account)
-	    {
-	      $acc = get_account_details($this_account['id']);
-	      $actions = array();
-	      DEBUG($acc);
-	      if ($acc['password'] != '')
-	      {
-                $percent = round(( $acc["quota_used"] / $acc["quota"] ) * 100 );
-                $color = ( $percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green" ));
-                $width = 2 * min($percent, 100);
-                $quotachart = "<div style=\"margin: 2px 0; padding: 0; width: 200px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; padding: 0;\">&#160;</div></div> {$acc['quota_used']} MB von {$acc['quota']} MB belegt";
-	        array_push($actions, "Ablegen in Mailbox<br />".$quotachart);
-	      }
-        if ($acc['autoresponder']) {
-            $now = date( 'Y-m-d' );
-            $valid_from = $acc['autoresponder']['valid_from'];
-            $valid_from_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_from']));
-            $valid_until = $acc['autoresponder']['valid_until'];
-            $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
-            if ($valid_from == NULL) {
-              // Autoresponder abgeschaltet
-              //array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
-            } elseif ($valid_from > $now) {
-              array_push($actions, "<strike>Automatische Antwort versenden</strike> (Wird aktiviert am {$valid_from_string})");
-            } elseif ($valid_until == NULL) {
-              array_push($actions, "Automatische Antwort versenden (Unbefristet)");
-            } elseif ($valid_until > $now) {
-              array_push($actions, "Automatische Antwort versenden (Wird deaktiviert am {$valid_until_string})");
-            } elseif ($valid_until < $now) {
-              array_push($actions, "<strike>Automatische Antwort versenden</strike> (Automatisch abgeschaltet seit {$valid_until_string})");
+    output('
+            <p>Folgende E-Mail-Konten sind aktuell eingerichtet:</p>
+            ');
+    foreach ($domains as $dom) 
+    {
+        if ($filter && strpos($dom['domainname'], $filter) === false) {
+            // Die Domain entspricht nicht dem Filter, schau die Postfächer an
+            $account_found = false;
+            if (array_key_exists($dom['id'], $sorted_by_domains)) {
+                $accounts_on_domain = $sorted_by_domains[$dom['id']];
+                foreach ($accounts_on_domain AS $this_account) {
+                    if (strpos($this_account['local'], $filter) !== false) {
+                        $account_found = true;
+                    }
+                }
+            }
+            if (! $account_found) {
+                continue;
             }
         }
-	      foreach ($acc['forwards'] AS $fwd)
-	      {
-		$fwd['destination'] = filter_input_general($fwd['destination']);
-	        array_push($actions, "Weiterleitung an <strong>{$fwd['destination']}</strong>");
-	      }
-	      $dest = '';
-	      if (count($actions) > 0)
-	      {
-	        $dest = "<ul>";
-		foreach ($actions as $a)
-		  $dest .= "<li>{$a}</li>";
-		$dest .= '</ul>';
-	      }
-        if ($acc['smtpreply']) {
-          output('<p><strike>'.$acc['local'].'@'.$this_account['domainname'].'</strike> '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
-          output("<ul><li>".icon_disabled()." Diese Adresse ist stillgelegt. <strong>".internal_link('suspend', 'Stilllegung ändern/aufheben', 'account='.$acc['id']).'</strong></li></ul>');
+        output('
+                <h4>'.$dom['domainname'].' <small>('.other_icon('information.png', 'Zugangsdaten anzeigen').' '.internal_link('logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($dom['server']).'&type=vmail').')</small></h4>
+                <div style="margin-left: 2em; margin-top: 0.5em; padding: 0.1em 0.5em;">');
+        if (array_key_exists($dom['id'], $sorted_by_domains)) {
+            $accounts_on_domain = $sorted_by_domains[$dom['id']];
+
+            foreach ($accounts_on_domain AS $this_account)
+            {
+                if ($filter && 
+                    (strpos($dom['domainname'], $filter) === false && 
+                     strpos($this_account['local'], $filter) === false)) {
+                    continue;
+                }
+                $acc = get_account_details($this_account['id']);
+                $actions = array();
+                DEBUG($acc);
+                if ($acc['password'] != '')
+                {
+                    $percent = round(( $acc["quota_used"] / $acc["quota"] ) * 100 );
+                    $color = ( $percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green" ));
+                    $width = 2 * min($percent, 100);
+                    $quotachart = "<div style=\"margin: 2px 0; padding: 0; width: 200px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; padding: 0;\">&#160;</div></div> {$acc['quota_used']} MB von {$acc['quota']} MB belegt";
+                    array_push($actions, "Ablegen in Mailbox<br />".$quotachart);
+                }
+                if ($acc['autoresponder']) {
+                    $now = date( 'Y-m-d' );
+                    $valid_from = $acc['autoresponder']['valid_from'];
+                    $valid_from_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_from']));
+                    $valid_until = $acc['autoresponder']['valid_until'];
+                    $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
+                    if ($valid_from == NULL) {
+                        // Autoresponder abgeschaltet
+                        //array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
+                    } elseif ($valid_from > $now) {
+                        array_push($actions, "<strike>Automatische Antwort versenden</strike> (Wird aktiviert am {$valid_from_string})");
+                    } elseif ($valid_until == NULL) {
+                        array_push($actions, "Automatische Antwort versenden (Unbefristet)");
+                    } elseif ($valid_until > $now) {
+                        array_push($actions, "Automatische Antwort versenden (Wird deaktiviert am {$valid_until_string})");
+                    } elseif ($valid_until < $now) {
+                        array_push($actions, "<strike>Automatische Antwort versenden</strike> (Automatisch abgeschaltet seit {$valid_until_string})");
+                    }
+                }
+                foreach ($acc['forwards'] AS $fwd)
+                {
+                    $fwd['destination'] = filter_input_general($fwd['destination']);
+                    array_push($actions, "Weiterleitung an <strong>{$fwd['destination']}</strong>");
+                }
+                $dest = '';
+                if (count($actions) > 0)
+                {
+                    $dest = "<ul>";
+                    foreach ($actions as $a)
+                        $dest .= "<li>{$a}</li>";
+                    $dest .= '</ul>';
+                }
+                if ($acc['smtpreply']) {
+                    output('<p><strike>'.$acc['local'].'@'.$this_account['domainname'].'</strike> '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
+                    output("<ul><li>".icon_disabled()." Diese Adresse ist stillgelegt. <strong>".internal_link('suspend', 'Stilllegung ändern/aufheben', 'account='.$acc['id']).'</strong></li></ul>');
+                } else {
+                    output('<p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
+                    output('<p>'.$dest.'</p>');
+                }
+            }
         } else {
-          output('<p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
-          output('<p>'.$dest.'</p>');
+            output('<p><em>Bisher keine E-Mail-Adressen unter dieser Domain.</em></p>');
         }
-	    }
-    } else {
-      output('<p><em>Bisher keine E-Mail-Adressen unter dieser Domain.</em></p>');
-    }
-    addnew("edit", "Neue E-Mail-Adresse anlegen", "domain={$dom['id']}");
-    output('</div>');
-  } 
+        addnew("edit", "Neue E-Mail-Adresse anlegen", "domain={$dom['id']}");
+        output('</div>');
+    } 
 }
 else
 {
-  output('<p><em>Es sind bisher keine Ihrer Domains für Mail-Empfang eingerichtet.</em></p>');
+    output('<p><em>Es sind bisher keine Ihrer Domains für Mail-Empfang eingerichtet.</em></p>');
 }
-        
+
 
 /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
 output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: '.config('company_name').' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
