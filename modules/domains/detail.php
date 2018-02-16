@@ -211,6 +211,7 @@ if (!$domain_in_use && ($dom->status == 'prereg' || $dom->status == 'pretransfer
     if ($info['deletionDate']) {
         output('<p>Es liegt aktuell eine Kündigung vor auf <strong>'.$info['deletionDate'].'</strong></p><p>Um die Kündigung aufzuheben, wenden Sie sich bitte an den Support.</p>');
     } else {
+        output('<p>Die Laufzeit wird automatisch um ein weiteres Jahr verlängert, sofern Sie keine Kündigung auslösen.</p>');
         output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' kündigen', 'action=cancel&domain='.$dom->id).'</p>');
     }
 }
