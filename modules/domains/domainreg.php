@@ -109,6 +109,19 @@ $section='domains_domains';
 output('<h4>Inhaber der Domain</h4>');
 output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
 
+if ($_SESSION['domains_domainreg_owner'] === NULL) {
+    $kundenkontakte = get_kundenkontakte();
+    $customer = get_contact($kundenkontakte['kunde']);
+    if (possible_domainholder($customer)) {
+        $_SESSION['domains_domainreg_owner'] = $kundenkontakte['kunde'];
+    } else {
+        $list = array_keys(possible_domainholders());
+        if (count($list) > 0) {
+            $_SESSION['domains_domainreg_owner'] = $list[0];
+        }
+    }
+}
+
 if ($_SESSION['domains_domainreg_detach'] == 0) {
     $_SESSION['domains_domainreg_admin_c'] = $_SESSION['domains_domainreg_owner'];
 } 
@@ -130,11 +143,11 @@ if ($_SESSION['domains_domainreg_owner']) {
 } else {
     output('<p><strong>Inhaber und Verwalter:</strong></p><p><em>Bisher kein Inhaber ausgewählt</em>');
 }
-addnew('choose', 'Neuen Inhaber wählen', "type=owner&backto=domainreg");
+addnew('choose', 'Inhaber wählen', "type=owner&backto=domainreg");
 if ($_SESSION['domains_domainreg_admin_c'] != $_SESSION['domains_domainreg_owner']) {
     $admin_c = get_contact($_SESSION['domains_domainreg_admin_c']);
     output('<p><strong>Verwalter:</strong></p>'.display_contact($admin_c, ''));
-    addnew('choose', 'Neuen Verwalter wählen', "type=admin_c&backto=domainreg");
+    addnew('choose', 'Anderen Verwalter wählen', "type=admin_c&backto=domainreg");
     output('<p class="delete">'.internal_link('', 'Keinen separaten Verwalter festlegen', 'admin_c=none').'</p>');
 } else {
     addnew('choose', 'Einen separaten Verwalter wählen', "type=admin_c&detach=1&backto=domainreg");
