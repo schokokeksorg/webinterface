@@ -37,19 +37,19 @@ if ($_REQUEST['action'] == 'ownerchange') {
         redirect('detail?error=1');
     }
     check_form_token('domains_update');
-    $dom = new Domain($_SESSION['domains_update_domainname']);
+    $dom = new Domain($_SESSION['domains_detail_domainname']);
     if (!$dom) {
         system_failure("Keine Domain gewählt!");
     }
 
     DEBUG($dom);
-    domain_ownerchange($_SESSION['domains_update_domainname'], $_SESSION['domains_update_owner'], $_SESSION['domains_update_admin_c']);
+    domain_ownerchange($_SESSION['domains_detail_domainname'], $_SESSION['domains_detail_owner'], $_SESSION['domains_detail_admin_c']);
 
 
-    unset($_SESSION['domains_update_domainname']);
-    unset($_SESSION['domains_update_owner']);
-    unset($_SESSION['domains_update_admin_c']);
-    unset($_SESSION['domains_update_detach']);
+    unset($_SESSION['domains_detail_domainname']);
+    unset($_SESSION['domains_detail_owner']);
+    unset($_SESSION['domains_detail_admin_c']);
+    unset($_SESSION['domains_detail_detach']);
 
     redirect('domains');
 }
