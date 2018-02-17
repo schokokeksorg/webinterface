@@ -211,10 +211,16 @@ $form .= "
     </div>";
 
   $certs = user_certs();
-  $certselect = array(0 => 'kein Zertifikat / System-Standard benutzen', -1 => 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt');
+  $certselect = array();
+  $certselect[0] = 'kein Zertifikat / System-Standard benutzen';
+  if ($vhost_type != 'dav' && $vhost_type != 'svn') {
+      $certselect[-1] = 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt';
+  }
   foreach ($certs as $c)
   {
-    $certselect[$c['id']] = $c['subject'];
+    if (! cert_is_letsencrypt($c['id'])) {
+        $certselect[$c['id']] = $c['subject'];
+    }
   }
   if (strstr($vhost['options'], 'letsencrypt')) {
     $vhost['certid'] = -1;
