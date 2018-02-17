@@ -210,34 +210,40 @@ $form .= "
     </span>
     </div>";
 
-  $certs = user_certs();
-  $certselect = array();
-  $certselect[0] = 'kein Zertifikat / System-Standard benutzen';
-  if ($vhost_type != 'dav' && $vhost_type != 'svn') {
-      $certselect[-1] = 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt';
-  }
-  foreach ($certs as $c)
-  {
+$certs = user_certs();
+$certselect = array();
+$certselect[0] = 'kein Zertifikat / System-Standard benutzen';
+if ($vhost_type != 'dav' && $vhost_type != 'svn') {
+    $certselect[-1] = 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt';
+}
+foreach ($certs as $c)
+{
     if (! cert_is_letsencrypt($c['id'])) {
         $certselect[$c['id']] = $c['subject'];
     }
-  }
-  if (strstr($vhost['options'], 'letsencrypt')) {
+}
+if (strstr($vhost['options'], 'letsencrypt')) {
     $vhost['certid'] = -1;
-  }
-  $form .= "
-    <h5>verwendetes Zertifikat</h5>
-    <div style=\"margin-left: 2em;\">
-    ".html_select('cert', $certselect, $vhost['certid'])."
-</div>
-<p class=\"warning\"><b>Datenschutz-Hinweis:</b><br>
-Alle erstellten HTTPS-Zertifikate werden
-automatisch in den für jeden zugänglichen Certificate-Transparency-Logs abgelegt.
-Die zugehörigen Subdomains sind damit auch öffentlich.
-Sie können die Logs mit dem Service <a href=\"https://crt.sh/\">crt.sh</a> durchsuchen.</p>";
+}
+if (count($certselect) > 1) {
+    // Nur dann gibt es was zum Auswählen
+    $form .= "
+        <h5>Verwendetes Zertifikat</h5>
+        <div style=\"margin-left: 2em;\">
+        ".html_select('cert', $certselect, $vhost['certid'])."
+        </div>
+        <p class=\"warning\"><b>Datenschutz-Hinweis:</b><br>
+        Alle erstellten HTTPS-Zertifikate werden
+        automatisch in den für jeden zugänglichen Certificate-Transparency-Logs abgelegt.
+        Die zugehörigen Subdomains sind damit auch öffentlich.
+        Sie können die Logs mit dem Service <a href=\"https://crt.sh/\">crt.sh</a> durchsuchen.</p>";
 
-  $form.="
-    <h5>Logfiles</h5>
+} else {
+    $form .= "<h5>Verwendetes Zertifikat</h5>
+    <div style=\"margin-left: 2em;\"><p>Für Sonderanwendungen (WebDAV, SVN) kann momentan kein Lets-Encrypt-Zertifikat verwaltet werden. Bitte beschaffen Sie ggf. ein Zertifikat und tragen Sie dieses unten auf der Websites-Übersichtsseite ein, damit es hier ausgewählt werden kann.</p></div>";
+}
+$form.="
+<h5>Logfiles</h5>
     <div style=\"margin-left: 2em;\">
       <select name=\"logtype\" id=\"logtype\">
         <option value=\"none\" ".($vhost['logtype'] == NULL ? 'selected="selected"' : '')." >keine Logfiles</option>
