@@ -88,10 +88,12 @@ function web_in_use($domain)
 function domain_ownerchange($fqdn, $owner, $admin_c) 
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE CONCAT_WS('.', domainname, tld)=? AND kunde=?", array($owner, $admin_c, $fqdn, $cid));
-    if (update_possible($fqdn)) {
+    $dom = new Domain( $fqdn );
+    db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=? AND kunde=?", array($owner, $admin_c, $dom->id, $cid));
+    if (update_possible($dom->id)) {
         require_once('domainapi.php');
-        api_upload_domain($fqdn);
+        DEBUG("Rufe Domain-API auf!");
+        api_upload_domain($dom->fqdn);
     }
 }
 
@@ -100,18 +102,22 @@ function update_possible($domain) {
     $dom = new Domain((int) $domain);
     if ($dom->provider != 'terions' || $dom->billing=='external') {
         // Domain nicht über uns verwaltet
+        DEBUG("Domain nicht über uns verwaltet!");
         return false;
     }
     $result = db_query("SELECT aenderung_eigentuemer, ruecksprache FROM misc.domainpreise WHERE tld=?", array($dom->tld));
     if ($result->rowCount() < 1) {
         // Endung nicht bei uns in der Liste erfasst
+        DEBUG("Endung nicht in der Preisliste!");
         return false;
     }
     $data = $result->fetch();
     if ($data['aenderung_eigentuemer'] != NULL || $data['ruecksprache'] == 'Y') {
+        DEBUG("Endung hat Eigenheiten (ruecksprache=Y)");
         // Endung mit speziellen Eigenheiten
         return false;
     }
+    DEBUG("Änderungen sollten möglich sein: {$dom->fqdn}");
     return true;
 }
 

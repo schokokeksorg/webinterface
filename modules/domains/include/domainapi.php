@@ -97,8 +97,13 @@ function api_upload_domain($fqdn)
     }
     $args = array("domain" => $apidomain);
     logger(LOG_INFO, "modules/domains/include/domainapi", "domains", "uploading domain »{$fqdn}«");
-    api_request('domainUpdate', $args);
-
+    $result = api_request('domainUpdate', $args);
+    if ($result['status'] == 'error') {
+        $msg = $result['errors'][0]['text'];
+        logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "ERROR uploading domain »{$fqdn}«: {$msg}");
+        system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
+    }
+    return $result;
 }
 
 
@@ -155,7 +160,7 @@ function api_register_domain($domainname, $authinfo=NULL)
     }
     if ($result['status'] == 'error') {
         $errstr = $result['errors'][0]['text'];
-        logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "error registering domain: {$errstr}");
+        logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "error registering domain $domainname: {$errstr}");
         system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
     }
     return $result;    
@@ -185,8 +190,11 @@ function api_cancel_domain($domainname)
     logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "cancel domain »{$newdomainname}« at time {$apidomain['latestDeletionDateWithoutRenew']}");
     $result = api_request('domainDelete', $args);
     if ($result['status'] == 'error') {
-        //system_failure(print_r($result['errors'], true));
+        $errstr = $result['errors'][0]['text'];
+        logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "error canceling domain $domainname: {$errstr}");
+        system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
     }
+    return $result;
  }
 
 
@@ -201,7 +209,13 @@ function api_unlock_domain($domainname)
     $apidomain['transferLockEnabled'] = false;
     $args = array("domain" => $apidomain);
     logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "allow transfer for domain »{$domainname}«");
-    api_request('domainUpdate', $args);
+    $result = api_request('domainUpdate', $args);
+    if ($result['status'] == 'error') {
+        $errstr = $result['errors'][0]['text'];
+        logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "error unlocking domain $domainname: {$errstr}");
+        system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
+    }
+    return $result;
 }
 
 

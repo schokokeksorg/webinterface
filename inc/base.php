@@ -158,9 +158,12 @@ function maybe_null($value)
 
 function logger($severity, $scriptname, $scope, $message)
 {
-  if (config('logging') <= $severity)
+  if (config('logging') < $severity) {
+    DEBUG("NOT LOGGING $scriptname:$scope:$message");
     return;
+  }
 
+  DEBUG("LOGGING $scriptname:$scope:$message");
   $user = NULL;
   if ($_SESSION['role'] & ROLE_SYSTEMUSER)
     $user = $_SESSION['userinfo']['username'];
