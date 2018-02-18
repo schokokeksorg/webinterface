@@ -42,8 +42,8 @@ foreach ($repos as $repo => $settings) {
   $public_string = '';
   if ($public) {
     $public_url = 'https://'.config('gitserver').'/'.$repo.'.git';
-    $git_url = 'git://'.config('gitserver').'/'.$repo.'.git';
-    $public_string = '<br />(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a> und '.$git_url.')';
+    $git_url = 'https://'.config('gitserver').'/git/'.$repo.'.git';
+    $public_string = '<br />(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a>, Clone-URL '.$git_url.')';
   }
   output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />push-Adresse: {$url} {$public_string}</p><ul>");
   foreach ($settings['users'] as $user => $rights) {
