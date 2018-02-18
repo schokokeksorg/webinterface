@@ -298,6 +298,7 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     }
     $tld = $info['domainSuffix'];
     $domainname = str_replace(".$tld", "", $info['domainNameUnicode']);
+    logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain '.$info['domainNameUnicode']." DNS:{$dns} / Mail:{$mail}");
     
     db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
         ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", array($cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')));
@@ -315,6 +316,7 @@ function insert_domain_external($domain, $dns = false, $mail = true)
 function delete_domain($id)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
+    logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Deleting domain '.$id);
     db_query("DELETE FROM kundendaten.domains WHERE id=? AND kunde=?", array($id, $cid)); 
 }
 
