@@ -15,6 +15,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/icons.php');
+require_once('inc/jquery.php');
+javascript();
 
 include('git.php');
 require_role(ROLE_SYSTEMUSER);
@@ -41,11 +43,11 @@ foreach ($repos as $repo => $settings) {
   $public = isset($settings['users']['gitweb']) && $settings['users']['gitweb'] == 'R';
   $public_string = '';
   if ($public) {
-    $public_url = 'https://'.config('gitserver').'/'.$repo.'.git';
-    $git_url = 'https://'.config('gitserver').'/git/'.$repo.'.git';
-    $public_string = '<br />(Öffentlicher Lesezugriff über <a href="'.$public_url.'">'.$public_url.'</a>, Clone-URL '.$git_url.')';
+    $public_viewer = 'https://'.config('gitserver').'/'.$repo.'.git';
+    $public_clone = 'https://'.config('gitserver').'/git/'.$repo.'.git';
+    $public_string = '<br />(Öffentlich einsehbar über <a href="'.$public_viewer.'">'.$public_viewer.'</a>, öffentliche clone-URL <input id="public_'.$repo.'_url" type="text" readonly="readonly" value="'.$public_clone.'"><button class="copyurl" id="public_'.$repo.'">Copy!</button>)';
   }
-  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />push-Adresse: {$url} {$public_string}</p><ul>");
+  output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />SSH-Clone/Push-URL: <input type=\"text\" id=\"private_{$repo}_url\" readonly=\"readonly\" value=\"{$url}\"><button class=\"copyurl\" id=\"private_{$repo}\">Copy!</button> {$public_string}</p><ul>");
   foreach ($settings['users'] as $user => $rights) {
     if ($user == 'gitweb' || $user == 'daemon') {
       continue;
