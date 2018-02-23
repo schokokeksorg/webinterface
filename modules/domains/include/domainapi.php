@@ -187,7 +187,7 @@ function api_cancel_domain($domainname)
         system_failure("Konnte Vertragsende nicht herausfinden.");
     }
     $args = array("domainName" => $domainname, "execDate" => $apidomain['latestDeletionDateWithoutRenew']);
-    logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "cancel domain »{$newdomainname}« at time {$apidomain['latestDeletionDateWithoutRenew']}");
+    logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "cancel domain »{$domainname}« at time {$apidomain['latestDeletionDateWithoutRenew']}");
     $result = api_request('domainDelete', $args);
     if ($result['status'] == 'error') {
         $errstr = $result['errors'][0]['text'];
