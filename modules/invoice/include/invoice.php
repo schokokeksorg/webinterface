@@ -351,7 +351,7 @@ function save_more_storage($items, $storage) {
   }
   $allstorage = $oldcustomerquota+$storage;
   $emailaddr = $_SESSION['customerinfo']['email'];
-  $message = "Hallo,\n\nsoeben wurde im Webinterface von ".config('company_name')." eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.";
+  $message = "Hallo,\n\nsoeben wurde im Webinterface von ".config('company_name')." eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.\n\nIhre Kundennummer: {$_SESSION['customerinfo']['customerno']} ({$_SESSION['customerinfo']['name']})\n";
   mail($emailaddr, 'Auftragsbestätigung: Mehr Speicherplatz bei schokokeks.org', $message, "X-schokokeks-org-message: notify\nFrom: ".config('company_name').' <'.config('adminmail').">\nBcc: ".config('adminmail')."\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
 }
 
