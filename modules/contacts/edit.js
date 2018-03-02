@@ -27,6 +27,34 @@ function check_number( field )
     }
 }
 
+
+function receive_pgpidcheck(result) {
+    if (result.status == 'found') {
+        $('#pgpid').val(result.id);
+        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" />');
+    } else {
+        $('#pgpkey').closest('tr').show();
+        $("#pgpid_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" /><br>Es wurde kein PGP-Key zu dieser ID gefunden. Bitte geben Sie unten den kompletten Key ein.');
+
+    }
+}
+
+
+function receive_pgpid(result) {
+    if (result.status == 'found' && ! $('#pgpid').val()) {
+        $('#pgpid').val(result.id);
+        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" /><br>Es wurde ein PGP-Key auf einem Keyserver gefunden. Falls Sie einen anderen (oder gar keinen) PGP-Key nutzen möchten, ändern Sie dies bitte hier.');
+    }
+}
+
+function pgpid_change() {
+    val = $('#pgpid').val().replace(/\s/g, "");;
+    if (val.length == 8 || val.length == 16 || val.length == 40) {
+        $.getJSON("ajax_pgp?id="+encodeURIComponent(val), receive_pgpidcheck)
+    }
+}
+
+
 function email_change() {
     var new_email = $('#email').val();
     if (new_email != old_email) {
@@ -34,16 +62,21 @@ function email_change() {
     } else {
         $('#designated-row').hide();
     }
+    if (new_email && ! $('#pgpid').val()) {
+        $.getJSON("ajax_pgp?q="+encodeURIComponent(new_email), receive_pgpid)
+    }
 }
 
 $(function() {
-    $('#telefon').on("change paste", check_number("telefon") );
-    $('#mobile').on("change paste", check_number("mobile") );
-    $('#telefax').on("change paste", check_number("telefax") );
+    $('#telefon').on("focusout", check_number("telefon") );
+    $('#mobile').on("focusout", check_number("mobile") );
+    $('#telefax').on("focusout", check_number("telefax") );
     
     if ($('#designated-row')) {
         $('#designated-row').hide();
-        $('#email').on("change paste", email_change);
         old_email = $('#email').val();
     }
+    $('#email').on("focusout", email_change);
+    $('#pgpid').on("focusout", pgpid_change);
+    $('#pgpkey').closest('tr').hide();
 });

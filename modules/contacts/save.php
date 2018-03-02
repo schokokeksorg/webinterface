@@ -136,7 +136,19 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $c['fax'] = NULL;
     }
 
-    // FIXME: PGP-ID/Key fehlen
+    
+    if (isset($_REQUEST['pgpid'])) {
+        $pgpid = preg_replace('/[^0-9a-fA-F]/', '', $_REQUEST['pgpid']);
+        DEBUG('PGP-ID: '.$pgpid.' / Länge: '.strlen($pgpid));
+        if (strlen($pgpid) == 8 || strlen($pgpid) == 16 || strlen($pgpid) == 40) {
+            $c['pgp_id'] = $_REQUEST['pgpid'];
+            if (isset($_REQUEST['pgpkey']) && $_REQUEST['pgpkey']) {
+                $c['pgp_key'] = $_REQUEST['pgpkey'];
+            }
+        } else {
+            warning('Ihre PGP-ID wurde nicht übernommen, da sie syntaktisch falsch erscheint');
+        }
+    }
 
 
     if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {

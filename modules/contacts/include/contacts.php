@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/debug.php');
+require_once('inc/security.php');
 require_role(array(ROLE_CUSTOMER));
 require_once('class/domain.php');
 
@@ -306,6 +307,59 @@ function delete_contact($id) {
 }
 
 
+function search_pgp_key($search) {
+    if (! check_emailaddr($search)) {
+        # Keine Ausgabe weil diese Funktion im AJAX-Call verwendet wird
+        return NULL;
+    }
+    $output = array();
+    exec('LC_ALL=C /usr/bin/gpg --batch --with-colons --keyserver hkp://pool.sks-keyservers.net --search-key '.escapeshellarg($search), $output);
+    DEBUG($output);
+    $keys = array();
+    foreach($output AS $row) {
+        if (substr($row, 0, 4) === 'pub:') {
+            $parts = explode(':', $row);
+            if ($parts[5] && ($parts[5] < time())) {
+                // abgelaufener key
+                continue;
+            }
+            // array-key = create-timestamp
+            // array-value = key-id
+            $keys[$parts[4]] = $parts[1];
+        }
+    }
+    if (count($keys) == 0) {
+        return NULL;
+    }
+    ksort($keys, SORT_NUMERIC);
+    DEBUG(end($keys));
+    // liefert den neuesten Key
+    return end($keys);
+}
+
+
+function fetch_pgp_key($pgp_id) {
+    $output = array();
+    $ret = NULL;
+    DEBUG('/usr/bin/gpg --batch --keyserver hkp://pool.sks-keyservers.net --recv-key '.escapeshellarg($pgp_id));
+    exec('/usr/bin/gpg --batch --keyserver hkp://pool.sks-keyservers.net --recv-key '.escapeshellarg($pgp_id), $output, $ret);
+    DEBUG($output);
+    DEBUG($ret);
+    if ($ret == 0) {
+        exec('/usr/bin/gpg --batch --with-colons --list-keys '.escapeshellarg($pgp_id), $output);
+        DEBUG($output);
+        foreach ($output AS $row) {
+            if (substr($row, 0, 4) === 'fpr:') {
+                $parts = explode(':', $row);
+                // Fingerprint
+                return $parts[9];
+            }
+        }
+    }
+    return NULL;
+}
+
+
 function domainlist_by_contact($c) {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $result = db_query("SELECT id FROM kundendaten.domains WHERE (owner=? OR admin_c=?) AND kunde=?", array($c['id'], $c['id'], $cid));
@@ -333,9 +387,16 @@ function contact_as_string($contact)
         $email = "<strike>$email</strike><br/>".filter_input_general($new_email).footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
     $email = implode("<br>\n", array_filter(array($email, filter_input_general($contact['phone']), filter_input_general($contact['fax']), filter_input_general($contact['mobile']))));
- 
-
-    $contact_string = "<p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>";
+    $pgp = '';
+    if ($contact['pgp_id']) {
+        $pgpid = $contact['pgp_id'];
+        if (strlen($pgpid) > 20) {
+            $pgpid = substr($pgpid, 0, 20).' '.substr($pgpid, 20);
+        }
+        $pgp = '<p class="contact-pgp">'.other_icon('key.png').' PGP ID:<br>'.$pgpid.'</p>';
+    }
+  
+    $contact_string = "<p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>$pgp";
     return $contact_string;
 }
 

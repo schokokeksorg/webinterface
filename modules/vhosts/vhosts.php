@@ -129,7 +129,7 @@ if (count($vhosts) > 0)
     }
     elseif ($vhost['cert'])
     {
-      output("<td>".other_icon("secure.png", "HTTPS mit eigenem Zertifikat")."</td>");
+      output("<td>".other_icon("key.png", "HTTPS mit eigenem Zertifikat")."</td>");
     }
     elseif (strstr($vhost['options'], "letsencrypt")) {
       // Letsencrypt gewählt aber noch nicht aktiv

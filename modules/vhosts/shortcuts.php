@@ -52,7 +52,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $shortcuts[] = array( 'section' => 'Webserver', 
                           'weight'  => 80, 
                           'file'    => 'certs', 
-                          'icon'    => 'secure.png', 
+                          'icon'    => 'key.png', 
                           'title'   => 'HTTPS-Zertifikate',
                           'alert'   => $alert );
   }

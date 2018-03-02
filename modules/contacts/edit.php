@@ -76,9 +76,13 @@ $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefo
 $odd = !$odd;
 
 if ($domains) {
-    $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'" id="designated-row"><td><label for="designated"><strong>Inhaberwechsel:</strong></label></td><td><input type="checkbox" name="designated" id="designated" value="yes"><label for="designated">Die Änderung der E-Mail-Adresse bewirkt rechtlich einen Inhaberwechsel. Ich bestätige, dass mir eine explizite Zustimmung des alten und neuen Inhabers für diese Änderung vorliegt. Eine Speicherung der Änderungen ist nur mit dieser Zustimmung möglich.</label></td></tr>';
-    $odd = !$odd;
+    $html .= '<tr class="odd" id="designated-row"><td><label for="designated"><strong>Inhaberwechsel:</strong></label></td><td><input type="checkbox" name="designated" id="designated" value="yes"><label for="designated">Die Änderung der E-Mail-Adresse bewirkt rechtlich einen Inhaberwechsel. Ich bestätige, dass mir eine explizite Zustimmung des alten und neuen Inhabers für diese Änderung vorliegt. Eine Speicherung der Änderungen ist nur mit dieser Zustimmung möglich.</label></td></tr>';
 }
+
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpid">PGP-Key-ID:</label></td><td><input type="text" name="pgpid" id="pgpid" value="'.$c['pgp_id'].'"><span id="pgpid_feedback"></span></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpkey">PGP-Key (ASCII-Armored):</label></td><td><textarea name="pgpkey" id="pgpkey">'.$c['pgp_key'].'</textarea></td></tr>';
+$odd = !$odd;
 
 $html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speichern" /></td></tr>';
 $html .= '</table>';
