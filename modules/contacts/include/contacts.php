@@ -169,10 +169,12 @@ function sync_legacy_contactdata()
             "mobile" => $kunde['mobile'],
             "telefax" => $kunde['fax'],
             "email" => $kunde['email'],
+            "pgp_id" => $kunde['pgp_id'],
+            "pgp_key" => $kunde['pgp_key'],
             "cid" => $cid);
     db_query("UPDATE kundendaten.kunden SET firma=:firma, vorname=:vorname, nachname=:nachname, adresse=:adresse,
-            plz=:plz, ort=:ort, land=:land, telefon=:telefon, mobile=:mobile, telefax=:telefax, email=:email
-            WHERE id=:cid", $args);
+            plz=:plz, ort=:ort, land=:land, telefon=:telefon, mobile=:mobile, telefax=:telefax, email=:email, 
+            pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:cid", $args);
     if ($kundenkontakte['extern']) {
         $extern = get_contact($kundenkontakte['extern'])['email'];
         if ($extern) {
