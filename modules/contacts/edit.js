@@ -35,7 +35,6 @@ function receive_pgpidcheck(result) {
     } else {
         $('#pgpkey').closest('tr').show();
         $("#pgpid_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" /><br>Es wurde kein PGP-Key zu dieser ID gefunden. Bitte geben Sie unten den kompletten Key ein.');
-
     }
 }
 
@@ -43,7 +42,7 @@ function receive_pgpidcheck(result) {
 function receive_pgpid(result) {
     if (result.status == 'found' && ! $('#pgpid').val()) {
         $('#pgpid').val(result.id);
-        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" /><br>Es wurde ein PGP-Key auf einem Keyserver gefunden. Falls Sie einen anderen (oder gar keinen) PGP-Key nutzen möchten, ändern Sie dies bitte hier.');
+        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" /><br>Es wurde ein PGP-Key auf einem Keyserver gefunden.');
     }
 }
 
@@ -62,10 +61,23 @@ function email_change() {
     } else {
         $('#designated-row').hide();
     }
-    if (new_email && ! $('#pgpid').val()) {
-        $.getJSON("ajax_pgp?q="+encodeURIComponent(new_email), receive_pgpid)
-    }
 }
+
+function usepgp_yes() {
+    if ($('#email').val() && ! $('#pgpid').val()) {
+        $.getJSON("ajax_pgp?q="+encodeURIComponent($('#email').val()), receive_pgpid)
+    }
+    $('#pgpid').closest('tr').show();
+}
+
+function usepgp_no() {
+    $('#pgpid').val('');
+    $("#pgpid_feedback").html('');
+    $('#pgpkey').val('');
+    $('#pgpid').closest('tr').hide();
+    $('#pgpkey').closest('tr').hide();
+}
+
 
 $(function() {
     $('#telefon').on("focusout", check_number("telefon") );
@@ -79,4 +91,10 @@ $(function() {
     $('#email').on("focusout", email_change);
     $('#pgpid').on("focusout", pgpid_change);
     $('#pgpkey').closest('tr').hide();
+    $(".buttonset").buttonset();
+    $("#usepgp-yes").click(usepgp_yes);
+    $("#usepgp-no").click(usepgp_no);
+    if ($('#usepgp-no').is(':checked')) {
+        $('#pgpid').closest('tr').hide();
+    }
 });

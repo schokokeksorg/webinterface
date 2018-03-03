@@ -137,7 +137,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     }
 
     
-    if (isset($_REQUEST['pgpid'])) {
+    if (isset($_REQUEST['usepgp']) && $_REQUEST['usepgp'] == 'yes' && isset($_REQUEST['pgpid'])) {
         $pgpid = preg_replace('/[^0-9a-fA-F]/', '', $_REQUEST['pgpid']);
         DEBUG('PGP-ID: '.$pgpid.' / Länge: '.strlen($pgpid));
         if (strlen($pgpid) == 8 || strlen($pgpid) == 16 || strlen($pgpid) == 40) {
@@ -148,6 +148,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         } else {
             warning('Ihre PGP-ID wurde nicht übernommen, da sie syntaktisch falsch erscheint');
         }
+    } else {
+        $c['pgp_id'] = NULL;
+        $c['pgp_key'] = NULL;
     }
 
 
@@ -191,6 +194,5 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     }
 
 
-    if (! $debugmode)
-        header("Location: ".$back);
+    redirect($back);
 }
