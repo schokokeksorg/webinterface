@@ -33,6 +33,23 @@ DEBUG($domain);
 title('DNS-Records für '.filter_input_general($domain->fqdn));
 headline('DNS-Records für <em>'.filter_input_general($domain->fqdn).'</em>');
 
+if ($domain->provider != 'terions' || $domain->billing != 'regular' || $domain->registrierungsdatum == NULL || $domain->kuendigungsdatum != NULL) {
+    $state = check_dns($domain->domainname, $domain->tld);
+    if ($state !== True) {
+        $current = 'Momentaner DNS-Server (u.A.): '.$state;
+        if ($state == 'NXDOMAIN') {
+            $current = 'Diese Domain ist aktuell nicht registriert.';
+        }
+        if (substr_compare($state, config('masterdomain'), -strlen(config('masterdomain')), strlen(config('masterdomain'))) === 0) {
+            warning('Es werden veraltete DNS-Server benutzt: '.$current);
+            warning('Bitte aktualisieren Sie diese Domain bei Ihrem Registrar auf unsere aktuellen DNS-Server-Namen, die Sie auf der Übersichtsseite finden.');
+        } else {
+            warning('Lokaler DNS-Server eingeschaltet aber nicht genutzt. '.$current);
+        }
+    }
+}
+
+
 $records = get_domain_records($domain->id);
 $auto_records = get_domain_auto_records($domain->fqdn);
 $cname_on_domain = false;
