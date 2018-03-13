@@ -223,7 +223,7 @@ if ($_GET['action'] == 'edit')
   $new_options = array();
   foreach ($old_options AS $op)
   {
-    if (! in_array($op, array('aliaswww', 'forwardwww', 'hsts_subdomains', 'hsts_preload'))) {
+    if (! in_array($op, array('aliaswww', 'forwardwww', 'forwardnowww', 'hsts_subdomains', 'hsts_preload'))) {
       array_push($new_options, $op);
     }
   }
