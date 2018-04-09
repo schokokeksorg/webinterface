@@ -58,7 +58,7 @@ if ($_GET['action'] == 'edit')
       system_failure("Sie haben ein leeres Passwort eingegeben!");
     if ($_POST['password'] == '**********')
       $account['password'] = '';
-    if (isset($_POST['mailbox']) && $_POST['mailbox'] != 'yes')
+    if (!isset($_POST['mailbox']) || (isset($_POST['mailbox']) && $_POST['mailbox'] != 'yes'))
     {
       $account['password'] = NULL;
     }
