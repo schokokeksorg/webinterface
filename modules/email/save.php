@@ -168,8 +168,9 @@ if ($_GET['action'] == 'edit')
     if (count($account['forwards']) == 0) system_failure("Bitte mindestens eine Weiterleitungsadresse angeben.");
   }
 
-  if ((isset($_POST['forward']) && $_POST['forward']!='yes') && (isset($_POST['mailbox']) && $_POST['mailbox']!='yes'))
+  if ($account['password'] === NULL && count($account['forwards']) == 0) {
     system_failure("Entweder eine Mailbox oder eine Weiterleitung muss angegeben werden!");
+  }
 
   DEBUG($account);
 
