@@ -116,7 +116,7 @@ output('</div>');
 output("<br />");
 
 if (have_role(ROLE_CUSTOMER) && config('http.net-apikey')) {
-    addnew('adddomain', 'Neue Domain bestellen / hinzufügen');
+    addnew('adddomain', 'Neue Domain bestellen oder externe Domain hinzufügen');
 }
 
 
