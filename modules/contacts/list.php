@@ -52,6 +52,9 @@ foreach ($liste as $id) {
     if ($id == $kundenkontakte['rechnung'] || ($id == $kundenkontakte['kunde'] && $kundenkontakte['rechnung'] == NULL)) {
         $usage[] = 'Rechnungs-Adresse';
     }
+    if ($id == $kundenkontakte['dataprotection']) {
+        $usage[] = 'Datenschutzbeauftragter';
+    }
     if (is_domainholder($id)) {
         $usage[] = 'Domain-Kontakt';
     }

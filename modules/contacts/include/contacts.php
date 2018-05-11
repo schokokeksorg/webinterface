@@ -140,6 +140,8 @@ function set_kundenkontakt($typ, $id) {
         $field = 'contact_extern';
     } elseif ($typ == 'rechnung') {
         $field = 'contact_rechnung';
+    } elseif ($typ == 'dataprotection') {
+        $field = 'contact_dataprotection';
     } else {
         system_failure("Falscher Typ!");
     }
@@ -200,11 +202,12 @@ function sync_legacy_contactdata()
 
 function get_kundenkontakte() {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung FROM kundendaten.kunden WHERE id=?", array($cid));
+    $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung, contact_dataprotection FROM kundendaten.kunden WHERE id=?", array($cid));
     $res = $result->fetch();
     $ret = array("kunde" => $res['contact_kunde'],
                  "extern" => $res['contact_extern'],
-                 "rechnung" => $res['contact_rechnung']);
+                 "rechnung" => $res['contact_rechnung'],
+                 "dataprotection" => $res['contact_dataprotection']);
     return $ret;
 }
 

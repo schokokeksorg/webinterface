@@ -65,6 +65,15 @@ if (isset($_REQUEST['useas'])) {
             redirect('useas?id='.$id);
         }
     }
+    if ($_REQUEST['useas'] == 'dataprotection') {
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+            set_kundenkontakt('dataprotection', NULL);
+            redirect('useas?id='.$id);
+        } else {
+            set_kundenkontakt('dataprotection', $id);
+            redirect('useas?id='.$id);
+        }
+    }
 } else {
     output(display_contact($contact));
     output('<p>'.internal_link('edit', icon_edit('Adresse bearbeiten')." Adresse bearbeiten", 'id='.$id).'</p>');
@@ -89,6 +98,11 @@ if (isset($_REQUEST['useas'])) {
             output("<p>Diese Adresse ist die Rechnungs-Adresse. ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=rechnung&action=delete')."</p>");
         } else {
             addnew('useas', 'Diese Adresse als Rechnungs-Adresse festlegen.', 'id='.$_REQUEST['id'].'&useas=rechnung');
+        }
+        if ($id == $kundenkontakte['dataprotection']) {
+            output("<p>Diese Adresse ist die Adresse des betrieblichen Datenschutzbeauftragten. ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=dataprotection&action=delete')."</p>");
+        } else {
+            addnew('useas', 'Diese Adresse als betrieblichen Datenschutzbeauftragten benennen.', 'id='.$_REQUEST['id'].'&useas=dataprotection');
         }
     }
 
