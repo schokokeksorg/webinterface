@@ -1,0 +1,33 @@
+<h1 id="anlage-1">Anlage 1</h1>
+<p>zum Vertrag zur Auftragsverarbeitung</p>
+<h1 id="maßnahmen-datenschutz-datensicherheit-schokokeks.org-gbr">Maßnahmen Datenschutz / Datensicherheit schokokeks.org GbR</h1>
+<p>schokokeks.org betreibt kein eigenes Rechenzentrum, die genutzten Server werden von der Hetzner Online GmbH angemietet und befinden sich in deren Rechenzentren. Die Sicherungsmaßnahmen bei der Hetzner Online GmbH sind in einem Vertrag zur Auftragsverarbeitung zwischen der schokokeks.org GbR und der Hetzner Online GmbH geregelt.</p>
+<p>Neben den hier dokumentierten spezifischen Maßnahmen verfolgen wir regelmäßig die Entwicklungen in Sachen IT-Sicherheit und passen unserer Systeme dem Stand der Technik an.</p>
+<h2 id="organisatorische-maßnahmen">Organisatorische Maßnahmen</h2>
+<p>Zugriff auf personenbezogene Daten haben ausschließlich die Firmeninhaber, im weiteren als Administratoren bezeichnet. schokokeks.org beschäftigt keine weiteren Mitarbeiter, die Zugriff auf personenbezogene Daten haben.</p>
+<p>Auf abgestufte Zugriffsrechte innerhalb des Unternehmens wird daher verzichtet.</p>
+<h2 id="vertraulichkeitintegrität">Vertraulichkeit/Integrität</h2>
+<ul>
+<li>Sämtliche Datenverbindungen, mit denen administrative Tätigkeiten zur Datenverarbeitung durchgeführt werden, sind mit Verschlüsselungsverfahren nach dem aktuellen Stand der Technik geschützt (SSH/TLS).<br />
+Diese Verschlüsselungsverfahren garantieren die Vertraulichkeit und Integrität der Datenverbindungen.</li>
+<li>Den Kunden bereitgestellte Services werden ebenfalls mit Verschlüsselungsverfahren geschützt. Für Web-Services wird HTTPS angeboten. Datenverbindungen vom Kunden zu unseren E-Mail- und XMPP-Services werden ausschließlich über die verschlüsselten Varianten angeboten. Beim Verstand und Empfang von E-Mails und XMPP-Nachrichten (Server-to-Server) wird STARTTLS angeboten.</li>
+<li>Alle von schokokeks.org bereitgestellten Webangebote (Konfigurationsinterface, Webmail, Wiki, Webseite etc.) werden ausschließlich über HTTPS angeboten. Durch den Einsatz von HSTS werden außerdem SSL-Stripping-Angriffe verhindert.</li>
+<li>Zugriffe auf sämtliche Daten können nur mittels Public-Key- Authentifizierung oder mittels starker Passwörter von den Administratoren durchgeführt werden. Aufgrund des höheren Sicherheitsniveaus wird eine Public-Key-Authentifizeirung in der Regel bevorzugt.</li>
+<li>Passwörter werden im System nicht im Klartext gespeichert (gehashte Passwörter).</li>
+<li>Passwörter für alle Systemzugänge müssen eine Mindestkomplexität aufweisen.</li>
+<li>Bei nicht mehr verwendeten Systemen wird vor einer Kündigung beim jeweiligen Dienstleister eine vollständige Löschung der Festplatten (&quot;shredden&quot;) vorgenommen.</li>
+<li>Logdateien werden Datensparsam angelegt. Grundsätzlich werden Logs mit personenbezogenen Daten nur für einen begrenzten Zeitraum gespeichert (maximal 10 Tage). Falls praktikabel wird vollständig auf das Anlegen von Logfiles mit personenbezogenen Daten verzichtet. Die Web-Services von schokokeks.org werden ohne Logfiles betrieben, Zugriffslogs werden nur in Ausnahmefällen zu Debuggingzwecken kurzzeitig aktiviert.</li>
+<li>Kunden können mit schokokeks.org mittels Ende-zu-Ende-verschlüsselter Nachrichten (E-Mails nach dem OpenPGP-Standard) kommunizieren. Vertrauliche Nachrichten (z.B. Rechnungen) werden - wenn möglich - stets verschlüsselt auf elektronischem Weg verschickt.</li>
+</ul>
+<h2 id="verfügbarkeit">Verfügbarkeit</h2>
+<ul>
+<li>Kundendaten werden in automatisierten Backups gesichert, die einmal täglich durchgeführt werden.</li>
+<li>Die Backups werden mit aktuellen, standardisierten kryptographischen Verfahren verschlüsselt.</li>
+<li>Ein externes Monitoring überprüft regelmäßig die Verfügbarkeit der bereitgestellten Services. Bei Service-Ausfällen werden die Administratoren unverzüglich mobil alarmiert.</li>
+</ul>
+<h2 id="belastbarkeit">Belastbarkeit</h2>
+<ul>
+<li>Softwareupdates und insbesondere Sicherheitsaktualisierungen werden unverzüglich installiert. Dies gilt sowohl für alle verwendeten Betriebssysteme und für separat davon verwaltete Spezial-Software wie beispielsweise Webanwendungen.</li>
+<li>Die Systeme werden regelmäßig automatisiert auf die Verfügbarkeit von Updates geprüft.</li>
+<li>Verfügbare Härtungsmaßnahmen (z. B. ASLR, Stack-Cookies) werden wenn möglich auf den verwendeten Betriebssystemen eingesetzt. Damit wird eine sofortige Ausnutzung von neu entdeckten Sicherheitslücken in vielen Fällen erschwert oder verhindert.</li>
+</ul>
