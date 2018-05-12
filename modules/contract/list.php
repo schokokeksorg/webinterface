@@ -33,7 +33,7 @@ if ($contract) {
     $sign = date('d.m.Y', strtotime( $contract['signed'] ));
     output('<p>Sie haben am <strong>'.$sign.'</strong> einen Vertrag zur Auftragsverarbeitung mit uns abgeschlossen.</p>
     <p>'.internal_link('download', 'Vertrag als PDF herunterladen', "id={$contract['id']}").'</p>');
-    output('<p>Wenn Sie Änderungen oder eine Auflösung dieses Vertrags wünschen, wenden Sie sich bitte an den Support</p>');
+    output('<p>Wenn Sie Änderungen oder eine Auflösung dieses Vertrags wünschen, wenden Sie sich bitte an den Support.</p>');
 } else {
     addnew('new_op', 'Einen Vertrag zur Auftragsverarbeitung abschließen');
 }
