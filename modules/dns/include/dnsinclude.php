@@ -250,10 +250,15 @@ function save_dns_record($id, $record)
       }
       break;
     case 'aaaa':
-      $record['dyndns'] = NULL;
-      verify_input_ipv6($record['ip']);
-      $record['data'] = NULL;
-      $record['spec'] = NULL;
+      if ($record['dyndns']) {
+          get_dyndns_account( $record['dyndns'] );
+          $record['ip'] = NULL;
+      } else {
+          $record['dyndns'] = NULL;
+          verify_input_ipv6($record['ip']);
+          $record['data'] = NULL;
+          $record['spec'] = NULL;
+      }
       break;
     case 'mx':
       $record['dyndns'] = NULL;

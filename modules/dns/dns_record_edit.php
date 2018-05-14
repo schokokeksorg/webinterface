@@ -40,6 +40,12 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == "dyndns")
   $_REQUEST['type'] = 'a';
   $dyndns = true;
 }
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == "dyndns_aaaa")
+{
+  $_REQUEST['type'] = 'aaaa';
+  $dyndns = true;
+}
+
 
 $new = false;
 if ($_REQUEST['id'] == 'new')

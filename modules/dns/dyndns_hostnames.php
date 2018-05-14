@@ -44,7 +44,8 @@ if ($records) {
 <ul>
 ';
   foreach ($records AS $record) {
-    $output .= '  <li>'.$record['fqdn'].' '.internal_link('dyndns_hostname_delete', icon_delete(), 'id='.$record['id']).'</li>';
+    $type = strtoupper($record['type']).' / '.($record['type'] == 'a' ? 'IPv4' : 'IPv6');
+    $output .= '  <li>'.$record['fqdn'].' ('.$type.') '.internal_link('dyndns_hostname_delete', icon_delete(), 'id='.$record['id']).'</li>';
   }
   $output .= '</ul>';
 }
@@ -52,7 +53,9 @@ if ($records) {
 
 output('<h4>Neuen Hostname festlegen</h4>');
 
-$form = '<p><label for="hostname">Neuer Hostname: </label></td><td><input type="text" name="hostname" id="hostname" value="'.$dyndns['handle'].'" />&#160;.&#160;'.html_select('domain', $available_domains).' <input type="submit" value="Speichern"/></p>';
+$form = '<p><label for="hostname">Neuer Hostname: </label> <input type="text" name="hostname" id="hostname" value="'.$dyndns['handle'].'" />&#160;.&#160;'.html_select('domain', $available_domains).' </p>
+<p>Typ: <select name="type"><option value="a" selected="selected">A / IPv4</option><option value="aaaa">AAAA / IPv6</option></select></p>
+<p><input type="submit" value="Speichern"/></p>';
 
 
 output(html_form('dyndns_hostname_add', 'dyndns_hostname_add', 'id='.$dyndns['id'], $form));

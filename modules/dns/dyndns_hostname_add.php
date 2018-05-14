@@ -31,7 +31,11 @@ if (!isset($_REQUEST['id']))
 $id = (int) $_REQUEST['id'];
 $dyndns = get_dyndns_account($id);
 
-  $record = blank_dns_record('a');
+  $type = 'a';
+  if ($_REQUEST['type'] == 'aaaa') {
+      $type = 'aaaa';
+  }
+  $record = blank_dns_record($type);
   // Sicherheitsprüfungen passieren im Backend
   
   $record['hostname'] = $_REQUEST['hostname'];

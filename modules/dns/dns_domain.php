@@ -124,6 +124,7 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 
 <ul>
 <li>'.internal_link('dns_record_edit', 'DynDNS (Hostname für einen DynDNS-Account setzen)', 'id=new&type=dyndns&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'DynDNS/AAAA (Hostname für einen DynDNS-Account setzen, als IPv6-Adresse)', 'id=new&type=dyndns_aaaa&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'A (normaler Hostname/normale Subdomain)', 'id=new&type=a&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'MX (Posteingangsserver)', 'id=new&type=mx&domain='.$domain->id).'</li>
 </ul>
