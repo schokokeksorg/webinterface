@@ -124,43 +124,6 @@ RE '.$id.' KD '.$customerno.' vom '.$datum;
 }
 
 
-function generate_bezahlcode_image($id) 
-{
-  $invoice = invoice_details($id);
-  $customerno = $invoice['kunde'];
-  $amount = str_replace('.', '%2C', sprintf('%.2f', $invoice['betrag']));
-  $datum = $invoice['datum'];
-  $data = 'bank://singlepaymentsepa?name=schokokeks.org%20GbR&reason=RE%20'.$id.'%20KD%20'.$customerno.'%20vom%20'.$datum.'&iban=DE91602911200041512006&bic=GENODES1VBK&amount='.$amount;
-  
-  $descriptorspec = array(
-    0 => array("pipe", "r"),  // STDIN ist eine Pipe, von der das Child liest
-    1 => array("pipe", "w"),  // STDOUT ist eine Pipe, in die das Child schreibt
-    2 => array("pipe", "w") 
-  );
-
-  $process = proc_open('qrencode -t PNG -o -', $descriptorspec, $pipes);
-
-  if (is_resource($process)) {
-    // $pipes sieht nun so aus:
-    // 0 => Schreibhandle, das auf das Child STDIN verbunden ist
-    // 1 => Lesehandle, das auf das Child STDOUT verbunden ist
-
-    fwrite($pipes[0], $data);
-    fclose($pipes[0]);
-
-    $pngdata = stream_get_contents($pipes[1]);
-    fclose($pipes[1]);
-
-    // Es ist wichtig, dass Sie alle Pipes schließen bevor Sie
-    // proc_close aufrufen, um Deadlocks zu vermeiden
-    $return_value = proc_close($process);
-  
-    return $pngdata;
-  } else {
-    warning('Es ist ein interner Fehler im Webinterface aufgetreten, aufgrund dessen kein QR-Code erstellt werden kann. Sollte dieser Fehler mehrfach auftreten, kontaktieren Sie bitte die Administratoren.');
-  }
-}
-
 function get_lastschrift($rechnungsnummer) {
   $rechnungsnummer = (int) $rechnungsnummer;
   $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum, sl.status FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.sepamandat=sl.mandatsreferenz) WHERE rechnungsnummer=? AND re.abbuchung=1", array($rechnungsnummer));
