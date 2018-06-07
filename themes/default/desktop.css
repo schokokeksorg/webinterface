@@ -157,8 +157,7 @@ div.confirmation p.buttons input {
 
 
 .login_label {
-        display: block;
-        float: left;
+        display: inline-block;
         width: 130px;
 }
 
