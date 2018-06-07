@@ -82,7 +82,7 @@ if ($invoice['bezahlt'] == 1) {
 } else {
   $qrcode_image = generate_qrcode_image($invoice_id);
 
-  output('<h4>QR-Code für Mobile Banking (GiroCode, STUZZA, SEPA Credit Transfer)</h4><p><img src="data:image/png;base64,'.base64_encode($qrcode_image).'" /></p>');
+  output('<h4>GiroCode für Mobile Banking (SEPA Credit Transfer)</h4><p><img src="data:image/png;base64,'.base64_encode($qrcode_image).'" /></p>');
 }
 
 ?>
