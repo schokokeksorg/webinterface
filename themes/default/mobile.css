@@ -1,0 +1,131 @@
+/*
+ * -------------------------------------------------------------------------------
+ * This file belongs to the Webinterface of schokokeks.org Hosting
+ * 
+ * Written 2008-2018 by schokokeks.org Hosting, namely
+ *    Bernd Wurst <bernd@schokokeks.org>
+ *    Hanno Böck <hanno@schokokeks.org>
+ *
+ * To the extent possible under law, the author(s) have dedicated all copyright 
+ * and related and neighboring rights to this software to the public domain 
+ * worldwide. This software is distributed without any warranty.
+ *
+ * You should have received a copy of the CC0 Public Domain Dedication along 
+ * with this software. If not, see 
+ * http://creativecommons.org/publicdomain/zero/1.0/
+ *
+ * Nevertheless, in case you use a significant part of this code, we ask (but 
+ * not require, see the license) that you keep the authors' names in place and 
+ * return your changes to the public. We would be especially happy if you tell 
+ * us what you're going to do with this code.
+ * -------------------------------------------------------------------------------
+ */
+
+@charset "utf-8";
+                         
+body {
+        font-size: 16px;
+}
+
+
+p.admininfo {
+}
+
+p.userinfo {
+}
+
+.login_label {
+        display: block;
+        float: left;
+        width: 130px;
+}
+
+
+div.sidebar {
+    display: none;
+}
+div.sidebar.responsive {
+    display: block;
+    position: absolute;
+        background-color: #b2c2cb;
+    left: 0;
+    top: 48px;
+    width: 180px;
+    height: 100%;
+    float: none;
+    padding: 1em;
+}
+
+a.logo {
+    background-color: #fff;
+}
+a.logo img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: 65px;
+    height: 48px;
+    padding-left: 5px;
+    background-color: #fff;
+    z-index: 99;
+}
+
+a#showmenu {
+        background-color: #b2c2cb;
+    position: absolute;
+    top: 0;
+    left: 0;
+        width: 100%;
+        height: 38px;
+        padding-top: 10px;
+    padding-left: 15px;
+    z-index: 99;
+    color: black;
+    font-size: 16px;
+}
+a#showmenu img {
+    margin-right: 0.5em;
+    }
+
+a.menuitem {
+        display: none;
+}
+div.sidebar.responsive a.menuitem {
+    display: block;
+}
+
+div.userinfo {
+    display: none;
+}
+div.sidebar.responsive div.userinfo {
+    display: block;
+}
+
+
+a.active {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #425d6c;
+}
+
+a.menuitem:hover {
+  text-decoration: underline;
+  color: #425d6c;
+}
+
+a.menuicon {
+    display: block;
+}
+
+a.menuicon img {
+    width: 16px;
+    height: 16px;
+}
+
+div.content {
+        margin-top: 53px;
+        margin-left: 0px;
+        padding-left: 20px;
+}
+

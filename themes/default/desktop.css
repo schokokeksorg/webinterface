@@ -1,0 +1,463 @@
+/*
+ * -------------------------------------------------------------------------------
+ * This file belongs to the Webinterface of schokokeks.org Hosting
+ * 
+ * Written 2008-2018 by schokokeks.org Hosting, namely
+ *    Bernd Wurst <bernd@schokokeks.org>
+ *    Hanno Böck <hanno@schokokeks.org>
+ *
+ * To the extent possible under law, the author(s) have dedicated all copyright 
+ * and related and neighboring rights to this software to the public domain 
+ * worldwide. This software is distributed without any warranty.
+ *
+ * You should have received a copy of the CC0 Public Domain Dedication along 
+ * with this software. If not, see 
+ * http://creativecommons.org/publicdomain/zero/1.0/
+ *
+ * Nevertheless, in case you use a significant part of this code, we ask (but 
+ * not require, see the license) that you keep the authors' names in place and 
+ * return your changes to the public. We would be especially happy if you tell 
+ * us what you're going to do with this code.
+ * -------------------------------------------------------------------------------
+ */
+
+html {
+        font-family: "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #000000;
+        background-color: #fff;
+}
+
+
+body {
+        font-family: "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #000000;
+        background-color: #fff;
+}
+
+
+div.error {
+        color: #FF0000;
+        border: 2px solid #000000;
+        background-color: #FFFFFF;
+        margin: 10px;
+        padding: 10px;
+}
+
+div.success {
+        color: #282;
+        border: 2px solid #282;
+        background-color: #FFFFFF;
+        margin: 5px;
+        padding: 5px;
+        font-weight: bold;
+}
+
+p.warning {
+        padding: 4px;
+        color: #000000;
+        border: 1px solid #FF0000;
+        background-color: #FFFFFF;
+}
+
+span.warning {
+	color:#FF0000;
+}
+
+a img {
+  border: 0px;
+}
+
+p.admininfo {
+  margin: 3px;
+  margin-bottom: 1.5em;
+  padding: 0.5em;
+  border: 1px solid red;
+  background-color: #fdd;
+}
+
+p.addnew,p.delete {
+  margin-top: 1.5em;
+  margin-bottom: 2em;
+}
+
+p.addnew a {
+  color: #257f00;
+  font-size: 110%;
+  font-weight: bold;
+  padding: 5px;
+  min-height: 18px;
+  padding-left: 25px;
+  background-image: url('../../images/add.png');
+  background-position: 0 5px;
+  background-repeat: no-repeat;
+}
+
+p.addnew a:hover {
+  text-decoration: none;
+  padding-bottom: 0;
+  border-bottom: 2px solid #257f00;
+}
+
+
+p.delete a {
+  color: #b22;
+  font-size: 110%;
+  font-weight: bold;
+  padding: 5px;
+  min-height: 18px;
+  padding-left: 25px;
+  background-image: url('../../images/delete.png');
+  background-position: 0 5px;
+  background-repeat: no-repeat;
+}
+
+p.delete a:hover {
+  text-decoration: none;
+  padding-bottom: 0;
+  border-bottom: 2px solid #b22;
+}
+
+
+p.userinfo {
+  margin: 3px;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  padding: 0.5em;
+  border: 1px solid black;
+  background-color: #b2c2cb;
+  /*padding-left: 40px;
+  background-image: url('../images/user.png');
+  background-position: left;
+  background-repeat: no-repeat;
+  background-position: 0.5em 0.5em;*/
+  min-height: 36px;
+}
+
+input.usageoption {
+	margin-top: 1em;
+}
+
+div.confirmation {
+}
+
+div.confirmation div.question {
+        padding: 10px;
+        color: #000000;
+        border: 1px solid #FF0000;
+        background-color: #FFFFFF;
+        font-weight: bold;
+        margin-bottom: 1em;
+}
+
+div.confirmation p.buttons input {
+        width: 10em;
+}
+
+
+.login_label {
+        display: block;
+        float: left;
+        width: 130px;
+}
+
+input[type=text],input[type=password],textarea,select {
+        border: 1px solid black;
+        padding: 3px;
+        background-color: #FFFFFF;
+        }
+
+input[type=text]:focus,input[type=password]:focus,textarea:focus {
+        border: 1px solid red;
+        background-color: #FFFFFF;
+        }
+
+
+div.vhostsidebyside {
+  max-width: 55em;
+}
+
+div.vhostoptions {
+  margin: 0;
+  padding: 0;
+  margin-left: 1em;
+  float: right;
+  width: 30em;
+  /*margin-left: 2em; position: absolute; left: 45em; */
+}
+
+
+a.logo img {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+div.sidebar {
+        padding-top: 160px;
+        width: 190px;
+        float: left;
+
+}
+
+div.menu img {
+  margin-bottom: 1em;
+}
+
+a.menuitem {
+  font-weight: normal;
+        display: block;
+        padding: 4px;
+        margin: 3px;
+        text-decoration: none;
+        color: #000000;
+}
+
+a.submenuitem {
+  margin-left: 2em;
+}
+
+a.active {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #425d6c;
+}
+
+a.menuitem:hover {
+  text-decoration: underline;
+  color: #425d6c;
+}
+
+a.menuicon {
+    display: none;
+}
+
+
+div#beta {
+  clear: both;
+        padding: 4px;
+        color: #000000;
+        border: 1px solid #FF0000;
+        background-color: #FFFFFF;
+        margin-bottom: 1em;
+}
+
+div#beta p {
+  padding: 0;
+  margin: 0;
+  margin-top: 0.3em;
+}
+
+div#beta h3 {
+  padding: 0;
+  margin: 0;
+}
+
+div.vmail-forward {
+  width: 40em;
+  border: 1px solid black;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  display: table;
+}
+div.vmail-forward p {
+  display: block;
+  margin: 0;
+  margin-bottom: 0.5em;
+  padding: 0;
+}
+
+div.vmail-forward input {
+  width: 20em;
+}
+
+div.content {
+        margin-left: 200px;
+        padding-left: 40px;
+        /*border-left: 1px solid #000000;*/
+}
+/*        overflow: hidden; */
+
+div.vmailoverview {
+}
+
+.overview {
+  margin: 2em;
+  overflow: auto;
+  width: 100%;
+  max-width: 50em;
+}
+.overview div.block {
+  float: left;
+  margin: 1em;
+  padding: 1em;
+  /*background-color: #b2c2cb;*/
+  width: 10em;
+  min-height: 7em;
+  text-align: center;
+  background-color: #eee;
+}
+
+.overview div.block img {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 1em;
+  height: 16px;
+}
+
+/*
+.overview div.block a {
+  color: #000;
+}
+*/
+
+div.foot {
+  clear: both;
+        border-top: 1px solid #425d6c;
+  color: #425d6c;
+        font-size: 90%;
+}
+
+h3 {
+  color: #425d6c;
+  margin-top: 2em;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #425d6c;
+}
+
+h3.headline {
+  margin-top: 0;
+}
+
+ul {
+        margin-bottom: 10px;
+}
+
+table {
+        border-collapse: collapse;
+}
+
+tr.odd td,
+tr.even td {
+  border: none;
+  padding: 0.5em 0.5em;
+}
+
+tr.odd {
+  background: #eee;
+}
+
+td {
+        border: 1px solid black;
+        padding: 0.5em;
+}
+
+td.number {
+  text-align: right;
+}
+
+th {
+  padding: 0px 1em;
+}
+
+
+dt {
+  font-weight: bold;
+}
+
+
+a {
+  text-decoration: none;
+  /*font-weight: bold;*/
+  color: #425d6c;
+
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+div.freewvs {
+  width: 80%; 
+  padding: 0.5em; 
+  margin-bottom: 0.5em; 
+}
+
+div.freewvs-ok {
+  background-color: #bcfd8b; 
+  border: 2px solid #3c8e00;
+}
+
+div.freewvs-vulnerable {
+  background-color: #ff7070;
+  border: 2px solid red;
+}
+
+div.freewvs img {
+  float: right;
+  margin: 1em;
+}
+
+div.freewvs p {
+  margin: 0;
+  padding: 0;
+}
+
+
+tr.unpaid td {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  font-weight: bold;
+  background-color: #fdd;
+}
+
+.ui-button {
+  border: 1px solid #425d6c;
+  background-color: #fff;
+  color: #000;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+  border: 1px solid #425d6c;
+  background: #425d6c;
+  color: #fff;
+}
+
+div.beta {
+  color: #000;
+  font-size: 110%;
+  font-weight: bold;
+  padding: 10px;
+  border: 3px solid #ffb000;
+  background-color: #fffee9;
+}
+div.beta h4 {
+  color: #ffb000;
+  padding-left: 26px;
+  min-height: 18px;
+  background-image: url('../../images/warning.png');
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+
+div.tile-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.tile {
+    width: 25em;
+    border-left: 5px solid #0a0;
+    background-color: #dfd;
+    padding: 4px;
+    margin: 10px;
+}
+
+
+
+
+
