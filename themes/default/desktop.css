@@ -157,8 +157,7 @@ div.confirmation p.buttons input {
 
 
 .login_label {
-        display: inline-block;
-        width: 130px;
+        display: block;
 }
 
 input[type=text],input[type=password],textarea,select {
