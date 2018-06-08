@@ -91,7 +91,12 @@ if ($is_current_user) {
         $everused = true;
     }
     if (have_module('mailman') && mailman_subdomains($dom->id)) {
-        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten")."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p></div>");
+        $mailmanhosts = mailman_subdomains($dom->id);
+        $hostname = $dom->fqdn;
+        if (count($mailmanhosts) == 1) {
+            $hostname = $mailmanhosts[0]['hostname'].'.'.$dom->fqdn;
+        }
+        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten", 'filter='.$hostname)."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p></div>");
         $used = true;
         $everused = true;
     }
