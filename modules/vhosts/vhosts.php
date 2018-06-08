@@ -37,7 +37,7 @@ output("<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als
 
 $filter = "";
 if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
-  $filter = $_REQUEST['filter'];
+  $filter = filter_input_general($_REQUEST['filter']);
 }
 $vhosts = list_vhosts($filter);
 
