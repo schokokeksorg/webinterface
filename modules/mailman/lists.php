@@ -14,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-require_once('inc/base.php');
+require_once('inc/jquery.php');
 require_once('inc/icons.php');
 require_once('mailman.php');
 
@@ -26,11 +26,25 @@ output('<p>Mit <a href="https://www.gnu.org/software/mailman/index.html">Mailman
 <p>Auf dieser Seite können Sie Ihre Mailinglisten verwalten.</p>
 ');
 
-$lists = get_lists();
+$filter = "";
+if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
+  $filter = filter_input_general($_REQUEST['filter']);
+}
+$lists = get_lists($filter);
+
+
+// Filter-Funktion
+if (count($lists) > 10 || $filter) {
+    javascript();
+    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.$filter.'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
+    output(html_form('mailman_filter', 'lists', '', $form));
+}
+
 
 if (! empty($lists))
 {
-  output("<table>\n<tr><th>Listenname</th><th>Verwalter<sup>1</sup></th><th>Status</th><th>Archivgröße<sup>2</sup></th><th>&nbsp;</th></tr>\n");
+  addnew('newlist', 'Neue Mailingliste anlegen');
+  output('<div id="mailman_lists_container">');
   foreach ($lists AS $list)
   {
     $size = $list['archivesize'];
@@ -43,39 +57,40 @@ if (! empty($lists))
     }
 
 
-    $style = '';
-    $status = 'In Betrieb';
+    $class = 'regular';
+    $status = 'In Betrieb (erstellt am '.strftime('%d.%m.%Y', strtotime($list['created'])).')';
     if ($list['status'] == 'delete')
     {
-      $style = ' style="text-decoration: line-through;" ';
+      $class = 'deleted';
       $status = 'Wird gelöscht';
     }
     elseif ($list['status'] == 'pending')
     {
-      $style = ' style="text-decoration: underline;" ';
+      $class = 'new';
       $status = 'Wird angelegt';
     }
     elseif ($list['status'] == 'newpw')
     {
-      $style = ' style="font-style: italic;" ';
+      $class = 'edited';
       $status = 'Neues Passwort angefordert';
     }
     elseif ($list['status'] == 'failure')
     {
-      $style = ' style="font-style: italic;" ';
+      $class = 'error';
       $status = 'Fehler bei der Erstellung';
     }
     
     $admin = str_replace(',', ', ', $list['admin']);
 
 
-    output("<tr><td{$style}><strong>{$list['listname']}</strong>@{$list['fqdn']}</td><td{$style}>{$admin}</td><td>{$status}</td><td style=\"text-align: right;\">{$sizestr}</td>");
+    output("<div class=\"mailman_list $class\"><p class=\"listname\"><span class=\"listname\">{$list['listname']}</span>@{$list['fqdn']}</p>
+        <p class=\"listadmin\">Verwalter: {$admin}</p><p class=\"status\">Status: {$status}</p><p class=\"archivesize\">Archivgröße: {$sizestr}</p>");
     if ($list['status'] == 'running')
-      output("<td>".internal_link('save', other_icon("lock.png", "Neues Passwort anfordern"), "action=newpw&id={$list['id']}")." ".internal_link('save', icon_delete("Mailingliste löschen"), "action=delete&id={$list['id']}")." <a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")."</a></td></tr>\n");
+      output("<p class=\"operations\">".internal_link('save', other_icon("lock.png", "Neues Passwort anfordern").' Neues Passwort anfordern', "action=newpw&id={$list['id']}")."<br>".internal_link('save', icon_delete("Mailingliste löschen").' Liste löschen', "action=delete&id={$list['id']}")."<br><a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")." Verwaltung aufrufen</a></p></div>\n");
     else
-      output("<td>&#160;</td></tr>\n");
+      output("</div>\n");
   }
-  output("</table>");
+  output("</div>");
 }
 else
 {

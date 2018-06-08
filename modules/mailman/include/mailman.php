@@ -19,10 +19,16 @@ require_once('inc/debug.php');
 require_once('inc/security.php');
 
 
-function get_lists()
+function get_lists($filter)
 {
   $uid = (int) $_SESSION['userinfo']['uid'];
-  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=? ORDER BY listname", array($uid));
+  $result = NULL;
+  if ($filter) {
+      $filter = '%'.$filter.'%';
+      $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
+  } else {
+      $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid ORDER BY listname", array('uid' => $uid));
+  }
   $ret = array();
   while ($list = $result->fetch())
     $ret[] = $list;
@@ -35,7 +41,7 @@ function get_list($id)
 {
   $args = array(":id" => $id,
                 ":uid" => $_SESSION['userinfo']['uid']);
-  $result = db_query("SELECT id, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
+  $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
   if ($result->rowCount() < 1)
     system_failure('Die gewünschte Mailingliste konnte nicht gefunden werden');
   $list = $result->fetch();
@@ -61,13 +67,14 @@ function request_new_password($id)
 
 function create_list($listname, $maildomain, $admin)
 {
+    $listname = strtolower($listname);
   verify_input_username($listname);
   verify_input_general($admin);
   if (in_array($listname, array("admin", "administrator", "webmaster", "hostmaster", "postmaster")))
     system_failure('Der Mailinglistenname '.$listname.' ist unzulässig.');
   if (! check_emailaddr($admin))
     system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
-  $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname=?", array($listname));
+  $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname LIKE ?", array($listname));
   if ($result->rowCount() > 0)
     system_failure('Eine Liste mit diesem Namen existiert bereits auf unserem Mailinglisten-Server (unter einer Ihrer Domains oder unter einer Domain eines anderen Kunden). Jeder Listenname kann auf dem gesamten Server nur einmal verwendet werden.');
 
