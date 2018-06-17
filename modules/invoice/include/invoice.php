@@ -126,7 +126,7 @@ RE '.$id.' KD '.$customerno.' vom '.$datum;
 
 function get_lastschrift($rechnungsnummer) {
   $rechnungsnummer = (int) $rechnungsnummer;
-  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum, sl.status FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.sepamandat=sl.mandatsreferenz) WHERE rechnungsnummer=? AND re.abbuchung=1", array($rechnungsnummer));
+  $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum, sl.status FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.sepamandat=sl.mandatsreferenz) WHERE rechnungsnummer=?", array($rechnungsnummer));
   if ($result->rowCount() == 0) {
     return NULL;
   }
