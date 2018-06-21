@@ -165,11 +165,13 @@ function logger($severity, $scriptname, $scope, $message)
 
   DEBUG("LOGGING $scriptname:$scope:$message");
   $user = NULL;
-  if ($_SESSION['role'] & ROLE_SYSTEMUSER)
-    $user = $_SESSION['userinfo']['username'];
-  elseif ($_SESSION['role'] & ROLE_CUSTOMER)
-    $user = $_SESSION['customerinfo']['customerno'];
-  
+  if (array_key_exists("role", $_SESSION)) {
+    if ($_SESSION['role'] & ROLE_SYSTEMUSER)
+      $user = $_SESSION['userinfo']['username'];
+    elseif ($_SESSION['role'] & ROLE_CUSTOMER)
+      $user = $_SESSION['customerinfo']['customerno'];
+  }
+
   $args = array(":user" => $user,
                 ":remote" => $_SERVER['REMOTE_ADDR'],
                 ":scriptname" => $scriptname,
