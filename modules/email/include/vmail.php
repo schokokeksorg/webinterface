@@ -305,7 +305,7 @@ function save_vmail_account($account)
     $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
     if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
       $newquota = $free + config('vmail_basequota');
-      if ($account['quota'] >= $oldaccount['quota'] && $newquota < $oldaccount['quota']) {
+      if (isset($oldaccount) && $account['quota'] >= $oldaccount['quota'] && $newquota < $oldaccount['quota']) {
         # Wenn das Limit künstlich reduziert wurde, dann maximal auf den alten Wert.
         $newquota = $oldaccount['quota'];
       }
