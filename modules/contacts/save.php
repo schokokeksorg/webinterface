@@ -97,7 +97,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $c['country'] = verify_input_general(maybe_null(strtoupper($_REQUEST['land'])));
     $c['zip'] = verify_input_general(maybe_null($_REQUEST['plz']));
     $c['city'] = verify_input_general(maybe_null($_REQUEST['ort']));
-    if ($new) {
+    if ($new && isset($_REQUEST['email'])) {
         $c['email'] = verify_input_general(maybe_null($_REQUEST['email']));
         if (!check_emailaddr($c['email'])) {
             system_failure("Ungültige E-Mail-Adresse!");
@@ -105,7 +105,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     }
         
 
-    if ($_REQUEST['telefon']) {
+    if (isset($_REQUEST['telefon']) && $_REQUEST['telefon'] != '') {
         $num = format_number(verify_input_general($_REQUEST['telefon']), $_REQUEST['land']);
         if ($num) {
             $c['phone'] = $num;
@@ -115,7 +115,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     } else {
         $c['phone'] = NULL;
     }
-    if ($_REQUEST['mobile']) {
+    if (isset($_REQUEST['mobile']) && $_REQUEST['mobile'] != '') {
         $num = format_number(verify_input_general($_REQUEST['mobile']), $_REQUEST['land']);
         if ($num) {
             $c['mobile'] = $num;
@@ -125,7 +125,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     } else {
         $c['mobile'] = NULL;
     }
-    if ($_REQUEST['telefax']) {
+    if (isset($_REQUEST['telefax']) && $_REQUEST['telefax'] != '') {
         $num = format_number(verify_input_general($_REQUEST['telefax']), $_REQUEST['land']);
         if ($num) {
             $c['fax'] = $num;
@@ -161,14 +161,14 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             warning('Zur Verwendung als Domaininhaber fehlen noch Angaben.');
             redirect('edit?id='.$_REQUEST['id'].'&back='.$_REQUEST['back'].'&domainholder=1');
         }
-        if (!have_mailaddress($_REQUEST['email'])) {
+        if (isset($_REQUEST['email']) && !have_mailaddress($_REQUEST['email'])) {
             warning("Die neu angelegte Adresse kann erst dann als Domaininhaber genutzt werden, wenn die E-Mail-Adresse bestätigt wurde.");
         }
     }
 
     $domains = domainlist_by_contact($c);
     if ($domains) {
-        if ($c['email'] != $_REQUEST['email'] && !(isset($_REQUEST['designated']) && $_REQUEST['designated'] == 'yes')) {
+        if (isset($_REQUEST['email']) && $c['email'] != $_REQUEST['email'] && !(isset($_REQUEST['designated']) && $_REQUEST['designated'] == 'yes')) {
             system_failure("Sie müssen die explizite Zustimmung des Domaininhabers bestätigen um diese Änderungen zu speichern.");
         }
     }
@@ -181,7 +181,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $id = save_contact($c);
     $c['id'] = $id;
 
-    if ($new || $c['email'] != $_REQUEST['email']) {
+    if (isset($_REQUEST['email']) && ($new || $c['email'] != $_REQUEST['email'])) {
         if (have_mailaddress($_REQUEST['email'])) {
             save_emailaddress($c['id'], verify_input_general($_REQUEST['email']));
         } else {
