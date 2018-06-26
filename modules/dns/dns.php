@@ -85,7 +85,7 @@ foreach ($domains as $dom) {
           $output .= "<tr><td>".internal_link('dns_edit', $rec['fqdn'], "id={$rec['id']}")."</td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$rec['ttl']} Sek.</td><td>".internal_link('save', '<img src="'.$prefix.'images/delete.png" width="16" height="16" alt="löschen" title="Account löschen" />', "id={$rec['id']}&type=dns&action=delete")."</td></tr>\n";
         }
         #$output .= '</table><br />';
-    
+
       }*/
 }
 
