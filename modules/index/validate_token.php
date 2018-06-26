@@ -21,7 +21,7 @@ $show = 'token';
 if (isset($_REQUEST['customerno']) and isset($_REQUEST['token'])) {
     $customerno = (int) $_REQUEST['customerno'];
     $token = $_REQUEST['token'];
-  
+
     require_once('newpass.php');
     require_once('inc/security.php');
     if (validate_token($customerno, $token)) {

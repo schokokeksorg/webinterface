@@ -37,7 +37,7 @@ if (isset($_GET['aliaswww'])) {
     if ($aliaswww) {
         array_push($new_options, 'aliaswww');
     }
-  
+
     DEBUG($old_options);
     DEBUG($new_options);
     $alias['options'] = implode(',', $new_options);
@@ -65,7 +65,7 @@ if (isset($_GET['forward'])) {
     if ($forward) {
         array_push($new_options, 'forward');
     }
-  
+
     DEBUG($old_options);
     DEBUG($new_options);
     $alias['options'] = implode(',', $new_options);

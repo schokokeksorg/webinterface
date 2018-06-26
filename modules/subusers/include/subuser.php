@@ -37,7 +37,7 @@ function list_subusers()
 function load_subuser($id)
 {
     $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
-  
+
     $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid=:uid AND id=:id", $args);
     $item = $result->fetch();
     $item['modules'] = explode(',', $item['modules']);
@@ -64,7 +64,7 @@ function available_modules()
 function delete_subuser($id)
 {
     $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
-  
+
     db_query("DELETE FROM system.subusers WHERE id=:id AND uid=:uid", $args);
 }
 
@@ -99,7 +99,7 @@ function new_subuser($username, $requested_modules, $password)
     if (count($modules) == 0) {
         system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
     }
-  
+
     $result = strong_password($password);
     if ($result !== true) {
         system_failure("Unsicheres Passwort: ".$result);
@@ -150,7 +150,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
     if (count($modules) == 0) {
         system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
     }
-  
+
     $args = array(":uid" => $_SESSION['userinfo']['uid'],
                 ":id" => $id,
                 ":username" => $username,

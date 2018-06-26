@@ -92,7 +92,7 @@ if (count($dbs) > 0) {
 } else {
     $form .= '<p><em>Bisher gibt es noch keine Datenbanken.</em></p>';
 }
- 
+
 $form .= '<p><input type="submit" name="submit" value="Speichern"/><p>';
 
 

@@ -54,7 +54,7 @@ if (count($available_servers) > 1) {
     }
     $whichserver = html_select('server', $serverselect, $ftpuser['server']);
 }
-  
+
 
 
 output(html_form('ftpusers_edit', 'save', 'id='.$ftpuser['id'], '

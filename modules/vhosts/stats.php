@@ -67,7 +67,7 @@ if (isset($_REQUEST['vhost'])) {
             } else {
                 output("<td>".icon_disabled("Diese Statistiken können nur hier im Webinterface betrachtet werden.")."</td>");
             }
-    
+
             output("<td>");
             if ($v['stats'] == 'public') {
                 output(internal_link("", other_icon("lock.png", "Statistiken nicht mehr öffentlich anzeigen"), "vhost={$v['id']}&public=0"));

@@ -22,7 +22,7 @@ $show = 'token';
 
 if (isset($_SESSION['role']) && $_SESSION['role'] != ROLE_ANONYMOUS) {
     @session_destroy();
-  
+
     header('Location: '.$PHP_SELF);
     die();
 }
@@ -30,7 +30,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] != ROLE_ANONYMOUS) {
 if (isset($_REQUEST['token'])) {
     $token = $_REQUEST['token'];
     $uid = get_uid_for_token($token);
-  
+
     if ($uid != null && validate_uid_token($uid, $token)) {
         $show = 'agb';
         if (isset($_REQUEST['agb']) && $_REQUEST['agb'] == '1') {

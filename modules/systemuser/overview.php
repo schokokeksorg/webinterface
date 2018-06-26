@@ -45,7 +45,7 @@ foreach ($usedquota as $q) {
     }
     $color = ($percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green"));
     $width = 2 * min($percent, 100) - $mailwidth;
-     
+
     $used_space = $q['systemquota_used'] + $q['mailquota'];
     $msg = "";
     if ($multiserver) {
@@ -67,5 +67,5 @@ output("<h5>Speicherplatz</h5><div style=\"margin-left: 2em;\">{$quotastring}</d
 if (have_module('invoice') && $need_more_storage) {
     addnew('../invoice/more_storage?section='.$section, 'Mehr Speicherplatz bestellen');
 }
-    
+
 output("<p>Die Werte für den verbrauchten Speicherplatz werden periodisch eingelesen und hier verzögert angezeigt!</p>");

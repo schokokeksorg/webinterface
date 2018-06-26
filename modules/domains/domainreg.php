@@ -55,7 +55,7 @@ if (isset($_REQUEST['domain'])) {
     if ($dom->provider == 'terions') {
         system_failure("Diese Domain ist bereits auf Ihr Kundenkonto registriert.");
     }
-    
+
     // An diesem Punkt ist die Domain eingetragen als extern und ggf. mit Mailserver-Lock
     // Bei der Reg-Bestätigung wird das Lock entfernt und die Daten entsprechend gesetzt, inklusive Preise.
 

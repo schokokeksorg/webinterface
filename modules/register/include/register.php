@@ -37,7 +37,7 @@ function create_customer($data)
     }
 
     logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: ".print_r($data, true));
-  
+
     db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES (:firma, :nachname, :vorname, :anrede, :email, CURDATE(), 3)", $data);
     $customerno = db_insert_id();
     return $customerno;

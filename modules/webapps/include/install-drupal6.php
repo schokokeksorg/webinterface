@@ -33,7 +33,7 @@ function validate_data($post)
     $dbdata = create_webapp_mysqldb('drupal6', $post['sitename']);
 
     $passwordhash = md5($post['adminpassword']);
-  
+
     $data = "adminuser={$post['adminuser']}
 adminpassword={$passwordhash}
 adminemail={$post['adminemail']}

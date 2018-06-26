@@ -150,7 +150,7 @@ function create_mailaccount($arr)
     logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "created account »{$arr['account']}«");
 }
 
-    
+
 function get_mailaccount_id($accountname)
 {
     list($local, $domain) = explode('@', $accountname, 2);
@@ -169,7 +169,7 @@ function get_mailaccount_id($accountname)
     $acc = $result->fetch();
     return $acc['id'];
 }
-    
+
 
 function delete_mailaccount($id)
 {

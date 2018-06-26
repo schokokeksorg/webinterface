@@ -34,7 +34,7 @@ function contract_html()
 {
     use_module('contacts');
     require_once('contacts.php');
-    
+
     $kundenkontakte = get_kundenkontakte();
     $kunde = get_contact($kundenkontakte['kunde']);
     $adresse = nl2br("\n".filter_input_general($kunde['address'])."\n".filter_input_general($kunde['country']).'-'.filter_input_general($kunde['zip']).' '.filter_input_general($kunde['city']));
@@ -44,7 +44,7 @@ function contract_html()
     }
     $email = filter_input_general($kunde['email']);
     $address = "<strong>$name</strong>$adresse</p><p>E-Mail-Adresse: $email";
- 
+
     $date = date('d.m.Y');
 
     $DIR=realpath(dirname(__FILE__).'/..');

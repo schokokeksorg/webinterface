@@ -34,7 +34,7 @@ if (! $docroot) {
 if (isset($_POST['submit'])) {
     require_once('install-mediawiki.php');
     require_once('webapp-installer.php');
-  
+
     check_form_token('install_mediawiki');
 
     $data = validate_data($_POST);
@@ -42,14 +42,14 @@ if (isset($_POST['submit'])) {
         system_failure('wtf?!');
     }
     create_new_webapp('mediawiki', $docroot, $url, $data);
-  
+
     title("MediaWiki wird installiert");
     output('<p>Ihr MediaWiki wird jetzt installiert. Sie erhalten eine E-Mail, sobald das Wiki betriebsbereit ist.</p>
 ');
 } else {
     require_once('modules/vhosts/include/vhosts.php');
     $vhosts = list_vhosts();
-  
+
     output('<p>Die Einrichtung von MediaWiki erfordert die Angabe ein paar weniger Daten.</p>');
 
     $form = '

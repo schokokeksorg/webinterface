@@ -411,7 +411,7 @@ function contact_as_string($contact)
         }
         $pgp = '<p class="contact-pgp">'.other_icon('key.png').' PGP ID:<br>'.$pgpid.'</p>';
     }
-  
+
     $contact_string = "<p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>$pgp";
     return $contact_string;
 }

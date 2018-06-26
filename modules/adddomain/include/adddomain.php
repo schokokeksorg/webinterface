@@ -55,7 +55,7 @@ function get_domain_offer($domainname)
     $temp = $result->fetch();
     $data["gebuehr"] = $temp["gebuehr"];
     $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
-  
+
     $available = api_domain_available($domainname);
     if (! $available) {
         warning('Die Domain »'.$domainname.'« ist leider nicht verfügbar.');
@@ -88,7 +88,7 @@ function register_domain($domainname, $uid)
     if (! $useraccount) {
         system_failure('Kein User gesetzt');
     }
-  
+
     $args = array(":cid" => $cid,
                 ":useraccount" => $useraccount,
                 ":basename" => $data['basename'],

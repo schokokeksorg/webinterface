@@ -26,7 +26,7 @@ $section = 'invoice_current';
 
 if ($_GET['action'] == 'new') {
     check_form_token('sepamandat_neu');
-  
+
     $gueltig_ab = $_REQUEST['gueltig_ab'];
     if ($gueltig_ab == 'datum') {
         $gueltig_ab = $_REQUEST['gueltig_ab_datum_year'].'-'.$_REQUEST['gueltig_ab_datum_month'].'-'.$_REQUEST['gueltig_ab_datum_day'];
@@ -75,8 +75,8 @@ if ($_GET['action'] == 'new') {
     }
     DEBUG('BIC: '.$bic);
 
-  
+
     sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab);
-  
+
     redirect($prefix.'go/invoice/current');
 }

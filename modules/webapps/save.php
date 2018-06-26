@@ -46,7 +46,7 @@ if ($_POST['target'] == 'new') {
     $vhost['is_dav'] = 0;
     $vhost['is_svn'] = 0;
     $vhost['is_webapp'] = 0;
-  
+
     $ssl = '';
     switch ($_POST['ssl']) {
     case 'http':
@@ -104,7 +104,7 @@ if ($_POST['target'] == 'new') {
     $vhost['logtype'] = $logtype;
     $vhost['errorlog'] = $errorlog;
     $vhost['options'] = $options;
-  
+
     $domain = $domainname;
     if ($domainid == -1) {
         $domain = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
@@ -157,7 +157,7 @@ if ($docroot && $url) {
 
     $_SESSION['webapp_docroot'] = $docroot;
     $_SESSION['webapp_url'] = $url;
-  
+
     if (!$debugmode) {
         header('Location: install/'.$application);
     }

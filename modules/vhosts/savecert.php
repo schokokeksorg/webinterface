@@ -150,7 +150,7 @@ if ($_GET['action'] == 'new') {
     if (isset($_REQUEST['bitlength'])) {
         $bitlength = $_REQUEST['bitlength'];
     }
-  
+
     $id = save_csr($cn, $bitlength, $replace);
 
     header("Location: showcert?mode=csr&id={$id}");

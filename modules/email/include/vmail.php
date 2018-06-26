@@ -261,7 +261,7 @@ function save_vmail_account($account)
             return false;
         }
     }
-  
+
     $forwards = array();
     if (count($account['forwards']) > 0) {
         for ($i = 0 ; $i < count($account['forwards']) ; $i++) {
@@ -300,7 +300,7 @@ function save_vmail_account($account)
         } else {
             $free = get_max_mailboxquota($oldaccount['server'], $oldaccount['quota']);
         }
-  
+
         $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
         if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
             $newquota = $free + config('vmail_basequota');
@@ -310,7 +310,7 @@ function save_vmail_account($account)
             }
             warning("Ihr Speicherplatz reicht für diese Postfach-Größe nicht mehr aus. Ihr Postfach wurde auf {$newquota} MB reduziert. Bitte beachten Sie, dass damit Ihr Benutzerkonto keinen freien Speicherplatz mehr aufweist!");
         }
-  
+
         $account['quota'] = $newquota;
     }
 
@@ -319,7 +319,7 @@ function save_vmail_account($account)
     } else {
         $account['quota_threshold'] = min((int) $account['quota_threshold'], (int) $account['quota']);
     }
-  
+
     $account['local'] = strtolower($account['local']);
     # Leerstring wird zu NULL
     $account['smtpreply'] = ($account['smtpreply'] ? $account['smtpreply'] : null);
@@ -376,7 +376,7 @@ function save_vmail_account($account)
                   ":quote" => $quote);
         db_query($query, $args);
     }
-    
+
 
 
     if (! $newaccount) {
@@ -485,7 +485,7 @@ function domainsettings($only_domain=null)
         if (! array_key_exists($mydom['id'], $subdomains)) {
             $subdomains[$mydom['id']] = array();
         }
-        
+
         $type = 'auto';
         if ($mydom['v_id']) {
             $type = 'virtual';
@@ -513,11 +513,11 @@ function change_domain($id, $type)
     if (domain_has_vmail_accounts($id)) {
         system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
     }
-  
+
     if (! in_array($type, array('none','auto','virtual'))) {
         system_failure("Ungültige Aktion");
     }
-  
+
     $old = domainsettings($id);
     if ($old['type'] == $type) {
         system_failure('Domain ist bereits so konfiguriert');

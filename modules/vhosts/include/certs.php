@@ -62,7 +62,7 @@ function cert_details($id)
 {
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
-  
+
     $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, chain, cert, `key` FROM vhosts.certs WHERE uid=:uid AND id=:id", array(":uid" => $uid, ":id" => $id));
     if ($result->rowCount() != 1) {
         system_failure("Ungültiges Zertifikat #{$id}");
@@ -85,7 +85,7 @@ function csr_details($id)
 {
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
-  
+
     $result = db_query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid=:uid AND id=:id", array(":uid" => $uid, ":id" => $id));
     if ($result->rowCount() != 1) {
         system_failure("Ungültiger CSR");
@@ -148,7 +148,7 @@ function validate_certificate($cert, $key)
     if (! in_array($certinfo['type'], array(OPENSSL_KEYTYPE_RSA, OPENSSL_KEYTYPE_DSA))) {
         system_failure("Dieser Schlüssel nutzt einen nicht unterstützten Algorithmus.");
     }
-    
+
     // Bei ECC-Keys treten kürzere Schlüssellängen auf, die können wir aktuell aber sowieso nicht unterstützen
     if ($certinfo['bits'] < 2048) {
         warning("Dieser Schlüssel hat eine sehr geringe Bitlänge und ist daher als nicht besonders sicher einzustufen!");
@@ -262,7 +262,7 @@ function delete_cert($id)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     $id = (int) $id;
-  
+
     db_query("DELETE FROM vhosts.certs WHERE uid=? AND id=?", array($uid, $id));
 }
 
@@ -270,7 +270,7 @@ function delete_csr($id)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     $id = (int) $id;
-  
+
     db_query("DELETE FROM vhosts.csr WHERE uid=? AND id=?", array($uid, $id));
 }
 
@@ -345,7 +345,7 @@ commonName_default = {$cn}
     if ($retval != 0) {
         system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: ".print_r($output, true));
     }
-  
+
     $csr = file_get_contents($csrfile);
     $key = file_get_contents($keyfile);
 
@@ -369,7 +369,7 @@ function save_csr($cn, $bits, $replace=null)
     $csr = null;
     $key = null;
     list($csr, $key) = create_csr(implode(',', $domains), $bits);
-  
+
     $uid = (int) $_SESSION['userinfo']['uid'];
     db_query(
       "INSERT INTO vhosts.csr (uid, hostname, san, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :san, :bits, :replace, :csr, :key)",

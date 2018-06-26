@@ -81,7 +81,7 @@ else
     if ($role & ROLE_CUSTOMER) {
         $customerquota = get_customer_quota();
         $maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
-   
+
         $quota = (int) $_POST['quota'];
         if ($quota > $maxquota) {
             system_failure("Sie können diesem Account maximal {$maxquota} MB Speicherplatz zuweisen.");
@@ -94,7 +94,7 @@ else
     } else {
         $account['name'] = filter_input_general($_POST['fullname']);
     }
-  
+
     $shells = available_shells();
     if (isset($shells[$_POST['shell']])) {
         $account['shell'] = $_POST['shell'];

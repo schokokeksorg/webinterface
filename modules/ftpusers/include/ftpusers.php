@@ -87,14 +87,14 @@ function save_ftpuser($data)
     } elseif (! $data['id']) {
         system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
     }
-    
+
     $args = array(":username" => $_SESSION['userinfo']['username'].'-'.$data['username'],
                 ":homedir" => $homedir,
                 ":active" => ($data['active'] == 1 ? 1 : 0),
                 ":forcessl" => ($data['forcessl'] == 0 ? 0 : 1),
                 ":server" => $server,
                 ":uid" => $_SESSION['userinfo']['uid']);
-  
+
     if ($data['id']) {
         $args[":id"] = $data['id'];
         if ($set_password) {

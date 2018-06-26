@@ -34,7 +34,7 @@ if (! $docroot) {
 if (isset($_POST['submit'])) {
     require_once('install-drupal6.php');
     require_once('webapp-installer.php');
-  
+
     check_form_token('install_drupal6');
 
     $data = validate_data($_POST);
@@ -42,14 +42,14 @@ if (isset($_POST['submit'])) {
         system_failure('wtf?!');
     }
     create_new_webapp('drupal6', $docroot, $url, $data);
-  
+
     title("Drupal wird installiert");
     output('<p>Ihr Drupal wird jetzt installiert. Sie erhalten eine E-Mail, sobald die Website betriebsbereit ist.</p>
 ');
 } else {
     require_once('modules/vhosts/include/vhosts.php');
     $vhosts = list_vhosts();
-  
+
     output('<p>Die Einrichtung von Drupal erfordert die Angabe ein paar weniger Daten.</p>');
 
     $form = '

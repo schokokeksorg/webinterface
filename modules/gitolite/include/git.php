@@ -145,7 +145,7 @@ function list_users()
         DEBUG("user-config does not exist");
         return array();
     }
-  
+
     $lines = file($userconfig);
     $users = array();
     foreach ($lines as $line) {
@@ -172,7 +172,7 @@ function list_foreign_users()
         DEBUG("user-config does not exist");
         return array();
     }
-  
+
     $lines = file($userconfig);
     $users = array();
     foreach ($lines as $line) {
@@ -281,7 +281,7 @@ function newkey($pubkey, $handle)
 {
     global $key_dir, $config_dir;
     $username = $_SESSION['userinfo']['username'];
-  
+
     $handle = $username.'-'.$handle;
     if (! validate_name($handle) || (str_replace(".", "x", $handle) != $handle)) {
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich und Bindestrich benutzen.");
@@ -289,7 +289,7 @@ function newkey($pubkey, $handle)
 
     $keyfile = $key_dir.'/'.$handle.'.pub';
     file_put_contents($keyfile, $pubkey);
-  
+
     DEBUG("checking public key $keyfile");
     $proc = popen("/usr/bin/ssh-keygen -l -f '{$keyfile}' 2>&1", 'r');
     $output = fread($proc, 512);
@@ -299,7 +299,7 @@ function newkey($pubkey, $handle)
         unlink($keyfile);
         system_failure('Der angegebene SSH-Key scheint ungültig zu sein.');
     }
-  
+
 
     git_wrapper('add '.$keyfile);
 
@@ -316,7 +316,7 @@ function newkey($pubkey, $handle)
         file_put_contents($userconfig, "# user {$handle}\n".$content);
     }
     git_wrapper('add '.$userconfig);
-  
+
     git_wrapper('commit --allow-empty -m "added new key for '.$handle.'"');
     git_wrapper('push');
 }
@@ -369,7 +369,7 @@ function delete_key($handle)
         file_put_contents($userconfig, implode('', $newcontent));
     }
     git_wrapper('add '.$userconfig);
- 
+
     git_wrapper('commit -m "deleted key for '.$handle.'"');
     git_wrapper('push');
 }
@@ -423,7 +423,7 @@ function delete_repo($repo)
     if (!array_key_exists($repo, $repos)) {
         system_failure("Ein solches Repository existiert nicht!");
     }
-  
+
     global $config_dir;
     $username = $_SESSION['userinfo']['username'];
     $userconfig = $config_dir . '/' . $username . '.conf';
@@ -432,7 +432,7 @@ function delete_repo($repo)
     $data = remove_repo_from_array($data, $repo);
     file_put_contents($userconfig, implode('', $data));
     git_wrapper('add '.$userconfig);
-  
+
     git_wrapper('commit --allow-empty -m "deleted repo '.$repo.'"');
     git_wrapper('push');
 }
@@ -501,7 +501,7 @@ function save_repo($repo, $permissions, $description)
     }
     file_put_contents($userconfig, implode('', $data));
     git_wrapper('add '.$userconfig);
-  
+
     git_wrapper('commit --allow-empty -m "written repo '.$repo.'"');
     git_wrapper('push');
 }

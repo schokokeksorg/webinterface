@@ -111,7 +111,7 @@ if (count($vhosts) > 0) {
         }
         $stats = $vhost['stats'] ? internal_link("showstats", other_icon("chart_bar.png", "Statistiken anzeigen"), "vhost={$vhost['id']}").' ' : '';
         output("<td>{$stats}{$logfiles}</td>");
-  
+
         if ($vhost['ssl'] == 'http') {
             output("<td>".icon_disabled('HTTPS ausgeschaltet')."</td>");
         } elseif (strstr($vhost['options'], "letsencrypt") && $vhost['cert']) {

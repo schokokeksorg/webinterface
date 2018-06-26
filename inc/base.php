@@ -45,14 +45,14 @@ function config($key, $localonly = false)
     if (array_key_exists($key, $config)) {
         return $config[$key];
     }
-  
+
     if ($localonly) {
         return null;
     }
 
     /* read configuration from database */
     $result = db_query("SELECT `key`, value FROM misc.config");
-  
+
     while ($object = $result->fetch()) {
         if (!array_key_exists($object['key'], $config)) {
             $config[$object['key']]=$object['value'];
@@ -433,7 +433,7 @@ function html_datepicker($nameprefix, $timestamp)
                        $current_year+2 => $current_year+2,
                        $current_year+3 => $current_year+3,
                        $current_year+4 => $current_year+4);
-              
+
     $selected_day = date('d', $timestamp);
     $selected_month = date('m', $timestamp);
     $selected_year = date('Y', $timestamp);

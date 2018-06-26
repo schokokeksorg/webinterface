@@ -120,7 +120,7 @@ function find_role($login, $password, $i_am_admin = false)
         }
         logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing e-mail-account »{$account}«.");
     }
-  
+
     // virtueller Mail-Account
     $account = $login;
     $result = db_query("SELECT cryptpass FROM mail.courier_virtual_accounts WHERE account=?", array($account));
@@ -134,7 +134,7 @@ function find_role($login, $password, $i_am_admin = false)
         }
         logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing virtual e-mail-account »{$account}«.");
     }
-  
+
 
 
     // Nothing?
@@ -167,7 +167,7 @@ function get_customer_info($customer)
     $ret['company'] = $data['firma'];
     $ret['name'] = $data['name'];
     $ret['email'] = $data['email'];
-  
+
     return $ret;
 }
 

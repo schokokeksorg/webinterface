@@ -38,12 +38,12 @@ $dyndns = get_dyndns_account($id);
   }
   $record = blank_dns_record($type);
   // Sicherheitsprüfungen passieren im Backend
-  
+
   $record['hostname'] = $_REQUEST['hostname'];
   $record['domain'] = (int) $_REQUEST['domain'];
   $record['dyndns'] = $id;
   $record['ttl'] = 120;
-  
+
   save_dns_record(null, $record);
 
   if (!$debugmode) {

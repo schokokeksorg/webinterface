@@ -79,10 +79,10 @@ function empty_vhost()
 {
     $vhost['id'] = null;
     $vhost['hostname'] = null;
-  
+
     $vhost['domain_id'] = null;
     $vhost['domain'] = null;
-  
+
     $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
     $vhost['docroot'] = null;
     $vhost['php'] = 'fpm72';
@@ -97,7 +97,7 @@ function empty_vhost()
     $vhost['is_svn'] = 0;
     $vhost['is_webapp'] = 0;
     $vhost['webapp_id'] = null;
-  
+
     $vhost['cert'] = null;
     $vhost['certid'] = null;
     $vhost['ipv4'] = null;
@@ -112,10 +112,10 @@ function empty_vhost()
 function empty_alias()
 {
     $alias['hostname'] = null;
-  
+
     $alias['domain_id'] = -1;
     $alias['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
-  
+
     $alias['options'] = null;
     return $alias;
 }
@@ -492,13 +492,13 @@ function get_alias_details($id)
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
     $result = db_query("SELECT * FROM vhosts.v_alias WHERE id=?", array($id));
-  
+
     if ($result->rowCount() != 1) {
         system_failure('Interner Fehler beim Auslesen der Alias-Daten');
     }
-  
+
     $alias = $result->fetch();
-  
+
     if ($alias['domain_id'] == null) {
         $alias['domain_id'] = -1;
     }

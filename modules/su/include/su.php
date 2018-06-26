@@ -19,7 +19,7 @@ function list_system_users()
     require_role(ROLE_SYSADMIN);
 
     $result = db_query("SELECT uid,username FROM system.v_useraccounts ORDER BY username");
-  
+
     $ret = array();
     while ($item = $result->fetch(PDO::FETCH_OBJ)) {
         array_push($ret, $item);
@@ -33,7 +33,7 @@ function list_customers()
     require_role(ROLE_SYSADMIN);
 
     $result = db_query("SELECT id, IF(firma IS NULL, CONCAT_WS(' ', vorname, nachname), CONCAT(firma, ' (', CONCAT_WS(' ', vorname, nachname), ')')) AS name FROM kundendaten.kunden");
-  
+
     $ret = array();
     while ($item = $result->fetch(PDO::FETCH_OBJ)) {
         array_push($ret, $item);
@@ -102,7 +102,7 @@ function build_results($term)
 {
     global $ret;
     $ret = array();
-  
+
     $add = function ($val, $id, $value) {
         global $ret;
         if (isset($ret[$val]) && is_array($ret[$val])) {
@@ -141,7 +141,7 @@ function build_results($term)
     }
 
     ksort($ret);
-  
+
     $allentries = array();
     foreach ($ret as $group) {
         usort($group, function ($a, $b) {

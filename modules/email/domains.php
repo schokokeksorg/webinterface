@@ -65,7 +65,7 @@ foreach ($domains as $id => $dom) {
     $check_off = ($dom['type'] == 'none' ? ' checked="checked"' : '');
     $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
     $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
-  
+
     $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled':'').'" id="buttonset-'.$id.'">
          <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
          <label for="option-'.$id.'-webinterface">Webinterface</label>

@@ -49,14 +49,14 @@ if (isset($_GET['type']) && $_GET['type'] == 'dyndns') {
     }
     if ($_GET['action'] == 'edit') {
         check_form_token('dyndns_edit');
-      
+
         $newid = null;
         if ($id) {
             edit_dyndns_account($id, $_POST['handle'], $_POST['password_http'], $_POST['sshkey']);
         } else {
             $newid = create_dyndns_account($_POST['handle'], $_POST['password_http'], $_POST['sshkey']);
         }
-  
+
         if (! ($debugmode || we_have_an_error())) {
             if ($id) {
                 // Bearbeitung

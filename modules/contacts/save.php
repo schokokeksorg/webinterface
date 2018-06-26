@@ -31,7 +31,7 @@ if (isset($_REQUEST['back'])) {
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $contact = get_contact($_REQUEST['id']);
-    
+
     $contact_string = display_contact($contact);
 
     $sure = user_is_sure();
@@ -98,7 +98,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             system_failure("Ungültige E-Mail-Adresse!");
         }
     }
-        
+
 
     if (isset($_REQUEST['telefon']) && $_REQUEST['telefon'] != '') {
         $num = format_number(verify_input_general($_REQUEST['telefon']), $_REQUEST['land']);
@@ -131,7 +131,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $c['fax'] = null;
     }
 
-    
+
     if (isset($_REQUEST['usepgp']) && $_REQUEST['usepgp'] == 'yes' && isset($_REQUEST['pgpid'])) {
         $pgpid = preg_replace('/[^0-9a-fA-F]/', '', $_REQUEST['pgpid']);
         DEBUG('PGP-ID: '.$pgpid.' / Länge: '.strlen($pgpid));

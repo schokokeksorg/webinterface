@@ -55,7 +55,7 @@ if (isset($_GET['id'])) {
     $ftpuser = load_ftpuser($_GET['id']);
 }
 
- 
+
 $ftpuser['username'] = $_REQUEST['ftpusername'];
 $ftpuser['password'] = $_REQUEST['password'];
 $ftpuser['homedir'] = $_REQUEST['homedir'];
@@ -75,7 +75,7 @@ if (isset($_REQUEST['server'])) {
     $ftpuser['server'] = $_REQUEST['server'];
 }
 
-  
+
 save_ftpuser($ftpuser);
-  
+
 redirect('accounts');

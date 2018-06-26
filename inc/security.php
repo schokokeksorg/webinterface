@@ -73,7 +73,7 @@ function verify_input_username($input)
 function filter_input_hostname($input, $wildcard=false)
 {
     // FIXME: Eine "filter"-Funktion sollte keinen system_failure verursachen sondern einfach einen bereinigten String liefern.
-  
+
     DEBUG('filter_input_hostname("'.$input.'", $wildcard='.$wildcard.')');
     $input = str_replace(array('Ä', 'Ö', 'Ü'), array('ä', 'ö', 'ü'), strtolower($input));
     $input = rtrim($input, "\t\n\r\x00 .");

@@ -91,9 +91,9 @@ function get_imap_password($username, $webmailpass)
 {
     $result = db_query("SELECT webmailpass FROM mail.webmail_totp WHERE email=?", array($username));
     $tmp = $result->fetch();
-  
+
     $crypted = $tmp['webmailpass'];
-    
+
     $clear = decode_webmail_password($crypted, $webmailpass);
     return $clear;
 }
@@ -109,7 +109,7 @@ function check_webmail_password($username, $webmailpass)
 function generate_secret($username)
 {
     $ga = new PHPGangsta_GoogleAuthenticator();
-  
+
     $secret = $ga->createSecret();
     DEBUG('GA-Secret: '.$secret);
     DEBUG('QrCode: '.$ga->getQRCodeGoogleUrl('Blog', $secret));
@@ -136,7 +136,7 @@ function check_totp($username, $code)
     $secret = $tmp['totp_secret'];
 
     $ga = new PHPGangsta_GoogleAuthenticator();
-  
+
     $checkResult = $ga->verifyCode($secret, $code, 2);    // 2 = 2*30sec clock tolerance
     if ($checkResult) {
         db_query("UPDATE mail.webmail_totp SET failures = 0, unlock_timestamp=NULL WHERE email=?", array($username));
@@ -148,7 +148,7 @@ function check_totp($username, $code)
         } else {
             db_query("UPDATE mail.webmail_totp SET failures = failures+1 WHERE email=?", array($username));
         }
-    
+
         DEBUG('FAILED');
     }
     return $checkResult;
@@ -157,7 +157,7 @@ function check_totp($username, $code)
 function generate_qrcode_image($secret)
 {
     $url = 'otpauth://totp/Webmail?secret='.$secret;
-  
+
     $descriptorspec = array(
     0 => array("pipe", "r"),  // STDIN ist eine Pipe, von der das Child liest
     1 => array("pipe", "w"),  // STDOUT ist eine Pipe, in die das Child schreibt
@@ -180,7 +180,7 @@ function generate_qrcode_image($secret)
         // Es ist wichtig, dass Sie alle Pipes schließen bevor Sie
         // proc_close aufrufen, um Deadlocks zu vermeiden
         $return_value = proc_close($process);
-  
+
         return $pngdata;
     } else {
         warning('Es ist ein interner Fehler im Webinterface aufgetreten, aufgrund dessen kein QR-Code erstellt werden kann. Sollte dieser Fehler mehrfach auftreten, kontaktieren Sie bitte die Administratoren.');
@@ -202,7 +202,7 @@ function delete_totp($id)
 {
     $args = array(":id" => $id,
                 ":uid" => $_SESSION['userinfo']['uid']);
-  
+
     db_query("DELETE FROM mail.webmail_totp WHERE id=:id AND useraccount=:uid", $args);
 }
 

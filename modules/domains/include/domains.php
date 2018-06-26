@@ -152,7 +152,7 @@ function get_auth_dns($domainname, $tld)
 
     $resp = shell_exec('dig @'.$NS.' -t ns '.$domain.'.');
     $lines = explode("\n", $resp);
-  
+
     $NS = null;
     $NS_IP = null;
     $sec = null;
@@ -271,7 +271,7 @@ function get_domain_offer($tld)
     $data["gebuehr"] = $temp["gebuehr"];
     $data["interval"] = $temp["interval"];
     $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
-  
+
     return $data;
 }
 
@@ -312,7 +312,7 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     $tld = $info['domainSuffix'];
     $domainname = str_replace(".$tld", "", $info['domainNameUnicode']);
     logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain '.$info['domainNameUnicode']." DNS:{$dns} / Mail:{$mail}");
-    
+
     db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
         ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", array($cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')));
     $id = db_insert_id();

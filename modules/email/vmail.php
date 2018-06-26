@@ -25,7 +25,7 @@ require_once('hasdomain.php');
 
 if (! user_has_vmail_domain()) {
     title("E-Mail-Verwaltung");
-  
+
     output('
 <p>Sie können bei '.config('company_name').' die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>

@@ -27,14 +27,14 @@ if (isset($_REQUEST['username'])) {
     $username = $_REQUEST['username'];
     $webmailpw = $_REQUEST['webmailpass'];
     $ga_code = $_REQUEST['totp_code'];
-  
+
     if (! strstr($username, '@')) {
         // Default-Domainname
         $username = $username.'@'.config('masterdomain');
     }
 
     $success = true;
-  
+
     if (! check_webmail_password($username, $webmailpw)) {
         input_error('Das Webmail-Passwort hat nicht gestimmt.');
         $success = false;

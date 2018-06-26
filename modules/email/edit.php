@@ -87,7 +87,7 @@ if (! $accountlogin) {
         $password_message = '<span style="font-size: 80%"><br /><em>Sie haben bereits ein Passwort gesetzt. Wenn Sie dieses Feld nicht ändern, wird das bisherige Passwort beibehalten.</em></span>';
         $password_value = '**********';
     }
-  
+
     $form .= "
     <p><input class=\"option_group\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
     <div style=\"margin-left: 2em;\" id=\"mailbox_config\" class=\"option_group\">

@@ -54,7 +54,7 @@ if (count(additional_servers()) > 0) {
     $available_servers = additional_servers();
     $available_servers[] = my_server_id();
     $available_servers = array_unique($available_servers);
-  
+
     $selectable_servers = array();
     $all_servers = server_names();
     foreach ($all_servers as $id => $fqdn) {
@@ -72,7 +72,7 @@ if (count($users) > 0) {
         $form .= '<p><input type="checkbox" id="access_'.$user['username'].'" name="access[]" value="'.$user['username'].'" /> <label for="access_'.$user['username'].'">'.$user['username'].'</label></p>';
     }
 }
- 
+
 $form .= '<p><input type="submit" name="submit" value="Speichern"/><p>';
 
 

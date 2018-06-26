@@ -54,7 +54,7 @@ foreach ($aliases as $alias) {
     $remove_forward = internal_link('aliasoptions', 'In zusätzliche Adresse umwandeln', "alias={$alias['id']}&forward=0&formtoken={$formtoken}");
     $typetoggle = (strstr($alias['options'], 'forward') ? $remove_forward : $to_forward);
 
-    
+
     $form .= "<tr>
     <td>{$alias['fqdn']}{$wwwalias}</td>
     <td>{$aliastype}<br />{$typetoggle}</td>
@@ -84,7 +84,7 @@ $form .= "
 </table>";
 
 output(html_form('vhosts_add_alias', 'save', 'action=addalias&vhost='.$vhost['id'], $form));
-    
+
 output("<p>
   ".internal_link("vhosts", "Zurück zur Übersicht")."
 </p>");

@@ -121,7 +121,7 @@ $users = get_mysql_accounts($_SESSION['userinfo']['uid']);
 
 if (isset($_POST['accesseditor'])) {
     check_form_token('mysql_databases');
-  
+
     foreach ($dbs as $db) {
         $db = $db['name'];
         foreach ($users as $user) {

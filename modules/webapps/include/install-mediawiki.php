@@ -36,7 +36,7 @@ function validate_data($post)
 
     $salt = random_string(8);
     $salthash = ':B:' . $salt . ':' . md5($salt . '-' . md5($post['adminpassword']));
-  
+
     $data = "adminuser={$adminuser}
 adminpassword={$salthash}
 adminemail={$post['adminemail']}

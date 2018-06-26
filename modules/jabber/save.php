@@ -55,7 +55,7 @@ if ($_GET['action'] == 'new') {
 } elseif ($_GET['action'] == 'delete') {
     $title = "Jabber-Account löschen";
     $section = 'jabber_accounts';
-  
+
     $account = get_jabberaccount_details($_GET['account']);
     $account_string = filter_input_general($account['local'].'@'.$account['domain']);
     $sure = user_is_sure();

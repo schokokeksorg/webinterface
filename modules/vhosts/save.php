@@ -72,7 +72,7 @@ if ($_GET['action'] == 'edit') {
     $docroot = '';
     if ($_POST['vhost_type'] == 'regular' || $_POST['vhost_type'] == 'dav') {
         $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domainname).'/htdocs';
-  
+
         $docroot = '';
         if (isset($_POST['docroot'])) {
             if (! check_path($_POST['docroot'])) {
@@ -83,7 +83,7 @@ if ($_GET['action'] == 'edit') {
         if ((isset($_POST['use_default_docroot']) && $_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
             $docroot = null;
         }
-  
+
         DEBUG("Document-Root: ".$docroot);
     }
     $php = null;
@@ -136,7 +136,7 @@ if ($_GET['action'] == 'edit') {
         $vhost['webapp_id'] = (int) $_POST['webapp'];
     }
 
-  
+
     $ssl = null;
     switch ($_POST['ssl']) {
     case 'http':
@@ -167,7 +167,7 @@ if ($_GET['action'] == 'edit') {
             }
         }
     }
- 
+
     $cert = (isset($_POST['cert']) ? (int) $_POST['cert'] : null);
 
     $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : null);
@@ -180,7 +180,7 @@ if ($_GET['action'] == 'edit') {
     } else {
         $vhost['autoipv6'] = 0;
     }
-  
+
 
     $logtype = '';
     switch ($_POST['logtype']) {
@@ -210,7 +210,7 @@ if ($_GET['action'] == 'edit') {
     if ($logtype == '') {
         $vhost['stats'] = null;
     }
-  
+
     DEBUG("PHP: {$php} / Logging: {$logtype}");
 
     $old_options = explode(',', $vhost['options']);
@@ -273,7 +273,7 @@ if ($_GET['action'] == 'edit') {
     $vhost['logtype'] = $logtype;
     $vhost['errorlog'] = $errorlog;
     $vhost['options'] = $options;
-    
+
     DEBUG($vhost);
     save_vhost($vhost);
     success_msg("Ihre Einstellungen wurden gespeichert. Es dauert jedoch einige Minuten bis die Änderungen wirksam werden.");
@@ -290,7 +290,7 @@ if ($_GET['action'] == 'edit') {
     $alias = empty_alias();
     $alias['vhost'] = $vhost['id'];
 
-  
+
     $hostname = filter_input_hostname($_POST['hostname'], true);
     $domainid = (int) $_POST['domain'];
     if ($domainid >= 0) {
@@ -326,9 +326,9 @@ if ($_GET['action'] == 'edit') {
 
     $alias['hostname'] = $hostname;
     $alias['domain_id'] = $domainid;
-    
+
     $alias ['options'] = $options;
-    
+
     save_alias($alias);
 
     if (! $debugmode) {
@@ -337,15 +337,15 @@ if ($_GET['action'] == 'edit') {
 } elseif ($_GET['action'] == 'deletealias') {
     $title = "Subdomain löschen";
     $section = 'vhosts_vhosts';
-  
+
     $alias = get_alias_details((int) $_GET['alias']);
     DEBUG($alias);
     $alias_string = $alias['fqdn'];
-  
+
     $vhost = get_vhost_details($alias['vhost']);
     DEBUG($vhost);
     $vhost_string = $vhost['fqdn'];
-  
+
     $sure = user_is_sure();
     if ($sure === null) {
         are_you_sure("action=deletealias&alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Subdomain »{$vhost_string}« wirklich löschen?");
@@ -362,10 +362,10 @@ if ($_GET['action'] == 'edit') {
 } elseif ($_GET['action'] == 'delete') {
     $title = "Subdomain löschen";
     $section = 'vhosts_vhosts';
-  
+
     $vhost = get_vhost_details((int) $_GET['vhost']);
     $vhost_string = $vhost['fqdn'];
-  
+
     $sure = user_is_sure();
     if ($sure === null) {
         are_you_sure("action=delete&vhost={$_GET['vhost']}", "Möchten Sie die Subdomain »{$vhost_string}« wirklich löschen?");

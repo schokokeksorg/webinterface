@@ -429,14 +429,14 @@ function check_dns($domainname, $tld)
         $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
         $tld_ns[$tld] = $NS;
     }
-  
+
     $resp = shell_exec('dig @'.$tld_ns[$tld].' +noall +authority -t ns '.$domain.'.');
     $line = explode("\n", $resp, 2)[0];
     if (preg_match('/^.*\\sIN\\s+NS\\s+/', $line) === 0) {
         return "NXDOMAIN";
     }
     $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+).$/", '\1', $line);
-  
+
     $own_ns = own_ns();
 
     if (in_array($NS, $own_ns)) {

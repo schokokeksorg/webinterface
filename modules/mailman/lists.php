@@ -69,7 +69,7 @@ if (! empty($lists)) {
             $class = 'error';
             $status = 'Fehler bei der Erstellung';
         }
-    
+
         $admin = str_replace(',', ', ', $list['admin']);
 
 

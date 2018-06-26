@@ -46,7 +46,7 @@ function invalidate_customer_token($customerno)
     $customerno = (int) $customerno;
     db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id={$customerno} LIMIT 1;");
 }
- 
+
 function create_token($customerno)
 {
     $customerno = (int) $customerno;

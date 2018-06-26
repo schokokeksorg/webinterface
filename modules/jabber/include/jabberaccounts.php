@@ -79,7 +79,7 @@ function create_jabber_account($local, $domain, $password)
         return;
     }
     $data[':password'] = $password;
-  
+
     if ($domain > 0) {
         $args = array(":domain" => $data[":domain"], ":customerno" => $data[":customerno"]);
         $result = db_query("SELECT id FROM kundendaten.domains WHERE kunde=:customerno AND jabber=1 AND id=:domain", $args);
@@ -118,7 +118,7 @@ function change_jabber_password($id, $password)
     $args = array(":customerno" => $_SESSION['customerinfo']['customerno'],
                 ":id" => $id,
                 ":password" => $password);
-  
+
     db_query("UPDATE jabber.accounts SET password=:password WHERE customerno=:customerno AND id=:id", $args);
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "changed password for account  »{$id}«");
 }
@@ -128,7 +128,7 @@ function change_jabber_password($id, $password)
 function delete_jabber_account($id)
 {
     require_role(ROLE_CUSTOMER);
-  
+
     $args = array(":customerno" => $_SESSION['customerinfo']['customerno'],
                 ":id" => $id);
 

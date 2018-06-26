@@ -33,11 +33,11 @@ if (! $docroot) {
 
 if (isset($_POST['submit'])) {
     require_once('webapp-installer.php');
-  
+
     check_form_token('install_owncloud');
 
     create_new_webapp('owncloud', $docroot, $url, '');
-  
+
     warning('Beachten Sie bitte, dass der erste Besucher Ihrer neuen Owncloud-Instanz den Namen und das Passwort des Administrators festlegen kann. Führen Sie die Inbetriebnahme daher bitte zeitnah durch!');
     title("OwnCloud wird installiert");
     output('<p>Ihre OwnCloud wird in Kürze installiert. Sie erhalten eine E-Mail, sobald die Anwendung betriebsbereit ist.</p>
@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
 } else {
     require_once('modules/vhosts/include/vhosts.php');
     $vhosts = list_vhosts();
-  
+
     $form = '
 <h4>Basisdaten</h4>
 <div style="margin-left: 2em;">

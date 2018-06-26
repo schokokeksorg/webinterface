@@ -45,7 +45,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
             $alert .= 'Zertifikate bald abgelaufen';
         }
     }
- 
+
     if ($alert) {
         $shortcuts[] = array( 'section' => 'Webserver',
                           'weight'  => 80,

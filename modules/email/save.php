@@ -43,7 +43,7 @@ if ($_GET['action'] == 'edit') {
         $account['id'] = null;
         if ($id) {
             $account['id'] = $id;
-  
+
             $oldaccount = get_account_details($id);
             $account['local'] = $oldaccount['local'];
             $account['domain'] = $oldaccount['domain'];
@@ -65,7 +65,7 @@ if ($_GET['action'] == 'edit') {
         if (isset($_POST['quota'])) {
             $account['quota'] = $_POST['quota'];
         }
-  
+
         $account['quota_threshold'] = -1;
         if (isset($_POST['quota_notify']) && isset($_POST['quota_threshold']) && $_POST['quota_notify'] == 1) {
             $account['quota_threshold'] = $_POST['quota_threshold'];
@@ -145,7 +145,7 @@ if ($_GET['action'] == 'edit') {
     if (isset($_POST['ar_from']) && $_POST['ar_from'] == 'custom' && isset($_POST['ar_fromname'])) {
         $ar['fromname'] = $_POST['ar_fromname'];
     }
-    
+
     $account['autoresponder'] = $ar;
 
 
@@ -226,7 +226,7 @@ if ($_GET['action'] == 'edit') {
         }
     }
     $account_string = $account['local'] . "@" . $domain;
-  
+
     if (!isset($_POST['smtpreply']) || !$_POST['smtpreply']) {
         system_failure('Zur Stilllegung einer Adresse müssen Sie einen Text eingeben den der Absender als Fehlermeldung erhält.');
     }
@@ -251,7 +251,7 @@ if ($_GET['action'] == 'edit') {
         }
     }
     $account_string = $account['local'] . "@" . $domain;
-  
+
     $account['smtpreply'] = null;
 
     save_vmail_account($account);

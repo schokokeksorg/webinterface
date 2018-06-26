@@ -43,7 +43,7 @@ if ($mode == 'csr') {
   <textarea cols=\"70\" rows=\"20\">
 {$cert}
 </textarea>");
-  
+
     if (isset($_REQUEST['private']) && $_REQUEST['private'] == 'yes') {
         output("<h4>privater Schlüssel</h4>
 <textarea cols=\"70\" rows=\"20\">
@@ -71,7 +71,7 @@ if ($mode == 'csr') {
   <textarea cols=\"70\" rows=\"20\">
 {$cert}
 </textarea>");
-  
+
     if (isset($_REQUEST['private']) && $_REQUEST['private'] == 'yes') {
         output("<h4>privater Schlüssel</h4>
 <textarea cols=\"70\" rows=\"20\">

@@ -29,7 +29,7 @@ function api_download_domain($id)
         system_failure('Domain nicht gefunden');
     }
     $dom = $result->fetch();
-    
+
     $data = array("domainName" => $dom['fqdn']);
     $result = api_request('domainInfo', $data);
     if ($result['status'] != 'success') {

@@ -100,23 +100,23 @@ function invalidate_customer_token($customerno)
 {
     db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id=?", array($customerno));
 }
- 
+
 function invalidate_systemuser_token($uid)
 {
     db_query("DELETE FROM system.usertoken WHERE uid=?", array($uid));
 }
- 
+
 function create_token($username)
 {
     expire_tokens();
     $result = db_query("SELECT uid FROM system.useraccounts WHERE username=?", array($username));
     $uid = (int) $result->fetch()['uid'];
-  
+
     $result = db_query("SELECT created FROM system.usertoken WHERE uid=?", array($uid));
     if ($result->rowCount() > 0) {
         system_failure("Für Ihr Benutzerkonto ist bereits eine Passwort-Erinnerung versendet worden. Bitte wenden Sie sich an den Support wenn Sie diese nicht erhalten haben.");
     }
-  
+
     $args = array(":uid" => $uid,
                 ":token" => random_string(16));
     db_query("INSERT INTO system.usertoken VALUES (:uid, NOW(), NOW() + INTERVAL 1 DAY, :token)", $args);

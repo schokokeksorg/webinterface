@@ -88,18 +88,18 @@ $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" nam
 
 $output .= html_form('dyndns_edit', 'save', 'type=dyndns&action=edit&'.(isset($_REQUEST['id']) ? 'id='.$_REQUEST['id'] : ''), $form);
 
-  
+
 if (! $new) {
     $records = get_dyndns_records($_REQUEST['id']);
 
     $output .= '<h4>Folgende DNS-records sind mit diesem DynDNS-Account verknüpft:</h4>
   
   <ul>';
-  
+
     foreach ($records as $record) {
         $output .= '<li>'.$record['fqdn'].' (Typ: '.strtoupper($record['type']).' / TTL: '.$record['ttl'].' Sek.)</li>';
     }
-  
+
     $output .= '</ul>';
     output("<p>".internal_link('dyndns_hostnames', "Liste ändern...", "id={$_REQUEST['id']}")."</p>");
 }

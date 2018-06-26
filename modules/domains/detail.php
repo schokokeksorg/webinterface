@@ -274,7 +274,7 @@ if ($dom->mailserver_lock == 1 && $dom->status != 'prereg') {
     }
     output('<h4>Inhaberschaft bestätigen</h4>');
     output('<p>Um eine extern registrierte Domain in vollem Umfang zu nutzen, ohne die lokalen DNS-Server als zuständig einzurichten, müssen Sie die Inhaberschaft bestätigen. Erst nach diesem Schritt können Sie diese Domain bei '.config('company_name').' als Mail-Domain nutzen.</p>');
-    
+
     output('<p>Die Zeichenkette zur Bestätigung lautet <strong>'.$dom->secret.'</strong>.</p>');
     output('<p>Richten Sie bitte auf dem zuständigen DNS-Server einen DNS-Record vom Typ TXT unter dem Hostname <strong>_schokokeks.'.$dom->fqdn.'</strong> ein und hinterlegen Sie dort diese Zeichenkette als Inhalt:</p>
             <p><code>_schokokeks.'.$dom->fqdn.'.    IN TXT "'.$dom->secret.'"</code></p>

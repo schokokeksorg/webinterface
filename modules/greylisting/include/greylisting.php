@@ -73,7 +73,7 @@ function new_whitelist_entry($local, $domain, $minutes)
     $args = array(":uid" => $_SESSION['userinfo']['uid'],
                 ":local" => $local,
                 ":domain" => $domain);
-    
+
     $expire = 'NULL';
     if ($minutes == 'none') {
         $expire = 'NULL';

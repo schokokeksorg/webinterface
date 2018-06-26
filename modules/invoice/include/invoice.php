@@ -98,7 +98,7 @@ DE91602911200041512006
 
 
 RE '.$id.' KD '.$customerno.' vom '.$datum;
-  
+
     $descriptorspec = array(
     0 => array("pipe", "r"),  // STDIN ist eine Pipe, von der das Child liest
     1 => array("pipe", "w"),  // STDOUT ist eine Pipe, in die das Child schreibt
@@ -121,7 +121,7 @@ RE '.$id.' KD '.$customerno.' vom '.$datum;
         // Es ist wichtig, dass Sie alle Pipes schließen bevor Sie
         // proc_close aufrufen, um Deadlocks zu vermeiden
         $return_value = proc_close($process);
-  
+
         return $pngdata;
     } else {
         warning('Es ist ein interner Fehler im Webinterface aufgetreten, aufgrund dessen kein QR-Code erstellt werden kann. Sollte dieser Fehler mehrfach auftreten, kontaktieren Sie bitte die Administratoren.');
@@ -270,7 +270,7 @@ function get_customerquota()
 function save_more_storage($items, $storage)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-  
+
     $queries = array();
 
     if ($storage < 1024 || $storage > 10240) {
@@ -304,7 +304,7 @@ function save_more_storage($items, $storage)
             input_error("Ungültige Daten");
             return;
         }
- 
+
         $param = array();
         foreach ($data as $k => $v) {
             $param[':'.$k] = $v;
@@ -317,7 +317,7 @@ function save_more_storage($items, $storage)
     if (count($queries) < 2) {
         system_failure("irgendwas stimmt jetzt nicht");
     }
-  
+
     foreach ($queries as $q) {
         db_query($q[0], $q[1]);
     }

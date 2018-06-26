@@ -56,7 +56,7 @@ if (isset($_POST['password1'])) {
         } else {
             system_failure("WTF?! (\$result={$result})");
         }
-    
+
         if (! $debugmode) {
             header('Location: index');
         } else {

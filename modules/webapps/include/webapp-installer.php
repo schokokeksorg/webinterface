@@ -104,13 +104,13 @@ function create_webapp_mysqldb($application, $sitename)
 {
     // dependet auf das mysql-modul
     require_once('modules/mysql/include/mysql.php');
-  
+
     $username = $_SESSION['userinfo']['username'];
     $description = "Automatisch erzeugte Datenbank für {$application} ({$sitename})";
-  
+
     // zuerst versuchen wir username_webappname. Wenn das nicht klappt, dann wird hochgezählt
     $handle = $username.'_'.$application;
-  
+
     if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle))) {
         logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
         create_mysql_database($handle, $description);

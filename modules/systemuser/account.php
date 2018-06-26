@@ -50,7 +50,7 @@ if (! customer_may_have_useraccounts()) {
             $percent = round((($q["systemquota_used"]+$q["mailquota"]) / $q["systemquota"]) * 100);
             $color = ($percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green"));
             $width = 2 * min($percent, 100) - $mailwidth;
-     
+
             $used_space = $q['systemquota_used'] + $q['mailquota'];
             $quota[] = "<p>Server <strong>{$q['server']}</strong><br />{$percent}%: {$used_space} MB von {$q['systemquota']} MB belegt{$mailstring}.</p> 
         <div style=\"margin: 0; padding: 0; width: 200px; border: 1px solid black;\">{$mailbar}<div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; margin-left: {$mailwidth}px; padding: 0;\">&#160;</div></div>";
@@ -60,7 +60,7 @@ if (! customer_may_have_useraccounts()) {
         output("<tr><td><p><strong>{$acc['username']}</strong> - {$realname}</p><p style=\"color: #555;\">Existiert seit {$acc['erstellungsdatum']}<br />Verwendete Shell: {$shell}</p></td>");
         output("<td>{$quotastring}</td>");
         output("<td>".internal_link('edit', other_icon('user_edit.png', 'Bearbeiten'), "uid={$acc['uid']}"));
-    
+
         if (! customer_useraccount($acc['uid'])) {
             output(" &#160; ".internal_link('pwchange', icon_pwchange('Passwort neu setzen'), "uid={$acc['uid']}"));
             #output(" &#160; ".internal_link('deluser', other_icon('user_delete.png', 'Benutzer löschen'), "uid={$acc['uid']}"));

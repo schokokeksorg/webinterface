@@ -42,7 +42,7 @@ if (is_file($file)) {
         header("Content-Type: image/png");
         header("Content-Length: " . filesize($file));
         header("Content-Transfer-Encoding: binary\n");
-    
+
         $fp = fopen($file, "r");
         fpassthru($fp);
         die();
@@ -73,7 +73,7 @@ if (is_file($file)) {
     $html = preg_replace('/=([-0-9a-zA-Z]+)([ >])/', '="$1"$2', $html);
     // Bilder rewriten
     $html = preg_replace('_<img ([^>]+[^/])>_', '<img $1 />', $html);
-  
+
     // Bilder rewriten
     $html = preg_replace('/src="((daily_|hourly_|ctry_)?usage(_[0-9]+)?\.png)"/', 'src="showstats?vhost='.$vhost['id'].'&amp;file=$1"', $html);
     // Interne Links rewriten
