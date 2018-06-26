@@ -14,6 +14,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+require_once('vendor/autoload.php');
+
 function account_has_totp($username)
 {
     $result = db_query("SELECT id FROM mail.webmail_totp WHERE email=?", array($username));
@@ -106,7 +108,6 @@ function check_webmail_password($username, $webmailpass)
 
 function generate_secret($username)
 {
-    require_once('external/googleauthenticator/GoogleAuthenticator.php');
     $ga = new PHPGangsta_GoogleAuthenticator();
   
     $secret = $ga->createSecret();
@@ -134,7 +135,6 @@ function check_totp($username, $code)
     $tmp = $result->fetch();
     $secret = $tmp['totp_secret'];
 
-    require_once('external/googleauthenticator/GoogleAuthenticator.php');
     $ga = new PHPGangsta_GoogleAuthenticator();
   
     $checkResult = $ga->verifyCode($secret, $code, 2);    // 2 = 2*30sec clock tolerance

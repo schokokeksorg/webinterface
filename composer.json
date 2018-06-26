@@ -6,6 +6,7 @@
         "bjeavons/zxcvbn-php": "0.3",
         "giggsey/libphonenumber-for-php": "^8.8",
         "globalcitizen/php-iban": "^2.6",
-        "mpdf/mpdf": "^7.0"
+        "mpdf/mpdf": "^7.0",
+        "PHPGangsta/GoogleAuthenticator": "dev-master"
     }
 }
