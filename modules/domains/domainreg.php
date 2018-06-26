@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -28,7 +28,7 @@ if (! config('http.net-apikey')) {
     system_failure("Dieses System ist nicht eingerichtet zum Hinzufügen von Domains");
 }
 
-$dom = NULL;
+$dom = null;
 if (isset($_REQUEST['domain'])) {
     $request = idn_to_utf8($_REQUEST['domain'], 0, INTL_IDNA_VARIANT_UTS46);
     if (substr($request, 0, 4) == 'www.') {
@@ -50,7 +50,7 @@ if (isset($_REQUEST['domain'])) {
         // Eintragen mit DNS und Mail
         $id = insert_domain_external($request, true, true);
         $dom->loadByName($request);
-    } 
+    }
     $dom->ensure_customerdomain();
     if ($dom->provider == 'terions') {
         system_failure("Diese Domain ist bereits auf Ihr Kundenkonto registriert.");
@@ -63,7 +63,6 @@ if (isset($_REQUEST['domain'])) {
     $_SESSION['domains_domainreg_admin_c'] = $dom->admin_c;
     $_SESSION['domains_domainreg_domainname'] = $request;
     $_SESSION['domains_domainreg_detach'] = 0;
-    
 } elseif (isset($_SESSION['domains_domainreg_domainname'])) {
     $domain = $_SESSION['domains_domainreg_domainname'];
     $dom = new Domain($domain);
@@ -86,7 +85,7 @@ if (!$pricedata) {
     warning('Die Domain '.$dom->fqdn.' kann nicht über dieses Webinterface umgezogen werden weil bei dieser Endung Besonderheiten zu beachten sind. Bitte kontaktieren Sie den Support.');
     redirect('domains');
 }
-$mode=NULL;
+$mode=null;
 
 if ($avail['status'] == 'available') {
     set_domain_prereg($dom->id);
@@ -109,7 +108,7 @@ $section='domains_domains';
 output('<h4>Inhaber der Domain</h4>');
 output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
 
-if ($_SESSION['domains_domainreg_owner'] === NULL) {
+if ($_SESSION['domains_domainreg_owner'] === null) {
     $kundenkontakte = get_kundenkontakte();
     $customer = get_contact($kundenkontakte['kunde']);
     if (possible_domainholder($customer)) {
@@ -124,7 +123,7 @@ if ($_SESSION['domains_domainreg_owner'] === NULL) {
 
 if ($_SESSION['domains_domainreg_detach'] == 0) {
     $_SESSION['domains_domainreg_admin_c'] = $_SESSION['domains_domainreg_owner'];
-} 
+}
 
 // Behandlung für "keinen extra Verwalter"
 if (isset($_GET['admin_c']) && $_GET['admin_c'] == 'none') {
@@ -158,7 +157,6 @@ $form = '';
 if ($mode == 'transfer') {
     $form .= '<h4>Auth-Info-Code für den Transfer</h4>';
     $form .= '<p><label for="authinfo">Auth-Info-Code für den Domainumzug:</label> <input type="text" name="authinfo" id="authinfo"></p>';
-    
 }
 
 $form .= '<h4>Kosten</h4>';
@@ -178,8 +176,3 @@ $form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($d
 <input type="submit" name="submit" value="Kostenpflichtigen Vertrag abschließen"></p>';
 output(html_form('domains_domainreg', 'domainreg_save', '', $form));
 output('<p>'.internal_link('domains', 'Zurück').'</p>');
-
-
-
-
-

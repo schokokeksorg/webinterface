@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -92,7 +92,6 @@ if (isset($_REQUEST['domain'])) {
             if ($data === false) {
                 output('<p>Diese Endung ist für die automatische Registrierung nicht freigeschaltet. Bitte fragen Sie bei unserem Support nach den Konditionen und Bedingungen für diese Domain-Endung!</p>');
             } else {
-
                 $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
                     <table>
                     <tr><td>Domainname:</td><td><strong>'.filter_input_general($avail['domainNameUnicode']).'</strong></td></tr>
@@ -107,7 +106,6 @@ if (isset($_REQUEST['domain'])) {
                     <input type="submit" name="submit" value="Ich möchte diese Domain zu '.config('company_name').' umziehen"></p>';
 
                 output(html_form('domains_transferin', 'domainreg', '', $form));
-
             }
         }
         output('<h3>Diese Domain als externe Domain nutzen</h3>');
@@ -134,7 +132,6 @@ if (isset($_REQUEST['domain'])) {
             <input type="submit" name="submit" value="Diese Domain bei '.config('company_name').' verwenden"></p>';
 
         output(html_form('domains_external', 'useexternal', '', $form));
-
     } else {
         output('<p class="domain-unavailable">Die Domain '.filter_input_general($request).' kann nicht registriert werden.</p>');
 
@@ -152,5 +149,4 @@ if (isset($_REQUEST['domain'])) {
                 output('<p>Ein Fehler ist aufgetreten beim Prüfen der Verfügbarkeit. Eventuell geht es später wieder.</p>');
         }
     }
-
 }

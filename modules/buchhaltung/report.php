@@ -114,4 +114,3 @@ output("<tr><td colspan=\"2\"></td></tr>");
 
 output("<tr><td><b>Überschuss aus laufendem Betrieb:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme-$ausgabensumme, 2, ',', '.')." €</td></tr>");
 output('</table>');
-

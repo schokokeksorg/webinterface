@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -23,31 +23,30 @@ require_once('su.php');
 
 require_role(ROLE_CUSTOMER);
 
-if (isset($_GET['uid']))
-{
-  $uid = (int) $_GET['uid'];
-  $token = $_GET['token'];
-  $cid = (int) $_SESSION['customerinfo']['customerno'];
-  $users = find_users_for_customer($cid);
-  $found = false;
-  foreach ($users as $u) {
-    if ($uid == $u['uid']) {
-      $found = true;
+if (isset($_GET['uid'])) {
+    $uid = (int) $_GET['uid'];
+    $token = $_GET['token'];
+    $cid = (int) $_SESSION['customerinfo']['customerno'];
+    $users = find_users_for_customer($cid);
+    $found = false;
+    foreach ($users as $u) {
+        if ($uid == $u['uid']) {
+            $found = true;
+        }
     }
-  }
-  if (! $found) {
-    system_failure('Unerlaubter Useraccount');
-  }
+    if (! $found) {
+        system_failure('Unerlaubter Useraccount');
+    }
 
-  if (!isset($_SESSION['su_customer_timestamp']) || $_SESSION['su_customer_timestamp'] < time() - 30) {
-    system_failure("Aus Sicherheitsgründen muss die Auswahl auf dieser Seite innerhalb von 30 Sekunden getroffen werden.");
-  }
+    if (!isset($_SESSION['su_customer_timestamp']) || $_SESSION['su_customer_timestamp'] < time() - 30) {
+        system_failure("Aus Sicherheitsgründen muss die Auswahl auf dieser Seite innerhalb von 30 Sekunden getroffen werden.");
+    }
 
-  if (!isset($_SESSION['su_customer_token']) || $_SESSION['su_customer_token'] != $token) {
-    system_failure("Ungültige Reihenfolge der Aufrufe");
-  }
+    if (!isset($_SESSION['su_customer_token']) || $_SESSION['su_customer_token'] != $token) {
+        system_failure("Ungültige Reihenfolge der Aufrufe");
+    }
 
-  su('u', $uid);
+    su('u', $uid);
 }
 
 title("Benutzer wechseln");
@@ -65,14 +64,14 @@ $users = find_users_for_customer($cid);
 output('<p>Zu Ihrem Kundenkonto gehören die folgenden Benutzer. Klicken Sie einen Benutzernamen an um zu diesem zu wechseln.</p><ul>');
 
 foreach ($users as $u) {
-  if ($u['uid'] == $_SESSION['userinfo']['uid']) {
-    output("<li>{$u['username']} - (Eigener Benutzeraccount)</li>");
-    continue;
-  }
-  $realname = $u['name'];
-  if ($realname) {
-    $realname = ' - '.$realname;
-  }
-  output("<li>".internal_link('', "{$u['username']}{$realname}", "uid={$u['uid']}&token={$token}")."</li>");
+    if ($u['uid'] == $_SESSION['userinfo']['uid']) {
+        output("<li>{$u['username']} - (Eigener Benutzeraccount)</li>");
+        continue;
+    }
+    $realname = $u['name'];
+    if ($realname) {
+        $realname = ' - '.$realname;
+    }
+    output("<li>".internal_link('', "{$u['username']}{$realname}", "uid={$u['uid']}&token={$token}")."</li>");
 }
 output('</ul>');

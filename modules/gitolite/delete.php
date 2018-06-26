@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -21,80 +21,71 @@ include('git.php');
 $section = 'git_git';
 
 if (isset($_GET['repo'])) {
-  $repos = list_repos();
-  if (!array_key_exists($_GET['repo'], $repos)) {
-    system_failure("Es sollte ein unbekanntes Repository gelöscht werden!");
-  }
+    $repos = list_repos();
+    if (!array_key_exists($_GET['repo'], $repos)) {
+        system_failure("Es sollte ein unbekanntes Repository gelöscht werden!");
+    }
 
-  $sure = user_is_sure();
-  if ($sure === NULL)
-  {
-    are_you_sure("repo={$_GET['repo']}", '<p>Soll das GIT-Repository »'.$_GET['repo'].'« wirklich gelöscht werden?</p>
+    $sure = user_is_sure();
+    if ($sure === null) {
+        are_you_sure("repo={$_GET['repo']}", '<p>Soll das GIT-Repository »'.$_GET['repo'].'« wirklich gelöscht werden?</p>
     <p>Alle Inhalte die in diesem Repository gespeichert sind, werden gelöscht!</p>');
-  }
-  elseif ($sure === true)
-  {
-    delete_repo($_GET['repo']);
-    if (! $debugmode)
-      header('Location: git');
-    die();
-  }
-  elseif ($sure === false)
-  {
-    if (! $debugmode)
-      header("Location: git");
-    die();
-  }
+    } elseif ($sure === true) {
+        delete_repo($_GET['repo']);
+        if (! $debugmode) {
+            header('Location: git');
+        }
+        die();
+    } elseif ($sure === false) {
+        if (! $debugmode) {
+            header("Location: git");
+        }
+        die();
+    }
 }
 
 if (isset($_GET['handle'])) {
-  $users = list_users();
-  if (!in_array($_GET['handle'], $users)) {
-    system_failure("Es sollte ein unbekannter Benutzer gelöscht werden!");
-  }
+    $users = list_users();
+    if (!in_array($_GET['handle'], $users)) {
+        system_failure("Es sollte ein unbekannter Benutzer gelöscht werden!");
+    }
 
-  $sure = user_is_sure();
-  if ($sure === NULL)
-  {
-    are_you_sure("handle={$_GET['handle']}", '<p>Soll der SSH-Key »'.$_GET['handle'].'« wirklich gelöscht werden?</p>');
-  }
-  elseif ($sure === true)
-  {
-    delete_key($_GET['handle']);
-    if (! $debugmode)
-      header('Location: git');
-    die();
-  }
-  elseif ($sure === false)
-  {
-    if (! $debugmode)
-      header("Location: git");
-    die();
-  }
+    $sure = user_is_sure();
+    if ($sure === null) {
+        are_you_sure("handle={$_GET['handle']}", '<p>Soll der SSH-Key »'.$_GET['handle'].'« wirklich gelöscht werden?</p>');
+    } elseif ($sure === true) {
+        delete_key($_GET['handle']);
+        if (! $debugmode) {
+            header('Location: git');
+        }
+        die();
+    } elseif ($sure === false) {
+        if (! $debugmode) {
+            header("Location: git");
+        }
+        die();
+    }
 }
 
 if (isset($_GET['foreignhandle'])) {
-  $users = list_foreign_users();
-  if (!in_array($_GET['foreignhandle'], $users)) {
-    system_failure("Es sollte ein unbekannter Benutzer gelöscht werden!");
-  }
+    $users = list_foreign_users();
+    if (!in_array($_GET['foreignhandle'], $users)) {
+        system_failure("Es sollte ein unbekannter Benutzer gelöscht werden!");
+    }
 
-  $sure = user_is_sure();
-  if ($sure === NULL)
-  {
-    are_you_sure("foreignhandle={$_GET['foreignhandle']}", '<p>Soll der GIT-Benutzer »'.$_GET['foreignhandle'].'« wirklich aus Ihrer Konfiguration werden?</p>');
-  }
-  elseif ($sure === true)
-  {
-    delete_foreign_user($_GET['foreignhandle']);
-    if (! $debugmode)
-      header('Location: git');
-    die();
-  }
-  elseif ($sure === false)
-  {
-    if (! $debugmode)
-      header("Location: git");
-    die();
-  }
+    $sure = user_is_sure();
+    if ($sure === null) {
+        are_you_sure("foreignhandle={$_GET['foreignhandle']}", '<p>Soll der GIT-Benutzer »'.$_GET['foreignhandle'].'« wirklich aus Ihrer Konfiguration werden?</p>');
+    } elseif ($sure === true) {
+        delete_foreign_user($_GET['foreignhandle']);
+        if (! $debugmode) {
+            header('Location: git');
+        }
+        die();
+    } elseif ($sure === false) {
+        if (! $debugmode) {
+            header("Location: git");
+        }
+        die();
+    }
 }

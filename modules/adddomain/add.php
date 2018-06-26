@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -32,14 +32,14 @@ output('<p>Mit dieser Funktion können Sie eine neue Domain in unsere Datenbank 
 $data = get_domain_offer($_REQUEST['domain']);
 
 if (! $data) {
-  // Die Include-Datei setzt eine passende Warning-Nachricht
-  redirect('search');
+    // Die Include-Datei setzt eine passende Warning-Nachricht
+    redirect('search');
 }
 
 $users = list_useraccounts();
 $userselect = array();
 foreach ($users as $u) {
-  $userselect[$u['uid']] = $u['username'].' / '.$u['name'];
+    $userselect[$u['uid']] = $u['username'].' / '.$u['name'];
 }
 
 $form = '<table>
@@ -54,5 +54,3 @@ $form = '<table>
 output(html_form('adddomain_add', 'save', 'domain='.$data['domainname'], $form));
 
 output("<p><strong>Hinweis:</strong> Die hier angegebenen Beträge wurden automatisch aus unserer Preisliste ermittelt und werden zur Abrechnung verwendet. Sollten diese nicht der Vereinbarung entsprechen, teilen Sie uns dies bitte umgehend mit, damit wir dies korrigieren können.</p>");
-
-?>

@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -55,19 +55,19 @@ html_header('
 
 $usernames = array();
 foreach ($users as $user) {
-  $usernames[] = $user['username'];
+    $usernames[] = $user['username'];
 }
 
 $suggestion = $username;
 $count = 1;
 while (in_array($suggestion, $usernames)) {
-  $suggestion = $username.'_'.$count;
-  $count++;
+    $suggestion = $username.'_'.$count;
+    $count++;
 }
 
 $hint = 'Der MySQL-Benutzername muss entweder <strong>'.$username.'</strong> lauten oder mit <strong>'.$username.'_</strong> beginnen.';
 if (in_array($username, $usernames)) {
-  $hint = 'Der MySQL-Benutzername muss mit <strong>'.$username.'_</strong> beginnen.';
+    $hint = 'Der MySQL-Benutzername muss mit <strong>'.$username.'_</strong> beginnen.';
 }
 
 
@@ -81,20 +81,19 @@ $form = '<h4>Benutzername</h4>
 <p style="display: none;">Automatisch erzeugtes Passwort: <input id="newpass_display" type="text" readonly="readonly" /></p>
 <h4>Berechtigungen</h4>';
 if (count($dbs) > 0) {
-  $form .= '<p>Auf welche der bisher vorhandenen Datenbanken darf dieser Benutzer zugreifen?</p>';
-  foreach ($dbs as $db) {
-    $desc = '';
-    if ($db['description']) {
-      $desc = ' - <em>'.$db['description'].'</em>';
+    $form .= '<p>Auf welche der bisher vorhandenen Datenbanken darf dieser Benutzer zugreifen?</p>';
+    foreach ($dbs as $db) {
+        $desc = '';
+        if ($db['description']) {
+            $desc = ' - <em>'.$db['description'].'</em>';
+        }
+        $form .= '<p><input type="checkbox" id="access_'.$db['name'].'" name="access[]" value="'.$db['name'].'" /> <label for="access_'.$db['name'].'">'.$db['name'].$desc.'</label></p>';
     }
-    $form .= '<p><input type="checkbox" id="access_'.$db['name'].'" name="access[]" value="'.$db['name'].'" /> <label for="access_'.$db['name'].'">'.$db['name'].$desc.'</label></p>';
-  }
 } else {
-  $form .= '<p><em>Bisher gibt es noch keine Datenbanken.</em></p>';
+    $form .= '<p><em>Bisher gibt es noch keine Datenbanken.</em></p>';
 }
  
 $form .= '<p><input type="submit" name="submit" value="Speichern"/><p>';
 
 
 output(html_form('mysql_newuser', 'save', 'action=newuser', $form));
-

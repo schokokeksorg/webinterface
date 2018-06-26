@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -44,16 +44,16 @@ $form = "<table>
     <tr><th>Empfänger-Adresse</th><th>seit</th><th>bis</th><th> </th></tr>
     ";
 
-foreach ($whitelist AS $entry)
-{
-	$end = $entry['expire'];
-	if (! $end)
-		$end = '<em>unbegrenzt</em>';
-  $local = $entry['local'];
-  if (empty($local)) {
-    $local = '*';
-  }
-	$form .= "<tr><td>{$local}@{$entry['domain']}</td><td>{$entry['date']}</td><td>{$end}</td><td>".internal_link("save", "<img src=\"{$prefix}images/delete.png\" alt=\"Eintrag löschen\" title=\"Diesen Eintrag löschen\" style=\"width: 16px; height: 16px;\" />", "action=delete&id={$entry['id']}")."</td></tr>\n";
+foreach ($whitelist as $entry) {
+    $end = $entry['expire'];
+    if (! $end) {
+        $end = '<em>unbegrenzt</em>';
+    }
+    $local = $entry['local'];
+    if (empty($local)) {
+        $local = '*';
+    }
+    $form .= "<tr><td>{$local}@{$entry['domain']}</td><td>{$entry['date']}</td><td>{$end}</td><td>".internal_link("save", "<img src=\"{$prefix}images/delete.png\" alt=\"Eintrag löschen\" title=\"Diesen Eintrag löschen\" style=\"width: 16px; height: 16px;\" />", "action=delete&id={$entry['id']}")."</td></tr>\n";
 }
 
 $form .= '<tr><td><input type="text" name="address" /></td><td>-</td><td>'.html_select('expire', array('none' => 'Unbegrenzt', '30' => '30 Minuten', '60' => '1 Stunde', '720' => '12 Stunden', '1440' => '1 Tag', '2880' => '2 Tage', '10080' => '1 Woche', '43200' => '30 Tage'), '1440').'</td><td></td></tr>';
@@ -65,5 +65,3 @@ $form .= '<p><input type="submit" value="Speichern" /></p>';
 output(html_form('greylisting_add', 'save', 'action=add', $form));
 
 output('<p></p>');
-
-?>

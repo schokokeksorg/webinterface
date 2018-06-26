@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -20,21 +20,21 @@ include('subuser.php');
 $section = 'subusers_subusers';
 
 if (isset($_GET['subuser'])) {
-  $list = list_subusers();
-  foreach ($list as $x) {
-    if ($x['id'] == $_GET['subuser']) {
-      $subuser = $x;
+    $list = list_subusers();
+    foreach ($list as $x) {
+        if ($x['id'] == $_GET['subuser']) {
+            $subuser = $x;
+        }
     }
-  }
-  if (!isset($subuser)) {
-    system_failure('Der Account den Sie bearbeiten möchten wurde nicht gefunden!');
-  }
-  title("Zusätzlichen Admin-Zugang bearbeiten");
-  $pwnotice = ' <em>(Wenn Sie hier nichts eingeben, wird das alte Passwort beibehalten)</em>';
+    if (!isset($subuser)) {
+        system_failure('Der Account den Sie bearbeiten möchten wurde nicht gefunden!');
+    }
+    title("Zusätzlichen Admin-Zugang bearbeiten");
+    $pwnotice = ' <em>(Wenn Sie hier nichts eingeben, wird das alte Passwort beibehalten)</em>';
 } else {
-  $subuser = empty_subuser();
-  title("Zusätzlichen Admin-Zugang erstellen");
-  $pwnotice = '';
+    $subuser = empty_subuser();
+    title("Zusätzlichen Admin-Zugang erstellen");
+    $pwnotice = '';
 }
 
 // Username davor entfernen
@@ -49,8 +49,8 @@ $form = '<table>
 <tr><td style="vertical-align: top;">Berechtigungen:</td><td>';
 $modinfo = available_modules();
 foreach ($modinfo as $key => $desc) {
-  $checked = in_array($key, $subuser['modules']) ? 'checked="checked "' : '';
-  $form .= '<input type="checkbox" name="modules[]" id="'.$key.'" value="'.$key.'" '.$checked.'/> <label for="'.$key.'">'.$desc.'</label><br />';
+    $checked = in_array($key, $subuser['modules']) ? 'checked="checked "' : '';
+    $form .= '<input type="checkbox" name="modules[]" id="'.$key.'" value="'.$key.'" '.$checked.'/> <label for="'.$key.'">'.$desc.'</label><br />';
 }
 $form .= '<br /><em>(Nicht alle Berechtigungen haben alleinstehend eine Wirkung. Eventuell müssen Sie mehrere Berechtigungen erlauben um einen Effekt zu erhalten.)</em></td></tr>
 <tr><td colspan="2"><input type="submit" value="Speichern" /></td></tr>
@@ -58,5 +58,3 @@ $form .= '<br /><em>(Nicht alle Berechtigungen haben alleinstehend eine Wirkung.
 </table>';
 
 output(html_form('subusers_edit', 'save', 'id='.$subuser['id'], $form));
-
-

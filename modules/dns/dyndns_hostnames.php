@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -31,23 +31,23 @@ $available_domains = array();
 
 $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
 foreach ($domains as $d) {
-  if ($d->dns) {
-    $available_domains[$d->id] = $d->fqdn;
-  }
+    if ($d->dns) {
+        $available_domains[$d->id] = $d->fqdn;
+    }
 }
 
 
 $records = get_dyndns_records($dyndns['id']);
 
 if ($records) {
-  $output .= '<h4>Folgende DNS-records sind mit diesem DynDNS-Account verknüpft:</h4>
+    $output .= '<h4>Folgende DNS-records sind mit diesem DynDNS-Account verknüpft:</h4>
 <ul>
 ';
-  foreach ($records AS $record) {
-    $type = strtoupper($record['type']).' / '.($record['type'] == 'a' ? 'IPv4' : 'IPv6');
-    $output .= '  <li>'.$record['fqdn'].' ('.$type.') '.internal_link('dyndns_hostname_delete', icon_delete(), 'id='.$record['id']).'</li>';
-  }
-  $output .= '</ul>';
+    foreach ($records as $record) {
+        $type = strtoupper($record['type']).' / '.($record['type'] == 'a' ? 'IPv4' : 'IPv6');
+        $output .= '  <li>'.$record['fqdn'].' ('.$type.') '.internal_link('dyndns_hostname_delete', icon_delete(), 'id='.$record['id']).'</li>';
+    }
+    $output .= '</ul>';
 }
 
 
@@ -61,5 +61,3 @@ $form = '<p><label for="hostname">Neuer Hostname: </label> <input type="text" na
 output(html_form('dyndns_hostname_add', 'dyndns_hostname_add', 'id='.$dyndns['id'], $form));
 
 output('<p>'.internal_link('dyndns', 'Zurück zur Übersicht')."</p>");
-
-

@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -22,9 +22,9 @@ require_once('domains.php');
 
 require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
 
-$dom = NULL;
+$dom = null;
 if (isset($_REQUEST['id'])) {
-    $dom = new Domain( (int) $_REQUEST['id']);
+    $dom = new Domain((int) $_REQUEST['id']);
     $_SESSION['domains_detail_domainname'] = $dom->fqdn;
 } elseif (isset($_SESSION['domains_detail_domainname'])) {
     $dom = new Domain($_SESSION['domains_detail_domainname']);
@@ -119,9 +119,9 @@ if ($is_current_user) {
     }
 }
 
-// Block Domain-Inhaber 
+// Block Domain-Inhaber
 
-if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions' && ($dom->cancel_date === NULL || $dom->cancel_date > date('Y-m-d'))) {
+if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions' && ($dom->cancel_date === null || $dom->cancel_date > date('Y-m-d'))) {
     use_module('contacts');
     require_once('contacts.php');
     require_once('domainapi.php');
@@ -138,11 +138,10 @@ if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == '
     if (!update_possible($dom->id)) {
         warning("Diese Domain verwendet eine unübliche Endung. Daher kann der Inhaber nicht auf diesem Weg verändert werden. Bitte kontaktieren Sie den Support.");
     } else {
-
-        if ($_SESSION['domains_detail_admin_c'] == $dom->admin_c && 
-                $_SESSION['domains_detail_owner'] != $dom->owner && 
+        if ($_SESSION['domains_detail_admin_c'] == $dom->admin_c &&
+                $_SESSION['domains_detail_owner'] != $dom->owner &&
                 (!isset($_SESSION['domains_detail_detach']) || $_SESSION['domains_detail_detach'] == 0)) {
-            // Wenn der Owner geändert wurde, der Admin aber nicht und das detach-Flag 
+            // Wenn der Owner geändert wurde, der Admin aber nicht und das detach-Flag
             // nicht gesetzt ist, dann wird der Admin gleich dem Owner gesetzt
             $_SESSION['domains_detail_admin_c'] = $_SESSION['domains_detail_owner'];
         }
@@ -187,7 +186,7 @@ if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == '
                 <p>Sie sind ferner darüber informiert, dass die Adresse des Domaininhabers öffentlich abrufbar ist.</p>';
             $form .= '<p><input type="submit" name="sumbit" value="Änderungen speichern und Domaininhaber ändern"></p>';
             output(html_form('domains_update', 'update', "action=ownerchange&id=".$dom->id, $form));
-        } 
+        }
     }
 }
 
@@ -280,12 +279,10 @@ if ($dom->mailserver_lock == 1 && $dom->status != 'prereg') {
     output('<p>Richten Sie bitte auf dem zuständigen DNS-Server einen DNS-Record vom Typ TXT unter dem Hostname <strong>_schokokeks.'.$dom->fqdn.'</strong> ein und hinterlegen Sie dort diese Zeichenkette als Inhalt:</p>
             <p><code>_schokokeks.'.$dom->fqdn.'.    IN TXT "'.$dom->secret.'"</code></p>
             <p>Beachten Sie, dass Aktualisierungen am DNS-Server i.d.R. mit einigen Minuten verzögerung abgerufen werden können.</p>');
-#output('<p>Sie können diese entweder als DNS-Record vom Typ TXT unter dem Hostname <strong>_schokokeks.'.$dom->fqdn.'</strong> einrichten oder auf dem zuständigen Webserver eine Datei hinterlegen mit dem Code als Inhalt und der Abruf-URL <strong>http://'.$dom->fqdn.'/'.$dom->secret.'.txt</strong></p>');
+    #output('<p>Sie können diese entweder als DNS-Record vom Typ TXT unter dem Hostname <strong>_schokokeks.'.$dom->fqdn.'</strong> einrichten oder auf dem zuständigen Webserver eine Datei hinterlegen mit dem Code als Inhalt und der Abruf-URL <strong>http://'.$dom->fqdn.'/'.$dom->secret.'.txt</strong></p>');
     output('<p>'.internal_link('', other_icon('refresh.png').' Diese Seite neu laden um den DNS-Record zu prüfen', "id={$dom->id}&ts=".time()).'</p>');
     output('<p>Nach erfolgreicher Überprüfung kann der DNS-Eintrag wieder entfernt werden.</p>');
-
 }
 
 
 output('<p>'.internal_link('domains', 'Ohne Änderungen zurück').'</p>');
-

@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -24,7 +24,7 @@ title("Einstellungen zum E-Mail-Abruf");
 $servername = filter_input_hostname($_REQUEST['server']);
 $type = 'vmail';
 if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'manual') {
-  $type = 'manual';
+    $type = 'manual';
 }
 
 output("<p>Sie können bei ".config('company_name')." Ihre E-Mails wahlweise direkt im Browser mit einem Web-Mail-System lesen oder mit einem E-Mail-Programm auf Ihrem Rechner per POP3 oder IMAP abrufen. Im folgenden möchten wir Ihnen erklären, wie Sie diese Möglichkeiten nutzen können.</p>");
@@ -34,9 +34,9 @@ output('<h3>Lesen per Web-Mail</h3>
 <p>Die Anmeldung zu unseren Web-Mail-Systemen erfolgt unter</p>
 <p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="'.config('webmail_url').'">'.$webmail_host.'</a></p>');
 if ($type == 'manual') {
-  output('<p>Dort geben Sie bitte im Feld für die E-Mail-Adresse Ihren Account-Namen ein.</p>');
+    output('<p>Dort geben Sie bitte im Feld für die E-Mail-Adresse Ihren Account-Namen ein.</p>');
 } else {
-  output('<p>Dort geben Sie bitte Ihre E-Mail-Adresse und das dazu gehörige Passwort ein um sich anzumelden.</p>');
+    output('<p>Dort geben Sie bitte Ihre E-Mail-Adresse und das dazu gehörige Passwort ein um sich anzumelden.</p>');
 }
 
 output('<h3>Abruf mit einem E-Mail-Programm</h3>
@@ -82,10 +82,3 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <br />
 
 ');
-
-
-
-
-
-
-

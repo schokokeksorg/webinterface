@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -31,84 +31,72 @@ require_once('modules/email/include/hasaccount.php');
 require_once('modules/email/include/vmail.php');
 
 if (! (user_has_accounts() || count(get_vmail_accounts())>0)) {
-  
-  output('<p><em>Bisher haben Sie kein Postfach. Bitte erstellen sie zunächst ein Postfach.</em></p>');
-}
-else
-{
+    output('<p><em>Bisher haben Sie kein Postfach. Bitte erstellen sie zunächst ein Postfach.</em></p>');
+} else {
 
 /* VMAIL */
 
-$domains = get_vmail_domains();
-$vmail_accounts = get_vmail_accounts();
+    $domains = get_vmail_domains();
+    $vmail_accounts = get_vmail_accounts();
 
-$sorted_by_domains = array();
-foreach ($vmail_accounts AS $account)
-{
-  if ($account['password'] == '') {
-    continue;
-  }
-  if (array_key_exists($account['domain'], $sorted_by_domains))
-    array_push($sorted_by_domains[$account['domain']], $account);
-  else
-    $sorted_by_domains[$account['domain']] = array($account);
-}
-
-DEBUG($sorted_by_domains);
-
-if (count($sorted_by_domains) > 0)
-{
-  foreach ($sorted_by_domains as $accounts_on_domain)
-  {
-      if (count($sorted_by_domains) > 2) {
-	      output('<h4>'.$accounts_on_domain[0]['domainname'].'</h4>');
-      }
-
-	    foreach ($accounts_on_domain AS $this_account)
-	    {
-        $username = $this_account['local'].'@'.$this_account['domainname'];  
-        output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$username.'</strong></p>');
-        $id = account_has_totp($username);
-        if ($id) {
-          output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
-        } else {
-          output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
+    $sorted_by_domains = array();
+    foreach ($vmail_accounts as $account) {
+        if ($account['password'] == '') {
+            continue;
         }
-        output('</div>');
-	    }
-  }
-}
-
-/* Mailaccounts */
-
-require_once('modules/email/include/mailaccounts.php');
-
-$accounts = mailaccounts($_SESSION['userinfo']['uid']);
-
-if (count($accounts) > 0) {
-
-if (count($sorted_by_domains) > 0) {
-  output('<h3>IMAP/POP3-Accounts</h3>');
-}
-
-
-foreach ($accounts AS $acc) {
-  if ($acc['mailbox']) {
-    output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$acc['account'].'</strong></p>');
-    $username = $acc['account'];
-    $id = account_has_totp($username);
-    if ($id) {
-      output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
-    } else {
-      output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
+        if (array_key_exists($account['domain'], $sorted_by_domains)) {
+            array_push($sorted_by_domains[$account['domain']], $account);
+        } else {
+            $sorted_by_domains[$account['domain']] = array($account);
+        }
     }
-    output('</div>');
-  }
+
+    DEBUG($sorted_by_domains);
+
+    if (count($sorted_by_domains) > 0) {
+        foreach ($sorted_by_domains as $accounts_on_domain) {
+            if (count($sorted_by_domains) > 2) {
+                output('<h4>'.$accounts_on_domain[0]['domainname'].'</h4>');
+            }
+
+            foreach ($accounts_on_domain as $this_account) {
+                $username = $this_account['local'].'@'.$this_account['domainname'];
+                output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$username.'</strong></p>');
+                $id = account_has_totp($username);
+                if ($id) {
+                    output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+                } else {
+                    output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
+                }
+                output('</div>');
+            }
+        }
+    }
+
+    /* Mailaccounts */
+
+    require_once('modules/email/include/mailaccounts.php');
+
+    $accounts = mailaccounts($_SESSION['userinfo']['uid']);
+
+    if (count($accounts) > 0) {
+        if (count($sorted_by_domains) > 0) {
+            output('<h3>IMAP/POP3-Accounts</h3>');
+        }
+
+
+        foreach ($accounts as $acc) {
+            if ($acc['mailbox']) {
+                output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$acc['account'].'</strong></p>');
+                $username = $acc['account'];
+                $id = account_has_totp($username);
+                if ($id) {
+                    output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+                } else {
+                    output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
+                }
+                output('</div>');
+            }
+        }
+    }
 }
-
-
-}
-
-}
-
-?>

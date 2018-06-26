@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -18,45 +18,44 @@ require_once('mail.php');
 
 function customer_with_email($email)
 {
-  $email = db_escape_string($email);
-  $result = db_query("SELECT id FROM kundendaten.kunden WHERE email='{$email}' OR email_rechnung='{$email}' OR email_extern='{$email}' LIMIT 1;");
-  if ($result->rowCount() == 0)
-    return NULL;
-  else
-    return $result->fetch(PDO::FETCH_OBJ)->id;
+    $email = db_escape_string($email);
+    $result = db_query("SELECT id FROM kundendaten.kunden WHERE email='{$email}' OR email_rechnung='{$email}' OR email_extern='{$email}' LIMIT 1;");
+    if ($result->rowCount() == 0) {
+        return null;
+    } else {
+        return $result->fetch(PDO::FETCH_OBJ)->id;
+    }
 }
 
 
 
 function create_customer($data)
 {
+    if (customer_with_email($data['email']) !== null) {
+        logger(LOG_WARNING, 'modules/register/include/register', 'register', "Attempt to create customer with duplicate email »{$data['email']}«");
+        return null;
+    }
 
-  if (customer_with_email($data['email']) !== NULL)
-  {
-    logger(LOG_WARNING, 'modules/register/include/register', 'register', "Attempt to create customer with duplicate email »{$data['email']}«");
-    return NULL;
-  }
-
-  logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: ".print_r($data, true));
+    logger(LOG_INFO, 'modules/register/include/register', 'register', "Creating new account: ".print_r($data, true));
   
-  db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES (:firma, :nachname, :vorname, :anrede, :email, CURDATE(), 3)", $data);
-  $customerno = db_insert_id();
-  return $customerno;
-
+    db_query("INSERT INTO kundendaten.kunden (firma, nachname, vorname, anrede, email, erstellungsdatum,status) VALUES (:firma, :nachname, :vorname, :anrede, :email, CURDATE(), 3)", $data);
+    $customerno = db_insert_id();
+    return $customerno;
 }
 
 
 function send_initial_customer_token($customerno)
 {
-  $customerno = (int) $customerno;
-  $token = get_customer_token($customerno);
-  $customer = get_customer_info($customerno);
-  $anrede = "Sehr geehrte Damen und Herren";
-  if ($customer['title'] == 'Herr')
-    $anrede = "Sehr geehrter Herr {$customer['name']}";
-  elseif ($customer['title'] == 'Frau')
-    $anrede = "Sehr geehrte Frau {$customer['name']}";
-  $msg = "{$anrede},
+    $customerno = (int) $customerno;
+    $token = get_customer_token($customerno);
+    $customer = get_customer_info($customerno);
+    $anrede = "Sehr geehrte Damen und Herren";
+    if ($customer['title'] == 'Herr') {
+        $anrede = "Sehr geehrter Herr {$customer['name']}";
+    } elseif ($customer['title'] == 'Frau') {
+        $anrede = "Sehr geehrte Frau {$customer['name']}";
+    }
+    $msg = "{$anrede},
 
 wir freuen uns, Sie bei schokokeks.org begrüßen zu dürfen.
 
@@ -83,15 +82,15 @@ Gültigkeit und der Zugang wird wieder gelöscht.
 Sofern Sie keinen Account bei schokokeks.org angemeldet haben, 
 können Sie diese Nachricht ignorieren.
 ";
-  send_mail($customer['email'], "Willkommen bei schokokeks.org Webhosting", $msg);
+    send_mail($customer['email'], "Willkommen bei schokokeks.org Webhosting", $msg);
 }
 
 
 function notify_admins_about_new_customer($customerno)
 {
-  $customerno = (int) $customerno;
-  $customer = get_customer_info($customerno);
-  $msg = "Folgender Kunde hat sich gerade über's Webinterface neu angemeldet:
+    $customerno = (int) $customerno;
+    $customer = get_customer_info($customerno);
+    $msg = "Folgender Kunde hat sich gerade über's Webinterface neu angemeldet:
 
 Kundennummer: {$customerno}
 Name: {$customer['name']}
@@ -99,21 +98,20 @@ E-mail: {$customer['email']}
 
 Registriert von IP-Adresse {$_SERVER['REMOTE_ADDR']}.
 ";
-  send_mail("root@schokokeks.org", "[Webinterface] Neuer Kunde", $msg);
-  
-  
+    send_mail("root@schokokeks.org", "[Webinterface] Neuer Kunde", $msg);
 }
 
 function welcome_customer($customerno)
 {
-  $customerno = (int) $customerno;
-  $customer = get_customer_info($customerno);
-  $anrede = "Sehr geehrte Damen und Herren";
-  if ($customer['title'] == 'Herr')
-    $anrede = "Sehr geehrter Herr {$customer['name']}";
-  elseif ($customer['title'] == 'Frau')
-    $anrede = "Sehr geehrte Frau {$customer['name']}";
-  $msg = "{$anrede}.
+    $customerno = (int) $customerno;
+    $customer = get_customer_info($customerno);
+    $anrede = "Sehr geehrte Damen und Herren";
+    if ($customer['title'] == 'Herr') {
+        $anrede = "Sehr geehrter Herr {$customer['name']}";
+    } elseif ($customer['title'] == 'Frau') {
+        $anrede = "Sehr geehrte Frau {$customer['name']}";
+    }
+    $msg = "{$anrede}.
 
 Herzlich willkommen bei schokokeks.org!
 
@@ -130,15 +128,9 @@ Auch die anderen Bereiche des Wikis stecken voller Tipps und
 Informationen. Schauen Sie sich um, es lohnt sich!
 
 ";
- /*
-  * FIXME: Diese Mail muss noch überarbeitet werden!
-  */
+    /*
+     * FIXME: Diese Mail muss noch überarbeitet werden!
+     */
 
-  send_mail($customer['email'], "Willkommen bei schokokeks.org", $msg);
+    send_mail($customer['email'], "Willkommen bei schokokeks.org", $msg);
 }
-
-
-
-
-
-?>

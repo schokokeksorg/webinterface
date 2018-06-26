@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -49,7 +49,7 @@ if (isset($_REQUEST['useas'])) {
     }
     if ($_REQUEST['useas'] == 'extern') {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-            set_kundenkontakt('extern', NULL);
+            set_kundenkontakt('extern', null);
             redirect('useas?id='.$id);
         } else {
             set_kundenkontakt('extern', $id);
@@ -58,7 +58,7 @@ if (isset($_REQUEST['useas'])) {
     }
     if ($_REQUEST['useas'] == 'rechnung') {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-            set_kundenkontakt('rechnung', NULL);
+            set_kundenkontakt('rechnung', null);
             redirect('useas?id='.$id);
         } else {
             set_kundenkontakt('rechnung', $id);
@@ -67,7 +67,7 @@ if (isset($_REQUEST['useas'])) {
     }
     if ($_REQUEST['useas'] == 'dataprotection') {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-            set_kundenkontakt('dataprotection', NULL);
+            set_kundenkontakt('dataprotection', null);
             redirect('useas?id='.$id);
         } else {
             set_kundenkontakt('dataprotection', $id);
@@ -122,11 +122,7 @@ if (isset($_REQUEST['useas'])) {
 
             output('<p>Ist <strong>'.$funktion.'</strong> bei der Domain <strong>'.$d->fqdn.'</strong>. '.internal_link('../domains/detail', icon_edit()." Inhaber dieser Domain ändern", 'id='.$d->id).'</p>');
         }
-
-
     } else {
         output("<p>Zur Verwendung als Domaininhaber müssen Name, vollständige Adresse, E-Mail-Adresse sowie Telefonnummer angegeben sein.</p>");
     }
-
-
 }

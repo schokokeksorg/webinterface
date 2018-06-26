@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -23,23 +23,23 @@ title('Daten Ihres Lastschrift-Mandats');
 
 $ref = $_REQUEST['ref'];
 $mandate = get_sepamandate();
-$m = NULL;
+$m = null;
 
 foreach ($mandate as $man) {
-  if ($man['mandatsreferenz'] == $ref) {
-    $m = $man;
-  }
+    if ($man['mandatsreferenz'] == $ref) {
+        $m = $man;
+    }
 }
 if (! $m) {
-  system_failure('Konnte das Mandat nicht finden.');
+    system_failure('Konnte das Mandat nicht finden.');
 }
 
 if ($m['medium'] == 'legacy') {
-  output('<p>Sie hatten uns vor längerer Zeit eine Einzugsermächtigung ausgesprochen. Wir haben diese selbstständig in das nachstehende SEPA-Mandat überführt.</p>');
+    output('<p>Sie hatten uns vor längerer Zeit eine Einzugsermächtigung ausgesprochen. Wir haben diese selbstständig in das nachstehende SEPA-Mandat überführt.</p>');
 } else {
-  $medium = 'über unser Webinterface';
-  switch ($m['medium']) {
-    case 'email': 
+    $medium = 'über unser Webinterface';
+    switch ($m['medium']) {
+    case 'email':
       $medium = 'per E-Mail';
       break;
     case 'fax':
@@ -49,7 +49,7 @@ if ($m['medium'] == 'legacy') {
       $medium = 'per Post';
       break;
   }
-  output('<p>Wir haben das nachstehende Mandat am '.$m['erteilt'].' '.$medium.' entgegen genommen.</p>');
+    output('<p>Wir haben das nachstehende Mandat am '.$m['erteilt'].' '.$medium.' entgegen genommen.</p>');
 }
 output('<h3>Stammdaten</h3>
 <dl>
@@ -61,37 +61,37 @@ output('<h3>Gültigkeit</h3>');
 
 $gueltigkeit = 'ab '.$m['gueltig_ab'];
 if ($m['gueltig_ab'] < date('Y-m-d')) {
-  $gueltigkeit = 'seit '.$m['gueltig_ab'];
+    $gueltigkeit = 'seit '.$m['gueltig_ab'];
 }
 if ($m['gueltig_bis']) {
-  $gueltigkeit = 'von '.$m['gueltig_ab'].' bis '.$m['gueltig_bis'];
+    $gueltigkeit = 'von '.$m['gueltig_ab'].' bis '.$m['gueltig_bis'];
 }
-if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == NULL || $m['gueltig_bis'] >= date('Y-m-d'))) {
-  output('<p>Das Mandat ist momentan gültig ('.$gueltigkeit.').</p>');
+if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == null || $m['gueltig_bis'] >= date('Y-m-d'))) {
+    output('<p>Das Mandat ist momentan gültig ('.$gueltigkeit.').</p>');
 } elseif ($m['gueltig_ab'] > date('Y-m-d')) {
-  output('<p>Das Mandat ist noch nicht gültig ('.$gueltigkeit.').</p>');
+    output('<p>Das Mandat ist noch nicht gültig ('.$gueltigkeit.').</p>');
 } else {
-  output('<p>Das Mandat ist erloschen ('.$gueltigkeit.').</p>');
+    output('<p>Das Mandat ist erloschen ('.$gueltigkeit.').</p>');
 }
 
 $lastschriften = get_lastschriften($m['mandatsreferenz']);
 
 if (! $lastschriften) {
-  output('<p>Es wurden bisher keine Abbuchungen mit Bezug auf dieses Mandat durchgeführt.</p>');
+    output('<p>Es wurden bisher keine Abbuchungen mit Bezug auf dieses Mandat durchgeführt.</p>');
 } else {
-  output('<p>Dieses Mandat wurde bisher für folgende Abbuchungen in Anspruch genommen:</p>
+    output('<p>Dieses Mandat wurde bisher für folgende Abbuchungen in Anspruch genommen:</p>
 <ul>');
-  foreach ($lastschriften as $l) {
-    $status = '';
-    if ($l['status'] == 'pending') {
-      $status = '<span style="color: red; font-weight: bold;">Vorgemerkt:</span> ';
+    foreach ($lastschriften as $l) {
+        $status = '';
+        if ($l['status'] == 'pending') {
+            $status = '<span style="color: red; font-weight: bold;">Vorgemerkt:</span> ';
+        }
+        if ($l['status'] == 'rejected') {
+            $status = '<span style="color: red; font-weight: bold;">Zurückgewiesen:</span> ';
+        }
+        output('<li>'.$status.'Rechnung #'.$l['rechnungsnummer'].' vom '.$l['rechnungsdatum'].' über <strong>'.str_replace('.', ',', sprintf('%.2f', $l['betrag'])).' €</strong>, Buchungsdatum '.$l['buchungsdatum'].'</li>');
     }
-    if ($l['status'] == 'rejected') {
-      $status = '<span style="color: red; font-weight: bold;">Zurückgewiesen:</span> ';
-    }
-    output('<li>'.$status.'Rechnung #'.$l['rechnungsnummer'].' vom '.$l['rechnungsdatum'].' über <strong>'.str_replace('.', ',', sprintf('%.2f', $l['betrag'])).' €</strong>, Buchungsdatum '.$l['buchungsdatum'].'</li>');
-  }
-  output('</ul>');
+    output('</ul>');
 }
 
 
@@ -106,5 +106,3 @@ output('<h3>Kontodaten</h3>
 
 
 output('<p>'.internal_link('current', 'Zurück').'</p>');
-
-?>

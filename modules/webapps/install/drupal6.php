@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -26,38 +26,33 @@ $section = 'webapps_install';
 $docroot = $_SESSION['webapp_docroot'];
 $url = $_SESSION['webapp_url'];
 
-if (! $docroot)
-{
-  system_failure('Kann die Session-Daten nicht auslesen. So geht das nicht.');
+if (! $docroot) {
+    system_failure('Kann die Session-Daten nicht auslesen. So geht das nicht.');
 }
 
 
-if (isset($_POST['submit']))
-{
-  require_once('install-drupal6.php');
-  require_once('webapp-installer.php');
+if (isset($_POST['submit'])) {
+    require_once('install-drupal6.php');
+    require_once('webapp-installer.php');
   
-  check_form_token('install_drupal6');
+    check_form_token('install_drupal6');
 
-  $data = validate_data($_POST);
-  if (! $data)
-    system_failure('wtf?!');
-  create_new_webapp('drupal6', $docroot, $url, $data); 
+    $data = validate_data($_POST);
+    if (! $data) {
+        system_failure('wtf?!');
+    }
+    create_new_webapp('drupal6', $docroot, $url, $data);
   
-  title("Drupal wird installiert");
-  output('<p>Ihr Drupal wird jetzt installiert. Sie erhalten eine E-Mail, sobald die Website betriebsbereit ist.</p>
+    title("Drupal wird installiert");
+    output('<p>Ihr Drupal wird jetzt installiert. Sie erhalten eine E-Mail, sobald die Website betriebsbereit ist.</p>
 ');
+} else {
+    require_once('modules/vhosts/include/vhosts.php');
+    $vhosts = list_vhosts();
   
-}
-else
-{
+    output('<p>Die Einrichtung von Drupal erfordert die Angabe ein paar weniger Daten.</p>');
 
-  require_once('modules/vhosts/include/vhosts.php');
-  $vhosts = list_vhosts();
-  
-  output('<p>Die Einrichtung von Drupal erfordert die Angabe ein paar weniger Daten.</p>');
-
-  $form = '
+    $form = '
 <h4>Basisdaten</h4>
 <div style="margin-left: 2em;">
   <h5>Ort der neuen Website</h5>
@@ -84,7 +79,5 @@ else
 <p><input type="submit" name="submit" value="Drupal installieren!" /></p>
 ';
 
-  output(html_form('install_drupal6', '', '', $form));
-
+    output(html_form('install_drupal6', '', '', $form));
 }
-

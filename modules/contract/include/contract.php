@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -17,19 +17,21 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_role(ROLE_CUSTOMER);
 
 
-function get_orderprocessing_contract() {
+function get_orderprocessing_contract()
+{
     $args = array(
         "cid" => (int) $_SESSION['customerinfo']['customerno']);
     $result = db_query("SELECT id, signed, type, startdate, enddate FROM kundendaten.contract WHERE customer=:cid AND type='orderprocessing' AND (enddate IS NULL OR enddate < CURDATE())", $args);
     if ($result->rowCount() == 0) {
-        return NULL;
+        return null;
     }
     $line = $result->fetch();
     return $line;
 }
 
 
-function contract_html() {
+function contract_html()
+{
     use_module('contacts');
     require_once('contacts.php');
     
@@ -58,21 +60,22 @@ function contract_html() {
 }
 
 
-function save_op_contract($pdfdata) {
+function save_op_contract($pdfdata)
+{
     $args = array("cid" => $_SESSION['customerinfo']['customerno'],
             "pdfdata" => $pdfdata);
-    db_query("INSERT INTO kundendaten.contract (customer, signed, type, startdate, pdfdata) VALUES (:cid, NOW(), 'orderprocessing', CURDATE(), :pdfdata)",
-        $args);
+    db_query(
+        "INSERT INTO kundendaten.contract (customer, signed, type, startdate, pdfdata) VALUES (:cid, NOW(), 'orderprocessing', CURDATE(), :pdfdata)",
+        $args
+    );
 }
 
 
-function get_contract_pdf($id) {
+function get_contract_pdf($id)
+{
     $args = array("id" => $id,
         "cid" => $_SESSION['customerinfo']['customerno']);
     $result = db_query("SELECT pdfdata FROM kundendaten.contract WHERE id=:id AND customer=:cid", $args);
     $line = $result->fetch();
     return $line['pdfdata'];
 }
-
-
-?>

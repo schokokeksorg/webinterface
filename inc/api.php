@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/debug.php');
 
-function api_request($method, $input_data) 
+function api_request($method, $input_data)
 {
     $url = config('http.net-apiurl').'domain/v1/json/'.$method;
     $input_data['authToken'] = config('http.net-apikey');
@@ -28,9 +28,9 @@ function api_request($method, $input_data)
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     $result = curl_exec($curl);
-    if ($result === FALSE) {
+    if ($result === false) {
         system_failure("API-Anfrage kaputt");
     }
     DEBUG('==============================');
@@ -39,4 +39,3 @@ function api_request($method, $input_data)
     DEBUG($output_data);
     return $output_data;
 }
-

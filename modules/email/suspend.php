@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -24,16 +24,16 @@ $section = 'email_vmail';
 require_role(array(ROLE_SYSTEMUSER));
 
 if (! isset($_REQUEST['account'])) {
-  system_failure("Fehler beim Aufruf dieser Seite");
+    system_failure("Fehler beim Aufruf dieser Seite");
 }
 $id = $_REQUEST['account'];
 $account = get_account_details($id);
 
-$suspended = False;
+$suspended = false;
 if ($account['smtpreply']) {
-  $suspended = True;
+    $suspended = true;
 } else {
-  $account['smtpreply'] = 'Diese E-Mail-Adresse wird nicht mehr verwendet. 
+    $account['smtpreply'] = 'Diese E-Mail-Adresse wird nicht mehr verwendet. 
 
 Bitte besuchen Sie unsere Website um eine aktuelle Kontaktmöglichkeit zu finden.';
 }
@@ -48,15 +48,12 @@ $form = "<h4>Text der Fehlermeldung</h4>".
 
 $form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;';
 if ($suspended) {
-  $form .= internal_link('vmail', 'Abbrechen').'</p>';
+    $form .= internal_link('vmail', 'Abbrechen').'</p>';
 } else {
-  $form .= internal_link('edit', 'Abbrechen', "id=".$id).'</p>';
+    $form .= internal_link('edit', 'Abbrechen', "id=".$id).'</p>';
 }
 output(html_form('vmail_edit_mailbox', 'save', 'action=suspend&id='.$id, $form));
 
 if ($suspended) {
-  output("<p><strong>".internal_link('save', 'Stilllegung aufheben', 'action=unsuspend&id='.$account['id'])."</strong></p>");
+    output("<p><strong>".internal_link('save', 'Stilllegung aufheben', 'action=unsuspend&id='.$account['id'])."</strong></p>");
 }
-
-
-?>

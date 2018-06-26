@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -22,7 +22,8 @@ require_once('contactapi.php');
 
 
 
-function api_download_domain($id) {
+function api_download_domain($id)
+{
     $result = db_query("SELECT id, CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c, registrierungsdatum, kuendigungsdatum FROM kundendaten.domains WHERE id=?", array($id));
     if ($result->rowCount() < 1) {
         system_failure('Domain nicht gefunden');
@@ -35,8 +36,8 @@ function api_download_domain($id) {
         system_failure("Abfrage nicht erfolgreich!");
     }
     $apidomain = $result['response'];
-    $apiowner = NULL;
-    $apiadmin_c = NULL;
+    $apiowner = null;
+    $apiadmin_c = null;
     foreach ($apidomain['contacts'] as $ac) {
         if ($ac['type'] == 'owner') {
             $apiowner = $ac['contact'];
@@ -107,7 +108,7 @@ function api_upload_domain($fqdn)
 }
 
 
-function api_register_domain($domainname, $authinfo=NULL) 
+function api_register_domain($domainname, $authinfo=null)
 {
     $result = db_query("SELECT id,status,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($domainname));
     if ($result->rowCount() < 1) {
@@ -148,7 +149,7 @@ function api_register_domain($domainname, $authinfo=NULL)
             $newdomain['contacts'][$key]['contact'] = $admin_c;
         }
     }
-    $result = NULL;
+    $result = null;
     if ($dom['status'] == 'prereg') {
         $args = array("domain" => $newdomain);
         logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "register new domain »{$newdomain['name']}«");
@@ -163,10 +164,10 @@ function api_register_domain($domainname, $authinfo=NULL)
         logger(LOG_ERR, "modules/domains/include/domainapi", "domains", "error registering domain $domainname: {$errstr}");
         system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
     }
-    return $result;    
+    return $result;
 }
 
-function api_domain_available($domainname) 
+function api_domain_available($domainname)
 {
     $args = array("domainNames" => array($domainname));
     $result = api_request('domainStatus', $args);
@@ -195,10 +196,10 @@ function api_cancel_domain($domainname)
         system_failure("Es trat ein interner Fehler auf. Bitte dem Support Bescheid geben!");
     }
     return $result;
- }
+}
 
 
-function api_unlock_domain($domainname) 
+function api_unlock_domain($domainname)
 {
     $data = array("domainName" => $domainname);
     $result = api_request('domainInfo', $data);
@@ -217,5 +218,3 @@ function api_unlock_domain($domainname)
     }
     return $result;
 }
-
-

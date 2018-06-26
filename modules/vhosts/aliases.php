@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -40,22 +40,22 @@ $form = "
     <tr><td><strong>{$vhost['fqdn']}</strong>{$mainalias}</td><td>Haupt-Adresse</td><td>&#160;</td></tr>
 ";
 
-foreach ($aliases AS $alias) {
-  $aliastype = 'Zusätzliche Adresse';
-  if (strstr($alias['options'], 'forward')) {
-    $aliastype = 'Umleitung auf Haupt-Adresse';
-  }
-  $formtoken = generate_form_token('aliases_toggle');
-  $havewww = '<br />www.'.$alias['fqdn'].' &#160; ('.internal_link('aliasoptions', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
-  $nowww = '<br />'.internal_link('aliasoptions', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
-  $wwwalias = (strstr($alias['options'], 'aliaswww') ? $havewww : $nowww);
+foreach ($aliases as $alias) {
+    $aliastype = 'Zusätzliche Adresse';
+    if (strstr($alias['options'], 'forward')) {
+        $aliastype = 'Umleitung auf Haupt-Adresse';
+    }
+    $formtoken = generate_form_token('aliases_toggle');
+    $havewww = '<br />www.'.$alias['fqdn'].' &#160; ('.internal_link('aliasoptions', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
+    $nowww = '<br />'.internal_link('aliasoptions', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
+    $wwwalias = (strstr($alias['options'], 'aliaswww') ? $havewww : $nowww);
 
-  $to_forward = internal_link('aliasoptions', 'In Umleitung umwandeln', "alias={$alias['id']}&forward=1&formtoken={$formtoken}");
-  $remove_forward = internal_link('aliasoptions', 'In zusätzliche Adresse umwandeln', "alias={$alias['id']}&forward=0&formtoken={$formtoken}");
-  $typetoggle = (strstr($alias['options'], 'forward') ? $remove_forward : $to_forward);
+    $to_forward = internal_link('aliasoptions', 'In Umleitung umwandeln', "alias={$alias['id']}&forward=1&formtoken={$formtoken}");
+    $remove_forward = internal_link('aliasoptions', 'In zusätzliche Adresse umwandeln', "alias={$alias['id']}&forward=0&formtoken={$formtoken}");
+    $typetoggle = (strstr($alias['options'], 'forward') ? $remove_forward : $to_forward);
 
     
-  $form .= "<tr>
+    $form .= "<tr>
     <td>{$alias['fqdn']}{$wwwalias}</td>
     <td>{$aliastype}<br />{$typetoggle}</td>
     <td>".internal_link('save', 'Aliasname löschen', "action=deletealias&alias={$alias['id']}")."</td></tr>
@@ -88,6 +88,3 @@ output(html_form('vhosts_add_alias', 'save', 'action=addalias&vhost='.$vhost['id
 output("<p>
   ".internal_link("vhosts", "Zurück zur Übersicht")."
 </p>");
-
-
-?>

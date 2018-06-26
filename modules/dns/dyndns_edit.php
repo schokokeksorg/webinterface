@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -26,20 +26,21 @@ $section = 'dns_dyndns';
 
 $new = true;
 $dyndns = array();
-if (isset($_REQUEST['id']))
-{
-  $dyndns = get_dyndns_account($_REQUEST['id']);
-  $new = false;
+if (isset($_REQUEST['id'])) {
+    $dyndns = get_dyndns_account($_REQUEST['id']);
+    $new = false;
 }
 
 
 $username_http = $_SESSION['userinfo']['username'];
-if (isset($dyndns['handle']))
-  $username_http .= "_{$dyndns['handle']}";
+if (isset($dyndns['handle'])) {
+    $username_http .= "_{$dyndns['handle']}";
+}
 
 $http_update_info = '';
-if (isset($dyndns['password']))
-  $http_update_info = ' Lassen Sie das Passworteingabefeld unberührt um das bestehende Passwort zu erhalten. Entfernen Sie das bestehende Passwort um das HTTP-Update zu deaktivieren.';
+if (isset($dyndns['password'])) {
+    $http_update_info = ' Lassen Sie das Passworteingabefeld unberührt um das bestehende Passwort zu erhalten. Entfernen Sie das bestehende Passwort um das HTTP-Update zu deaktivieren.';
+}
 
 
 $html_header .= '<script type="text/javascript">
@@ -63,11 +64,12 @@ document.getElementById("username_http").firstChild.data = http_username;
 title('DynDNS-Account');
 
 
-if (! $new ) 
-  $output .= '<div style="padding: 0.5em; border: 1px solid black;"><strong>aktuelle Daten:</strong><br />
+if (! $new) {
+    $output .= '<div style="padding: 0.5em; border: 1px solid black;"><strong>aktuelle Daten:</strong><br />
   letztes Update: '.$dyndns['lastchange'].'<br />
   aktuelle Adresse: '.$dyndns['address'].'
   </div>';
+}
 
 $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" name="handle" id="handle" value="'.(isset($dyndns['handle']) ? $dyndns['handle'] : '').'" onkeyup="updateUsernameHTTP()" /></p>
 
@@ -87,19 +89,17 @@ $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" nam
 $output .= html_form('dyndns_edit', 'save', 'type=dyndns&action=edit&'.(isset($_REQUEST['id']) ? 'id='.$_REQUEST['id'] : ''), $form);
 
   
-if (! $new )
-{
-  $records = get_dyndns_records($_REQUEST['id']);
+if (! $new) {
+    $records = get_dyndns_records($_REQUEST['id']);
 
-  $output .= '<h4>Folgende DNS-records sind mit diesem DynDNS-Account verknüpft:</h4>
+    $output .= '<h4>Folgende DNS-records sind mit diesem DynDNS-Account verknüpft:</h4>
   
   <ul>';
   
-  foreach ($records AS $record) {
-    $output .= '<li>'.$record['fqdn'].' (Typ: '.strtoupper($record['type']).' / TTL: '.$record['ttl'].' Sek.)</li>';
-  }
+    foreach ($records as $record) {
+        $output .= '<li>'.$record['fqdn'].' (Typ: '.strtoupper($record['type']).' / TTL: '.$record['ttl'].' Sek.)</li>';
+    }
   
-  $output .= '</ul>';
-  output("<p>".internal_link('dyndns_hostnames', "Liste ändern...", "id={$_REQUEST['id']}")."</p>");
+    $output .= '</ul>';
+    output("<p>".internal_link('dyndns_hostnames', "Liste ändern...", "id={$_REQUEST['id']}")."</p>");
 }
-

@@ -26,21 +26,20 @@ output("<h3>$t</h3>");
 output("<table>");
 
 foreach ($data as $line) {
-        $net = $line['amount'];
-        if ($line['gross'] == 1 && $line['tax_rate'] > 0) {
-            $net = $net / (1.0+($line['tax_rate']/100));
-        }
-        if ($line['direction'] == 'out') {
-            $net = -$net;
-        }
-        $ust = $net * ($line['tax_rate']/100);
-        $gross = $net + $ust;
-        $net = str_replace('.', ',', sprintf('%.2f €', $net));
-        $ust = str_replace('.', ',', sprintf('%.2f €', $ust));
-        $gross = str_replace('.', ',', sprintf('%.2f €', $gross));
-        $typetext = $types[$line['type']];
-        output("<tr><td>".$line['date']."</td><td>".$typetext."</td><td>".$line['description']."</td><td style=\"text-align: right;\">".$net."</td><td style=\"text-align: right;\">".$ust."</td><td style=\"text-align: right;\">".$gross."</td></tr>\n");
+    $net = $line['amount'];
+    if ($line['gross'] == 1 && $line['tax_rate'] > 0) {
+        $net = $net / (1.0+($line['tax_rate']/100));
+    }
+    if ($line['direction'] == 'out') {
+        $net = -$net;
+    }
+    $ust = $net * ($line['tax_rate']/100);
+    $gross = $net + $ust;
+    $net = str_replace('.', ',', sprintf('%.2f €', $net));
+    $ust = str_replace('.', ',', sprintf('%.2f €', $ust));
+    $gross = str_replace('.', ',', sprintf('%.2f €', $gross));
+    $typetext = $types[$line['type']];
+    output("<tr><td>".$line['date']."</td><td>".$typetext."</td><td>".$line['description']."</td><td style=\"text-align: right;\">".$net."</td><td style=\"text-align: right;\">".$ust."</td><td style=\"text-align: right;\">".$gross."</td></tr>\n");
 }
 
 output('</table>');
-

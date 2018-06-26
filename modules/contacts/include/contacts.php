@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -26,28 +26,29 @@ require_once('contactapi.php');
 Todo:
     - Ausgabe-Funktion abstrahieren
     - Telefonnummern bei Ausgabe durch filter_input_general schieben
-    - Domaininhaber festlegen    
+    - Domaininhaber festlegen
 */
 
 
-function new_contact() {
-    return array("id" => NULL,
-        "state" => NULL,
+function new_contact()
+{
+    return array("id" => null,
+        "state" => null,
         "lastchange" => time(),
-        "nic_handle" => NULL,
-        "nic_id" => NULL,
-        "company" => NULL,
-        "name" => NULL,
-        "address" => NULL,
-        "zip" => NULL,
-        "city" => NULL,
+        "nic_handle" => null,
+        "nic_id" => null,
+        "company" => null,
+        "name" => null,
+        "address" => null,
+        "zip" => null,
+        "city" => null,
         "country" => "DE",
-        "phone" => NULL,
-        "mobile" => NULL,
-        "fax" => NULL,
-        "email" => NULL,
-        "pgp_id" => NULL,
-        "pgp_key" => NULL,
+        "phone" => null,
+        "mobile" => null,
+        "fax" => null,
+        "email" => null,
+        "pgp_id" => null,
+        "pgp_key" => null,
         "customer" => $_SESSION['customerinfo']['customerno']);
 }
 
@@ -65,7 +66,8 @@ function get_contact($id)
     return $contact;
 }
 
-function get_contacts() {
+function get_contacts()
+{
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY COALESCE(company, name)", array($cid));
     $ret = array();
@@ -77,7 +79,8 @@ function get_contacts() {
 }
 
 
-function is_domainholder($contactid) {
+function is_domainholder($contactid)
+{
     $contactid = (int) $contactid;
     $result = db_query("SELECT id FROM kundendaten.domains WHERE owner=? OR admin_c=?", array($contactid, $contactid));
     if ($result->rowCount() > 0) {
@@ -86,7 +89,8 @@ function is_domainholder($contactid) {
     return false;
 }
 
-function possible_domainholders() {
+function possible_domainholders()
+{
     $allcontacts = get_contacts();
     $ret = array();
     foreach ($allcontacts as $id => $c) {
@@ -105,7 +109,7 @@ function possible_domainholder($c)
     return false;
 }
 
-function have_mailaddress($email) 
+function have_mailaddress($email)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $result = db_query("SELECT id FROM kundendaten.contacts WHERE customer=? AND email=?", array($cid, $email));
@@ -116,16 +120,18 @@ function have_mailaddress($email)
 }
 
 
-function possible_kundenkontakt($c) {
+function possible_kundenkontakt($c)
+{
     if ($c['name'] && $c['email']) {
         return true;
     }
 }
 
 
-function set_kundenkontakt($typ, $id) {
+function set_kundenkontakt($typ, $id)
+{
     if (! $id) {
-        $id = NULL;
+        $id = null;
     } else {
         $id = (int) $id;
     }
@@ -133,7 +139,7 @@ function set_kundenkontakt($typ, $id) {
         "kunde" => (int) $_SESSION['customerinfo']['customerno'],
         "contact" => $id
         );
-    $field = NULL;
+    $field = null;
     if ($typ == 'kunde') {
         $field = 'contact_kunde';
     } elseif ($typ == 'extern') {
@@ -155,8 +161,8 @@ function sync_legacy_contactdata()
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $kundenkontakte = get_kundenkontakte();
     $kunde = get_contact($kundenkontakte['kunde']);
-    $vorname = NULL;
-    $nachname = NULL;
+    $vorname = null;
+    $nachname = null;
     if ($kunde['name']) {
         $vorname = explode(' ', $kunde['name'], 2)[0];
         $nachname = explode(' ', $kunde['name'], 2)[1];
@@ -183,7 +189,6 @@ function sync_legacy_contactdata()
         if ($extern) {
             db_query("UPDATE kundendaten.kunden SET email_extern=? WHERE id=?", array($extern, $cid));
         }
-        
     }
     if ($kundenkontakte['rechnung']) {
         $kunde = get_contact($kundenkontakte['rechnung']);
@@ -200,7 +205,8 @@ function sync_legacy_contactdata()
 }
 
 
-function get_kundenkontakte() {
+function get_kundenkontakte()
+{
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung, contact_dataprotection FROM kundendaten.kunden WHERE id=?", array($cid));
     $res = $result->fetch();
@@ -211,13 +217,13 @@ function get_kundenkontakte() {
     return $ret;
 }
 
-function save_emailaddress($id, $email) 
+function save_emailaddress($id, $email)
 {
     // Speichert eine E-Mail-Adresse direkt, z.B. wenn diese schonmal geprüft wurde
     $args = array("cid" => (int) $_SESSION['customerinfo']['customerno'],
         "id" => (int) $id,
         "email" => $email);
-    db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:id AND customer=:cid", $args);    
+    db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:id AND customer=:cid", $args);
 }
 
 function save_contact($c)
@@ -258,7 +264,7 @@ function send_emailchange_token($id, $email)
         "email" => $email,
         "token" => random_string(20));
 
-    db_query("INSERT INTO kundendaten.mailaddress_token (token, expire, contact, email) VALUES (:token, NOW() + INTERVAL 1 DAY, :id, :email)" , $args);
+    db_query("INSERT INTO kundendaten.mailaddress_token (token, expire, contact, email) VALUES (:token, NOW() + INTERVAL 1 DAY, :id, :email)", $args);
     DEBUG('Token erzeugt: '.print_r($args, true));
     $message = 'Diese E-Mail-Adresse wurde angegeben als möglicher Domaininhaber oder Kundenkontakt bei schokokeks.org Hosting.
 
@@ -277,14 +283,14 @@ https://schokokeks.org
 ';
     # send welcome message
     mail($email, '=?UTF-8?Q?Best=C3=A4tigung_Ihrer_E-Mail-Adresse?=', $message, "X-schokokeks-org-message: verify\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
- 
 }
 
-function update_pending($contactid) {
+function update_pending($contactid)
+{
     $contactid = (int) $contactid;
     $result = db_query("SELECT email FROM kundendaten.mailaddress_token WHERE contact=?", array($contactid));
     if ($result->rowCount() == 0) {
-        return NULL;
+        return null;
     }
     $res = $result->fetch();
     return $res['email'];
@@ -292,17 +298,18 @@ function update_pending($contactid) {
 
 
 
-function delete_contact($id) {
+function delete_contact($id)
+{
     $c = get_contact($id);
     $kundenkontakte = get_kundenkontakte();
     if ($id == $kundenkontakte['kunde']) {
         system_failure("Die Stamm-Adresse kann nicht gelöscht werden, bitte erst eine andere Adresse als Stamm-Adresse festlegen!");
     }
     if ($id == $kundenkontakte['rechnung']) {
-        set_kundenkontakt('rechnung', NULL);
+        set_kundenkontakt('rechnung', null);
     }
     if ($id == $kundenkontakte['extern']) {
-        set_kundenkontakt('extern', NULL);
+        set_kundenkontakt('extern', null);
     }
     if ($c['nic_id']) {
         // Lösche bei der Registry
@@ -313,16 +320,17 @@ function delete_contact($id) {
 }
 
 
-function search_pgp_key($search) {
+function search_pgp_key($search)
+{
     if (! check_emailaddr($search)) {
         # Keine Ausgabe weil diese Funktion im AJAX-Call verwendet wird
-        return NULL;
+        return null;
     }
     $output = array();
     exec('LC_ALL=C /usr/bin/gpg --batch --with-colons --keyserver hkp://pool.sks-keyservers.net --search-key '.escapeshellarg($search), $output);
     DEBUG($output);
     $keys = array();
-    foreach($output AS $row) {
+    foreach ($output as $row) {
         if (substr($row, 0, 4) === 'pub:') {
             $parts = explode(':', $row);
             if ($parts[5] && ($parts[5] < time())) {
@@ -335,7 +343,7 @@ function search_pgp_key($search) {
         }
     }
     if (count($keys) == 0) {
-        return NULL;
+        return null;
     }
     ksort($keys, SORT_NUMERIC);
     DEBUG(end($keys));
@@ -344,9 +352,10 @@ function search_pgp_key($search) {
 }
 
 
-function fetch_pgp_key($pgp_id) {
+function fetch_pgp_key($pgp_id)
+{
     $output = array();
-    $ret = NULL;
+    $ret = null;
     DEBUG('/usr/bin/gpg --batch --keyserver hkp://pool.sks-keyservers.net --recv-key '.escapeshellarg($pgp_id));
     exec('/usr/bin/gpg --batch --keyserver hkp://pool.sks-keyservers.net --recv-key '.escapeshellarg($pgp_id), $output, $ret);
     DEBUG($output);
@@ -354,7 +363,7 @@ function fetch_pgp_key($pgp_id) {
     if ($ret == 0) {
         exec('/usr/bin/gpg --batch --with-colons --list-keys '.escapeshellarg($pgp_id), $output);
         DEBUG($output);
-        foreach ($output AS $row) {
+        foreach ($output as $row) {
             if (substr($row, 0, 4) === 'fpr:') {
                 $parts = explode(':', $row);
                 // Fingerprint
@@ -362,16 +371,17 @@ function fetch_pgp_key($pgp_id) {
             }
         }
     }
-    return NULL;
+    return null;
 }
 
 
-function domainlist_by_contact($c) {
+function domainlist_by_contact($c)
+{
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $result = db_query("SELECT id FROM kundendaten.domains WHERE (owner=? OR admin_c=?) AND kunde=?", array($c['id'], $c['id'], $cid));
     $ret = array();
     while ($domain = $result->fetch()) {
-        $ret[] = new Domain( (int) $domain['id'] );
+        $ret[] = new Domain((int) $domain['id']);
     }
     return $ret;
 }
@@ -412,6 +422,3 @@ function display_contact($contact, $additional_html='', $cssclass='')
     $contact_string = "<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\">{$html}{$additional_html}</div>";
     return $contact_string;
 }
-
-
-

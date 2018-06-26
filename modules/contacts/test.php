@@ -22,9 +22,3 @@ if (isset($_SESSION['contacts_upload'])) {
     $_SESSION['contacts_choose_redirect'] = 'test';
     redirect('choose');
 }
-
-
-
-
-
-

@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -35,30 +35,25 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $contact_string = display_contact($contact);
 
     $sure = user_is_sure();
-    if ($sure === NULL)
-    {
-       are_you_sure("action=delete&id={$contact['id']}&back=".urlencode($back), "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
-    }
-    elseif ($sure === true)
-    {
-       delete_contact($contact['id']);
-       if (! $debugmode)
-           header("Location: ".$back);
-    }
-    elseif ($sure === false)
-    {
-        if (! $debugmode)
+    if ($sure === null) {
+        are_you_sure("action=delete&id={$contact['id']}&back=".urlencode($back), "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
+    } elseif ($sure === true) {
+        delete_contact($contact['id']);
+        if (! $debugmode) {
             header("Location: ".$back);
+        }
+    } elseif ($sure === false) {
+        if (! $debugmode) {
+            header("Location: ".$back);
+        }
     }
-
-
 } else {
     check_form_token('contacts_edit');
 
-    $new = False;
+    $new = false;
     if ($_REQUEST['id'] == 'new') {
         title("Adresse anlegen");
-        $new = True;
+        $new = true;
     } else {
         title("Adresse bearbeiten");
     }
@@ -78,7 +73,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $_REQUEST['land'] = $c['country'];
     }
 
-    if ($c['nic_handle'] != NULL) {
+    if ($c['nic_handle'] != null) {
         if ($c['name'] != $_REQUEST['name'] || $c['company'] != $_REQUEST['firma'] || $c['country'] != $_REQUEST['land']) {
             system_failure('Name/Firma/Land kann bei diesem Kontakt nicht geändert werden.');
         }
@@ -113,7 +108,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             system_failure('Die eingegebene Telefonnummer scheint nicht gültig zu sein!');
         }
     } else {
-        $c['phone'] = NULL;
+        $c['phone'] = null;
     }
     if (isset($_REQUEST['mobile']) && $_REQUEST['mobile'] != '') {
         $num = format_number(verify_input_general($_REQUEST['mobile']), $_REQUEST['land']);
@@ -123,7 +118,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             system_failure('Die eingegebene Mobiltelefonnummer scheint nicht gültig zu sein!');
         }
     } else {
-        $c['mobile'] = NULL;
+        $c['mobile'] = null;
     }
     if (isset($_REQUEST['telefax']) && $_REQUEST['telefax'] != '') {
         $num = format_number(verify_input_general($_REQUEST['telefax']), $_REQUEST['land']);
@@ -133,7 +128,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             system_failure('Die eingegebene Faxnummer scheint nicht gültig zu sein!');
         }
     } else {
-        $c['fax'] = NULL;
+        $c['fax'] = null;
     }
 
     
@@ -149,8 +144,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             warning('Ihre PGP-ID wurde nicht übernommen, da sie syntaktisch falsch erscheint');
         }
     } else {
-        $c['pgp_id'] = NULL;
-        $c['pgp_key'] = NULL;
+        $c['pgp_id'] = null;
+        $c['pgp_key'] = null;
     }
 
 
@@ -174,8 +169,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     }
 
     // Zuerst Kontakt speichern und wenn eine Änderung der E-Mail gewünscht war,
-    // dann hinterher das Token erzeugen und senden. Weil wir für das Token die 
-    // Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach 
+    // dann hinterher das Token erzeugen und senden. Weil wir für das Token die
+    // Contact-ID brauchen und die bekommen wir bei einer Neueintragung erst nach
     // dem Speichern.
 
     $id = save_contact($c);

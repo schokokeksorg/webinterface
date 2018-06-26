@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -16,82 +16,89 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/security.php');
 
-function do_ajax_cert_login() {
-  global $prefix;
-  require_once('inc/jquery.php');
-  javascript('certlogin.js', 'index');
+function do_ajax_cert_login()
+{
+    global $prefix;
+    require_once('inc/jquery.php');
+    javascript('certlogin.js', 'index');
 }
 
-function get_logins_by_cert($cert) 
+function get_logins_by_cert($cert)
 {
-	$result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
-	if ($result->rowCount() < 1) {
+    $result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
+    if ($result->rowCount() < 1) {
         DEBUG("No certlogin found for this cert!");
-		return NULL;
-	} else {
-		$ret = array();
-		while ($row = $result->fetch()) {
-			$ret[] = $row;
-		}
+        return null;
+    } else {
+        $ret = array();
+        while ($row = $result->fetch()) {
+            $ret[] = $row;
+        }
         DEBUG("Logins for this cert:");
         DEBUG($ret);
-		return $ret;
-	}
-}
-
-function get_cert_by_id($id) 
-{
-  $id = (int) $id;
-	if ($id == 0)
-	  system_failure('no ID');
-	$result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
-	if ($result->rowCount() < 1)
-		return NULL;
-	$ret = $result->fetch();
-  DEBUG($ret);
-  return $ret;
-}
-
-
-function get_certs_by_username($username) 
-{
-	if ($username == '')
-	  system_failure('empty username');
-	$result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
-	if ($result->rowCount() < 1)
-		return NULL;
-	while ($row = $result->fetch()) {
-	  $ret[] = $row;
-	}
-	return $ret;
-}
-
-
-function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $startpage=NULL)
-{
-  $type = NULL;
-  $username = NULL;
-  if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
-    $type = 'user';
-    $username = $_SESSION['userinfo']['username'];
-    if (isset($_SESSION['subuser'])) {
-      $username = $_SESSION['subuser'];
-      $type = 'subuser';
+        return $ret;
     }
-  } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
-    $type = 'email';
-    $username = $_SESSION['mailaccount'];
-  }
-  if (! $type || ! $username) {
-    system_failure('cannot get type or username of login');
-  }
-  if ($startpage &&  ! check_path($startpage))
-    system_failure('Startseite kaputt');
+}
 
-  if ($certdata == '')
-    system_failure('Kein Zertifikat');
+function get_cert_by_id($id)
+{
+    $id = (int) $id;
+    if ($id == 0) {
+        system_failure('no ID');
+    }
+    $result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
+    if ($result->rowCount() < 1) {
+        return null;
+    }
+    $ret = $result->fetch();
+    DEBUG($ret);
+    return $ret;
+}
 
-  $args = array(":dn" => $dn,
+
+function get_certs_by_username($username)
+{
+    if ($username == '') {
+        system_failure('empty username');
+    }
+    $result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
+    if ($result->rowCount() < 1) {
+        return null;
+    }
+    while ($row = $result->fetch()) {
+        $ret[] = $row;
+    }
+    return $ret;
+}
+
+
+function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $startpage=null)
+{
+    $type = null;
+    $username = null;
+    if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
+        $type = 'user';
+        $username = $_SESSION['userinfo']['username'];
+        if (isset($_SESSION['subuser'])) {
+            $username = $_SESSION['subuser'];
+            $type = 'subuser';
+        }
+    } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
+        $type = 'email';
+        $username = $_SESSION['mailaccount'];
+    }
+    if (! $type || ! $username) {
+        system_failure('cannot get type or username of login');
+    }
+    if ($startpage &&  ! check_path($startpage)) {
+        system_failure('Startseite kaputt');
+    }
+
+    if ($certdata == '') {
+        system_failure('Kein Zertifikat');
+    }
+
+    $args = array(":dn" => $dn,
                 ":issuer" => $issuer,
                 ":serial" => $serial,
                 ":vstart" => $vstart,
@@ -100,34 +107,34 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $start
                 ":type" => $type,
                 ":username" => $username,
                 ":startpage" => $startpage);
-  DEBUG($args);
+    DEBUG($args);
 
-  db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `valid_from`, `valid_until`, `cert`, `type`, `username`, `startpage`) 
+    db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `valid_from`, `valid_until`, `cert`, `type`, `username`, `startpage`) 
 VALUES (:dn, :issuer, :serial, :vstart, :vend, :certdata, :type, :username, :startpage)", $args);
-
 }
 
 
 function delete_clientcert($id)
 {
-  $id = (int) $id;
-  $type = NULL;
-  $username = NULL;
-  if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
-    $type = 'user';
-    $username = $_SESSION['userinfo']['username'];
-    if (isset($_SESSION['subuser'])) {
-      $username = $_SESSION['subuser'];
-      $type = 'subuser';
+    $id = (int) $id;
+    $type = null;
+    $username = null;
+    if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
+        $type = 'user';
+        $username = $_SESSION['userinfo']['username'];
+        if (isset($_SESSION['subuser'])) {
+            $username = $_SESSION['subuser'];
+            $type = 'subuser';
+        }
+    } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
+        $type = 'email';
+        $username = $_SESSION['mailaccount'];
     }
-  } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
-    $type = 'email';
-    $username = $_SESSION['mailaccount'];
-  }
-  if (! $type || ! $username) {
-    system_failure('cannot get type or username of login');
-  }
-  db_query("DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username", 
-           array(":id" => $id, ":type" => $type, ":username" => $username));
+    if (! $type || ! $username) {
+        system_failure('cannot get type or username of login');
+    }
+    db_query(
+      "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
+           array(":id" => $id, ":type" => $type, ":username" => $username)
+  );
 }
-

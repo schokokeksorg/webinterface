@@ -8,7 +8,7 @@ Written 2008-2018 by schokokeks.org Hosting, namely
 
 To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see 
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see
 http://creativecommons.org/publicdomain/zero/1.0/
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
@@ -25,10 +25,10 @@ require_once('session/start.php');
 require_role(array(ROLE_CUSTOMER));
 $section = 'contacts_list';
 
-$new = False;
+$new = false;
 if ($_REQUEST['id'] == 'new') {
     title("Adresse anlegen");
-    $new = True;
+    $new = true;
 } else {
     title("Adresse bearbeiten");
 }
@@ -38,13 +38,13 @@ if (! $new) {
     $c = get_contact($_REQUEST['id']);
 } elseif (isset($_REQUEST['copy'])) {
     $c = get_contact($_REQUEST['copy']);
-    $c['nic_handle'] = NULL;
+    $c['nic_handle'] = null;
 }
 $domains = domainlist_by_contact($c);
 
 $readonly = '';
 // Wenn das Handle beim NIC angemeldet ist, kann man Name und Land nicht mehr ändern
-if ($c['nic_handle'] != NULL) {
+if ($c['nic_handle'] != null) {
     $readonly = ' disabled="disabled" ';
     output('<p>Da diese Adresse als möglicher Domaininhaber bei der Domain-Regristry angemeldet ist, können Name/Firmenname und Land nicht mehr geändert werden. Legen Sie ggf. eine neue Adresse an und ändern Sie den Domain-Inhaber entsprechend.</p>');
 }
@@ -114,6 +114,3 @@ if ($domains) {
     }
     output('</ul>');
 }
-
-
-?>
