@@ -207,7 +207,7 @@ function in_homedir($path)
         DEBUG("Kann homedir nicht ermitteln");
         return false;
     }
-    return strncmp($_SESSION['userinfo']['homedir'], $path, count($_SESSION['userinfo']['homedir'])) == 0;
+    return strncmp($_SESSION['userinfo']['homedir'], $path, strlen($_SESSION['userinfo']['homedir'])) == 0;
 }
 
 function check_date($input)
