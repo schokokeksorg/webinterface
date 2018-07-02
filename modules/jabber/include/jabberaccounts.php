@@ -72,7 +72,7 @@ function create_jabber_account($local, $domain, $password)
 {
     require_role(ROLE_CUSTOMER);
     $data = array(":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":local" => filter_input_username($local),
+                ":local" => filter_input_username(strtolower($local)),
                 ":domain" => $domain);
     if (! valid_jabber_password($password)) {
         input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
