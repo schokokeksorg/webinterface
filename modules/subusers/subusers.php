@@ -35,7 +35,9 @@ if ($subusers) {
         output('<div><p><strong>'.$subuser['username'].'</strong> '.internal_link('delete.php', icon_delete('Löschen'), 'subuser='.$subuser['id']).' '.internal_link('edit.php', icon_edit('Bearbeiten'), 'subuser='.$subuser['id']).'</p>');
         output('<ul>');
         foreach ($subuser['modules'] as $mod) {
-            output('<li>'.$available_modules[$mod].'</li>');
+            if (isset($available_modules[$mod])) {
+                output('<li>'.$available_modules[$mod].'</li>');
+            }
         }
         output('</ul></div>');
     }
