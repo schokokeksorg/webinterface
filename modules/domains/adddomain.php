@@ -30,8 +30,6 @@ if (! config('http.net-apikey')) {
 title("Domain hinzufügen");
 $section='domains_domains';
 
-beta_notice();
-
 output('<p>Mit dieser Funktion können Sie eine neue Domain bestellen oder eine bestehende, extern registrierte Domain verfügbar machen.</p>');
 
 $form = '<p>Domainname: <input type="text" name="domain" size="50" /> <input type="submit" value="Verfügbarkeit prüfen" />';

@@ -98,8 +98,6 @@ if ($avail['status'] == 'available') {
     title("Domain-Transfer vornehmen");
 }
 
-beta_notice();
-
 output("<p>Domainname: <strong>".$dom->fqdn."</strong></p>");
 
 $section='domains_domains';
