@@ -70,6 +70,7 @@ else
         header('Location: account');
     }
 } elseif ($_GET['action'] == 'edit') {
+    $error = false;
     check_form_token('systemuser_edit');
     $account = null;
     if ($role & ROLE_CUSTOMER) {
