@@ -23,6 +23,25 @@ require_once('class/domain.php');
 require_once("certs.php");
 
 
+function valid_php_versions() {
+    $tags = explode(',', config('php_versions'));
+    $ret = array();
+    foreach ($tags as $t) {
+        $key = str_replace('*', '', $t);
+        $ret[$key] = array('major' => null, 'minor' => null, 'status' => 'regular');
+        /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und 
+        an letzter Stelle die Minor-Version enthalten */
+        $ret[$key]['major'] = substr(str_replace('*', '', $t), -2, 1);
+        $ret[$key]['minor'] = substr(str_replace('*', '', $t), -1, 1);
+        if (substr($t, -1) === '*') {
+            $ret[$key]['status'] = 'deprecated';
+        }
+    }
+    DEBUG($ret);
+    return $ret;
+}
+
+
 function traffic_month($vhost_id)
 {
     $vhost_id = (int) $vhost_id;
@@ -85,7 +104,8 @@ function empty_vhost()
 
     $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
     $vhost['docroot'] = null;
-    $vhost['php'] = 'fpm72';
+    $phpversions = explode(',', config('php_versions'));
+    $vhost['php'] = end($phpversions);
     $vhost['cgi'] = 1;
     $vhost['ssl'] = null;
     $vhost['hsts'] = -1;

@@ -88,21 +88,12 @@ if ($_GET['action'] == 'edit') {
     }
     $php = null;
     if ($_POST['vhost_type'] == 'regular' && isset($_POST['php'])) {
-        switch ($_POST['php']) {
-      case 'php56':
-        $php = 'php56';
-        break;
-      case 'fpm70':
-        $php = 'fpm70';
-        break;
-      case 'fpm71':
-        $php = 'fpm71';
-        break;
-      case 'fpm72':
-        $php = 'fpm72';
-        break;
-      /* Wenn etwas anderes kommt, ist das "kein PHP". So einfach ist das. */
-    }
+        $phpinfo = valid_php_versions();
+        if (array_key_exists($_POST['php'], $phpinfo)) {
+            $php = $_POST['php'];
+        } else {
+            $php = null;
+        }
     }
     $cgi = 1;
     if (isset($_POST['safemode']) && $_POST['safemode'] == 'yes') {

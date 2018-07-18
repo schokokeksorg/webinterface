@@ -151,26 +151,19 @@ if (count($vhosts) > 0) {
             output('<td colspan="2"><em><strong>Sonderanwendung:</strong> Subversion-Server</em></td>');
         } else {
             $php = $vhost['php'];
-            switch ($php) {
-        /* To create new PHP icon:
-           convert ok.png -gravity center -draw "text 0,0 '7.2'" ok-php72.png
-        */
-        case null:
-          $php = icon_disabled('PHP ausgeschaltet');
-          break;
-        case 'php56':
-          $php = icon_enabled_phpxx('PHP in Version 5.6 eingeschaltet', 5, 6);
-          break;
-        case 'fpm70':
-          $php = icon_enabled_phpxx('PHP in Version 7.0 eingeschaltet', 7, 0);
-          break;
-        case 'fpm71':
-          $php = icon_enabled_phpxx('PHP in Version 7.1 eingeschaltet', 7, 1);
-          break;
-        case 'fpm72':
-          $php = icon_enabled_phpxx('PHP in Version 7.2 eingeschaltet', 7, 2);
-          break;
-      }
+            $phpinfo = valid_php_versions($php);
+            if (array_key_exists($php, $phpinfo)) {
+                $phpinfo = $phpinfo[$php];
+                /* To create new PHP icon:
+                   convert ok.png -gravity center -draw "text 0,0 '7.2'" ok-php72.png
+                */
+                $php = icon_enabled_phpxx('PHP in Version '.$phpinfo['major'].'.'.$phpinfo['minor'].' eingeschaltet', $phpinfo['major'], $phpinfo['minor']);
+                if ($phpinfo['status'] == 'deprecated') {
+                    $php .= ' '.icon_warning('Diese PHP-Version ist veraltet!');
+                }
+            } else {
+                $php = icon_disabled('PHP ausgeschaltet');
+            }
             output("<td>{$php}</td>");
             if ($vhost['docroot_is_default'] == 1) {
                 output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");

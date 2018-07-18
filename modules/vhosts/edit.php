@@ -140,7 +140,14 @@ $phpoptions = "<h5>PHP</h5>
  */
 //if ($vhost['php'] == 'php54')
 //{
-  $options = array("none" => 'ausgeschaltet', "php56" => "PHP 5.6 (veraltet)", "fpm70" => "PHP 7.0 (auslaufend)", "fpm71" => "PHP 7.1", "fpm72" => "PHP 7.2");
+  $options = array("none" => 'ausgeschaltet');
+  $phpinfo = valid_php_versions();
+  foreach ($phpinfo as $tag => $info) {
+      $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
+      if ($info['status'] == 'deprecated') {
+          $options[$tag] .= ' (veraltet)';
+      }
+  }
   $phpoptions = "
   <h5>PHP</h5>
   <div style=\"margin-left: 2em;\">
