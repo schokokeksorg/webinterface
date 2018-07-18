@@ -37,7 +37,21 @@ function valid_php_versions() {
             $ret[$key]['status'] = 'deprecated';
         }
     }
+    /* Bis hier: aus der Datenbank ausgelesen */
     DEBUG($ret);
+    /* Sonderfall: Wenn ein User noch Vhosts einer anderen Version hat, dann bleibt diese erlaubt */
+    $list = list_vhosts();
+    foreach ($list as $vhost) {
+        if ($vhost['php'] && !array_key_exists($vhost['php'], $ret)) {
+            $key = $vhost['php'];
+            $ret = array($key => array('major' => null, 'minor' => null, 'status' => 'regular')) + $ret;
+            /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und 
+            an letzter Stelle die Minor-Version enthalten */
+            $ret[$key]['major'] = substr($key, -2, 1);
+            $ret[$key]['minor'] = substr($key, -1, 1);
+            $ret[$key]['status'] = 'used';
+        }
+    }
     return $ret;
 }
 

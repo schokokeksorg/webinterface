@@ -146,6 +146,8 @@ $phpoptions = "<h5>PHP</h5>
       $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
       if ($info['status'] == 'deprecated') {
           $options[$tag] .= ' (veraltet)';
+      } elseif ($info['status'] == 'used') {
+          $options[$tag] .= ' (nur Bestandsschutz)';
       }
   }
   $phpoptions = "

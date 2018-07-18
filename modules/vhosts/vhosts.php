@@ -160,6 +160,8 @@ if (count($vhosts) > 0) {
                 $php = icon_enabled_phpxx('PHP in Version '.$phpinfo['major'].'.'.$phpinfo['minor'].' eingeschaltet', $phpinfo['major'], $phpinfo['minor']);
                 if ($phpinfo['status'] == 'deprecated') {
                     $php .= ' '.icon_warning('Diese PHP-Version ist veraltet!');
+                } elseif ($phpinfo['status'] == 'used') {
+                    $php .= ' '.icon_warning('Diese PHP-Version hat für Sie aktuell nur noch Bestandsschutz');
                 }
             } else {
                 $php = icon_disabled('PHP ausgeschaltet');
