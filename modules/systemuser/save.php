@@ -70,7 +70,6 @@ else
         header('Location: account');
     }
 } elseif ($_GET['action'] == 'edit') {
-    $error = false;
     check_form_token('systemuser_edit');
     $account = null;
     if ($role & ROLE_CUSTOMER) {
@@ -104,7 +103,7 @@ else
     }
 
     set_account_details($account);
-    if (! ($debugmode || $error)) {
+    if (! ($debugmode)) {
         $location = 'myaccount';
         if ($_SESSION['role'] & ROLE_CUSTOMER) {
             $location = 'account';
