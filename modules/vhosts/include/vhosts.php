@@ -24,18 +24,33 @@ require_once("certs.php");
 
 
 function valid_php_versions() {
+    /* In der konfiguration ist die Variable "php_versions" eine kommaseparierte Liste der unterstützten Versionen.
+        Dabei gelten folgende Suffixe (nicht kombinierbar!):
+            *: Standardversion für neue Konfigurationen
+            /: Deprecated
+            +: Beta-Version
+    */
     $tags = explode(',', config('php_versions'));
     $ret = array();
     foreach ($tags as $t) {
-        $key = str_replace('*', '', $t);
-        $ret[$key] = array('major' => null, 'minor' => null, 'status' => 'regular');
+        $key = $t;
+        $ver = array('major' => null, 'minor' => null, 'status' => 'regular', 'default' => false);
+        if (substr($t, -1, 1) == '+') {
+            $ver['status'] = 'beta';
+            $key = substr($t, 0, -1);
+        } elseif (substr($t, -1, 1) == '/') {
+            $ver['status'] = 'deprecated';
+            $key = substr($t, 0, -1);
+        } elseif (substr($t, -1, 1) == '*') {
+            $ver['default'] = true;
+            $key = substr($t, 0, -1);
+        }
+
         /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und 
         an letzter Stelle die Minor-Version enthalten */
-        $ret[$key]['major'] = substr(str_replace('*', '', $t), -2, 1);
-        $ret[$key]['minor'] = substr(str_replace('*', '', $t), -1, 1);
-        if (substr($t, -1) === '*') {
-            $ret[$key]['status'] = 'deprecated';
-        }
+        $ver['major'] = substr($key, -2, 1);
+        $ver['minor'] = substr($key, -1, 1);
+        $ret[$key] = $ver;
     }
     /* Bis hier: aus der Datenbank ausgelesen */
     DEBUG($ret);
@@ -44,12 +59,11 @@ function valid_php_versions() {
     foreach ($list as $vhost) {
         if ($vhost['php'] && !array_key_exists($vhost['php'], $ret)) {
             $key = $vhost['php'];
-            $ret = array($key => array('major' => null, 'minor' => null, 'status' => 'regular')) + $ret;
+            $ret = array($key => array('major' => null, 'minor' => null, 'status' => 'used', 'default' => false)) + $ret;
             /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und 
             an letzter Stelle die Minor-Version enthalten */
             $ret[$key]['major'] = substr($key, -2, 1);
             $ret[$key]['minor'] = substr($key, -1, 1);
-            $ret[$key]['status'] = 'used';
         }
     }
     return $ret;
@@ -118,8 +132,14 @@ function empty_vhost()
 
     $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
     $vhost['docroot'] = null;
-    $phpversions = explode(',', config('php_versions'));
-    $vhost['php'] = end($phpversions);
+
+    $vhost['php'] = null;
+    $phpversions = valid_php_versions();
+    foreach ($phpversions as $tag => $info) {
+        if ($info['default']) {
+            $vhost['php'] = $tag;
+        }
+    }
     $vhost['cgi'] = 1;
     $vhost['ssl'] = null;
     $vhost['hsts'] = -1;
