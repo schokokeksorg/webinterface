@@ -300,6 +300,9 @@ function check_form_token($form_id, $formtoken = null)
         system_failure("Internal error! (Session not running)");
     }
 
+    if (! isset($_SESSION['session_token'])) {
+        $_SESSION['session_token'] = random_string(10);
+    }
     $correct_formtoken = hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
 
     if (! ($formtoken == $correct_formtoken)) {
