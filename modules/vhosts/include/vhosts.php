@@ -598,11 +598,11 @@ function save_alias($alias)
     if ($id == 0) {
         unset($args[":id"]);
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
-        db_query("INSERT INTO vhosts.alias (hostname, domain, vhost, options) VALUES (:hostname, :domain, :vhost, :options)", $args);
+        db_query("INSERT INTO vhosts.alias (hostname, domain, vhost, options) VALUES (:hostname, :domain, :vhost, :options)", $args, true);
     } else {
         unset($args[":vhost"]);
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Updating alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
-        db_query("UPDATE vhosts.alias SET hostname=:hostname, domain=:domain, options=:options WHERE id=:id", $args);
+        db_query("UPDATE vhosts.alias SET hostname=:hostname, domain=:domain, options=:options WHERE id=:id", $args, true);
     }
 }
 
