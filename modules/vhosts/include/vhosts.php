@@ -23,7 +23,8 @@ require_once('class/domain.php');
 require_once("certs.php");
 
 
-function valid_php_versions() {
+function valid_php_versions()
+{
     /* In der konfiguration ist die Variable "php_versions" eine kommaseparierte Liste der unterstützten Versionen.
         Dabei gelten folgende Suffixe (nicht kombinierbar!):
             *: Standardversion für neue Konfigurationen
@@ -46,7 +47,7 @@ function valid_php_versions() {
             $key = substr($t, 0, -1);
         }
 
-        /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und 
+        /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und
         an letzter Stelle die Minor-Version enthalten */
         $ver['major'] = substr($key, -2, 1);
         $ver['minor'] = substr($key, -1, 1);
@@ -60,7 +61,7 @@ function valid_php_versions() {
         if ($vhost['php'] && !array_key_exists($vhost['php'], $ret)) {
             $key = $vhost['php'];
             $ret = array($key => array('major' => null, 'minor' => null, 'status' => 'used', 'default' => false)) + $ret;
-            /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und 
+            /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und
             an letzter Stelle die Minor-Version enthalten */
             $ret[$key]['major'] = substr($key, -2, 1);
             $ret[$key]['minor'] = substr($key, -1, 1);
