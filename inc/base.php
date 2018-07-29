@@ -260,7 +260,8 @@ function are_you_sure($query_string, $question)
 function user_is_sure()
 {
     if (isset($_POST['really'])) {
-        if ($_POST['random_token'] == $_SESSION['are_you_sure_token']) {
+        if (array_key_exists('random_token', $_POST) &&
+            ($_POST['random_token'] == $_SESSION['are_you_sure_token'])) {
             return true;
         } else {
             system_failure("Possible Cross-site-request-forgery detected!");
