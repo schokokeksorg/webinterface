@@ -86,7 +86,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
         }
     }
     system_failure('Der angegebene Account kann mit diesem Client-Zertifikat nicht eingeloggt werden.');
-} elseif ($_SESSION['role'] != ROLE_ANONYMOUS && $_REQUEST['destination'] != '') {
+} elseif ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['destination']) && $_REQUEST['destination'] != '') {
     # User hat sich grade eingeloggt
     header('Location: ../'.$destination);
 } else {
