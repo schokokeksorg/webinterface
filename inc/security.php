@@ -75,13 +75,13 @@ function filter_input_hostname($input, $wildcard=false)
     // FIXME: Eine "filter"-Funktion sollte keinen system_failure verursachen sondern einfach einen bereinigten String liefern.
 
     DEBUG('filter_input_hostname("'.$input.'", $wildcard='.$wildcard.')');
-    $input = str_replace(array('Ä', 'Ö', 'Ü'), array('ä', 'ö', 'ü'), strtolower($input));
+    $input = strtolower($input);
     $input = rtrim($input, "\t\n\r\x00 .");
     $input = ltrim($input, "\t\n\r\x00 .");
     if (preg_replace("/[^.]_/", "", $input) != $input) {
         system_failure("Der Unterstrich ist nur als erstes Zeichen eines Hostnames erlaubt.");
     }
-    if (preg_replace("/[^[:alnum:]äöü_*\.\-]/", "", $input) != $input) {
+    if (preg_replace("/[^[:alnum:]_*\.\-]/u", "", $input) != $input) {
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
     }
     if (preg_match("/^.+\*/", $input)) {
