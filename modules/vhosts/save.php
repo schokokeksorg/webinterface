@@ -37,7 +37,7 @@ if ($_GET['action'] == 'edit') {
     }
     DEBUG($vhost);
 
-    $hostname = filter_input_hostname($_POST['hostname'], true);
+    $hostname = strtolower(trim($_POST['hostname']));
 
     $domainname = null;
     $domain_id = (int) $_POST['domain'];
@@ -67,6 +67,12 @@ if ($_GET['action'] == 'edit') {
         } elseif ($_POST['forwardwww'] == 'forwardnowww') {
             $forwardwww = 'forwardnowww';
         }
+    }
+
+    $fqdn = ($hostname!==""?$hostname.".":"").$domainname;
+    verify_input_hostname_utf8($fqdn);
+    if ($aliaswww) {
+        verify_input_hostname_utf8("www.".$fqdn);
     }
 
     $docroot = '';
@@ -282,18 +288,20 @@ if ($_GET['action'] == 'edit') {
     $alias['vhost'] = $vhost['id'];
 
 
-    $hostname = filter_input_hostname($_POST['hostname'], true);
-    $domainid = (int) $_POST['domain'];
-    if ($domainid >= 0) {
+    $hostname = strtolower(trim($_POST['hostname']));
+
+    $domain_id = (int) $_POST['domain'];
+    if ($domain_id >= 0) {
         $domain = new Domain((int) $_POST['domain']);
         $domain->ensure_userdomain();
-        $domainid = $domain->id;
-    }
-    if ($domainid == -1) {
+        $domain_id = $domain->id;
+        $domainname = $domain->fqdn;
+    } elseif ($domain_id == -1) {
         # use configured user_vhosts_domain
         $userdomain = userdomain();
         $domain = new Domain((int) $userdomain['id']);
-        $domainid = $domain->id;
+        $domain_id = $domain->id;
+        $domainname = $domain->fqdn;
         $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
         $hostname = trim($hostname, " .-");
     }
@@ -303,6 +311,12 @@ if ($_GET['action'] == 'edit') {
     }
     $aliaswww = in_array('aliaswww', $_POST['options']);
     $forward = in_array('forward', $_POST['options']);
+
+    $fqdn = ($hostname!==""?$hostname.".":"").$domainname;
+    verify_input_hostname_utf8($fqdn);
+    if ($aliaswww) {
+        verify_input_hostname_utf8("www.".$fqdn);
+    }
 
     $new_options = array();
     if ($aliaswww) {
@@ -316,7 +330,7 @@ if ($_GET['action'] == 'edit') {
     DEBUG('New options: '.$options);
 
     $alias['hostname'] = $hostname;
-    $alias['domain_id'] = $domainid;
+    $alias['domain_id'] = $domain_id;
 
     $alias ['options'] = $options;
 

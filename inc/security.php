@@ -105,6 +105,19 @@ function verify_input_hostname($input, $wildcard=false)
 }
 
 
+function verify_input_hostname_utf8($input)
+{
+    $puny = idn_to_ascii($input, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+    if ($puny === false) {
+        system_failure("Ungültiger Hostname! idn ".$input);
+    }
+    $filter = filter_var($puny, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+    if ($filter === false) {
+        system_failure("Ungültiger Hostname! filter ".$input);
+    }
+}
+
+
 function verify_input_ipv4($input)
 {
     if (! preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $input)) {
