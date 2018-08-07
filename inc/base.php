@@ -292,7 +292,7 @@ function generate_form_token($form_id)
 
 function check_form_token($form_id, $formtoken = null)
 {
-    if ($formtoken == null) {
+    if ($formtoken == null && isset($_REQUEST['formtoken'])) {
         $formtoken = $_REQUEST['formtoken'];
     }
     $sessid = session_id();
