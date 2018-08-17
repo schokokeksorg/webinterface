@@ -204,6 +204,12 @@ function check_path($input)
             DEBUG("»..« im Pfad");
             return false;
         }
+        if (strlen($item) > 255) {
+            return false;
+        }
+    }
+    if (strlen($input) > 2048) {
+        return false;
     }
     return (preg_match('/^[ A-Za-z0-9.@\/_-]*$/', $input) == 1);
 }
