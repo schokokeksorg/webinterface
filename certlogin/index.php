@@ -81,14 +81,14 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
             if (isset($_REQUEST['destination']) && check_path($_REQUEST['destination'])) {
                 $destination = $_REQUEST['destination'];
             }
-            header('Location: ../'.$destination);
+            header('Location: ../'.ltrim($destination, '/'));
             die();
         }
     }
     system_failure('Der angegebene Account kann mit diesem Client-Zertifikat nicht eingeloggt werden.');
 } elseif ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['destination']) && $_REQUEST['destination'] != '') {
     # User hat sich grade eingeloggt
-    header('Location: ../'.$destination);
+    header('Location: ../'.ltrim($destination, '/'));
 } else {
     if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) &&
       isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) && $_SERVER[$redirect.'SSL_CLIENT_S_DN'] != '' &&
@@ -111,7 +111,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
             if (isset($_REQUEST['destination']) && check_path($_REQUEST['destination'])) {
                 $destination = $_REQUEST['destination'];
             }
-            header('Location: ../'.$destination);
+            header('Location: ../'.ltrim($destination, '/'));
             die();
         }
         output('<p>Ihr Browser hat ein gültiges SSL-Client-Zertifikat gesendet, mit dem Sie sich auf dieser Seite einloggen können. Allerdings haben Sie dieses Client-Zertifikat für mehrere Zugänge hinterlegt. Wählen Sie bitte den Zugang aus, mit dem Sie sich anmelden möchten.</p>
