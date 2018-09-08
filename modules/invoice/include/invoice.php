@@ -81,7 +81,7 @@ function upcoming_items()
 }
 
 
-function generate_qrcode_image($id)
+function generate_qrcode_image_invoice($id)
 {
     $invoice = invoice_details($id);
     $customerno = $invoice['kunde'];

@@ -82,7 +82,7 @@ if ($invoice['bezahlt'] == 1) {
 } elseif ($l && $l['status'] == 'done') {
     output('<p>Diese Rechnung wurde am '.$l['buchungsdatum'].' per Lastschrift eingezogen.</p>');
 } else {
-    $qrcode_image = generate_qrcode_image($invoice_id);
+    $qrcode_image = generate_qrcode_image_invoice($invoice_id);
 
     output('<h4>GiroCode für Mobile Banking (SEPA Credit Transfer)</h4><p><img src="data:image/png;base64,'.base64_encode($qrcode_image).'" /></p>');
 }
