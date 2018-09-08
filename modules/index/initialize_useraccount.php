@@ -23,7 +23,7 @@ $show = 'token';
 if (isset($_SESSION['role']) && $_SESSION['role'] != ROLE_ANONYMOUS) {
     @session_destroy();
 
-    header('Location: '.$PHP_SELF);
+    header('Location: '.$_SERVER['PHP_SELF']);
     die();
 }
 
