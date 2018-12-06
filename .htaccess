@@ -8,6 +8,9 @@
   Deny from all
 </Files>
 
+# See https://wicg.github.io/change-password-url/
+Redirect /.well-known/change-password /go/index/chpass
+
 RewriteEngine On
 RewriteBase /
 RewriteRule ^go/(.*)$  dispatch.php?go=$1&%{QUERY_STRING}
