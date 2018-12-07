@@ -16,12 +16,12 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_role(ROLE_SYSTEMUSER);
 
-$data_dir = realpath(dirname(__FILE__).'/../data/');
+$data_dir = realpath(dirname(__FILE__).'/../../../../gitolite-data/');
 $config_file = $data_dir.'/gitolite-admin/conf/webinterface.conf';
 $config_dir = $data_dir.'/gitolite-admin/conf/webinterface';
 $key_dir = $data_dir.'/gitolite-admin/keydir';
 DEBUG("gitolite-data_dir: ".$data_dir);
-$git_wrapper = $data_dir . '/git-wrapper.sh';
+$git_wrapper = realpath(dirname(__FILE__).'/../scripts/git-wrapper.sh');
 
 
 
