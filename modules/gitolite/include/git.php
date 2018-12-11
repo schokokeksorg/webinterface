@@ -287,6 +287,8 @@ function newkey($pubkey, $handle)
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich und Bindestrich benutzen.");
     }
 
+    $pubkey = trim(str_replace(array("\r", "\n"), ' ', $pubkey));
+
     $keyfile = $key_dir.'/'.$handle.'.pub';
     file_put_contents($keyfile, $pubkey);
 
