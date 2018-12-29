@@ -17,6 +17,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/security.php');
 
+use_module('contacts');
+require_once('contacts.php');
 
 function my_invoices()
 {
@@ -42,22 +44,46 @@ function get_pdf($id)
 }
 
 
-function invoice_details($id)
+function invoice_address($customer = null) 
 {
     $c = (int) $_SESSION['customerinfo']['customerno'];
+    if ($customer != null && have_role(ROLE_SYSADMIN)) {
+        $c = (int) $customer;
+    }
+    $result = db_query("SELECT contact_kunde, contact_rechnung FROM kundendaten.kunden WHERE id=?", array($c));
+    $kontakte = $result->fetch();
+    $kunde = get_contact($kontakte['contact_kunde'], $c);
+    if ($kontakte['contact_rechnung']) {
+        $rechnung = get_contact($kontakte['contact_rechnung'], $c);
+        foreach (array('company', 'name', 'address', 'zip', 'city', 'country', 'email') as $field) {
+            if ($rechnung[$field]) {
+                $kunde[$field] = $rechnung[$field];
+            }
+        }
+    }
+    // Hier ist $kunde der bereinigte Rechnungskontakt
+    return $kunde;
+}
+
+
+function invoice_details($id)
+{
     $id = (int) $id;
-    $result = db_query("SELECT kunde,datum,betrag,bezahlt,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE kunde=:c AND id=:id", array(":c" => $c, ":id" => $id));
+    $result = db_query("SELECT kunde,datum,betrag,bezahlt,sepamandat,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE id=:id", array(":id" => $id));
     if ($result->rowCount() == 0) {
         system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
     }
-    return $result->fetch();
+    $data = $result->fetch();
+    if (!have_role(ROLE_SYSADMIN) && $data['kunde'] != (int) $_SESSION['customerinfo']['customerno']) {
+        system_failure('Ungültige Rechnungsnummer für diesen Login');
+    }
+    return $data;
 }
 
 function invoice_items($id)
 {
-    $c = (int) $_SESSION['customerinfo']['customerno'];
     $id = (int) $id;
-    $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer=:id AND kunde=:c", array(":c" => $c, ":id" => $id));
+    $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer=:id", array(":id" => $id));
     if ($result->rowCount() == 0) {
         system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
     }
@@ -149,6 +175,13 @@ function get_lastschriften($mandatsreferenz)
     }
     return $ret;
 }
+
+
+function get_sepamandat($id) 
+{
+    $result = db_query("SELECT id, kunde, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE id=? OR mandatsreferenz=?", array($id, $id));
+    return $result->fetch();
+ }
 
 function get_sepamandate()
 {
