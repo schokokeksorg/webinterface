@@ -269,7 +269,7 @@ hiermit stellen wir die nachfolgend genannten Posten in Rechnung.</p>';
 $html .= '<table style="width: 100%;">
 <tr style="border-bottom: 1px solid black;">
 <th style="width: 1cm; text-align: center;">Anz.</th>
-<th style="min-width: 1cm; max-width: 2cm;">&nbsp;</th>
+<th style="width: 2cm;">&nbsp;</th>
 <th>Beschreibung</th>
 <th style="width: 2.5cm; text-align: center;">Einzelpreis</th>
 <th style="width: 3cm; text-align: center;">Gesamtpreis</th></tr>';

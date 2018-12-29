@@ -204,9 +204,12 @@ function sync_legacy_contactdata()
 }
 
 
-function get_kundenkontakte()
+function get_kundenkontakte($customer = null)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
+    if ($customer and have_role(ROLE_SYSADMIN)) {
+        $cid = (int) $customer;
+    }
     $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung, contact_dataprotection FROM kundendaten.kunden WHERE id=?", array($cid));
     $res = $result->fetch();
     $ret = array("kunde" => $res['contact_kunde'],
