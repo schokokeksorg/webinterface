@@ -53,6 +53,14 @@ if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
 }
 $odd = false;
 $html = '<table>';
+$buttons = '<span class="buttonset" id="buttonset-salutation">
+         <input type="radio" name="salutation" id="salutation-firma" value="Firma" '.($c['salutation'] === null ? 'checked="checked"' : '').'/>
+         <label for="salutation-firma">Neutral</label>
+         <input type="radio" name="salutation" id="salutation-herr" value="Herr" '.($c['salutation'] === 'Herr' ? 'checked="checked"' : '').'/>
+         <label for="salutation-herr">Herr</label>
+         <input type="radio" name="salutation" id="salutation-frau" value="Frau" '.($c['salutation'] === 'Frau' ? 'checked="checked"' : '').'/>
+         <label for="salutation-frau">Frau</label>';
+$html .= '    <tr class="'.($odd == true ? 'odd' : 'even').'"><td>Bevorzugte Anrede:</td><td>'.$buttons.'</td></tr>';
 $html .= '    <tr class="'.($odd == true ? 'odd' : 'even').'"><td>Firmenname:</td><td><input type="text" name="firma" id="firma" value="'.$c['company'].'" '.$readonly.' /></td></tr>';
 $odd = !$odd;
 $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td>'.($c['company'] ? 'Ansprechpartner' : 'Name').':</td><td><input type="text" name="name" id="name" value="'.$c['name'].'" '.$readonly.' /></td></tr>';

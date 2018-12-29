@@ -86,6 +86,12 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         }
     }
 
+    $c['salutation'] = null;
+    if ($_REQUEST['salutation'] == 'Herr') {
+        $c['salutation'] = 'Herr';
+    } elseif ($_REQUEST['salutation'] == 'Frau') {
+        $c['salutation'] = 'Frau';
+    }
     $c['company'] = verify_input_general(maybe_null($_REQUEST['firma']));
     $c['name'] = verify_input_general(maybe_null($_REQUEST['name']));
     $c['address'] = verify_input_general(maybe_null($_REQUEST['adresse']));

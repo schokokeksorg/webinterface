@@ -22,13 +22,6 @@ require_once('class/domain.php');
 
 require_once('contactapi.php');
 
-/*
-Todo:
-    - Ausgabe-Funktion abstrahieren
-    - Telefonnummern bei Ausgabe durch filter_input_general schieben
-    - Domaininhaber festlegen
-*/
-
 
 function new_contact()
 {
@@ -37,6 +30,7 @@ function new_contact()
         "lastchange" => time(),
         "nic_handle" => null,
         "nic_id" => null,
+        "salutation" => null,
         "company" => null,
         "name" => null,
         "address" => null,
@@ -53,12 +47,16 @@ function new_contact()
 }
 
 
-function get_contact($id)
+function get_contact($id, $customer = null)
 {
+    $c = $_SESSION['customerinfo']['customerno'];
+    if ($customer != null && have_role(ROLE_SYSADMIN)) {
+        $c = $customer;
+    }
     $args = array(
-        "cid" => (int) $_SESSION['customerinfo']['customerno'],
+        "cid" => (int) $c,
         "id" => (int) $id);
-    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id AND customer=:cid", $args);
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id AND customer=:cid", $args);
     if ($result->rowCount() == 0) {
         system_failure("Kontakt nicht gefunden oder gehört nicht diesem Kunden");
     }
@@ -69,7 +67,7 @@ function get_contact($id)
 function get_contacts()
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY COALESCE(company, name)", array($cid));
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY COALESCE(company, name)", array($cid));
     $ret = array();
     while ($contact = $result->fetch()) {
         $ret[$contact['id']] = $contact;
@@ -168,6 +166,7 @@ function sync_legacy_contactdata()
         $nachname = explode(' ', $kunde['name'], 2)[1];
     }
     $args = array("firma" => $kunde['company'],
+            "anrede" => $kunde['salutation'],
             "vorname" => $vorname,
             "nachname" => $nachname,
             "adresse" => $kunde['address'],
@@ -181,7 +180,7 @@ function sync_legacy_contactdata()
             "pgp_id" => $kunde['pgp_id'],
             "pgp_key" => $kunde['pgp_key'],
             "cid" => $cid);
-    db_query("UPDATE kundendaten.kunden SET firma=:firma, vorname=:vorname, nachname=:nachname, adresse=:adresse,
+    db_query("UPDATE kundendaten.kunden SET anrede=:anrede, firma=:firma, vorname=:vorname, nachname=:nachname, adresse=:adresse,
             plz=:plz, ort=:ort, land=:land, telefon=:telefon, mobile=:mobile, telefax=:telefax, email=:email, 
             pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:cid", $args);
     if ($kundenkontakte['extern']) {
@@ -242,11 +241,11 @@ function save_contact($c)
     $c['customer'] = (int) $_SESSION['customerinfo']['customerno'];
     if ($c['id']) {
         // Kontakt bestaht schon, Update
-        db_query("UPDATE kundendaten.contacts SET nic_id=:nic_id, nic_handle=:nic_handle, company=:company, name=:name, address=:address, zip=:zip, city=:city, country=:country, phone=:phone, mobile=:mobile, fax=:fax, pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:id AND customer=:customer", $c);
+        db_query("UPDATE kundendaten.contacts SET nic_id=:nic_id, nic_handle=:nic_handle, salutation=:salutation, company=:company, name=:name, address=:address, zip=:zip, city=:city, country=:country, phone=:phone, mobile=:mobile, fax=:fax, pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:id AND customer=:customer", $c);
     } else {
         unset($c['id']);
         // Neu anlegen
-        db_query("INSERT INTO kundendaten.contacts (nic_id, nic_handle, customer, company, name, address, zip, city, country, phone, mobile, fax, pgp_id, pgp_key) VALUES (:nic_id, :nic_handle, :customer, :company, :name, :address, :zip, :city, :country, :phone, :mobile, :fax, :pgp_id, :pgp_key)", $c);
+        db_query("INSERT INTO kundendaten.contacts (nic_id, nic_handle, customer, salutation, company, name, address, zip, city, country, phone, mobile, fax, pgp_id, pgp_key) VALUES (:nic_id, :nic_handle, :customer, :salutation, :company, :name, :address, :zip, :city, :country, :phone, :mobile, :fax, :pgp_id, :pgp_key)", $c);
         $c['id'] = db_insert_id();
     }
     // FIXME: Das sollte eigentlich nicht bei jedem einzelnen Speicherovrgang passieren
