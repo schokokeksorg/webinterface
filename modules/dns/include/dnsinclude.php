@@ -271,8 +271,8 @@ function save_dns_record($id, $record)
     case 'mx':
       $record['dyndns'] = null;
       $record['spec'] = (int) $record['spec'];
-      if ($record['spec'] < 1) {
-          systen_failure("invalid priority");
+      if ($record['spec'] < 0) {
+          system_failure("invalid priority");
       }
       verify_input_hostname($record['data']);
       if (! $record['data']) {
