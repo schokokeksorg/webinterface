@@ -20,6 +20,7 @@ require_once('inc/debug.php');
 require_once("inc/base.php");
 require_once("inc/theme.php");
 
+set_exception_handler('handle_exception');
 
 $go = $_GET['go'];
 

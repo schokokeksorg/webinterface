@@ -460,3 +460,9 @@ function get_modules_info()
     }
     return $modconfig;
 }
+
+function handle_exception($e)
+{
+    $msg = "Exception caught:\n".$e->getMessage()."\n".serialize($_POST)."\n".serialize($_SERVER);
+    mail(config("adminmail"), "Exception on configinterface", $msg);
+}
