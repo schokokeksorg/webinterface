@@ -211,6 +211,9 @@ if ($_GET['action'] == 'edit') {
     DEBUG("PHP: {$php} / Logging: {$logtype}");
 
     $old_options = explode(',', $vhost['options']);
+    if ($vhost['options'] == '') {
+        $old_options = array();
+    }
     $new_options = array();
     foreach ($old_options as $op) {
         if (! in_array($op, array('aliaswww', 'forwardwww', 'forwardnowww', 'hsts_subdomains', 'hsts_preload'))) {
@@ -252,6 +255,7 @@ if ($_GET['action'] == 'edit') {
             unset($new_options[$key]);
         }
     }
+    
 
     DEBUG($old_options);
     DEBUG($new_options);
