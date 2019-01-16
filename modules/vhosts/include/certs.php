@@ -241,7 +241,7 @@ function refresh_cert($id, $info, $cert, $key = null)
     $oldcert = cert_details($id);
     $args = array(":subject" => filter_input_general($info['subject']),
                 ":cn" => filter_input_general($info['cn']),
-                ":san" => $san,
+                ":san" => $info['san'],
                 ":cert" => $cert,
                 ":valid_from" => $info['valid_from'],
                 ":valid_until" => $info['valid_until'],
