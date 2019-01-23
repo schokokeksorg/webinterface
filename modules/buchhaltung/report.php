@@ -7,16 +7,20 @@ $title = 'Report';
 
 $year = date("Y")-1;
 
-$typeresult = db_query("SELECT id, description FROM buchhaltung.types");
+$typeresult = db_query("SELECT id, description, investment FROM buchhaltung.types");
 $dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", array(":from" => $year."-01-01", ":to" => $year."-12-31"));
 
 $types = array();
 $data_by_type = array();
 $sum_by_type = array();
+$investment_types = array();
 while ($t = $typeresult->fetch()) {
     $types[$t['id']] = $t['description'];
     $data_by_type[$t['id']] = array();
     $sum_by_type[$t['id']] = 0.0;
+    if ($t['investment'] == 1) {
+        $investment_types[$t['id']] = $t;
+    }
 }
 
 while ($line = $dataresult->fetch()) {
@@ -27,6 +31,7 @@ while ($line = $dataresult->fetch()) {
 output("Journal für $year (01.01.$year-31.12.$year, gruppiert nach Buchungskonten)");
 
 DEBUG($types);
+DEBUG($investment_types);
 $net_by_type = array(0 => array(-1 => array(), 0 => array(), 19 => array()));
 $umsatzsteuer = 0.0;
 $vorsteuer = 0.0;
@@ -100,7 +105,7 @@ output("<tr><td><b>Summe Einnahmen:</b></td><td style=\"text-align: right;\"><b>
 output("<tr><td colspan=\"2\"></td></tr>");
 $ausgabensumme = 0.0;
 foreach ($types as $id => $t) {
-    if ($id == 0 || !isset($net_by_type[$id])) {
+    if ($id == 0 || !isset($net_by_type[$id]) || array_key_exists($id, $investment_types)) {
         continue;
     }
     $ausgabensumme -= $net_by_type[$id];
@@ -114,3 +119,11 @@ output("<tr><td colspan=\"2\"></td></tr>");
 
 output("<tr><td><b>Überschuss aus laufendem Betrieb:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme-$ausgabensumme, 2, ',', '.')." €</td></tr>");
 output('</table>');
+
+foreach ($investment_types as $id => $type) {
+    if (isset($net_by_type[$id])) {
+        output('<p>Neue Anlagegüter <strong>'.$type['description'].'</strong>: '.number_format(-$net_by_type[$id], 2, ',', '.')." €</p>");
+    }
+}
+
+
