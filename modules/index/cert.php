@@ -64,7 +64,8 @@ if ($certs != null) {
     output('<p>Sie haben bereits Zertifikate für den Zugang eingerichtet.</p>
   <ul>');
     foreach ($certs as $cert) {
-        output('<li>'.$cert['dn'].' / Seriennummer '.$cert['serial'].' / '.'Gültig von '.$cert['valid_from'].' bis '.$cert['valid_until'].'<br /><em>ausgestellt von </em>'.$cert['issuer']);
+        output('<li>'.filter_input_general($cert['dn'].' / Seriennummer '.$cert['serial'].' / '.'Gültig von '.$cert['valid_from'].' bis '.$cert['valid_until']).'<br />');
+        output('<em>ausgestellt von </em>'.filter_input_general($cert['issuer']));
         output('<br />'.internal_link('certsave', 'Dieses Zertifikat löschen', 'action=delete&id='.$cert['id']));
         output('</li>');
     }
