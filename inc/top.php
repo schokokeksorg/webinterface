@@ -59,6 +59,22 @@ if (! defined("TOP_INCLUDED")) {
         $menuitem = array_merge($menuitem, $menu);
     }
 
+    foreach ($submenu as $key => $content) {
+        $found = false;
+        foreach ($weighted_menuitem as $weight => $data) {
+            if (array_key_exists($key, $data)) {
+                DEBUG("found requested submenu ".$key);
+                $found = true;
+            }
+        }
+        if (! $found) {
+            DEBUG("Submenu ".$key." requested but not present!");
+            // Ein Submenü von einem nicht existierenden Hauptmenü wird angefordert
+            // Menüpunkt muss als Hauptmenüpunkt geführt werden
+            $weighted_menuitem = $weighted_menuitem + $content;
+        }
+    }
+
     ksort($weighted_menuitem);
     #DEBUG($weighted_menuitem);
 
