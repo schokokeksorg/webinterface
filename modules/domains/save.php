@@ -40,7 +40,7 @@ if ($_REQUEST['action'] == 'delete') {
     $info = api_download_domain($dom->id);
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=cancel&domain={$dom->id}", "Möchten Sie die Domain »{$dom->fqdn}« wirklich kündigen?<br>Das Kündigungsdatum wäre dann {$info['currentContractPeriodEnd']}");
+        are_you_sure("action=cancel&domain={$dom->id}", "Möchten Sie die Domain »{$dom->fqdn}« wirklich kündigen?<br>Wichtig: Bei einem Umzug ist keine separate Kündigung nötig. Bitte kündigen Sie nur, wenn Sie die Domain löschen und freigeben möchten.<br>Das Kündigungsdatum wäre dann {$info['currentContractPeriodEnd']}");
     } elseif ($sure === true) {
         api_cancel_domain($dom->fqdn);
         redirect('detail?id='.$dom->id);
