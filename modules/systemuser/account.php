@@ -71,8 +71,17 @@ if (! customer_may_have_useraccounts()) {
     $customerquota = get_customer_quota();
     $freequota = $customerquota['max'] - $customerquota['assigned'];
     if ($freequota > 10) { // Gewisse Unschärfe
+        $percent = round(($customerquota['assigned'] / $customerquota['max']) * 100);
+        $width = 5 * min($percent, 100);
+        $color = ($percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green"));
+        $maxstr = ($customerquota['max'] > 1024) ? number_format($customerquota['max'] / 1024, 1, ',', '.').' GB' : $customerquota['max'].' MB';
+        $assignedstr = ($customerquota['assigned'] > 1024) ? number_format($customerquota['assigned'] / 1024, 1, ',', '.').' GB' : $customerquota['assigned'].' MB';
+        $freestr = ($freequota > 1024) ? number_format($freequota / 1024, 1, ',', '.').' GB' : $freequota.' MB';
+        output('<p>Ihrem Kundenaccount stehen insgesamt '.$maxstr.' zur Verfügung, davon sind '.$assignedstr.' den Benutzerkonten zugewiesen und noch '.$freestr.' frei verfügbar.</p>');
+        output("<div style=\"margin: 0; padding: 0; width: 500px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; margin-left: 0; padding: 0;\">&#160;</div></div>");
         output('<p class="warning"><b>Hinweis:</b><br/>Ihnen steht mehr Speicherplatz zur Verfügung als Ihren Benutzeraccounts zugewiesen ist. Sie können den Speicherplatz der einzelnen Benutzerkonten noch erhöhen.</p>');
     } else {
+        output('<p>Der für Sie reservierte Speicherplatz ist vollständig auf Ihre Benutzeraccounts verteilt.</p>');
         if (have_module('invoice')) {
             addnew('../invoice/more_storage?section=systemuser_account', 'Mehr Speicherplatz bestellen');
         }
