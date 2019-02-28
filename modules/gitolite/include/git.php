@@ -469,7 +469,7 @@ function set_user_include()
 function save_repo($repo, $permissions, $description)
 {
     if (!validate_name($repo)) {
-        system_failure("Der gewählte name entspricht nicht den Konventionen!");
+        system_failure("Der gewählte Name entspricht nicht den Konventionen!");
     }
     if (!array_key_exists($repo, list_repos()) && repo_exists_globally($repo)) {
         system_failure("Der gewählte Name existiert bereits auf diesem Server. Bitte wählen Sie einen spezifischeren Namen.");
