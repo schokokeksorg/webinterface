@@ -218,7 +218,7 @@ $address = invoice_address($invoice['kunde']);
 // Address Field
 $html .= '<div id="addressfield">
 <div id="addressfieldheader">schokokeks.org · Köchersberg 32 · 71540 Murrhardt</div>
-<p>'.($address['company'] != null ? $address['company'].'<br>' : '' ).$address['name'].'<br>
+<p>'.($address['company'] != null ? $address['company'].'<br>' : '').$address['name'].'<br>
 '.$address['address'].'<br>
 '.($address['country'] != 'DE' ? $address['country'].'-' : '').$address['zip'].' '.$address['city'].'
 </p>
@@ -282,9 +282,9 @@ $summe = 0.0;
 $odd = true;
 foreach ($items as $item) {
     if ($vattype == 'gross' && $item['brutto'] == 0) {
-            system_failure('Mixed gross and net positions');
+        system_failure('Mixed gross and net positions');
     } elseif ($vattype == 'net' && $item['brutto'] == 1) {
-            system_failure('Mixed gross and net positions');
+        system_failure('Mixed gross and net positions');
     } else {
         $vattype = ($item['brutto'] == 1 ? 'gross' : 'net');
     }
@@ -312,7 +312,7 @@ foreach ($items as $item) {
         $einzelsummen[$item['mwst']]['vat'] += $gesamt / (1 + ($item['mwst'] / 100)) * ($item['mwst'] / 100);
         $einzelsummen[$item['mwst']]['gross'] += $gesamt;
     } else {
-        $einzelsummen[$item['mwst']] = array('net' => $gesamt / (1 + ($item['mwst'] / 100)), 
+        $einzelsummen[$item['mwst']] = array('net' => $gesamt / (1 + ($item['mwst'] / 100)),
                                              'vat' => $gesamt / (1 + ($item['mwst'] / 100)) * ($item['mwst'] / 100),
                                              'gross' => $gesamt);
     }
@@ -329,7 +329,7 @@ foreach ($einzelsummen as $percent => $sums) {
     $html .= '<tr><td colspan="4" style="text-align: right;">Nettobetrag ('.number_format($percent, 1, ',', '.').'% MwSt):</td><td style="text-align: right;">'.number_format($sums['net'], 2, ',', '.').' €</td></tr>
               <tr><td colspan="4" style="text-align: right;">MwSt-Betrag '.number_format($percent, 1, ',', '.').'%:</td><td style="text-align: right;">'.number_format($sums['vat'], 2, ',', '.').' €</td></tr>';
     if (count($einzelsummen) > 1) {
-              $html .= '<tr><td colspan="4" style="text-align: right;">Brutto-Teilbetrag '.number_format($percent, 1, ',', '.').'% MwSt:</td><td style="text-align: right;">'.number_format($sums['gross'], 2, ',', '.').' €</td></tr>';
+        $html .= '<tr><td colspan="4" style="text-align: right;">Brutto-Teilbetrag '.number_format($percent, 1, ',', '.').'% MwSt:</td><td style="text-align: right;">'.number_format($sums['gross'], 2, ',', '.').' €</td></tr>';
     }
 }
 $html .= '<tr style="font-weight: bold;"><td colspan="4" style="text-align: right;">Rechnungsbetrag:</td><td style="text-align: right;">'.number_format($summe, 2, ',', '.').' €</td></tr>

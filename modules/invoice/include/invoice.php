@@ -44,7 +44,7 @@ function get_pdf($id)
 }
 
 
-function invoice_address($customer = null) 
+function invoice_address($customer = null)
 {
     $c = (int) $_SESSION['customerinfo']['customerno'];
     if ($customer != null && have_role(ROLE_SYSADMIN)) {
@@ -177,11 +177,11 @@ function get_lastschriften($mandatsreferenz)
 }
 
 
-function get_sepamandat($id) 
+function get_sepamandat($id)
 {
     $result = db_query("SELECT id, kunde, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE id=? OR mandatsreferenz=?", array($id, $id));
     return $result->fetch();
- }
+}
 
 function get_sepamandate()
 {

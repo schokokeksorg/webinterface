@@ -255,7 +255,7 @@ if ($_GET['action'] == 'edit') {
             unset($new_options[$key]);
         }
     }
-    
+
 
     DEBUG($old_options);
     DEBUG($new_options);

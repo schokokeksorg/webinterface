@@ -125,5 +125,3 @@ foreach ($investment_types as $id => $type) {
         output('<p>Neue Anlagegüter <strong>'.$type['description'].'</strong>: '.number_format(-$net_by_type[$id], 2, ',', '.')." €</p>");
     }
 }
-
-
