@@ -164,7 +164,7 @@ $form .= "<h4>Betreffzeile der automatischen Antwort</h4>".
 
 $message = filter_input_general($ar['message']);
 $form .= "<h4>Inhalt der automatischen Antwort</h4>".
-  "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">".$ar['message']."</textarea></p>";
+  "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">".filter_input_general($ar['message'])."</textarea></p>";
 $quote = $ar['quote'];
 if (! $quote) {
     $quote = 'none';
