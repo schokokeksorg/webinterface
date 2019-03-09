@@ -48,7 +48,7 @@ if (isset($_GET['username'])) {
             $thisuser = $user;
         }
     }
-    $form = '<p>Ändern Sie hier die Beschreibung der Datenbank <strong>'.$thisuser['username'].'</strong>.</p>';
+    $form = '<p>Ändern Sie hier die Beschreibung des DB-Benutzers <strong>'.$thisuser['username'].'</strong>.</p>';
     $form .= '<p><input type="text" name="description" value="'.filter_input_general($thisuser['description']).'" /></p>
 <p><input type="submit" value="Speichern" /></p>';
     output(html_form('mysql_description', 'save', "action=description&username={$thisuser['username']}", $form));
