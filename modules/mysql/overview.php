@@ -64,7 +64,7 @@ if (count($dbs) > 0 || count($users) > 0) {
         //$username = str_replace('_', '_ ', $user['username']);
         $desc = '';
         if ($user['description']) {
-            $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.$user['description'].'</span>';
+            $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.filter_input_general($user['description']).'</span>';
         }
         output("<th><span title=\"Erstellt: {$user['created']}\">{$username}</span>".$desc);
         output("<br />".internal_link('description', other_icon("comment.png", 'Beschreibung ändern'), "username={$username}")."&#160;");
