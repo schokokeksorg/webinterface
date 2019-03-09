@@ -78,7 +78,7 @@ if (count($dbs) > 0 || count($users) > 0) {
         $phpmyadmin = "https://mysql-{$servers[$db['name']]}/";
         $desc = '';
         if ($db['description']) {
-            $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.$db['description'].'</span>';
+            $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">'.filter_input_general($db['description']).'</span>';
         }
         output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>".$desc."<br />");
         output(internal_link('description', other_icon("comment.png", 'Datenbank-Beschreibung ändern'), "db={$db['name']}")."&#160;");
