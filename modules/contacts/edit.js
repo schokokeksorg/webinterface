@@ -32,9 +32,13 @@ function receive_pgpidcheck(result) {
     if (result.status == 'found') {
         $('#pgpid').val(result.id);
         $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" />');
+    } else if (result.status == 'unusable') {
+        $('#pgpid').val(result.id);
+        $('#pgpkey').closest('tr').show();
+        $("#pgpid_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" /><br>Es wurde ein Key gefunden, allerdings scheint dieser kaputt oder veraltet zu sein. Bitte geben Sie unten den kompletten aktuellen Key ein.');
     } else {
         $('#pgpkey').closest('tr').show();
-        $("#pgpid_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" /><br>Es wurde kein PGP-Key zu dieser ID gefunden. Bitte geben Sie unten den kompletten Key ein.');
+        $("#pgpid_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" /><br>Es konnte kein PGP-Key zu dieser ID vom Keyserver-Netzwerk bezogen werden. Bitte geben Sie unten den kompletten Key ein.');
     }
 }
 
@@ -42,7 +46,8 @@ function receive_pgpidcheck(result) {
 function receive_pgpid(result) {
     if (result.status == 'found' && ! $('#pgpid').val()) {
         $('#pgpid').val(result.id);
-        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" /><br>Es wurde ein PGP-Key auf einem Keyserver gefunden.');
+        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" /><br>Es wurde ein PGP-Key auf einem Keyserver gefunden. Bitte prüfen Sie, ob die ID korrekt ist und Sie auch den dazu passenden privaten Schlüssel besitzen.');
+        pgpid_change();
     }
 }
 

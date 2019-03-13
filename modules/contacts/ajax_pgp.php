@@ -34,6 +34,9 @@ if (isset($_GET['id'])) {
         $result['status'] = 'found';
         $result['id'] = $id;
     }
+    if ($id && !test_pgp_key($_GET['id'])) {
+        $result['status'] = 'unusable';
+    }
     echo json_encode($result);
     die();
 }

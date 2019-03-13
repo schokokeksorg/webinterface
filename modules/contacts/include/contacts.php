@@ -329,7 +329,9 @@ function search_pgp_key($search)
         return null;
     }
     $output = array();
-    exec('LC_ALL=C /usr/bin/gpg --batch --with-colons --keyserver hkp://pool.sks-keyservers.net --search-key '.escapeshellarg($search), $output);
+    $command = 'LC_ALL=C /usr/bin/gpg --batch --with-colons --keyserver hkps://hkps.pool.sks-keyservers.net --search-key '.escapeshellarg($search);
+    DEBUG($command);
+    exec($command, $output);
     DEBUG($output);
     $keys = array();
     foreach ($output as $row) {
@@ -358,12 +360,15 @@ function fetch_pgp_key($pgp_id)
 {
     $output = array();
     $ret = null;
-    DEBUG('/usr/bin/gpg --batch --keyserver hkp://pool.sks-keyservers.net --recv-key '.escapeshellarg($pgp_id));
-    exec('/usr/bin/gpg --batch --keyserver hkp://pool.sks-keyservers.net --recv-key '.escapeshellarg($pgp_id), $output, $ret);
+    $command = '/usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key '.escapeshellarg($pgp_id);
+    DEBUG($command);
+    exec($command, $output, $ret);
     DEBUG($output);
     DEBUG($ret);
     if ($ret == 0) {
-        exec('/usr/bin/gpg --batch --with-colons --list-keys '.escapeshellarg($pgp_id), $output);
+        $command = '/usr/bin/gpg --batch --with-colons --list-keys '.escapeshellarg($pgp_id);
+        DEBUG($command);
+        exec($command, $output);
         DEBUG($output);
         foreach ($output as $row) {
             if (substr($row, 0, 4) === 'fpr:') {
@@ -376,6 +381,26 @@ function fetch_pgp_key($pgp_id)
     return null;
 }
 
+function import_pgp_key($pgp_key) 
+{
+    $command = 'LC_ALL=C /usr/bin/gpg --batch --no-auto-check-trustdb --trust-model=always --import';
+    DEBUG($command);
+    $proc = popen($command, 'w');
+    fwrite($proc, $pgp_key);
+    $ret = pclose($proc);
+    DEBUG('Import des PGP-Keys: '.$ret);
+    return $ret === 0;
+}
+
+function test_pgp_key($pgp_id)
+{
+    $command = 'LC_ALL=C /usr/bin/gpg --batch --trust-model=always --encrypt --recipient '.escapeshellarg($pgp_id);
+    DEBUG($command);
+    $proc = popen($command, 'w');
+    $ret = pclose($proc);
+    DEBUG('Test des PGP-Key: '.$ret);
+    return $ret === 0;
+}
 
 function domainlist_by_contact($c)
 {

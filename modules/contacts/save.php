@@ -140,14 +140,20 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
     if (isset($_REQUEST['usepgp']) && $_REQUEST['usepgp'] == 'yes' && isset($_REQUEST['pgpid'])) {
         $pgpid = preg_replace('/[^0-9a-fA-F]/', '', $_REQUEST['pgpid']);
-        DEBUG('PGP-ID: '.$pgpid.' / Länge: '.strlen($pgpid));
-        if (strlen($pgpid) == 8 || strlen($pgpid) == 16 || strlen($pgpid) == 40) {
-            $c['pgp_id'] = $_REQUEST['pgpid'];
-            if (isset($_REQUEST['pgpkey']) && $_REQUEST['pgpkey']) {
-                $c['pgp_key'] = $_REQUEST['pgpkey'];
-            }
+        DEBUG('PGP-ID: '.$pgpid);
+        if (isset($_REQUEST['pgpkey']) && $_REQUEST['pgpkey']) {
+            DEBUG('Key angegeben, wird importiert');
+            $c['pgp_id'] = $pgpid;
+            import_pgp_key($_REQUEST['pgpkey']);
+            $c['pgp_key'] = $_REQUEST['pgpkey'];
         } else {
-            warning('Ihre PGP-ID wurde nicht übernommen, da sie syntaktisch falsch erscheint');
+            DEBUG('Kein Key, wird vom Keyserver geholt!');
+            $c['pgp_id'] = fetch_pgp_key($pgpid);
+        }
+        if (!test_pgp_key($c['pgp_id'])) {
+            $c['pgp_id'] = null;
+            $c['pgp_key'] = null;
+            warning('Ihr PGP-Key wurde nicht übernommen, da er nicht gültig zu sein scheint. Bitte geben Sie im Zweifel die vollständige Key-ID (Fingerprint) und einen Key in der ASCII-Form ein.');
         }
     } else {
         $c['pgp_id'] = null;
