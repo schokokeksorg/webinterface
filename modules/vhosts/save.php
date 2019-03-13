@@ -308,6 +308,9 @@ if ($_GET['action'] == 'edit') {
         $domainname = $domain->fqdn;
         $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
         $hostname = trim($hostname, " .-");
+    } elseif ($domain_id == -2) {
+        # use system masterdomain
+        $domainname = $_SESSION['userinfo']['username'].".".config('masterdomain');
     }
 
     if (! is_array($_POST['options'])) {
