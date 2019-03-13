@@ -67,9 +67,9 @@ if (isset($_REQUEST['domain'])) {
             $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
                 <table>
                 <tr><td>Domainname:</td><td><strong>'.filter_input_general($request).'</strong></td></tr>
-                <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+                <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
             if ($data['setup']) {
-                $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+                $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
             }
             $form .='</table>';
 
@@ -93,9 +93,9 @@ if (isset($_REQUEST['domain'])) {
                 $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
                     <table>
                     <tr><td>Domainname:</td><td><strong>'.filter_input_general($avail['domainNameUnicode']).'</strong></td></tr>
-                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
                 if ($data['setup']) {
-                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
                 }
                 $form .='</table>';
 
