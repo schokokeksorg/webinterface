@@ -88,7 +88,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
     }
 
     title("IMAP-Account anlegen");
-    output('<p>Hier können Sie ein neues POP3/IMAP-Konto anlegen.</p>
+    output('<p>Hier können Sie ein neues IMAP/POP3/SMTP-Konto anlegen.</p>
 <p style="border: 2px solid red; background-color: white; padding:1em;"><strong>ACHTUNG:</strong> ein POP3-/IMAP-Account ist <strong>keine E-Mail-Adresse</strong>. Wenn Sie sich nicht sicher sind, lesen Sie bitte die Anleitung <a href="https://wiki.schokokeks.org/E-Mail/Konfiguration">in unserem Wiki</a>. Sie können Ihre E-Mail-Konten auch über eine einfachere Möglichkeit verwalten, dann ist eine Einrichtung über diese Weboberfläche möglich. Die Umstellung erfolgt '.internal_link("../email/domains", "unter Domains").'.</p>
   '.html_form('email_imap_create', 'imap', 'action=save', '
   <table style="margin-bottom: 1em;">
@@ -197,7 +197,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
         output('<div class="error"><strong>Achtung:</strong> Alle Ihre Domains sind auf Webinterface-Verwaltung konfiguriert. Sie können dennoch manuelle IMAP-Konten für Ihre speziellen Konfigurationen anlegen, in der Regel sollten Sie aber hier keine IMAP-Acccounts anlegen. Dies kann zu Fehlfunktionen führen.</div>');
     }
     addnew("imap", "Neuen Account anlegen", "action=create");
-    output('<p>Folgende POP3/IMAP-Konten sind eingerichtet:</p>
+    output('<p>Folgende IMAP/POP3/SMTP-Konten sind eingerichtet:</p>
 <table style="margin-bottom: 1em;">
 <tr><th>Kontoname:</th><th>Mailbox-Pfad:</th><th>aktiv</th><th>&#160;</th></tr>
 ');
