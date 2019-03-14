@@ -106,7 +106,7 @@ if (strstr($vhost['options'], 'aliaswww')) {
 }
 
 $form = "
-<h4 style=\"margin-top: 2em;\">Name des VHost</h4>
+<h4 style=\"margin-top: 2em;\">Adresse der Website</h4>
     <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" /><strong>.</strong>".domainselect($vhost['domain_id']);
 $form .= "<br />
     <input type=\"checkbox\" name=\"aliaswww\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label><br/>
