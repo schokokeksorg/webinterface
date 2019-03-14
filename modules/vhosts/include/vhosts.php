@@ -186,20 +186,6 @@ function userdomain()
     return $res;
 }
 
-function user_uses_userdomain()
-{
-    global $config;
-    $uid = (int) $_SESSION['userinfo']['uid'];
-    $userdomain = userdomain();
-    $result = db_query("SELECT id FROM vhosts.vhost WHERE domain=:domid AND user=:uid", array(":uid" => $uid, ":domid" => $userdomain['id']));
-    if ($result->rowCount() > 0) {
-        DEBUG("User hat ".$result->rowCount()." Domains *.schokokeks.net");
-        return true;
-    }
-    DEBUG("User hat keine Domains *.schokokeks.net");
-    return false;
-}
-
 function domainselect($selected = null, $selectattribute = '')
 {
     global $domainlist, $config;
@@ -222,12 +208,8 @@ function domainselect($selected = null, $selectattribute = '')
         $ret .= "<option value=\"{$dom->id}\"{$s}>{$dom->fqdn}</option>\n";
     }
     $userdomain = userdomain();
-    $user_needs_userdomain = $userdomain && (count($domainlist) == 0 || user_uses_userdomain());
-    $user_needs_userdomain = $user_needs_userdomain || ($selected == -2);
-    if (count($domainlist) > 0 && $user_needs_userdomain) {
-        $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
-    }
-    if ($userdomain && (count($domainlist) == 0 || user_uses_userdomain())) {
+    $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
+    if ($userdomain) {
         $s = ($selected == -1 ? ' selected="selected"' : '');
         $ret .= ' <option value="-1"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.$userdomain['name'].'</option>';
     }
