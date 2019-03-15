@@ -23,14 +23,14 @@ javascript();
 
 require_once('vhosts.php');
 
-title("Subdomains");
+title("Websites");
 $error = '';
 
 require_role(ROLE_SYSTEMUSER);
 
 global $prefix;
 
-output("<p>Mit dieser Funktion legen Sie fest, welche Domains und Subdomains als Webserver-Ressource verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>
+output("<p>Mit dieser Funktion legen Sie fest, welche Websites verfügbar sein sollen und welches Verzeichnis die Dateien enthalten soll.</p>
 <p>Änderungen an Ihren Einstellungen werden im 5-Minuten-Takt auf dem Server übernommen.</p>
 ");
 
@@ -63,9 +63,9 @@ if (count($vhosts) > 0) {
     }
     */
     if (count($vhosts) > 10) {
-        addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
+        addnew('edit', 'Neue Website einrichten');
     }
-    output("<table><tr><th>(Sub-)Domain</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>HTTPS</th><th>Traffic<sup>*</sup></th><th>PHP</th><th>Lokaler Pfad<sup>**</sup></th></tr>\n");
+    output("<table><tr><th>Haupt-Adresse</th><th></th><th>Zusätzliche Alias-Namen</th><th>Protokoll</th><th>HTTPS</th><th>Traffic<sup>*</sup></th><th>PHP</th><th>Lokaler Pfad<sup>**</sup></th></tr>\n");
 
     $even = true;
 
@@ -188,10 +188,10 @@ if (count($vhosts) > 0) {
 } elseif ($filter) {
     output("<p><strong><em>Keine Einträge für Ihre aktuellen Filterkrieterien.</em></strong></p>");
 } else { // keine VHosts vorhanden
-    output("<p><strong><em>Bisher haben Sie keine Domain bzw. Subdomain eingerichtet.</em></strong></p>");
+    output("<p><strong><em>Bisher haben Sie keine Website eingerichtet.</em></strong></p>");
 }
 
-addnew('edit', 'Neue Domain bzw. Subdomain einrichten');
+addnew('edit', 'Neue Website einrichten');
 
 output('<p>Bei passenden Einstellungen wird für jede Ihrer Websites automatisch ein Zertifikat von Let\'s Encrypt verwaltet und regelmäßig erneuert. Wenn Sie ein Zertifikat einsetzen möchten, das von einer anderen Zertifizierungsstelle ausgestellt ist, können Sie dieses hier hochladen.</p>');
 addnew('newcert', 'Ein eigenes HTTPS-Zertifikat eintragen');

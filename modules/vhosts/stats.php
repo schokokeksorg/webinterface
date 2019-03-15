@@ -115,6 +115,6 @@ if (isset($_REQUEST['vhost'])) {
 ');
     } else {
         # keine VHosts mehr verfügbar
-        output('<p><em>Sie haben aktuell keine Domains/Subdomains, für die Protokolle erstellt aber noch nicht ausgewertet werden.</em></p>');
+        output('<p><em>Sie haben aktuell keine Websites, für die Protokolle erstellt aber noch nicht ausgewertet werden.</em></p>');
     }
 }

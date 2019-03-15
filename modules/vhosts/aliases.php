@@ -19,7 +19,7 @@ require_once('inc/security.php');
 
 require_once('vhosts.php');
 
-title("Aliasnamen für Subdomain bearbeiten");
+title("Aliasnamen für Website bearbeiten");
 $section = 'vhosts_vhosts';
 
 require_role(ROLE_SYSTEMUSER);

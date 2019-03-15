@@ -347,7 +347,7 @@ if ($_GET['action'] == 'edit') {
         header('Location: aliases?vhost='.$vhost['id']);
     }
 } elseif ($_GET['action'] == 'deletealias') {
-    $title = "Subdomain löschen";
+    $title = "Website-Alias löschen";
     $section = 'vhosts_vhosts';
 
     $alias = get_alias_details((int) $_GET['alias']);
@@ -360,7 +360,7 @@ if ($_GET['action'] == 'edit') {
 
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=deletealias&alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Subdomain »{$vhost_string}« wirklich löschen?");
+        are_you_sure("action=deletealias&alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Website »{$vhost_string}« wirklich löschen?");
     } elseif ($sure === true) {
         delete_alias($alias['id']);
         if (! $debugmode) {
@@ -372,7 +372,7 @@ if ($_GET['action'] == 'edit') {
         }
     }
 } elseif ($_GET['action'] == 'delete') {
-    $title = "Subdomain löschen";
+    $title = "Website löschen";
     $section = 'vhosts_vhosts';
 
     $vhost = get_vhost_details((int) $_GET['vhost']);
@@ -380,7 +380,7 @@ if ($_GET['action'] == 'edit') {
 
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=delete&vhost={$_GET['vhost']}", "Möchten Sie die Subdomain »{$vhost_string}« wirklich löschen?");
+        are_you_sure("action=delete&vhost={$_GET['vhost']}", "Möchten Sie die Website »{$vhost_string}« wirklich löschen?");
     } elseif ($sure === true) {
         delete_vhost($vhost['id']);
         if (! $debugmode) {

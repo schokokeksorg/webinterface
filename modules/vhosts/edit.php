@@ -41,9 +41,9 @@ if (ipv6_possible($server)) {
 
 DEBUG($vhost);
 if ($id == 0) {
-    title("Neue Subdomain anlegen");
+    title("Neue Website anlegen");
 } else {
-    title("Subdomain bearbeiten");
+    title("Website bearbeiten");
 }
 
 $defaultdocroot = $vhost['domain'];
@@ -317,7 +317,7 @@ if (!$vhost['server']) {
 if ($have_v6) {
     $ipv6_address = '';
     if ($vhost['id'] && ($vhost['autoipv6'] >0)) {
-        $ipv6_address = '<strong>IPv6-Adresse dieser Subdomain:</strong> '.autoipv6_address($vhost['id'], $vhost['autoipv6']);
+        $ipv6_address = '<strong>IPv6-Adresse dieser Website:</strong> '.autoipv6_address($vhost['id'], $vhost['autoipv6']);
     }
     $checked = ($vhost['autoipv6'] > 0) ? ' checked="checked"' : '';
     $checked2 = ($vhost['autoipv6'] == 2) ? ' checked="checked"' : '';
