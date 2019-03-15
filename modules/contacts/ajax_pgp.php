@@ -16,26 +16,23 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contacts.php');
 
-if (isset($_GET['q'])) {
-    $id = search_pgp_key($_GET['q']);
+if (isset($_GET['q']) || isset($_GET['id'])) {
     $result = array("status" => "notfound",
-        "id" => null);
+                    "id" => null);
+    $id = null;
+    if (isset($_GET['q'])) {
+        $id = search_pgp_key($_GET['q']);
+        fetch_pgp_key($id);
+    } elseif (isset($_GET['id'])) {
+        $id = fetch_pgp_key($_GET['id']);
+    }
     if ($id) {
         $result['status'] = 'found';
         $result['id'] = $id;
-    }
-    echo json_encode($result);
-    die();
-}
-if (isset($_GET['id'])) {
-    $id = fetch_pgp_key($_GET['id']);
-    $result = array("status" => "notfound", "id" => null);
-    if ($id) {
-        $result['status'] = 'found';
-        $result['id'] = $id;
-    }
-    if ($id && !test_pgp_key($_GET['id'])) {
-        $result['status'] = 'unusable';
+        if (!test_pgp_key($id)) {
+            $result['status'] = 'unusable';
+        }
+
     }
     echo json_encode($result);
     die();

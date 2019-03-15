@@ -1,4 +1,5 @@
 var old_email;
+var pgpcheck_in_progress = false;
 
 function populate_number(result) {
   var field = result.field;
@@ -28,10 +29,14 @@ function check_number( field )
 }
 
 
-function receive_pgpidcheck(result) {
+function receive_pgpid(result) {
     if (result.status == 'found') {
+        message = '<br>Es wurde ein PGP-Key auf einem Keyserver gefunden. Bitte prüfen Sie, ob die ID korrekt ist und Sie auch den dazu passenden privaten Schlüssel besitzen.';
+        if (result.id == $('#pgpid').val()) {
+            message = '';
+        }
         $('#pgpid').val(result.id);
-        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" />');
+        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" />'+message);
     } else if (result.status == 'unusable') {
         $('#pgpid').val(result.id);
         $('#pgpkey').closest('tr').show();
@@ -39,22 +44,6 @@ function receive_pgpidcheck(result) {
     } else {
         $('#pgpkey').closest('tr').show();
         $("#pgpid_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" /><br>Es konnte kein PGP-Key zu dieser ID vom Keyserver-Netzwerk bezogen werden. Bitte geben Sie unten den kompletten Key ein.');
-    }
-}
-
-
-function receive_pgpid(result) {
-    if (result.status == 'found' && ! $('#pgpid').val()) {
-        $('#pgpid').val(result.id);
-        $("#pgpid_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" /><br>Es wurde ein PGP-Key auf einem Keyserver gefunden. Bitte prüfen Sie, ob die ID korrekt ist und Sie auch den dazu passenden privaten Schlüssel besitzen.');
-        pgpid_change();
-    }
-}
-
-function pgpid_change() {
-    val = $('#pgpid').val().replace(/\s/g, "");;
-    if (val.length == 8 || val.length == 16 || val.length == 40) {
-        $.getJSON("ajax_pgp?id="+encodeURIComponent(val), receive_pgpidcheck)
     }
 }
 
@@ -68,11 +57,19 @@ function email_change() {
     }
 }
 
-function usepgp_yes() {
-    if ($('#email').val() && ! $('#pgpid').val()) {
+function searchpgp() {
+    if ($('#pgpid').val()) {
+        $("#pgpid_feedback").html('<img src="../../images/spinner.gif" style="height: 16px; width: 16px;" />');
+        $.getJSON("ajax_pgp?id="+encodeURIComponent($('#pgpid').val().replace(/\s/g, "")), receive_pgpid)
+    } else if ($('#email').val() && ! $('#pgpid').val()) {
+        $("#pgpid_feedback").html('<img src="../../images/spinner.gif" style="height: 16px; width: 16px;" />');
         $.getJSON("ajax_pgp?q="+encodeURIComponent($('#email').val()), receive_pgpid)
     }
+}
+
+function usepgp_yes() {
     $('#pgpid').closest('tr').show();
+    $('#pgpkey').closest('tr').show();
 }
 
 function usepgp_no() {
@@ -94,12 +91,12 @@ $(function() {
         old_email = $('#email').val();
     }
     $('#email').on("focusout", email_change);
-    $('#pgpid').on("focusout", pgpid_change);
-    $('#pgpkey').closest('tr').hide();
     $(".buttonset").buttonset();
     $("#usepgp-yes").click(usepgp_yes);
     $("#usepgp-no").click(usepgp_no);
     if ($('#usepgp-no').is(':checked')) {
         $('#pgpid').closest('tr').hide();
+        $('#pgpkey').closest('tr').hide();
     }
+    $('#searchpgp').click(searchpgp);
 });
