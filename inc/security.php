@@ -20,11 +20,33 @@ require_once('vendor/autoload.php');
 
 function strong_password($password, $user = array())
 {
-    $passwordchecker = new ZxcvbnPhp\Zxcvbn();
-    $strength = $passwordchecker->passwordStrength($password, $user);
-
-    if ($strength['score'] < 2) {
-        return "Das Passwort ist zu einfach!";
+    $pwcheck = config('pwcheck');
+    $result = null;
+    if ($pwcheck) {
+        DEBUG($pwcheck);
+        $req = curl_init($pwcheck.$password);
+        curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($req, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($req, CURLOPT_SSL_VERIFYSTATUS, 1);
+        curl_setopt($req, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($req, CURLOPT_TIMEOUT, 5);
+        curl_setopt($req, CURLOPT_FOLLOWLOCATION, 0);
+        $result = chop(curl_exec($req));
+        DEBUG($result);
+    }
+    if ($result === 'good') {
+        return true;
+    } elseif ($result === 'bad') {
+        return "Das ist kein gutes Passwort!";
+    }
+    if ($result === null || $result === false) {
+        // Kein Online-Check eingerichtet oder der request war nicht erfolgreich
+        $passwordchecker = new ZxcvbnPhp\Zxcvbn();
+        $strength = $passwordchecker->passwordStrength($password, $user);
+        
+        if ($strength['score'] < 2) {
+            return "Das Passwort ist zu einfach!";
+        }
     }
 
     return true;
