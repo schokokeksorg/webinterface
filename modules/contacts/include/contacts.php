@@ -381,7 +381,7 @@ function fetch_pgp_key($pgp_id)
     return null;
 }
 
-function import_pgp_key($pgp_key) 
+function import_pgp_key($pgp_key)
 {
     $command = 'LC_ALL=C /usr/bin/gpg --batch --no-auto-check-trustdb --trust-model=always --import';
     DEBUG($command);

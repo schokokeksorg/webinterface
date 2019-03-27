@@ -32,7 +32,6 @@ if (isset($_GET['q']) || isset($_GET['id'])) {
         if (!test_pgp_key($id)) {
             $result['status'] = 'unusable';
         }
-
     }
     echo json_encode($result);
     die();
