@@ -282,7 +282,7 @@ function set_domain_pretransfer($domain)
     $domain = (int) $domain;
     db_query(
         "UPDATE kundendaten.domains SET status='pretransfer', dns=1 WHERE id=? AND kunde=?",
-            array($domain, $cid)
+        array($domain, $cid)
     );
 }
 
@@ -295,7 +295,7 @@ function set_domain_prereg($domain)
     $domain = (int) $domain;
     db_query(
         "UPDATE kundendaten.domains SET status='prereg', dns=1 WHERE id=? AND kunde=?",
-            array($domain, $cid)
+        array($domain, $cid)
     );
 }
 

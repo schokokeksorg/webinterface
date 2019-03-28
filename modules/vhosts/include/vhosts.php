@@ -191,8 +191,8 @@ function domainselect($selected = null, $selectattribute = '')
     global $domainlist, $config;
     if ($domainlist == null) {
         $domainlist = get_domain_list(
-        $_SESSION['customerinfo']['customerno'],
-                                  $_SESSION['userinfo']['uid']
+            $_SESSION['customerinfo']['customerno'],
+            $_SESSION['userinfo']['uid']
     );
     }
     $selected = (int) $selected;

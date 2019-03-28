@@ -1,0 +1,1295 @@
+   1) modules/index/certsave.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+     add_clientcert(
+-
+-      $_SESSION['clientcert_cert'],
+-
+-      $_SESSION['clientcert_dn'],
+-
+-      $_SESSION['clientcert_issuer'],
+-                 $_SESSION['clientcert_serial'],
+-
+-      $_SESSION['clientcert_valid_from'],
+-
+-      $_SESSION['clientcert_valid_until']
++        $_SESSION['clientcert_cert'],
++        $_SESSION['clientcert_dn'],
++        $_SESSION['clientcert_issuer'],
++        $_SESSION['clientcert_serial'],
++        $_SESSION['clientcert_valid_from'],
++        $_SESSION['clientcert_valid_until']
+ 
+   );
+ 
+     // Räume session auf
+     unset($_SESSION['clientcert_cert']);
+     unset($_SESSION['clientcert_dn']);
+     unset($_SESSION['clientcert_issuer']);
+     unset($_SESSION['clientcert_serial']);
+     unset($_SESSION['clientcert_valid_from']);
+     unset($_SESSION['clientcert_valid_until']);
+     header('Location: cert');
+ } elseif ($_GET['action'] == 'delete') {
+     $cert = get_cert_by_id($_GET['id']);
+     if (! $cert) {
+         system_failure('no ID');
+     }
+     $username = null;
+     if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
+         $username = $_SESSION['userinfo']['username'];
+         if (isset($_SESSION['subuser'])) {
+             $username = $_SESSION['subuser'];
+         }
+     } elseif ($_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
+         $username = $_SESSION['mailaccount'];
+     }
+     if (! ($cert['username'] == $username)) {
+         system_failure('Das Zertifikat ist nicht für Ihren Zugang eingerichtet');
+     }
+     $sure = user_is_sure();
+     if ($sure === null) {
+         are_you_sure("action=delete&id={$cert['id']}", filter_input_general("Möchten Sie das Zertifikat »{$cert['dn']}« (Seriennummer {$cert['serial']}, Gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich löschen?"));
+     } elseif ($sure === true) {
+         delete_clientcert($cert['id']);
+         if (! $debugmode) {
+             header("Location: cert");
+         }
+     } elseif ($sure === false) {
+         if (! $debugmode) {
+             header("Location: cert");
+         }
+     }
+ } else {
+     system_failure('Kein Kommando');
+ }
+ 
+
+      ----------- end diff -----------
+
+   2) modules/index/include/x509.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+     db_query(
+-      "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
+-           array(":id" => $id, ":type" => $type, ":username" => $username)
++        "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
++        array(":id" => $id, ":type" => $type, ":username" => $username)
+   );
+ }
+ 
+
+      ----------- end diff -----------
+
+   3) modules/vhosts/include/vhosts.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+         $domainlist = get_domain_list(
+-        $_SESSION['customerinfo']['customerno'],
+-                                  $_SESSION['userinfo']['uid']
++            $_SESSION['customerinfo']['customerno'],
++            $_SESSION['userinfo']['uid']
+     );
+     }
+     $selected = (int) $selected;
+ 
+     $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
+     $found = false;
+     foreach ($domainlist as $dom) {
+         $s = '';
+         if ($selected == $dom->id) {
+             $s = ' selected="selected" ';
+             $found = true;
+         }
+         $ret .= "<option value=\"{$dom->id}\"{$s}>{$dom->fqdn}</option>\n";
+     }
+     $userdomain = userdomain();
+     $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
+     if ($userdomain) {
+         $s = ($selected == -1 ? ' selected="selected"' : '');
+         $ret .= ' <option value="-1"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.$userdomain['name'].'</option>';
+     }
+     if ($selected == -2) {
+         $s = ($selected == -2 ? ' selected="selected"' : '');
+         $ret .= ' <option value="-2"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').' (Bitte nicht mehr benutzen!)</option>';
+         if ($selected > 0 and ! $found) {
+             system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
+         }
+     }
+     $ret .= '</select>';
+     return $ret;
+ }
+ 
+ 
+ 
+ function get_vhost_details($id)
+ {
+     DEBUG("Lese #{$id}...");
+     $id = (int) $id;
+     $uid = (int) $_SESSION['userinfo']['uid'];
+     $result = db_query("SELECT vh.*,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid AND vh.id=:id", array(":uid" => $uid, ":id" => $id));
+     if ($result->rowCount() != 1) {
+         system_failure('Interner Fehler beim Auslesen der Daten');
+     }
+ 
+     $ret = $result->fetch();
+ 
+     if ($ret['domain_id'] === null) {
+         $ret['domain_id'] = -2;
+     }
+     $ret['cert'] = $ret['certid'];
+     $userdomain = userdomain();
+     if ($ret['domain_id'] == $userdomain['id']) {
+         $user = $_SESSION['userinfo']['username'];
+         $ret['domain_id'] = -1;
+         if ($ret['hostname'] == $user) {
+             $ret['hostname'] = null;
+         } elseif (substr($ret['hostname'], -strlen($user), strlen($user)) == $user) {
+             $ret['hostname'] = substr($ret['hostname'], 0, -strlen($user)-1); // Punkt mit entfernen!
+         } else {
+             system_failure('Userdomain ohne Username!');
+         }
+     }
+     if ($ret['hsts'] === null) {
+         DEBUG('HSTS: '.$ret['hsts']);
+         $ret['hsts'] = -1;
+     }
+     $ret['server'] = $ret['server_id'];
+     DEBUG($ret);
+     return $ret;
+ }
+ 
+ 
+ function get_aliases($vhost)
+ {
+     $result = db_query("SELECT id,fqdn,options FROM vhosts.v_alias WHERE vhost=?", array($vhost));
+     $ret = array();
+     while ($item = $result->fetch()) {
+         array_push($ret, $item);
+     }
+     return $ret;
+ }
+ 
+ 
+ 
+ function get_all_aliases($vhost)
+ {
+     //$vhost = get_vhost_details( (int) $vhost );
+     $aliases = get_aliases($vhost['id']);
+     $ret = array();
+     if (strstr($vhost['options'], 'aliaswww')) {
+         array_push($ret, array('id' => 'www', 'fqdn' => 'www.'.$vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : null)));
+     }
+     foreach ($aliases as $item) {
+         array_push($ret, $item);
+         if (strstr($item['options'], 'aliaswww')) {
+             array_push($ret, array('id' => 'www_'.$item['id'], 'fqdn' => 'www.'.$item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : null)));
+         }
+     }
+     return $ret;
+ }
+ 
+ 
+ function list_available_webapps()
+ {
+     $result = db_query("SELECT id,displayname FROM vhosts.global_webapps");
+     $ret = array();
+     while ($item = $result->fetch()) {
+         array_push($ret, $item);
+     }
+     return $ret;
+ }
+ 
+ 
+ function delete_vhost($id)
+ {
+     $id = (int) $id;
+     if ($id == 0) {
+         system_failure("id == 0");
+     }
+     $vhost = get_vhost_details($id);
+     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Removing vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
+     db_query("DELETE FROM vhosts.vhost WHERE id=?", array($vhost['id']));
+ }
+ 
+ 
+ 
+ function make_svn_vhost($id)
+ {
+     $id = (int) $id;
+     if ($id == 0) {
+         system_failure("id == 0");
+     }
+     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to SVN');
+     db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES (?, 'svn')", array($id));
+     db_query("DELETE FROM vhosts.webapps WHERE vhost=?", array($id));
+ }
+ 
+ function make_dav_vhost($id)
+ {
+     $id = (int) $id;
+     if ($id == 0) {
+         system_failure("id == 0");
+     }
+     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
+     db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES (?, 'dav', 'nouserfile')", array($id));
+     db_query("DELETE FROM vhosts.webapps WHERE vhost=?", array($id));
+ }
+ 
+ function make_regular_vhost($id)
+ {
+     $id = (int) $id;
+     if ($id == 0) {
+         system_failure("id == 0");
+     }
+     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to regular');
+     db_query("DELETE FROM vhosts.dav WHERE vhost=?", array($id));
+     db_query("DELETE FROM vhosts.webapps WHERE vhost=?", array($id));
+ }
+ 
+ 
+ function make_webapp_vhost($id, $webapp)
+ {
+     $id = (int) $id;
+     $webapp = (int) $webapp;
+     if ($id == 0) {
+         system_failure("id == 0");
+     }
+     $result = db_query("SELECT displayname FROM vhosts.global_webapps WHERE id=?", array($webapp));
+     if ($result->rowCount() == 0) {
+         system_failure("webapp-id invalid");
+     }
+     $webapp_name = $result->fetch(PDO::FETCH_OBJ)->displayname;
+     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
+     db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES (?, ?)", array($id, $webapp));
+     mail('webapps-setup@schokokeks.org', 'setup', 'setup');
+ }
+ 
+ 
+ function check_hostname_collision($hostname, $domain)
+ {
+     $uid = (int) $_SESSION['userinfo']['uid'];
+     # Neuer vhost => Prüfe Duplikat
+     $args = array(":hostname" => $hostname, ":domain" => $domain, ":uid" => $uid);
+     $domaincheck = "domain=:domain";
+     if ($domain == -1) {
+         $userdomain = userdomain();
+         if ($hostname) {
+             $hostname .= ".".$_SESSION['userinfo']['username'];
+         }
+         $args[":domain"] = $userdomain['id'];
+     }
+     if ($domain == -2) {
+         unset($args[":domain"]);
+         $domaincheck = "domain IS NULL";
+     }
+     $hostnamecheck = "hostname=:hostname";
+     if (! $hostname) {
+         $hostnamecheck = "hostname IS NULL";
+         unset($args[":hostname"]);
+     }
+     $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck} AND user=:uid", $args);
+     if ($result->rowCount() > 0) {
+         system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
+     }
+     if ($domain <= -1) {
+         return ;
+     }
+     unset($args[":uid"]);
+     $result = db_query("SELECT id, vhost FROM vhosts.v_alias WHERE {$hostnamecheck} AND {$domaincheck}", $args);
+     if ($result->rowCount() > 0) {
+         $data = $result->fetch();
+         $vh = get_vhost_details($data['vhost']);
+         system_failure('Dieser Hostname ist bereits als Alias für »'.$vh['fqdn'].'« eingerichtet');
+     }
+ }
+ 
+ function save_vhost($vhost)
+ {
+     if (! is_array($vhost)) {
+         system_failure('$vhost kein array!');
+     }
+     $id = (int) $vhost['id'];
+     $hostname = $vhost['hostname'];
+     $domain = (int) $vhost['domain_id'];
+     if ($domain == 0) {
+         system_failure('$domain == 0');
+     }
+     if ($vhost['domain_id'] == -2) {
+         $domain = null;
+     }
+     if ($id == 0) {
+         check_hostname_collision($vhost['hostname'], $vhost['domain_id']);
+     }
+     $hsts = (int) $vhost['hsts'];
+     if ($hsts < 0) {
+         $hsts = null;
+     }
+     $suexec_user = null;
+ 
+     $available_suexec = available_suexec_users();
+     foreach ($available_suexec as $u) {
+         if ($u['uid'] == $vhost['suexec_user']) {
+             $suexec_user = $u['uid'];
+         }
+     }
+ 
+     $server = null;
+     $available_servers = additional_servers();
+     if (in_array($vhost['server'], $available_servers)) {
+         $server = (int) $vhost['server'];
+     }
+     if ($server == my_server_id()) {
+         $server = null;
+     }
+ 
+     if ($vhost['is_svn']) {
+         if (! $vhost['options']) {
+             $vhost['options']='nodocroot';
+         } else {
+             $vhost['options'].=",nodocroot";
+         }
+     }
+ 
+     $cert = null;
+     $certs = user_certs();
+     foreach ($certs as $c) {
+         if ($c['id'] == $vhost['cert']) {
+             $cert = $c['id'];
+         }
+     }
+ 
+     $ipv4 = null;
+     $ipv4_avail = user_ipaddrs();
+     if (in_array($vhost['ipv4'], $ipv4_avail)) {
+         $ipv4 = $vhost['ipv4'];
+     }
+ 
+     $autoipv6 = 1;
+     if ($vhost['autoipv6'] == 0 ||  $vhost['autoipv6'] == 2) {
+         $autoipv6 = $vhost['autoipv6'];
+     }
+ 
+     if (!($vhost['ssl'] == 'forward' || $vhost['ssl'] == 'http' ||
+         $vhost['ssl'] == 'https')) {
+         $vhost['ssl'] = null;
+     }
+ 
+     $args = array(":hostname" => ($hostname ? $hostname : null),
+                 ":domain" => $domain,
+                 ":docroot" => ($vhost['docroot'] ? $vhost['docroot'] : null),
+                 ":php" => $vhost['php'],
+                 ":cgi" => ($vhost['cgi'] == 1 ? 1 : 0),
+                 ":ssl" => $vhost['ssl'],
+                 ":hsts" => $hsts,
+                 ":suexec_user" => $suexec_user,
+                 ":server" => $server,
+                 ":logtype" => ($vhost['logtype'] ? $vhost['logtype'] : null),
+                 ":errorlog" => (int) $vhost['errorlog'],
+                 ":cert" => $cert,
+                 ":ipv4" => $ipv4,
+                 ":autoipv6" => $autoipv6,
+                 ":options" => $vhost['options'],
+                 ":stats" => ($vhost['stats'] ? $vhost['stats'] : null),
+                 ":id" => $id);
+     if ($id != 0) {
+         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
+         db_query("UPDATE vhosts.vhost SET hostname=:hostname, domain=:domain, docroot=:docroot, php=:php, cgi=:cgi, `ssl`=:ssl, hsts=:hsts, `suexec_user`=:suexec_user, `server`=:server, logtype=:logtype, errorlog=:errorlog, certid=:cert, ipv4=:ipv4, autoipv6=:autoipv6, options=:options, stats=:stats WHERE id=:id", $args);
+     } else {
+         $args[":user"] = $_SESSION['userinfo']['uid'];
+         unset($args[":id"]);
+         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
+         $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ".
+                        "(:user, :hostname, :domain, :docroot, :php, :cgi, :ssl, :hsts, :suexec_user, :server, :logtype, :errorlog, :cert, :ipv4, :autoipv6, :options, :stats)", $args, true);
+         $id = db_insert_id();
+     }
+     $oldvhost = get_vhost_details($id);
+     /*
+       these vars may be 0 or 1.
+       So newval > oldval means that it has been switched on yet.
+     */
+     if ($vhost['is_dav'] > $oldvhost['is_dav']) {
+         make_dav_vhost($id);
+     } elseif ($vhost['is_svn'] > $oldvhost['is_svn']) {
+         make_svn_vhost($id);
+     } elseif ($vhost['is_webapp'] > $oldvhost['is_webapp']) {
+         make_webapp_vhost($id, $vhost['webapp_id']);
+     } elseif ($vhost['is_dav'] == 0 && $vhost['is_svn'] == 0 && $vhost['is_webapp'] == 0) {
+         make_regular_vhost($id);
+     }
+ }
+ 
+ 
+ function get_alias_details($id)
+ {
+     $id = (int) $id;
+     $uid = (int) $_SESSION['userinfo']['uid'];
+     $result = db_query("SELECT * FROM vhosts.v_alias WHERE id=?", array($id));
+ 
+     if ($result->rowCount() != 1) {
+         system_failure('Interner Fehler beim Auslesen der Alias-Daten');
+     }
+ 
+     $alias = $result->fetch();
+ 
+     if ($alias['domain_id'] == null) {
+         $alias['domain_id'] = -1;
+     }
+ 
+     /* Das bewirkt, dass nur die eigenen Aliase gesehen werden können */
+     get_vhost_details((int) $alias['vhost']);
+ 
+     return $alias;
+ }
+ 
+ 
+ function delete_alias($id)
+ {
+     $id = (int) $id;
+     $alias = get_alias_details($id);
+ 
+     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Removing alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
+     db_query("DELETE FROM vhosts.alias WHERE id=?", array($id));
+ }
+ 
+ function save_alias($alias)
+ {
+     if (! is_array($alias)) {
+         system_failure('$alias kein array!');
+     }
+     $id = (isset($alias['id']) ? (int) $alias['id'] : 0);
+     $domain = (int) $alias['domain_id'];
+     if ($domain == 0) {
+         system_failure('$domain == 0');
+     }
+     if ($alias['domain_id'] == -2) {
+         $domain = null;
+     }
+     $vhost = get_vhost_details((int) $alias['vhost']);
+     if (! $alias['hostname']) {
+         $alias['hostname'] = null;
+     }
+     $args = array(":hostname" => $alias['hostname'],
+                 ":domain" => $domain,
+                 ":vhost" => $vhost['id'],
+                 ":options" => $alias['options'],
+                 ":id" => $id);
+     if ($id == 0) {
+         unset($args[":id"]);
+         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
+         db_query("INSERT INTO vhosts.alias (hostname, domain, vhost, options) VALUES (:hostname, :domain, :vhost, :options)", $args, true);
+     } else {
+         unset($args[":vhost"]);
+         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Updating alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
+         db_query("UPDATE vhosts.alias SET hostname=:hostname, domain=:domain, options=:options WHERE id=:id", $args, true);
+     }
+ }
+ 
+ 
+ function available_suexec_users()
+ {
+     $uid = (int) $_SESSION['userinfo']['uid'];
+     $result = db_query("SELECT uid, username FROM vhosts.available_users LEFT JOIN vhosts.v_useraccounts ON (uid = suexec_user) WHERE mainuser=?", array($uid));
+     $ret = array();
+     while ($i = $result->fetch()) {
+         $ret[] = $i;
+     }
+     DEBUG('available suexec-users:');
+     DEBUG($ret);
+     return $ret;
+ }
+ 
+ 
+ function user_ipaddrs()
+ {
+     $uid = (int) $_SESSION['userinfo']['uid'];
+     $result = db_query("SELECT ipaddr FROM vhosts.ipaddr_available WHERE uid=?", array($uid));
+     $ret = array();
+     while ($i = $result->fetch()) {
+         $ret[] = $i['ipaddr'];
+     }
+     DEBUG($ret);
+     return $ret;
+ }
+ 
+
+      ----------- end diff -----------
+
+   4) modules/vhosts/include/certs.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+     db_query(
+-      "INSERT INTO vhosts.certs (uid, subject, cn, san, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :san, :valid_from, :valid_until, :chain, :cert, :key)",
++        "INSERT INTO vhosts.certs (uid, subject, cn, san, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :san, :valid_from, :valid_until, :chain, :cert, :key)",
+@@ @@
+     db_query(
+-      "INSERT INTO vhosts.csr (uid, hostname, san, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :san, :bits, :replace, :csr, :key)",
+-           array(":uid" => $uid, ":cn" => $cn, ":san" => $san, ":bits" => $bits,
++        "INSERT INTO vhosts.csr (uid, hostname, san, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :san, :bits, :replace, :csr, :key)",
++        array(":uid" => $uid, ":cn" => $cn, ":san" => $san, ":bits" => $bits,
+                  ":replace" => $replace, ":csr" => $csr, ":key" => $key)
+   );
+     $id = db_insert_id();
+     return $id;
+ }
+ 
+
+      ----------- end diff -----------
+
+   5) modules/domains/include/domains.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+         "UPDATE kundendaten.domains SET status='pretransfer', dns=1 WHERE id=? AND kunde=?",
+-            array($domain, $cid)
++        array($domain, $cid)
+@@ @@
+         "UPDATE kundendaten.domains SET status='prereg', dns=1 WHERE id=? AND kunde=?",
+-            array($domain, $cid)
++        array($domain, $cid)
+     );
+ }
+ 
+ 
+ function insert_domain_external($domain, $dns = false, $mail = true)
+ {
+     $cid = (int) $_SESSION['customerinfo']['customerno'];
+     $uid = (int) $_SESSION['userinfo']['uid'];
+     require_once("domainapi.php");
+     $info = api_domain_available($domain);
+     if (in_array($info['status'], array('nameContainsForbiddenCharacter', 'suffixDoesNotExist'))) {
+         system_failure("Diese Domain scheint ungültig zu sein!");
+     }
+     $tld = $info['domainSuffix'];
+     $domainname = str_replace(".$tld", "", $info['domainNameUnicode']);
+     logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain '.$info['domainNameUnicode']." DNS:{$dns} / Mail:{$mail}");
+ 
+     db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
+         ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", array($cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')));
+     $id = db_insert_id();
+     if ($dns) {
+         db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", array($id));
+     }
+     if ($mail) {
+         $vmailserver = (int) $_SESSION['userinfo']['server'];
+         db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES (?, ?)", array($id, $vmailserver));
+     }
+     return $id;
+ }
+ 
+ function delete_domain($id)
+ {
+     $cid = (int) $_SESSION['customerinfo']['customerno'];
+     logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Deleting domain '.$id);
+     db_query("DELETE FROM kundendaten.domains WHERE id=? AND kunde=?", array($id, $cid));
+ }
+ 
+
+      ----------- end diff -----------
+
+   6) modules/dns/include/dnsinclude.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+     db_query(
+-      "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
++        "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
+            "(:uid, :handle, :pwhash, :sshkey)",
+-           array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey)
++        array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey)
+@@ @@
+         db_query(
+-        "UPDATE dns.custom_records SET hostname=:newhostname WHERE ".
++            "UPDATE dns.custom_records SET hostname=:newhostname WHERE ".
+              "hostname=:oldhostname AND domain=:dom AND dyndns=:dyndns AND ip IS NULL",
+-             array(":dom" => $masterdomain->id, ":newhostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'],
++            array(":dom" => $masterdomain->id, ":newhostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'],
+                    ":oldhostname" => $oldaccount['handle'].'.'.$_SESSION['userinfo']['username'],  ":dyndns" => $id)
+     );
+     }
+ 
+     $args = array(":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id);
+     $pwhash = null;
+     if ($password_http && $password_http != '************') {
+         $args[":pwhash"] = "{SHA}".base64_encode(sha1($password_http, true));
+         db_query("UPDATE dns.dyndns SET handle=:handle, password=:pwhash, sshkey=:sshkey WHERE id=:id", $args);
+     } else {
+         db_query("UPDATE dns.dyndns SET handle=:handle, sshkey=:sshkey WHERE id=:id", $args);
+     }
+     logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "edited account »{$id}«");
+ }
+ 
+ 
+ function delete_dyndns_account($id)
+ {
+     $id = (int) $id;
+ 
+     db_query("DELETE FROM dns.dyndns WHERE id=?", array($id));
+     logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "deleted account »{$id}«");
+ }
+ 
+ 
+ function get_dyndns_records($id)
+ {
+     $id = (int) $id;
+     $result = db_query("SELECT hostname, domain, type, ttl, lastchange, id FROM dns.custom_records WHERE dyndns=?", array($id));
+     $data = array();
+     while ($entry = $result->fetch()) {
+         $dom = new Domain((int) $entry['domain']);
+         if ($dom->fqdn != config('masterdomain') && $dom->fqdn != config('user_vhosts_domain')) {
+             $dom->ensure_userdomain();
+         }
+         $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
+         if (! $entry['hostname']) {
+             $entry['fqdn'] = $dom->fqdn;
+         }
+         array_push($data, $entry);
+     }
+     DEBUG($data);
+     return $data;
+ }
+ 
+ $valid_record_types = array('a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp', 'caa');
+ 
+ 
+ function blank_dns_record($type)
+ {
+     global $valid_record_types;
+     if (!in_array(strtolower($type), $valid_record_types)) {
+         system_failure('invalid type: '.$type);
+     }
+     $rec = array('hostname' => null,
+                'domain' => 0,
+                'type' => strtolower($type),
+                'ttl' => 3600,
+                'ip' => null,
+                'dyndns' => null,
+                'data' => null,
+                'spec' => null);
+     if (strtolower($type) == 'mx') {
+         $rec['data'] = config('default_mx');
+         $rec['spec'] = '5';
+     }
+     return $rec;
+ }
+ 
+ function get_dns_record($id)
+ {
+     $id = (int) $id;
+     $result = db_query("SELECT hostname, domain, type, ip, dyndns, spec, data, ttl FROM dns.custom_records WHERE id=?", array($id));
+     if ($result->rowCount() != 1) {
+         system_failure('illegal ID');
+     }
+     $data = $result->fetch();
+     $dom = new Domain((int) $data['domain']);
+     $dom->ensure_userdomain();
+     DEBUG($data);
+     return $data;
+ }
+ 
+ 
+ function get_domain_records($dom)
+ {
+     $dom = (int) $dom;
+     $result = db_query("SELECT hostname, domain, type, ip, dyndns, spec, data, ttl, id FROM dns.custom_records WHERE domain=?", array($dom));
+     $data = array();
+     while ($entry = $result->fetch()) {
+         $dom = new Domain((int) $entry['domain']);
+         $dom->ensure_userdomain();
+         $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
+         if (! $entry['hostname']) {
+             $entry['fqdn'] = $dom->fqdn;
+         }
+         array_push($data, $entry);
+     }
+     DEBUG($data);
+     return $data;
+ }
+ 
+ function get_domain_auto_records($domainname)
+ {
+     $result = db_query("SELECT hostname, domain, CONCAT_WS('.', hostname, domain) AS fqdn, type, ip, spec, data, ttl FROM dns.tmp_autorecords WHERE domain=?", array($domainname));
+     $data = array();
+     while ($entry = $result->fetch()) {
+         array_push($data, $entry);
+     }
+     DEBUG($data);
+     return $data;
+ }
+ 
+ 
+ $implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp', 'caa');
+ 
+ function save_dns_record($id, $record)
+ {
+     global $valid_record_types;
+     global $implemented_record_types;
+     $record['type'] = strtolower($record['type']);
+     if (!in_array($record['type'], $valid_record_types)) {
+         system_failure('invalid type: '.$record['type']);
+     }
+     if (!in_array($record['type'], $implemented_record_types)) {
+         system_failure('record type '.$record['type'].' not implemented at the moment.');
+     }
+     $dom = new Domain((int) $record['domain']);
+     $dom->ensure_userdomain();
+     if (! $dom->id) {
+         system_failure('invalid domain');
+     }
+     if ($record['hostname'] == '') {
+         $record['hostname'] = null;
+     }
+     verify_input_hostname($record['hostname'], true);
+     verify_input_recorddata($record['data']);
+     if ($record['ttl'] &&  (int) $record['ttl'] < 1) {
+         system_failure('Fehler bei TTL');
+     }
+     switch ($record['type']) {
+     case 'a':
+       if ($record['dyndns']) {
+           get_dyndns_account($record['dyndns']);
+           $record['ip'] = null;
+       } else {
+           verify_input_ipv4($record['ip']);
+           $record['data'] = null;
+           $record['spec'] = null;
+       }
+       break;
+     case 'aaaa':
+       if ($record['dyndns']) {
+           get_dyndns_account($record['dyndns']);
+           $record['ip'] = null;
+       } else {
+           $record['dyndns'] = null;
+           verify_input_ipv6($record['ip']);
+           $record['data'] = null;
+           $record['spec'] = null;
+       }
+       break;
+     case 'mx':
+       $record['dyndns'] = null;
+       $record['spec'] = (int) $record['spec'];
+       if ($record['spec'] < 0) {
+           system_failure("invalid priority");
+       }
+       verify_input_hostname($record['data']);
+       if (! $record['data']) {
+           system_failure('MX hostname missing');
+       }
+       $record['ip'] = null;
+       break;
+     case 'ptr':
+     case 'ns':
+       if (!$record['hostname']) {
+           system_failure("Die angestrebte Konfiguration wird nicht funktionieren, Speichern wurde daher verweigert.");
+       }
+       // no break
+     case 'cname':
+       $record['dyndns'] = null;
+       $record['spec'] = null;
+       $record['ip'] = null;
+       verify_input_hostname($record['data']);
+       if (! $record['data']) {
+           system_failure('destination host missing');
+       }
+       break;
+ 
+     case 'spf':
+     case 'txt':
+       $record['dyndns'] = null;
+       $record['spec'] = null;
+       $record['ip'] = null;
+       if (! $record['data']) {
+           system_failure('text entry missing');
+       }
+       break;
+ 
+     case 'sshfp':
+       $record['dyndns'] = null;
+       $record['spec'] = max((int) $record['spec'], 1);
+       $record['ip'] = null;
+       if (! $record['data']) {
+           system_failure('text entry missing');
+       }
+       break;
+ 
+     case 'caa':
+       $record['dyndns'] = null;
+       $record['ip'] = null;
+       if (! $record['data']) {
+           system_failure('text entry missing');
+       }
+       break;
+ 
+     case 'srv':
+       system_failure('not implemented yet');
+       // no break
+     default:
+       system_failure('Not implemented');
+   }
+     $id = (int) $id;
+     $args = array(":domain" => $dom->id,
+                 ":hostname" => $record['hostname'],
+                 ":type" => $record['type'],
+                 ":ttl" => ($record['ttl'] == 0 ? null : (int) $record['ttl']),
+                 ":ip" => $record['ip'],
+                 ":dyndns" => $record['dyndns'],
+                 ":data" => $record['data'],
+                 ":spec" => $record['spec']);
+     if ($id) {
+         $args[":id"] = $id;
+         db_query("UPDATE dns.custom_records SET hostname=:hostname, domain=:domain, type=:type, ttl=:ttl, ip=:ip, dyndns=:dyndns, data=:data, spec=:spec WHERE id=:id", $args);
+     } else {
+         db_query("INSERT INTO dns.custom_records (hostname, domain, type, ttl, ip, dyndns, data, spec) VALUES (:hostname, :domain, :type, :ttl, :ip, :dyndns, :data, :spec)", $args);
+     }
+ }
+ 
+ 
+ function delete_dns_record($id)
+ {
+     $id = (int) $id;
+     // Diese Funktion prüft, ob der Eintrag einer eigenen Domain gehört
+     $record = get_dns_record($id);
+     db_query("DELETE FROM dns.custom_records WHERE id=?", array($id));
+ }
+ 
+ 
+ function convert_from_autorecords($domainid)
+ {
+     $dom = new Domain((int) $domainid);
+     $dom->ensure_userdomain();
+     $dom = $dom->id;
+ 
+     db_query("INSERT IGNORE INTO dns.custom_records SELECT r.id, r.lastchange, type, d.id, hostname, ip, NULL AS dyndns, data, spec, ttl FROM dns.v_tmptable_allrecords AS r INNER JOIN dns.v_domains AS d ON (d.name=r.domain) WHERE d.id=?", array($dom));
+     disable_autorecords($dom);
+     db_query("UPDATE dns.dnsstatus SET status='outdated'");
+     warning("Die automatischen Einträge werden in Kürze abgeschaltet, bitte haben Sie einen Moment Geduld.");
+ }
+ 
+ 
+ function enable_autorecords($domainid)
+ {
+     $dom = new Domain((int) $domainid);
+     $dom->ensure_userdomain();
+     $dom = $dom->id;
+ 
+     db_query("UPDATE kundendaten.domains SET autodns=1 WHERE id=?", array($dom));
+     db_query("DELETE FROM dns.custom_records WHERE type='ns' AND domain=? AND hostname IS NULL", array($dom));
+     warning("Die automatischen Einträge werden in Kürze aktiviert, bitte haben Sie einen Moment Geduld.");
+ }
+ 
+ function disable_autorecords($domainid)
+ {
+     $dom = new Domain((int) $domainid);
+     $dom->ensure_userdomain();
+     $dom = $dom->id;
+ 
+     db_query("UPDATE kundendaten.domains SET autodns=0 WHERE id=?", array($dom));
+ }
+ 
+ 
+ function domain_is_maildomain($domain)
+ {
+     $domain = (int) $domain;
+     $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", array($domain));
+     $dom = $result->fetch();
+     return ($dom['mail'] != 'none');
+ }
+ 
+ 
+ $own_ns = array();
+ 
+ function own_ns()
+ {
+     global $own_ns;
+ 
+     if (count($own_ns) < 1) {
+         $auth = dns_get_record(config('masterdomain'), DNS_NS);
+         foreach ($auth as $ns) {
+             $own_ns[] = $ns['target'];
+         }
+     }
+ 
+     return $own_ns;
+ }
+ 
+ 
+ $tld_ns = array();
+ 
+ function check_dns($domainname, $tld)
+ {
+     global $tld_ns;
+     $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+ 
+     if (! isset($tld_ns[$tld])) {
+         $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
+         $line = explode("\n", $resp, 2)[0];
+         $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
+         $tld_ns[$tld] = $NS;
+     }
+ 
+     $resp = shell_exec('dig @'.$tld_ns[$tld].' +noall +authority -t ns '.$domain.'.');
+     $line = explode("\n", $resp, 2)[0];
+     if (preg_match('/^.*\\sIN\\s+NS\\s+/', $line) === 0) {
+         return "NXDOMAIN";
+     }
+     $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+).$/", '\1', $line);
+ 
+     $own_ns = own_ns();
+ 
+     if (in_array($NS, $own_ns)) {
+         return true;
+     }
+     return $NS;
+ }
+ 
+ function remove_from_dns($dom)
+ {
+     $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
+     $current = null;
+     foreach ($domains as $d) {
+         if ($d->id == $dom && $d->dns == 1) {
+             $current = $d;
+             break;
+         }
+     }
+     if (! $current) {
+         system_failure("Domain nicht gefunden!");
+     }
+     db_query("UPDATE kundendaten.domains SET dns=0 WHERE id=?", array($current->id));
+ }
+ 
+ function add_to_dns($dom)
+ {
+     $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
+     $current = null;
+     foreach ($domains as $d) {
+         if ($d->id == $dom && $d->dns == 0) {
+             $current = $d;
+             break;
+         }
+     }
+     if (! $current) {
+         system_failure("Domain nicht gefunden!");
+     }
+     db_query("UPDATE kundendaten.domains SET dns=1, autodns=1 WHERE id=?", array($current->id));
+ }
+ 
+
+      ----------- end diff -----------
+
+   7) modules/invoice/include/invoice.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+     db_query(
+-      "INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
+-          array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
++        "INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
++        array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
+                 ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
+                 ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname)
+   );
+ }
+ 
+ 
+ 
+ function get_bank_info($iban)
+ {
+     if (strlen($iban) != 22 || substr($iban, 0, 2) != 'DE') {
+         // Geht nur bei deutschen IBANs
+         echo 'Fehler!';
+         echo '$iban = '.$iban;
+         echo 'strlen($iban): '.strlen($iban);
+         echo 'substr($iban, 0, 2): '.substr($iban, 0, 2);
+         return null;
+     }
+     $blz = substr($iban, 4, 8);
+     // FIXME: Liste der BLZs muss vorhanden sein!
+     $bankinfofile = dirname(__FILE__).'/bankinfo.txt';
+     $f = file($bankinfofile);
+     $match = '';
+     foreach ($f as $line) {
+         if (substr($line, 0, 9) == $blz.'1') {
+             $match = $line;
+             break;
+         }
+     }
+     $bank = array();
+     $bank['name'] = iconv('latin1', 'utf8', chop(substr($match, 9, 58)));
+     $bank['bic'] = chop(substr($match, 139, 11));
+     return $bank;
+ }
+ 
+ 
+ function find_iban($blz, $kto)
+ {
+     $iban = sprintf('DE00%08s%010s', $blz, $kto);
+     $iban = iban_set_checksum($iban);
+     return $iban;
+ }
+ 
+ 
+ function get_customerquota()
+ {
+     $cid = (int) $_SESSION['customerinfo']['customerno'];
+     $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid", array(":cid" => $cid));
+     $data = $result->fetch();
+     return $data["quota"];
+ }
+ 
+ function save_more_storage($items, $storage)
+ {
+     $cid = (int) $_SESSION['customerinfo']['customerno'];
+ 
+     $queries = array();
+ 
+     if ($storage < 1024 || $storage > 10240) {
+         input_error('Speicherplatz nicht im erwarteten Bereich');
+     }
+     $oldcustomerquota = get_customerquota();
+     if ($oldcustomerquota > 102400) {
+         # Über 100 GB soll die Automatik nichts machen
+         system_failure("Ihr Speicherplatz kann über diese Funktion nicht weiter erhöht werden. Bitte wenden Sie sich an die Administratoren.");
+     }
+     $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid AND lastchange > CURDATE()", array(":cid" => $cid));
+     if ($result->rowcount() > 0) {
+         system_failure("Ihr Speicherplatz wurde heute bereits verändert. Sie können dies nur einmal am Tag machen.");
+     }
+ 
+     $queries[] = array("UPDATE system.customerquota SET quota=quota+:storage WHERE cid=:cid", array(":storage" => $storage, ":cid" => $cid));
+ 
+     foreach ($items as $data) {
+         if ($data['anzahl'] == 0) {
+             continue;
+         }
+         $data['kunde'] = $cid;
+         $data['notizen'] = 'Bestellt via Webinterface';
+         if (!isset($data['anzahl']) ||
+         !isset($data['beschreibung']) ||
+         !isset($data['datum']) ||
+         !array_key_exists('kuendigungsdatum', $data) ||
+         !isset($data['betrag']) ||
+         !isset($data['monate'])) {
+             DEBUG($data);
+             input_error("Ungültige Daten");
+             return;
+         }
+ 
+         $param = array();
+         foreach ($data as $k => $v) {
+             $param[':'.$k] = $v;
+         }
+ 
+         $queries[] = array("INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES ".
+                        "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param);
+     }
+ 
+     if (count($queries) < 2) {
+         system_failure("irgendwas stimmt jetzt nicht");
+     }
+ 
+     foreach ($queries as $q) {
+         db_query($q[0], $q[1]);
+     }
+     $allstorage = $oldcustomerquota+$storage;
+     $emailaddr = $_SESSION['customerinfo']['email'];
+     $message = "Hallo,\n\nsoeben wurde im Webinterface von ".config('company_name')." eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.\n\nIhre Kundennummer: {$_SESSION['customerinfo']['customerno']} ({$_SESSION['customerinfo']['name']})\n";
+     mail($emailaddr, 'Auftragsbestätigung: Mehr Speicherplatz bei schokokeks.org', $message, "X-schokokeks-org-message: notify\nFrom: ".config('company_name').' <'.config('adminmail').">\nBcc: ".config('adminmail')."\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
+ }
+ 
+
+      ----------- end diff -----------
+
+   8) themes/default/page.tpl.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+ 
+-<?php 
++<?php
+@@ @@
+ 
+-<?php 
++<?php
+ if ($headline) {
+     echo "<h3 class=\"headline\">$headline</h3>";
+ }
+ ?>
+ 
+ <?php echo $content; ?>
+ 
+ <?php if ($footnotes) {
+     echo '<div class="footnotes">';
+     foreach ($footnotes as $num => $explaination) {
+         echo '<p>'.str_repeat('*', $num+1).': '.$explaination.'</p>';
+     }
+     echo '</div>';
+ } ?>
+ </div>
+ <div class="foot">
+ <p>Sollten Sie auf dieser Administrations-Oberfläche ein Problem entdecken oder Hilfe benötigen, schreiben Sie bitte eine einfache eMail an <a href="mailto:root@schokokeks.org">root@schokokeks.org</a>. Unser <a href="https://schokokeks.org/kontakt">Impressum</a> finden Sie auf der <a href="https://schokokeks.org/">öffentlichen Seite</a>. Lizenzinformationen zu diesem Webinterface und verwendeten Rechten finden Sie <a href="<?php echo $BASE_PATH; ?>go/about/about">indem Sie hier klicken</a>.</p>
+ 
+ </div>
+ 
+ 
+ </body>
+ </html>
+ 
+
+      ----------- end diff -----------
+
+   9) themes/default/page-webmailtotp-login.tpl.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+ 
+-<?php 
++<?php
+ if ($title) {
+     echo "<title>$title - Administration</title>";
+ } else {
+     echo "<title>Administration</title>";
+ }
+ ?>
+ <link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal" />
+ <link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon" />
+ <?php echo $html_header; ?>
+ </head>
+ 
+ <body onload="javascript:document.getElementById('code').focus();">
+ <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
+ 
+ <div class="menu">
+ <a href="<?php echo $BASE_PATH; ?>"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
+ 
+ <?php echo $menu; ?>
+ 
+ <?php echo $userinfo; ?>
+ 
+ </div>
+ 
+ <div class="content">
+ <a id="content" style="display: none"> </a>
+ 
+ <?php
+ if ($messages) {
+     echo $messages;
+ }
+ ?>
+ 
+ <h3 class="headline">Sicherheits-Code</h3>
+ <p>Ihr Zugang ist mit Zwei-Faktor-Anmeldung geschützt. Sie müssen daher jetzt noch den aktuellsten Code Ihres TOTP-Geräts eingeben.</p>
+ <form action="" method="post">
+ <p><label for="code" class="login_label">Google-Authenticator-Code:</label> <input type="text" id="code" name="webinterface_totpcode" size="20" /></p>
+ <p><span class="login_label">&#160;</span> <input type="submit" value="Prüfen" /></p>
+ </form>
+ 
+ </div>
+ 
+ <div class="foot">
+ <p>Sollten Sie auf dieser Administrations-Oberfläche ein Problem entdecken oder Hilfe benötigen, schreiben Sie bitte eine einfache eMail an <a href="mailto:root@schokokeks.org">root@schokokeks.org</a>. Unser <a href="https://schokokeks.org/kontakt">Impressum</a> finden Sie auf der <a href="https://schokokeks.org/">öffentlichen Seite</a>. Lizenzinformationen zu diesem Webinterface und verwendeten Rechten finden Sie <a href="../../images/about.php">indem Sie hier klicken</a>.</p>
+ 
+ </div>
+ 
+ 
+ </body>
+ </html>
+ 
+
+      ----------- end diff -----------
+
+  10) themes/default/page-login.tpl.php
+      ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+ 
+-<?php 
++<?php
+ if ($title) {
+     echo "<title>$title - Administration</title>";
+ } else {
+     echo "<title>Administration</title>";
+ }
+ ?>
+ <link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal" />
+ <link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon" />
+ <?php echo $html_header; ?>
+ <script type="text/javascript" src="<?php echo $THEME_PATH; ?>script.js"></script>
+ </head>
+ 
+ <body onload="javascript:document.getElementById('username').focus();">
+ <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
+ 
+ <a href="javascript:void(0);" class="menuicon" id="showmenu" onclick="showMenu()"><img src="<?php echo $THEME_PATH; ?>images/bars.svg"><span id="showmenutext">Menü</span></a>
+ <a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
+ <div class="sidebar" id="sidebar">
+ 
+ <div class="menu">
+ <?php echo $menu; ?>
+ </div>
+ <div class="userinfo">
+ <?php echo $userinfo; ?>
+ </div>
+ </div>
+ 
+ <div class="content">
+ <a id="content" style="display: none"> </a>
+ 
+ <?php
+ if ($messages) {
+     echo $messages;
+ }
+ ?>
+ 
+ <h3 class="headline">schokokeks.org Hosting Webinterface</h3>
+ <p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org Hosting festlegen. Sofern Sie noch kein Kunde von schokokeks.org Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="https://schokokeks.org">öffentliche Seite</a>.</p>
+ <form action="" method="post">
+ <p class="login_field"><label for="username" class="login_label">Benutzername oder E-Mail-Adresse:</label> <input type="text" id="username" name="webinterface_username" size="30" /></p>
+ <p class="login_field"><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="webinterface_password" size="30" /></p>
+ <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
+ </form>
+ <p>Sie können sich hier mit Ihrem System-Benutzernamen, Ihrer E-Mail-Adresse oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
+ <?php /* <p>Sollten Sie Ihr Benutzer-Passwort nicht mehr kennen, wenden Sie sich bitte an den Support. Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p> */ ?>
+ <p><a href="<?php echo $BASE_PATH; ?>go/index/lost_password">Sollten Sie Ihr Kunden-Passwort nicht mehr kennen, klicken Sie bitte hier.</a> Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p>
+ 
+ <p><em><a href="../../certlogin/?destination=go/<?php echo $go; ?>"  >Mit einem Client-Zertifikat anmelden</a></em> (<a href="../../go/index/certinfo"  >Wie geht das?</a>)</p>
+ 
+ 
+ <?php if ($footnotes) {
+     echo '<div class="footnotes">';
+     foreach ($footnotes as $num => $explaination) {
+         echo '<p>'.str_repeat('*', $num+1).': '.$explaination.'</p>';
+     }
+     echo '</div>';
+ } ?>
+ </div>
+ 
+ <div class="foot">
+ <p>Sollten Sie auf dieser Administrations-Oberfläche ein Problem entdecken oder Hilfe benötigen, schreiben Sie bitte eine einfache eMail an <a href="mailto:root@schokokeks.org">root@schokokeks.org</a>. Unser <a href="https://schokokeks.org/kontakt">Impressum</a> finden Sie auf der <a href="https://schokokeks.org/">öffentlichen Seite</a>. Lizenzinformationen zu diesem Webinterface und verwendeten Rechten finden Sie <a href="../../images/about.php">indem Sie hier klicken</a>.</p>
+ 
+ </div>
+ 
+ 
+ </body>
+ </html>
+ 
+
+      ----------- end diff -----------
+
+
+Checked all files in 0.260 seconds, 14.000 MB memory used

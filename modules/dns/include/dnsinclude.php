@@ -76,9 +76,9 @@ function create_dyndns_account($handle, $password_http, $sshkey)
     }
 
     db_query(
-      "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
+        "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
            "(:uid, :handle, :pwhash, :sshkey)",
-           array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey)
+        array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey)
   );
     $dyndns_id = db_insert_id();
     //$masterdomain = new Domain(config('masterdomain'));
@@ -103,9 +103,9 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
     if ($oldaccount['handle'] != $handle) {
         $masterdomain = new Domain(config('masterdomain'));
         db_query(
-        "UPDATE dns.custom_records SET hostname=:newhostname WHERE ".
+            "UPDATE dns.custom_records SET hostname=:newhostname WHERE ".
              "hostname=:oldhostname AND domain=:dom AND dyndns=:dyndns AND ip IS NULL",
-             array(":dom" => $masterdomain->id, ":newhostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'],
+            array(":dom" => $masterdomain->id, ":newhostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'],
                    ":oldhostname" => $oldaccount['handle'].'.'.$_SESSION['userinfo']['username'],  ":dyndns" => $id)
     );
     }

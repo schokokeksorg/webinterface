@@ -19,7 +19,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<?php 
+<?php
 if ($title) {
     echo "<title>$title - Administration</title>";
 } else {

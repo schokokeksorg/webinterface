@@ -27,17 +27,12 @@ if ($_GET['action'] == 'new') {
     }
 
     add_clientcert(
-
-      $_SESSION['clientcert_cert'],
-
-      $_SESSION['clientcert_dn'],
-
-      $_SESSION['clientcert_issuer'],
-                 $_SESSION['clientcert_serial'],
-
-      $_SESSION['clientcert_valid_from'],
-
-      $_SESSION['clientcert_valid_until']
+        $_SESSION['clientcert_cert'],
+        $_SESSION['clientcert_dn'],
+        $_SESSION['clientcert_issuer'],
+        $_SESSION['clientcert_serial'],
+        $_SESSION['clientcert_valid_from'],
+        $_SESSION['clientcert_valid_until']
 
   );
 

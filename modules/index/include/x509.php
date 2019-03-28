@@ -134,7 +134,7 @@ function delete_clientcert($id)
         system_failure('cannot get type or username of login');
     }
     db_query(
-      "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
-           array(":id" => $id, ":type" => $type, ":username" => $username)
+        "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
+        array(":id" => $id, ":type" => $type, ":username" => $username)
   );
 }

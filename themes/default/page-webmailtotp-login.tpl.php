@@ -20,7 +20,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
 <head>
 
-<?php 
+<?php
 if ($title) {
     echo "<title>$title - Administration</title>";
 } else {

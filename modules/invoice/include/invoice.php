@@ -247,8 +247,8 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
 
     $today = date('Y-m-d');
     db_query(
-      "INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
-          array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
+        "INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
+        array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
                 ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
                 ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname)
   );
