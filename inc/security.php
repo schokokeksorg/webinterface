@@ -24,13 +24,16 @@ function strong_password($password, $user = array())
     $result = null;
     if ($pwcheck) {
         DEBUG($pwcheck);
-        $req = curl_init($pwcheck.$password);
+        $req = curl_init($pwcheck);
         curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($req, CURLOPT_SSL_VERIFYPEER, 1);
         curl_setopt($req, CURLOPT_SSL_VERIFYSTATUS, 1);
         curl_setopt($req, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($req, CURLOPT_TIMEOUT, 5);
         curl_setopt($req, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt($req, CURLOPT_POST, 1);
+        curl_setopt($req, CURLOPT_SAFE_UPLOAD, 1);
+        curl_setopt($req, CURLOPT_POSTFIELDS, array("password" => $password));
         $result = chop(curl_exec($req));
         DEBUG($result);
     }
