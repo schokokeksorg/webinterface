@@ -23,7 +23,7 @@ require_once('domains.php');
 
 require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
-if (have_role(ROLE_CUSTOMER)) {
+if (have_role(ROLE_CUSTOMER) && !have_role(ROLE_SYSTEMUSER)) {
     $user_domains = get_domain_list($_SESSION['customerinfo']['customerno']);
 } else {
     $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
@@ -79,6 +79,10 @@ foreach ($user_domains as $domain) {
     if ($domain->cancel_date && $domain->cancel_date < date('Y-m-d')) {
         $status = 'cancelled';
     }
+    if (isset($_SESSION['customerinfo']['customerno']) && $domain->kunde != $_SESSION['customerinfo']['customerno']) {
+        $status = 'foreign';
+        $regdate = '<em>Zuständige Kundennummer: '.$domain->kunde.'</em>';
+    }
 
     $features = array();
     if ($domain->dns == 1) {
@@ -113,7 +117,7 @@ foreach ($user_domains as $domain) {
         $punycode = '';
     }
     $domainname = "{$domain->fqdn}{$punycode}";
-    if (have_role(ROLE_CUSTOMER)) {
+    if (have_role(ROLE_CUSTOMER) && $status != 'foreign') {
         $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
     }
     output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
