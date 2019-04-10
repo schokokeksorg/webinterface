@@ -62,7 +62,7 @@ if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
     output('<h4>Zuständiges Benutzerkonto</h4>');
     $form = '<p>Diese Domain nutzen im Benutzerkonto '.html_select('domainuser', $options, $dom->useraccount).' <input type="submit" name="submit" value="Änderung speichern"></p>';
     output(html_form('update-user', 'update', 'action=chguser&id='.$dom->id, $form));
-} else if (!have_role(ROLE_SYSTEMUSER) || $dom->useraccount != $_SESSION['userinfo']['uid']) {
+} elseif (!have_role(ROLE_SYSTEMUSER) || $dom->useraccount != $_SESSION['userinfo']['uid']) {
     // Kunde hat keine mehreren User, Domain ist trotzdem in einem anderen Useraccount
     $is_current_user = false;
     output('<h4>Zuständiges Benutzerkonto</h4>');
