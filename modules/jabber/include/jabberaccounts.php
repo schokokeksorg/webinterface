@@ -74,9 +74,12 @@ function create_jabber_account($local, $domain, $password)
     $data = array(":customerno" => $_SESSION['customerinfo']['customerno'],
                 ":local" => filter_input_username(strtolower($local)),
                 ":domain" => $domain);
-    if (! valid_jabber_password($password)) {
-        input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
-        return;
+    if (!valid_jabber_password($password)) {
+        system_failure('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
+    }
+    $check = strong_password($password);
+    if ($check !== true) {
+        system_failure('Das Passwort ist nicht sicher genug.');
     }
     $data[':password'] = $password;
 
@@ -111,9 +114,12 @@ function create_jabber_account($local, $domain, $password)
 function change_jabber_password($id, $password)
 {
     require_role(ROLE_CUSTOMER);
-    if (! valid_jabber_password($password)) {
-        input_error('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
-        return;
+    if (!valid_jabber_password($password)) {
+        system_failure('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
+    }
+    $check = strong_password($password);
+    if ($check !== true) {
+        system_failure('Das Passwort ist nicht sicher genug.');
     }
     $args = array(":customerno" => $_SESSION['customerinfo']['customerno'],
                 ":id" => $id,
