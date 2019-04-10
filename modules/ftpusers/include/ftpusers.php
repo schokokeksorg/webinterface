@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
+require_once('inc/security.php');
 
 function list_ftpusers()
 {
@@ -74,6 +75,10 @@ function save_ftpuser($data)
     $set_password = false;
     $password_hash = '';
     if ($data['password'] != '') {
+        $result = strong_password($data['password']);
+        if ($result !== true) {
+            system_failure("Unsicheres Passwort: ".$result);
+        }
         if (defined("CRYPT_SHA512") && CRYPT_SHA512 == 1) {
             $rounds = rand(1000, 5000);
             $salt = "rounds=".$rounds."$".random_string(8);
@@ -83,7 +88,6 @@ function save_ftpuser($data)
             $password_hash = crypt($data['password'], "\$1\${$salt}\$");
         }
         $set_password = true;
-        $password_query = "password='{$password_hash}', ";
     } elseif (! $data['id']) {
         system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
     }
