@@ -32,6 +32,14 @@ define('ROLE_SUBUSER', 32);
 
 function find_role($login, $password, $i_am_admin = false)
 {
+    if (!$i_am_admin) {
+        $failed = count_failed_logins();
+        if ($failed > 5) {
+            global $title;
+            $title = '';
+            system_failure("Zu viele fehlgeschlagenen Login-Versuche! Bitte warten Sie einige Minuten bis zum nächsten Versuch!");
+        }
+    }
     // Domain-Admin?  <not implemented>
     // System-User?
     $uid = (int) $login;

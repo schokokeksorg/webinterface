@@ -189,6 +189,13 @@ function logger($severity, $scriptname, $scope, $message)
     db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES (:remote, :user, :scriptname, :scope, :message)", $args);
 }
 
+function count_failed_logins() {
+    $result = db_query("SELECT count(*) AS num FROM misc.scriptlog WHERE user IS NULL AND scriptname='session/start' AND scope='login' AND message LIKE 'wrong user data%' AND remote=:remote AND `timestamp` > NOW() - INTERVAL 10 MINUTE", array(":remote" => $_SERVER['REMOTE_ADDR']));
+    $data = $result->fetch();
+    DEBUG('seen '.$data['num'].' failed logins from this address within 10 minutes');
+    return $data['num'];
+}
+
 function html_header($arg)
 {
     global $html_header;

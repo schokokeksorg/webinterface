@@ -135,6 +135,12 @@ function require_role($roles)
 
 function login_screen($why = null)
 {
+    $failed = count_failed_logins();
+    if ($failed > 5) {
+        global $title;
+        $title = '';
+        system_failure("Zu viele fehlgeschlagenen Login-Versuche! Bitte warten Sie einige Minuten bis zum nächsten Versuch!");
+    }
     if (! $why) {
         if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
             redirect("/certlogin/index.php?destination=".urlencode($_SERVER['REQUEST_URI']));
