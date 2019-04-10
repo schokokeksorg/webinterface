@@ -50,6 +50,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'newuser') {
     $username = $_POST['newuser'];
     $desc = $_POST['description'];
     $password = $_POST['newpass'];
+    $check = strong_password($password);
+    if ($check !== true) {
+        system_failure('Das Passwort ist nicht sicher genug.');
+    }
     create_mysql_account($username, $desc);
     set_mysql_password($username, $password);
     if (isset($_POST['access'])) {
@@ -108,6 +112,10 @@ if (isset($_GET['action'])) {
       break;
     case 'change_pw':
       check_form_token('mysql_databases');
+      $check = strong_password($_POST['newpass']);
+      if ($check !== true) {
+          system_failure('Das Passwort ist nicht sicher genug.');
+      }
       set_mysql_password($_POST['mysql_username'], $_POST['newpass']);
       redirect('overview');
       break;
