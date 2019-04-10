@@ -85,6 +85,10 @@ function change_mailaccount($id, $arr)
     }
 
     if (isset($arr['password'])) {
+        $result = strong_password($arr['password']);
+        if ($result !== true) {
+            system_failure("Unsicheres Passwort: ".$result);
+        }
         $encpw = encrypt_mail_password($arr['password']);
         array_push($conditions, "`password`=:password");
         $values[":password"] = $encpw;
@@ -135,6 +139,10 @@ function create_mailaccount($arr)
 
 
     if (isset($arr['password'])) {
+        $result = strong_password($arr['password']);
+        if ($result !== true) {
+            system_failure("Unsicheres Passwort: ".$result);
+        }
         $values[':password'] = encrypt_mail_password($arr['password']);
     }
 
