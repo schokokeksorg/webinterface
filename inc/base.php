@@ -472,8 +472,10 @@ function get_modules_info()
 function handle_exception($e)
 {
     if (config('enable_debug')) {
-        print_r($e->getMessage());
-        print_r(serialize($_POST));
+        print_r($e->getMessage()."<br>");
+        debug_print_backtrace();
+        echo("<br>");
+        print_r(serialize($_POST)."<br>");
         print_r(serialize($_SERVER));
     } else {
         $msg = "Exception caught:\n".$e->getMessage()."\n".serialize($_POST)."\n".serialize($_SERVER);
