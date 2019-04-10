@@ -52,6 +52,18 @@ if (isset($_POST['webinterface_username']) && isset($_POST['webinterface_passwor
         login_screen('Ihre Anmeldung konnte nicht durchgeführt werden. Vermutlich haben Sie falsche Zugangsdaten eingegeben.');
     } else {
         setup_session($role, $_POST['webinterface_username']);
+        if (isset($_POST['webinterface_password'])) {
+            $result = strong_password($_POST['webinterface_password']);
+            if ($result !== true) {
+                logger(LOG_WARNING, "session/start", "login", "weak password detected for %s" % $_POST['webinterface_username']);
+                warning('Unsere Überprüfung hat ergeben, dass Ihr Passwort in bisher veröffentlichten Passwortlisten enthalten ist, es ist daher als unsicher zu betrachten. Bitte ändern Sie Ihr Passwort bei Gelegenheit.');
+                if ($role & (ROLE_VMAIL_ACCOUNT | ROLE_MAILACCOUNT)) {
+                    redirect($prefix.'go/email/chpass');
+                } else {
+                    redirect($prefix.'go/index/chpass');
+                }
+            }
+        }
     }
     unset($_POST['webinterface_username']);
     unset($_POST['webinterface_password']);
