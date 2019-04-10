@@ -27,7 +27,8 @@ foreach ($domains as $domain) {
 }
 
 output(
-    '<p>Tragen Sie hier die benötigten Daten zur Erstellung einer neuen Mailingliste ein. Die Liste wird <strong>mit etwas Zeitverzögerung</strong> angelegt, Sie erhalten dann eine E-Mail an die unten angegebene Adresse des Listen-Verwalters</p>
+    '<p>Tragen Sie hier die benötigten Daten zur Erstellung einer neuen Mailingliste ein. Die Liste wird <strong>mit etwas Zeitverzögerung</strong> angelegt, Sie erhalten dann eine E-Mail an die unten angegebene Adresse des Listen-Verwalters.</p>
+    <p><strong>Hinweis zum Listen-Verwalter:</strong> Der Listen-Verwalter bzw. Moderator erhält später im Betrieb auch die Nachrichten, die Mailman nicht zur Liste sendet mit der Bitte um Moderation/Freigabe. Bitte geben Sie hier eine E-Mail-Adresse an, die über keinen besonders aggressiven Spamfilter verfügt und auf der keine Autoresponder aktiviert werden.</p>
 
 '.html_form('mailman_newlist', 'save', 'action=new', '
 <table>
