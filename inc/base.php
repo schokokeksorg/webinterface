@@ -191,6 +191,10 @@ function logger($severity, $scriptname, $scope, $message)
 
 function count_failed_logins()
 {
+    if (config('logging') < LOG_WARNING) {
+        DEBUG("logging is disabled, no brute force check possible");
+        return;
+    }
     $result = db_query("SELECT count(*) AS num FROM misc.scriptlog WHERE user IS NULL AND scriptname='session/start' AND scope='login' AND message LIKE 'wrong user data%' AND remote=:remote AND `timestamp` > NOW() - INTERVAL 10 MINUTE", array(":remote" => $_SERVER['REMOTE_ADDR']));
     $data = $result->fetch();
     DEBUG('seen '.$data['num'].' failed logins from this address within 10 minutes');
