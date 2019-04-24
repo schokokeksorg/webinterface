@@ -329,7 +329,7 @@ function search_pgp_key($search)
         return null;
     }
     $output = array();
-    $command = 'LC_ALL=C /usr/bin/gpg --batch --with-colons --keyserver hkps://hkps.pool.sks-keyservers.net --search-key '.escapeshellarg($search);
+    $command = 'LC_ALL=C /usr/bin/timeout 10 /usr/bin/gpg --batch --with-colons --keyserver hkps://hkps.pool.sks-keyservers.net --search-key '.escapeshellarg($search);
     DEBUG($command);
     exec($command, $output);
     DEBUG($output);
@@ -360,7 +360,7 @@ function fetch_pgp_key($pgp_id)
 {
     $output = array();
     $ret = null;
-    $command = '/usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key '.escapeshellarg($pgp_id);
+    $command = '/usr/bin/timeout 10 /usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key '.escapeshellarg($pgp_id);
     DEBUG($command);
     exec($command, $output, $ret);
     DEBUG($output);
