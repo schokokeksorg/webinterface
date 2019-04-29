@@ -37,6 +37,7 @@ DEBUG($types);
 DEBUG($investment_types);
 $net_by_type = array(0 => array(-1 => array(), 0 => array(), 19 => array()));
 $umsatzsteuer = 0.0;
+$ustbetraege = array();
 $vorsteuer = 0.0;
 foreach ($types as $id => $t) {
     if (count($data_by_type[$id]) == 0) {
@@ -68,6 +69,10 @@ foreach ($types as $id => $t) {
         $netsum += $net;
         $ustsum += $ust;
         if ($id == 0) {
+            if (!isset($ustbetraege[$line['tax_rate']])) {
+                $ustbetraege[$line['tax_rate']] = 0;
+            }
+            $ustbetraege[$line['tax_rate']] += $ust;
             $umsatzsteuer += $ust;
         } else {
             $vorsteuer += $ust;
@@ -76,7 +81,7 @@ foreach ($types as $id => $t) {
         $net = str_replace('.', ',', sprintf('%.2f €', $net));
         $ust = str_replace('.', ',', sprintf('%.2f €', $ust));
         $gross = str_replace('.', ',', sprintf('%.2f €', $gross));
-        output("<tr><td>".$line['date']."</td><td>".$line['description']."</td><td style=\"text-align: right;\">".$net."</td><td style=\"text-align: right;\">".$ust."</td><td style=\"text-align: right;\">".$gross."</td></tr>\n");
+        output("<tr><td>".$line['date']."</td><td>".$line['description']."</td><td style=\"text-align: right;\">".$net."</td><td style=\"text-align: right;\">".$line['tax_rate']."%</td><td style=\"text-align: right;\">".$ust."</td><td style=\"text-align: right;\">".$gross."</td></tr>\n");
     }
     if ($id == 0) {
         $net_by_type[0][-1] = $umsatzandereproz;
@@ -87,7 +92,7 @@ foreach ($types as $id => $t) {
     }
     $netsum = str_replace('.', ',', sprintf('%.2f €', $netsum));
     $ustsum = str_replace('.', ',', sprintf('%.2f €', $ustsum));
-    output("<tr><td colspan=\"2\" style=\"font-weight: bold;text-align: right;\">Summe $t:</td><td style=\"font-weight: bold;text-align: right;\">$netsum</td><td style=\"font-weight: bold;text-align: right;\">$ustsum</td><td></td></tr>\n");
+    output("<tr><td colspan=\"2\" style=\"font-weight: bold;text-align: right;\">Summe $t:</td><td style=\"font-weight: bold;text-align: right;\">$netsum</td><td></td><td style=\"font-weight: bold;text-align: right;\">$ustsum</td><td></td></tr>\n");
     output('</table>');
 }
 
@@ -97,12 +102,20 @@ output('<table>');
 $einnahmensumme = 0.0;
 output("<tr><td>Einnahmen 19% USt netto</td><td style=\"text-align: right;\">".number_format($net_by_type[0][19], 2, ',', '.')." €</td></tr>");
 $einnahmensumme += $net_by_type[0][19];
+output("<tr><td>Einnahme Umsatzsteuer 19%</td><td style=\"text-align: right;\">".number_format($ustbetraege[19], 2, ',', '.')." €</td></tr>");
+$einnahmensumme += $ustbetraege[19];
 output("<tr><td>Einnahmen innergem. Lieferung (steuerfrei §4/1b UStG)</td><td style=\"text-align: right;\">".number_format($net_by_type[0][0], 2, ',', '.')." €</td></tr>");
 $einnahmensumme += $net_by_type[0][0];
 output("<tr><td>Einnahmen EU-Ausland (VATMOSS)</td><td style=\"text-align: right;\">".number_format($net_by_type[0][-1], 2, ',', '.')." €</td></tr>");
 $einnahmensumme += $net_by_type[0][-1];
-output("<tr><td>Einnahme Umsatzsteuer</td><td style=\"text-align: right;\">".number_format($umsatzsteuer, 2, ',', '.')." €</td></tr>");
-$einnahmensumme += $umsatzsteuer;
+$einzelust = '';
+foreach ($ustbetraege as $satz => $ust) {
+    if ($satz == 0 || $satz == 19) {
+        continue;
+    }
+    output("<tr><td>- Umsatzsteuer $satz%</td><td style=\"text-align: right;\">".number_format($ust, 2, ',', '.')." €</td></tr>");
+    $einnahmensumme += $ust;
+}
 
 output("<tr><td><b>Summe Einnahmen:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme, 2, ',', '.')." €</td></tr>");
 output("<tr><td colspan=\"2\"></td></tr>");
