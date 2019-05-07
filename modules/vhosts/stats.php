@@ -22,6 +22,8 @@ require_role(ROLE_SYSTEMUSER);
 
 title("Zugriffs-Statistiken");
 
+warning('Diese Statistiken werden in Kürze abgeschafft. Wenn Sie eine solche Funktion weiterhin nutzen möchten, können Sie mit dem Programm "webalizer" selbst solche Statistiken erstellen lassen. Auf Anfrage können wir Ihnen die bestehenden Daten verfügbar machen um die rückblickenden Auswertungen zu erhalten.');
+
 if (isset($_REQUEST['vhost'])) {
     $v = get_vhost_details($_REQUEST['vhost']);
 
@@ -83,38 +85,4 @@ if (isset($_REQUEST['vhost'])) {
     }
 
 
-    output("<h3>Weitere Statistiken</h3>");
-
-    $sel = array();
-    foreach ($all_vhosts as $v) {
-        if ($v['logtype']) {
-            $found = false;
-            foreach ($stats_vhosts as $s) {
-                if ($s['id'] == $v['id']) {
-                    $found = true;
-                }
-            }
-            if (! $found) {
-                $sel[$v['id']] = $v['fqdn'];
-            }
-        }
-    }
-
-
-    if (count($sel) > 0) {
-        output(html_form('stats_new', '', 'action=new', "<p>".html_select("vhost", $sel).'<br/>
-<input type="radio" name="public" id="public_0" value="0" checked="checked" /><label for="public_0"> Statistiken hier im Webinterface anzeigen</label><br />
-<input type="radio" name="public" id="public_1" value="1" /><label for="public_1"> Statistiken unter '.config('stats_hostname').' veröffentlichen (Ohne Passwortschutz)</label><br />
-<input type="submit" value="Neue Statistiken erzeugen" /></p>
-'));
-
-
-        output('
-
-<p><strong>Hinweis:</strong> Die Statistiken werden mindestens täglich erzeugt. Bis zum ersten Durchlauf nach der Aktivierung der Statistik wird der obige Link eine Fehlermeldung erzeugen. Bitte warten Sie mindestens einen Tag ab bevor Sie die Statistik zum ersten Mal aufrufen.</p>
-');
-    } else {
-        # keine VHosts mehr verfügbar
-        output('<p><em>Sie haben aktuell keine Websites, für die Protokolle erstellt aber noch nicht ausgewertet werden.</em></p>');
-    }
 }

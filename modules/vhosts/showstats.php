@@ -21,6 +21,8 @@ require_role(ROLE_SYSTEMUSER);
 
 $section = 'vhosts_stats';
 
+warning('Diese Statistiken werden in Kürze abgeschafft. Wenn Sie eine solche Funktion weiterhin nutzen möchten, können Sie mit dem Programm "webalizer" selbst solche Statistiken erstellen lassen. Auf Anfrage können wir Ihnen die bestehenden Daten verfügbar machen um die rückblickenden Auswertungen zu erhalten.');
+
 // Stellt sicher, dass der angegebene VHost dem User gehört
 $vhost = get_vhost_details($_REQUEST['vhost']);
 

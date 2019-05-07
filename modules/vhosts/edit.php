@@ -263,7 +263,6 @@ $form.="
         <option value=\"default\" ".($vhost['logtype'] == 'default' ? 'selected="selected"' : '')." >vollständige Logfile</option>
       </select><br />
       <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label><br />
-      <input type=\"checkbox\" id=\"stats\" name=\"stats\" value=\"1\" ".($vhost['stats'] != null ? ' checked="checked" ' : '')." />&#160;<label for=\"stats\">Statistiken/Auswertungen erzeugen</label>
     </div>
     <p>Logfiles werden unter <b>/var/log/apache2/".$_SESSION['userinfo']['username']."</b> abgelegt.</p>
     ";
