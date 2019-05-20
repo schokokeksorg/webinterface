@@ -55,8 +55,8 @@ div.success {
 }
 
 div.warning {
-    color: #FF0000;
-    border: 2px solid #FF0000;
+    color: #EE7300;
+    border: 2px solid #EE7300;
     border-radius: 1em;
     background-color: #FFEBCC;
     margin: 10px;
@@ -67,7 +67,8 @@ div.warning li:before {
     content: "⚠";
     font-size: 200%;
     font-weight: bold;
-    padding-right: 0.6em;
+    float: left;
+    margin-left: -1.5em;
 }
 div.warning ul {
     padding: 0 1em;
@@ -76,7 +77,6 @@ div.warning ul {
 div.warning li {
     font-weight: bold;
     list-style-type: none;
-    text-indent: -3em;
     padding-left: 3em;
 }
 
