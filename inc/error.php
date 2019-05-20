@@ -81,7 +81,7 @@ function get_messages()
     </div>';
     }
     if (isset($_SESSION['warning'])) {
-        $messages .= '<div class="error">
+        $messages .= '<div class="warning">
     <ul>
     ';
         foreach ($_SESSION['warning'] as $msg) {

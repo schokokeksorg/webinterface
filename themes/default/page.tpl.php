@@ -51,14 +51,14 @@ if ($title) {
 <a id="content" style="display: none"> </a>
 
 <?php
-if ($messages) {
-    echo $messages;
+if ($headline) {
+    echo "<h3 class=\"headline\">$headline</h3>";
 }
 ?>
 
 <?php
-if ($headline) {
-    echo "<h3 class=\"headline\">$headline</h3>";
+if ($messages) {
+    echo $messages;
 }
 ?>
 
