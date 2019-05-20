@@ -82,6 +82,21 @@ if ($is_current_user) {
         $everused = true;
     }
     if (have_module('email') && ($dom->mail != 'none')) {
+        if ($dom->provider != 'terions') {
+            $mxresult = dns_get_record($dom->fqdn, DNS_MX);
+            $found = false;
+            foreach ($mxresult as $mx) {
+                if (substr_compare($mx['target'], config('masterdomain'), -strlen(config('masterdomain'))) === 0) {
+                    $found = true;
+                }
+            }
+            if (! $found) {
+                DEBUG('MX für '.$dom->fqdn.':');
+                DEBUG($mxresult);
+                warning('Bei dieser Domain ist der Mail-Empfang aktiviert, jedoch verweist das DNS-System scheinbar nicht auf unsere Anlagen. Wenn Sie keine E-Mails empfangen möchten, schalten Sie die Mail-Verarbeitung für diese Domain aus.');
+            }
+
+        }
         $used = mail_in_use($dom->id);
         $vmail = count_vmail($dom->id);
         if ($used) {
