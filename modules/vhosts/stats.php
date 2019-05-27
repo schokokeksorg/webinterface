@@ -83,6 +83,4 @@ if (isset($_REQUEST['vhost'])) {
     } else {
         output('<em>Für Ihre Seiten werden bisher keine Statistiken erzeugt</em>');
     }
-
-
 }

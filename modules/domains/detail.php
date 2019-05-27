@@ -95,7 +95,6 @@ if ($is_current_user) {
                 DEBUG($mxresult);
                 warning('Bei dieser Domain ist der Mail-Empfang aktiviert, jedoch verweist das DNS-System scheinbar nicht auf unsere Anlagen. Wenn Sie keine E-Mails empfangen möchten, schalten Sie die Mail-Verarbeitung für diese Domain aus.');
             }
-
         }
         $used = mail_in_use($dom->id);
         $vmail = count_vmail($dom->id);
