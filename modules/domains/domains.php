@@ -23,7 +23,7 @@ require_once('domains.php');
 
 require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
 
-if (have_role(ROLE_CUSTOMER) && !have_role(ROLE_SYSTEMUSER)) {
+if (have_role(ROLE_CUSTOMER)) {
     $user_domains = get_domain_list($_SESSION['customerinfo']['customerno']);
 } else {
     $user_domains = get_domain_list($_SESSION['userinfo']['customerno'], $_SESSION['userinfo']['uid']);
