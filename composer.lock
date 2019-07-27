@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "75f13c700009be21a1965dc2c5b68a8708c22ba2"
+                "reference": "d30679a47a067a69540c988405cb675404898acc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/75f13c700009be21a1965dc2c5b68a8708c22ba2",
-                "reference": "75f13c700009be21a1965dc2c5b68a8708c22ba2",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/d30679a47a067a69540c988405cb675404898acc",
+                "reference": "d30679a47a067a69540c988405cb675404898acc",
                 "shasum": ""
             },
             "require": {
@@ -115,25 +115,25 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2018-12-14T02:40:31+00:00"
+            "time": "2019-05-10T01:14:18+00:00"
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.10.2",
+            "version": "8.10.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "a71f260c2efce10ded8af030a20fa13edfb0e9be"
+                "reference": "e67ce0839ba448988d109c6c17718472a5d9ccff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/a71f260c2efce10ded8af030a20fa13edfb0e9be",
-                "reference": "a71f260c2efce10ded8af030a20fa13edfb0e9be",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/e67ce0839ba448988d109c6c17718472a5d9ccff",
+                "reference": "e67ce0839ba448988d109c6c17718472a5d9ccff",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "giggsey/locale": "^1.2",
+                "giggsey/locale": "^1.7",
                 "php": ">=5.3.2"
             },
             "require-dev": {
@@ -183,20 +183,20 @@
                 "phonenumber",
                 "validation"
             ],
-            "time": "2018-12-06T10:42:08+00:00"
+            "time": "2019-07-15T14:58:27+00:00"
         },
         {
             "name": "giggsey/locale",
-            "version": "1.6",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/Locale.git",
-                "reference": "da6845720b5d104d319d7e84576f54e44dd9e4f5"
+                "reference": "b8030fc8df13cdfbecba318588de2d52b49c9b50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/Locale/zipball/da6845720b5d104d319d7e84576f54e44dd9e4f5",
-                "reference": "da6845720b5d104d319d7e84576f54e44dd9e4f5",
+                "url": "https://api.github.com/repos/giggsey/Locale/zipball/b8030fc8df13cdfbecba318588de2d52b49c9b50",
+                "reference": "b8030fc8df13cdfbecba318588de2d52b49c9b50",
                 "shasum": ""
             },
             "require": {
@@ -232,20 +232,20 @@
                 }
             ],
             "description": "Locale functions required by libphonenumber-for-php",
-            "time": "2018-10-18T07:17:52+00:00"
+            "time": "2019-04-26T07:28:50+00:00"
         },
         {
             "name": "globalcitizen/php-iban",
-            "version": "v2.6.9",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/globalcitizen/php-iban.git",
-                "reference": "16b8c416e8a4047b52dca00794f161bfa68afb7a"
+                "reference": "51f0fb5fec38574c23a7baf2b3795bf5729dc813"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/globalcitizen/php-iban/zipball/16b8c416e8a4047b52dca00794f161bfa68afb7a",
-                "reference": "16b8c416e8a4047b52dca00794f161bfa68afb7a",
+                "url": "https://api.github.com/repos/globalcitizen/php-iban/zipball/51f0fb5fec38574c23a7baf2b3795bf5729dc813",
+                "reference": "51f0fb5fec38574c23a7baf2b3795bf5729dc813",
                 "shasum": ""
             },
             "type": "library",
@@ -260,20 +260,20 @@
                 "LGPL-3.0"
             ],
             "description": "php-iban is a library for parsing and validating IBAN (and IIBAN) bank account information.",
-            "time": "2018-08-14T00:04:02+00:00"
+            "time": "2019-07-02T16:45:16+00:00"
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v7.1.7",
+            "version": "v7.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "ac60286a7dc5250c293afebd2bd9414e58a02466"
+                "reference": "a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/ac60286a7dc5250c293afebd2bd9414e58a02466",
-                "reference": "ac60286a7dc5250c293afebd2bd9414e58a02466",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb",
+                "reference": "a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb",
                 "shasum": ""
             },
             "require": {
@@ -328,20 +328,20 @@
                 "php",
                 "utf-8"
             ],
-            "time": "2018-11-29T18:21:32+00:00"
+            "time": "2019-02-06T13:32:19+00:00"
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.8.1",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8"
+                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
-                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
+                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2018-06-11T23:09:50+00:00"
+            "time": "2019-04-07T13:18:21+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -506,12 +506,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPGangsta/GoogleAuthenticator.git",
-                "reference": "3baa997f399d4afd5d6a81d42244ec9cc3eeb080"
+                "reference": "505c2af8337b559b33557f37cda38e5f843f3768"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPGangsta/GoogleAuthenticator/zipball/3baa997f399d4afd5d6a81d42244ec9cc3eeb080",
-                "reference": "3baa997f399d4afd5d6a81d42244ec9cc3eeb080",
+                "url": "https://api.github.com/repos/PHPGangsta/GoogleAuthenticator/zipball/505c2af8337b559b33557f37cda38e5f843f3768",
+                "reference": "505c2af8337b559b33557f37cda38e5f843f3768",
                 "shasum": ""
             },
             "require": {
@@ -530,9 +530,9 @@
             "authors": [
                 {
                     "name": "Michael Kliewe",
+                    "role": "Developer",
                     "email": "info@phpgangsta.de",
-                    "homepage": "http://www.phpgangsta.de/",
-                    "role": "Developer"
+                    "homepage": "http://www.phpgangsta.de/"
                 }
             ],
             "description": "Google Authenticator 2-factor authentication",
@@ -541,7 +541,7 @@
                 "rfc6238",
                 "totp"
             ],
-            "time": "2016-10-08T16:35:34+00:00"
+            "time": "2019-03-20T00:55:58+00:00"
         },
         {
             "name": "psr/log",
