@@ -196,18 +196,6 @@ if ($_GET['action'] == 'edit') {
     }
 
 
-    if (isset($_POST['stats']) && $_POST['stats'] == 1) {
-        if ($vhost['stats'] == null) {
-            $vhost['stats'] = 'private';
-        }
-    } else {
-        $vhost['stats'] = null;
-    }
-
-    if ($logtype == '') {
-        $vhost['stats'] = null;
-    }
-
     DEBUG("PHP: {$php} / Logging: {$logtype}");
 
     $old_options = explode(',', $vhost['options']);

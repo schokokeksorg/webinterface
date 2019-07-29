@@ -100,10 +100,10 @@ function autoipv6_address($vhost_id, $mode = 1)
 function list_vhosts($filter=null)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid ORDER BY domain,hostname";
+    $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid ORDER BY domain,hostname";
     $params = array(":uid" => $uid);
     if ($filter) {
-        $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp, stats FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE (vh.fqdn LIKE :filter OR vh.id IN (SELECT vhost FROM vhosts.v_alias WHERE fqdn LIKE :filter)) AND uid=:uid ORDER BY hostname";
+        $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE (vh.fqdn LIKE :filter OR vh.id IN (SELECT vhost FROM vhosts.v_alias WHERE fqdn LIKE :filter)) AND uid=:uid ORDER BY hostname";
         $params[":filter"] = "%$filter%";
     }
     $result = db_query($query, $params);
@@ -159,7 +159,6 @@ function empty_vhost()
     $vhost['autoipv6'] = 2; // 1 => Eine IP pro User, 2 => Eine IP pro VHost
 
     $vhost['options'] = 'forwardwww';
-    $vhost['stats'] = null;
     return $vhost;
 }
 
@@ -494,17 +493,16 @@ function save_vhost($vhost)
                 ":ipv4" => $ipv4,
                 ":autoipv6" => $autoipv6,
                 ":options" => $vhost['options'],
-                ":stats" => ($vhost['stats'] ? $vhost['stats'] : null),
                 ":id" => $id);
     if ($id != 0) {
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-        db_query("UPDATE vhosts.vhost SET hostname=:hostname, domain=:domain, docroot=:docroot, php=:php, cgi=:cgi, `ssl`=:ssl, hsts=:hsts, `suexec_user`=:suexec_user, `server`=:server, logtype=:logtype, errorlog=:errorlog, certid=:cert, ipv4=:ipv4, autoipv6=:autoipv6, options=:options, stats=:stats WHERE id=:id", $args);
+        db_query("UPDATE vhosts.vhost SET hostname=:hostname, domain=:domain, docroot=:docroot, php=:php, cgi=:cgi, `ssl`=:ssl, hsts=:hsts, `suexec_user`=:suexec_user, `server`=:server, logtype=:logtype, errorlog=:errorlog, certid=:cert, ipv4=:ipv4, autoipv6=:autoipv6, options=:options WHERE id=:id", $args);
     } else {
         $args[":user"] = $_SESSION['userinfo']['uid'];
         unset($args[":id"]);
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-        $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options, stats) VALUES ".
-                       "(:user, :hostname, :domain, :docroot, :php, :cgi, :ssl, :hsts, :suexec_user, :server, :logtype, :errorlog, :cert, :ipv4, :autoipv6, :options, :stats)", $args, true);
+        $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options) VALUES ".
+                       "(:user, :hostname, :domain, :docroot, :php, :cgi, :ssl, :hsts, :suexec_user, :server, :logtype, :errorlog, :cert, :ipv4, :autoipv6, :options)", $args, true);
         $id = db_insert_id();
     }
     $oldvhost = get_vhost_details($id);
