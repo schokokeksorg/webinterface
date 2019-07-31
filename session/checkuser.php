@@ -334,4 +334,7 @@ function setup_session($role, $useridentity)
         $_SESSION['userinfo'] = get_user_info($uid);
         DEBUG("We are virtual mailaccount: {$_SESSION['mailaccount']}");
     }
+    if (! ($role & ROLE_CUSTOMER)) {
+        $_SESSION['customerinfo'] = array();
+    }
 }
