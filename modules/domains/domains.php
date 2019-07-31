@@ -117,9 +117,7 @@ foreach ($user_domains as $domain) {
         $punycode = '';
     }
     $domainname = "{$domain->fqdn}{$punycode}";
-    if (have_role(ROLE_CUSTOMER) && $status != 'foreign') {
-        $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
-    }
+    $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
     output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
 }
 output('</div>');

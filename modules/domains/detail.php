@@ -46,27 +46,31 @@ $section = 'domains_domains';
 // Block zuständiger Useraccount
 
 $is_current_user = true;
-$useraccounts = list_useraccounts();
-if (have_role(ROLE_CUSTOMER) && count($useraccounts) > 1) {
-    if ($dom->useraccount != $_SESSION['userinfo']['uid']) {
+$is_current_customer = false;
+if (have_role(ROLE_CUSTOMER) && isset($_SESSION['customerinfo']['customerno']) && ($dom->kunde == $_SESSION['customerinfo']['customerno'])) {
+    $is_current_customer = true;
+    $useraccounts = list_useraccounts();
+    if (count($useraccounts) > 1) {
+        if ($dom->useraccount != $_SESSION['userinfo']['uid']) {
+            $is_current_user = false;
+        }
+        // Mehrere User vorhanden
+        $options = array();
+        foreach ($useraccounts as $u) {
+            $options[$u['uid']] = $u['username'];
+        }
+        if (!array_key_exists($dom->useraccount, $options)) {
+            $options[$dom->useraccount] = $dom->useraccount;
+        }
+        output('<h4>Zuständiges Benutzerkonto</h4>');
+        $form = '<p>Diese Domain nutzen im Benutzerkonto '.html_select('domainuser', $options, $dom->useraccount).' <input type="submit" name="submit" value="Änderung speichern"></p>';
+        output(html_form('update-user', 'update', 'action=chguser&id='.$dom->id, $form));
+    } elseif (!have_role(ROLE_SYSTEMUSER) || $dom->useraccount != $_SESSION['userinfo']['uid']) {
+        // Kunde hat keine mehreren User, Domain ist trotzdem in einem anderen Useraccount
         $is_current_user = false;
+        output('<h4>Zuständiges Benutzerkonto</h4>');
+        output('<p>Diese Domain wird im Benutzerkonto mit der User-ID #'.$dom->useraccount.' verwendet.</p>');
     }
-    // Mehrere User vorhanden
-    $options = array();
-    foreach ($useraccounts as $u) {
-        $options[$u['uid']] = $u['username'];
-    }
-    if (!array_key_exists($dom->useraccount, $options)) {
-        $options[$dom->useraccount] = $dom->useraccount;
-    }
-    output('<h4>Zuständiges Benutzerkonto</h4>');
-    $form = '<p>Diese Domain nutzen im Benutzerkonto '.html_select('domainuser', $options, $dom->useraccount).' <input type="submit" name="submit" value="Änderung speichern"></p>';
-    output(html_form('update-user', 'update', 'action=chguser&id='.$dom->id, $form));
-} elseif (!have_role(ROLE_SYSTEMUSER) || $dom->useraccount != $_SESSION['userinfo']['uid']) {
-    // Kunde hat keine mehreren User, Domain ist trotzdem in einem anderen Useraccount
-    $is_current_user = false;
-    output('<h4>Zuständiges Benutzerkonto</h4>');
-    output('<p>Diese Domain wird im Benutzerkonto mit der User-ID #'.$dom->useraccount.' verwendet.</p>');
 }
 
 
@@ -140,7 +144,7 @@ if ($is_current_user) {
 
 // Block Domain-Inhaber
 
-if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions' && ($dom->cancel_date === null || $dom->cancel_date > date('Y-m-d'))) {
+if ($is_current_customer && config('http.net-apikey') && $dom->provider == 'terions' && ($dom->cancel_date === null || $dom->cancel_date > date('Y-m-d'))) {
     use_module('contacts');
     require_once('contacts.php');
     require_once('domainapi.php');
@@ -211,7 +215,7 @@ if (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == '
 
 // Block Externe Domain umziehen
 
-if (have_role(ROLE_CUSTOMER) && config('http.net-apikey')) {
+if ($is_current_customer && config('http.net-apikey')) {
     if ($dom->status == 'prereg') {
         output('<h4>Domain-Registrierung abschließen</h4>
                 <p>'.internal_link('domainreg', 'Domain registrieren', "domain={$dom->fqdn}").'</p>');
@@ -227,10 +231,10 @@ if (have_role(ROLE_CUSTOMER) && config('http.net-apikey')) {
 // Block Domain löschen/kündigen
 
 $domain_in_use = mailman_subdomains($dom->id) || mail_in_use($dom->id) || web_in_use($dom->id) || $dom->jabber == 1;
-if (!$domain_in_use && ($dom->status == 'prereg' || $dom->status == 'pretransfer' || $dom->status == 'transferfailed' || $dom->status == 'external')) {
+if ($is_current_customer && !$domain_in_use && ($dom->status == 'prereg' || $dom->status == 'pretransfer' || $dom->status == 'transferfailed' || $dom->status == 'external')) {
     output('<h4>Domain wieder entfernen</h4>');
     output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' entfernen', 'action=delete&domain='.$dom->id).'</p>');
-} elseif (have_role(ROLE_CUSTOMER) && config('http.net-apikey') && $dom->provider == 'terions' && (!$dom->cancel_date || ($dom->cancel_date > date('Y-m-d')))) {
+} elseif ($is_current_customer && config('http.net-apikey') && $dom->provider == 'terions' && (!$dom->cancel_date || ($dom->cancel_date > date('Y-m-d')))) {
     require_once('domainapi.php');
     output('<h4>Domain kündigen</h4>');
     $info = api_download_domain($dom->id);
