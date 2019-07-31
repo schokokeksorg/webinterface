@@ -43,7 +43,8 @@ if (! function_exists("user_has_dotcourier_domain")) {
         $ret = ($result->rowCount() > 0);
         if ($ret) {
             DEBUG("User {$uid} has dotcourier-domains");
+            return true;
         }
-        return $ret;
+        return false;
     }
 }
