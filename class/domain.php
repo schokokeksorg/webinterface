@@ -148,14 +148,18 @@ class Domain
 
 
 
-function get_domain_list($customerno, $uid = null)
+function get_domain_list($customerno = null, $uid = null)
 {
-    $customerno = (int) $customerno;
+    if ($customerno == null && $uid === null) {
+        DEBUG('get_domain_list() wurde aufgerufen mit leerem Kunde und leerem User!');
+        system_failure('Interner Fehler');
+    }
     $query = "SELECT id FROM kundendaten.domains WHERE";
     if ($uid !== null) {
         $uid = (int) $uid;
         $query .= " useraccount={$uid}";
     } else {
+        $customerno = (int) $customerno;
         $query .= " kunde={$customerno}";
     }
     $query .= " ORDER BY domainname,tld";
