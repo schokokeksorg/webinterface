@@ -37,7 +37,7 @@ $form = '<p>Domainname: <input type="text" name="domain" size="50" /> <input typ
 output(html_form('adddomain_search', '', '', $form));
 
 if (isset($_REQUEST['domain'])) {
-    $request = idn_to_utf8($_REQUEST['domain'], 0, INTL_IDNA_VARIANT_UTS46);
+    $request = idn_to_utf8(trim($_REQUEST['domain']), 0, INTL_IDNA_VARIANT_UTS46);
     if (substr($request, 0, 4) == 'www.') {
         $request = str_replace('www.', '', $request);
     }
