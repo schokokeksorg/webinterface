@@ -74,6 +74,13 @@ function verify_input_general($input)
 }
 
 
+function filter_output_html($data)
+{
+    return htmlspecialchars($data, ENT_QUOTES);
+}
+
+
+
 function filter_input_username($input)
 {
     $username=preg_replace("/[^[:alnum:]\_\.\+\-]/", "", $input);
@@ -215,7 +222,7 @@ function filter_ssh_key($key)
 function check_path($input)
 {
     DEBUG("checking {$input} for valid path name");
-    if ($input != filter_input_general($input)) {
+    if ($input != filter_output_html($input)) {
         logger(LOG_WARNING, 'inc/security', 'check_path', 'HTML-Krams im Pfad: '.$input);
         DEBUG("HTML-Krams im Pfad");
         return false;
