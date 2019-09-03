@@ -74,7 +74,11 @@ foreach ($user_domains as $domain) {
     }
     if ($domain->cancel_date) {
         $status = 'cancel-scheduled';
-        $regdate .= '<br />Gekündigt zum '.$domain->cancel_date;
+        if ($domain->status == 'transferout') {
+            $regdate .= '<br />Umgezogen am '.$domain->cancel_date;
+        } else {
+            $regdate .= '<br />Gekündigt zum '.$domain->cancel_date;
+        }
     }
     if ($domain->cancel_date && $domain->cancel_date < date('Y-m-d')) {
         $status = 'cancelled';
