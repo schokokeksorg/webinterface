@@ -13,9 +13,8 @@ require_once('inc/base.php');
 
 session_name(config('session_name'));
 
-if ($_SERVER['HTTPS']) {
-    session_set_cookie_params(0, '/', '', true, true);
-}
+session_set_cookie_params(array('path' => '/', 'secure' => true,
+                                'httponly' => true, 'samesite' => 'Lax'));
 
 if (!session_start()) {
     logger(LOG_ERR, "session/start", "session", "Die session konnte nicht gestartet werden!");
