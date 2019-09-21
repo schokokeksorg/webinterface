@@ -36,7 +36,7 @@ if ((isset($_REQUEST['newsletter']) && $_REQUEST['newsletter'] == 'no') || (isse
     }
 } else {
     check_form_token('newsletter');
-    if (! check_emailaddr($_REQUEST['recipient']) || filter_input_general($_REQUEST['recipient']) != $_REQUEST['recipient']) {
+    if (! check_emailaddr($_REQUEST['recipient'])) {
         system_failure("Keine gültige E-Mail-Adresse!");
     }
     set_newsletter_address($_REQUEST['recipient']);

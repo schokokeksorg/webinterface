@@ -43,7 +43,7 @@ foreach ($jabberaccounts as $acc) {
     if (! $lastactivity) {
         $lastactivity = 'Bisher nie verwendet';
     }
-    $local = filter_input_general($acc['local']);
+    $local = filter_output_html($acc['local']);
     $domain = new Domain((int) $acc['domain']);
     if ($domain->id == null) {
         $domain = new Domain();

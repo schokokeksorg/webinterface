@@ -118,7 +118,7 @@ if ($type == 'ptr' || $type == 'cname') {
 
 if ($type == 'spf' || $type == 'txt') {
     $form .= '
-<tr><td><label for="data">Inhalt:</label></td><td><input type="text" name="data" id="data" value="'.filter_input_general($data['data']).'" /></td></tr>
+<tr><td><label for="data">Inhalt:</label></td><td><input type="text" name="data" id="data" value="'.filter_output_html($data['data']).'" /></td></tr>
 ';
 }
 
@@ -140,7 +140,7 @@ if ($type == 'sshfp') {
 
     $form .= '
 <tr><td><label for="spec">Algorithmus:</label></td><td><select name="spec" id="spec">'.$option.'</select></td></tr>
-<tr><td><label for="data">Fingerabdruck:</label></td><td><input type="text" name="data" id="data" value="'.$data['data'].'" /></td></tr>
+<tr><td><label for="data">Fingerabdruck:</label></td><td><input type="text" name="data" id="data" value="'.filter_output_html($data['data']).'" /></td></tr>
 ';
 }
 

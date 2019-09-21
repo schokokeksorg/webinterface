@@ -265,9 +265,8 @@ function save_vmail_account($account)
     $forwards = array();
     if (count($account['forwards']) > 0) {
         for ($i = 0 ; $i < count($account['forwards']) ; $i++) {
-            $account['forwards'][$i]['destination'] = filter_input_general($account['forwards'][$i]['destination']);
             if (! check_emailaddr($account['forwards'][$i]['destination'])) {
-                system_failure('Das Weiterleitungs-Ziel »'.$account['forwards'][$i]['destination'].'« ist keine E-Mail-Adresse!');
+                system_failure('Das Weiterleitungs-Ziel »'.filter_output_html($account['forwards'][$i]['destination']).'« ist keine E-Mail-Adresse!');
             }
         }
     }

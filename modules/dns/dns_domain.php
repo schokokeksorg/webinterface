@@ -30,8 +30,8 @@ $domain->ensure_userdomain();
 
 DEBUG($domain);
 
-title('DNS-Records für '.filter_input_general($domain->fqdn));
-headline('DNS-Records für <em>'.filter_input_general($domain->fqdn).'</em>');
+title('DNS-Records für '.filter_output_html($domain->fqdn));
+headline('DNS-Records für <em>'.filter_output_html($domain->fqdn).'</em>');
 
 if ($domain->provider != 'terions' || $domain->billing != 'regular' || $domain->registrierungsdatum == null || $domain->kuendigungsdatum != null) {
     $state = check_dns($domain->domainname, $domain->tld);
@@ -58,7 +58,7 @@ output('<table><tr><th>Hostname</th><th>Typ</th><th>IP-Adresse/Inhalt</th><th>TT
 ');
 foreach ($records as $rec) {
     $editable = true;
-    $data = filter_input_general($rec['ip'] ? $rec['ip'] : $rec['data']);
+    $data = filter_output_html($rec['ip'] ? $rec['ip'] : $rec['data']);
     if ($rec['dyndns']) {
         if ($domain->fqdn == config('masterdomain')) {
             $data = '<em>DynDNS #'.(int) $rec['dyndns'].'</em>';
@@ -68,7 +68,7 @@ foreach ($records as $rec) {
             if ($dyndns === null) {
                 $data = '<em>DynDNS #'.(int) $rec['dyndns'].' (nicht Ihr Account)</em>';
             } else {
-                $data = internal_link('dyndns_edit', '<em>DynDNS #'.(int) $rec['dyndns'].' ('.filter_input_general($dyndns['handle']).')</em>', 'id='.(int) $rec['dyndns']);
+                $data = internal_link('dyndns_edit', '<em>DynDNS #'.(int) $rec['dyndns'].' ('.filter_output_html($dyndns['handle']).')</em>', 'id='.(int) $rec['dyndns']);
             }
         }
     }
@@ -97,7 +97,7 @@ foreach ($records as $rec) {
     output("<tr><td>{$link}</td><td>".strtoupper($rec['type'])."</td><td>".$data."</td><td>{$ttl} Sek.</td><td>".$delete."</td></tr>\n");
 }
 foreach ($auto_records as $rec) {
-    $data = filter_input_general($rec['ip'] ? $rec['ip'] : $rec['data']);
+    $data = filter_output_html($rec['ip'] ? $rec['ip'] : $rec['data']);
     $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
     output("<tr><td><em>{$rec['fqdn']}</em></td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
 }

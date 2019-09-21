@@ -226,7 +226,7 @@ function save_cert($info, $cert, $key)
 
     db_query(
         "INSERT INTO vhosts.certs (uid, subject, cn, san, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :san, :valid_from, :valid_until, :chain, :cert, :key)",
-        array(":uid" => $uid, ":subject" => filter_input_general($info['subject']), ":cn" => filter_input_general($info['cn']), ":san" => $info['san'], ":valid_from" => $info['valid_from'],
+        array(":uid" => $uid, ":subject" => filter_input_oneline($info['subject']), ":cn" => filter_input_oneline($info['cn']), ":san" => $info['san'], ":valid_from" => $info['valid_from'],
               ":valid_until" => $info['valid_until'], ":chain" => get_chain($cert), ":cert" => $cert, ":key" => $key)
   );
 }
@@ -239,8 +239,8 @@ function refresh_cert($id, $info, $cert, $key = null)
 
     $id = (int) $id;
     $oldcert = cert_details($id);
-    $args = array(":subject" => filter_input_general($info['subject']),
-                ":cn" => filter_input_general($info['cn']),
+    $args = array(":subject" => filter_input_oneline($info['subject']),
+                ":cn" => filter_input_oneline($info['cn']),
                 ":san" => $info['san'],
                 ":cert" => $cert,
                 ":valid_from" => $info['valid_from'],

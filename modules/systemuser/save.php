@@ -92,7 +92,7 @@ else
     if ($_POST['defaultname'] == 1) {
         $account['name'] = null;
     } else {
-        $account['name'] = filter_input_general($_POST['fullname']);
+        $account['name'] = filter_input_oneline($_POST['fullname']);
     }
 
     $shells = available_shells();
@@ -113,7 +113,7 @@ else
 } elseif ($_GET['action'] == 'delete') {
     system_failure("Benutzeraccounts zu löschen ist momentan nicht über diese Oberfläche möglich. Bitte wenden Sie sich an einen Administrator.");
 /*
-$account_string = filter_input_general( $account['local'].'@'.$account['domain'] );
+$account_string = filter_output_html($account['local'].'@'.$account['domain']);
 $sure = user_is_sure();
 if ($sure === NULL)
 {

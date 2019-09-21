@@ -20,7 +20,7 @@ require_once('inc/security.php');
 
 require_role(ROLE_CUSTOMER);
 
-$invoice_id = (int) filter_input_general($_GET['id']);
+$invoice_id = (int) $_GET['id'];
 
 $items = invoice_items($invoice_id);
 

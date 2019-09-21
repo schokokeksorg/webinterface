@@ -60,8 +60,7 @@ if ($acc['autoresponder']) {
 }
 
 foreach ($acc['forwards'] as $fwd) {
-    $fwd['destination'] = filter_input_general($fwd['destination']);
-    $content .= '<p>'.other_icon('go.png')." Weiterleitung an <strong>{$fwd['destination']}</strong></p>";
+    $content .= '<p>'.other_icon('go.png')." Weiterleitung an <strong>".filter_output_html($fwd['destination'])."</strong></p>";
 }
 
 

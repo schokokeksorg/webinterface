@@ -71,7 +71,6 @@ function create_list($listname, $maildomain, $admin)
 {
     $listname = strtolower($listname);
     verify_input_username($listname);
-    verify_input_general($admin);
     if (in_array($listname, array("admin", "administrator", "webmaster", "hostmaster", "postmaster"))) {
         system_failure('Der Mailinglistenname '.$listname.' ist unzulässig.');
     }

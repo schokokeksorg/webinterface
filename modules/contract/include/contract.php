@@ -37,12 +37,12 @@ function contract_html()
 
     $kundenkontakte = get_kundenkontakte();
     $kunde = get_contact($kundenkontakte['kunde']);
-    $adresse = nl2br("\n".filter_input_general($kunde['address'])."\n".filter_input_general($kunde['country']).'-'.filter_input_general($kunde['zip']).' '.filter_input_general($kunde['city']));
-    $name = filter_input_general($kunde['name']);
+    $adresse = nl2br("\n".filter_output_html($kunde['address']."\n".$kunde['country'].'-'.$kunde['zip'].' '.$kunde['city']));
+    $name = filter_output_html($kunde['name']);
     if ($kunde['company']) {
-        $name = filter_input_general($kunde['company'])."<br />".filter_input_general($kunde['name']);
+        $name = filter_output_html($kunde['company'])."<br />".filter_output_html($kunde['name']);
     }
-    $email = filter_input_general($kunde['email']);
+    $email = filter_output_html($kunde['email']);
     $address = "<strong>$name</strong>$adresse</p><p>E-Mail-Adresse: $email";
 
     $date = date('d.m.Y');

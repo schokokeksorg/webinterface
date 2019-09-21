@@ -59,18 +59,25 @@ function filter_input_general($input)
     if ($input === null) {
         return null;
     }
-    return htmlspecialchars(iconv('UTF-8', 'UTF-8', $input), ENT_QUOTES, 'UTF-8');
+    $filtered = preg_replace('/[\x00-\x09\x0b-\x0c\x0e-\x1f]/', '', $input);
+    if ($filtered !== $input) {
+        system_failure("Ihre Daten enthielten ungültige Zeichen!");
+        logger(LOG_WARNING, 'inc/security', 'filter_input_general', 'Ungültige Daten!');
+    }
+    return $filtered;
 }
 
-
-function verify_input_general($input)
+function filter_input_oneline($input)
 {
-    if (filter_input_general($input) !== $input) {
-        system_failure("Ihre Daten enthielten ungültige Zeichen!");
-        logger(LOG_WARNING, 'inc/security', 'verify_input_general', 'Ungültige Daten: '.$input);
-    } else {
-        return $input;
+    if ($input === null) {
+        return null;
     }
+    $filtered = preg_replace('/[\x00-\x1f]/', '', $input);
+    if ($filtered !== $input) {
+        system_failure("Ihre Daten enthielten ungültige Zeichen!");
+        logger(LOG_WARNING, 'inc/security', 'filter_input_general', 'Ungültige Daten!');
+    }
+    return $filtered;
 }
 
 
@@ -80,10 +87,35 @@ function filter_output_html($data)
 }
 
 
+function verify_input_ascii($data)
+{
+    $filtered = filter_var($data, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
+    if ($filtered != $data) {
+        logger(LOG_WARNING, 'inc/security', 'verify_input_ascii', 'Ungültige Daten: '.$data);
+        system_failure("Ihre Eingabe enthielt ungültige Zeichen");
+    }
+    return $filtered;
+}
+
+
+function verify_input_identifier($data)
+{
+    if ($data === "") {
+        system_failure("Leerer Bezeichner");
+    }
+    $filtered = preg_replace("/[^[:alnum:]\_\.\-]/", "", $data);
+    if ($filtered !== $data) {
+        logger(LOG_WARNING, 'inc/security', 'verify_input_identifier', 'Ungültige Daten: '.$data);
+        system_failure("Ihre Daten enthielten ungültige Zeichen!");
+
+    }
+    return $filtered;
+}
+
 
 function filter_input_username($input)
 {
-    $username=preg_replace("/[^[:alnum:]\_\.\+\-]/", "", $input);
+    $username = preg_replace("/[^[:alnum:]\_\.\+\-]/", "", $input);
     if ($username === "") {
         system_failure("Leerer Benutzername!");
     }
@@ -102,12 +134,9 @@ function verify_input_username($input)
 
 function filter_input_hostname($input, $wildcard=false)
 {
-    // FIXME: Eine "filter"-Funktion sollte keinen system_failure verursachen sondern einfach einen bereinigten String liefern.
-
     DEBUG('filter_input_hostname("'.$input.'", $wildcard='.$wildcard.')');
     $input = strtolower($input);
-    $input = rtrim($input, "\t\n\r\x00 .");
-    $input = ltrim($input, "\t\n\r\x00 .");
+    $input = trim($input, "\t\n\r\x00 .");
     if (preg_replace("/[^.]_/", "", $input) != $input) {
         system_failure("Der Unterstrich ist nur als erstes Zeichen eines Hostnames erlaubt.");
     }
@@ -142,7 +171,7 @@ function verify_input_hostname_utf8($input)
         system_failure("Ungültiger Hostname! idn ".$input);
     }
     $filter = filter_var($puny, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
-    if ($filter === false) {
+    if ($filter !== $puny) {
         system_failure("Ungültiger Hostname! filter ".$input);
     }
 }

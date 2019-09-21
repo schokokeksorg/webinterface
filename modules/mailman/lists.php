@@ -28,7 +28,7 @@ output('<p>Mit <a href="https://www.gnu.org/software/mailman/index.html">Mailman
 
 $filter = "";
 if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
-    $filter = filter_input_general($_REQUEST['filter']);
+    $filter = $_REQUEST['filter'];
 }
 $lists = get_lists($filter);
 
@@ -36,7 +36,7 @@ $lists = get_lists($filter);
 // Filter-Funktion
 if (count($lists) > 10 || $filter) {
     javascript();
-    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.$filter.'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
+    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.filter_output_html($filter).'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
     output(html_form('mailman_filter', 'lists', '', $form));
 }
 

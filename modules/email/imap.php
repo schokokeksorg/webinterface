@@ -125,10 +125,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
     <p>Soll der folgende Account wirklich gelöscht werden?</p>
     <table style="margin-bottom: 1em;">
       <tr><td>Benutzername:</td>
-        <td>'.filter_input_general($account['account']).'</td>
+        <td>'.filter_output_html($account['account']).'</td>
       </tr>
       <tr><td>Mailbox:</td>
-        <td>'.filter_input_general($account['mailbox']).'</td>
+        <td>'.filter_output_html($account['mailbox']).'</td>
       </tr>
       <tr><td>Konto aktiv:</td>
         <td>'.$enabled.'</td>

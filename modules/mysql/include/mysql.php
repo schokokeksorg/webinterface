@@ -53,7 +53,7 @@ function set_database_description($dbname, $description)
         system_failure('Ungültige Datenbank');
     }
     $args = array(":id" => $thisdb['id'],
-                ":desc" => filter_input_general($description));
+                ":desc" => filter_input_oneline($description));
     db_query("UPDATE misc.mysql_database SET description=:desc WHERE id=:id", $args);
 }
 
@@ -70,7 +70,7 @@ function set_dbuser_description($username, $description)
         system_failure('Ungültiger Benutzer');
     }
     $args = array(":id" => $thisuser['id'],
-                ":desc" => filter_input_general($description));
+                ":desc" => filter_input_oneline($description));
     db_query("UPDATE misc.mysql_accounts SET description=:desc WHERE id=:id", $args);
 }
 

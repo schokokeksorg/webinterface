@@ -44,7 +44,7 @@ output('<p>Mit dieser Funktion können Sie eine E-Mail-Adresse stilllegen (so we
 <p><strong>Wichtig:</strong> Dieses Verfahren funktioniert nur, wenn die E-Mails wirklich nicht angenommen werden (Annahme wird verweigert), somit sind keine Weiterleitung und keine Speicherung möglich. Sie können aber natürlich im Text auf eine andere E-Mail-Adresse hinweisen.</p>');
 
 $form = "<h4>Text der Fehlermeldung</h4>".
-  "<p><textarea cols=\"80\" rows=\"10\" name=\"smtpreply\" id=\"smtpreply\">".filter_input_general($account['smtpreply'])."</textarea></p>";
+  "<p><textarea cols=\"80\" rows=\"10\" name=\"smtpreply\" id=\"smtpreply\">".filter_output_html($account['smtpreply'])."</textarea></p>";
 
 $form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;';
 if ($suspended) {

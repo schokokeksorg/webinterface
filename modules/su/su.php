@@ -16,7 +16,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/base.php');
 require_once('inc/security.php');
-require_once('inc/debug.php');
 
 require_once('session/start.php');
 require_once('su.php');
@@ -37,7 +36,7 @@ if (isset($_GET['do'])) {
 $search = null;
 if (isset($_POST['query'])) {
     check_form_token('su_su');
-    $id = filter_input_general($_POST['query']);
+    $id = $_POST['query'];
     if (! su(null, $id)) {
         $search = $_POST['query'];
     }
@@ -47,11 +46,6 @@ title("Benutzer wechseln");
 
 output('<p>Hiermit können Sie (als Admin) das Webinterface mit den Rechten eines beliebigen anderen Benutzers benutzen.</p>
 ');
-
-$debug = '';
-if ($debugmode) {
-    $debug = 'debug&amp;';
-}
 
 require_once('inc/jquery.php');
 // lädt die JS-Datei mit gleichem basename
@@ -63,6 +57,6 @@ output(html_form('su_su', '', '', '<p><label for="query"><strong>Suchtext:</stro
 if ($search) {
     $allentries = build_results($search);
     foreach ($allentries as $entry) {
-        output("  <p><a href=\"?do=".filter_input_general($entry['id'])."\">".filter_input_general($entry['value'])."</a></p>");
+        output("  <p><a href=\"?do=".filter_output_html($entry['id'])."\">".filter_output_html($entry['value'])."</a></p>");
     }
 }

@@ -63,7 +63,7 @@ if ($_GET['action'] == 'new') {
     }
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=delete&id={$cert['id']}", filter_input_general("Möchten Sie das Zertifikat »{$cert['dn']}« (Seriennummer {$cert['serial']}, Gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich löschen?"));
+        are_you_sure("action=delete&id={$cert['id']}", filter_output_html("Möchten Sie das Zertifikat »{$cert['dn']}« (Seriennummer {$cert['serial']}, Gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich löschen?"));
     } elseif ($sure === true) {
         delete_clientcert($cert['id']);
         if (! $debugmode) {

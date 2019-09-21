@@ -27,12 +27,12 @@ if (! in_homedir($directory)) {
 }
 
 $app = $_GET['app'];
-verify_input_general($app);
+verify_input_identifier($app);
 
 
 $sure = user_is_sure();
 if ($sure === null) {
-    are_you_sure("dir={$directory}&app={$app}", "Möchten Sie ein Update der Anwendung »{$app}« im Verzeichnis »{$directory}« automatisch durchführen lassen?");
+    are_you_sure("dir={$directory}&app=".filter_output_html($app), "Möchten Sie ein Update der Anwendung »".filter_output_html($app)."« im Verzeichnis »{$directory}« automatisch durchführen lassen?");
 } elseif ($sure === true) {
     request_update($app, $directory, get_url_for_dir($directory));
     if (! $debugmode) {

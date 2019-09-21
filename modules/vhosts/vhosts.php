@@ -37,7 +37,7 @@ output("<p>Mit dieser Funktion legen Sie fest, welche Websites verfügbar sein s
 
 $filter = "";
 if (isset($_REQUEST['filter']) && $_REQUEST['filter'] != '') {
-    $filter = filter_input_general($_REQUEST['filter']);
+    $filter = $_REQUEST['filter'];
 }
 $vhosts = list_vhosts($filter);
 
@@ -51,7 +51,7 @@ foreach ($vhosts as $vh) {
 }
 // Filter-Funktion
 if (count($vhosts) > 10 || $filter) {
-    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.$filter.'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
+    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.filter_output_html($filter).'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
     output(html_form('vhosts_filter', 'vhosts', '', $form));
 }
 

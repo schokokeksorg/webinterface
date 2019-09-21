@@ -416,27 +416,27 @@ function domainlist_by_contact($c)
 
 function contact_as_string($contact)
 {
-    $adresse = nl2br("\n".filter_input_general($contact['address'])."\n".filter_input_general($contact['country']).'-'.filter_input_general($contact['zip']).' '.filter_input_general($contact['city']));
+    $adresse = nl2br(filter_output_html("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']));
     if (! $contact['city']) {
         $adresse = '';
     }
-    $name = filter_input_general($contact['name']);
+    $name = filter_output_html($contact['name']);
     if ($contact['company']) {
-        $name = filter_input_general($contact['company'])."<br />".filter_input_general($contact['name']);
+        $name = filter_output_html($contact['company'])."<br />".filter_output_html($contact['name']);
     }
-    $email = filter_input_general($contact['email']);
+    $email = filter_output_html($contact['email']);
     $new_email = update_pending($contact['id']);
     if ($new_email) {
-        $email = "<strike>$email</strike><br/>".filter_input_general($new_email).footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
+        $email = "<strike>$email</strike><br/>".filter_output_html($new_email).footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    $email = implode("<br>\n", array_filter(array($email, filter_input_general($contact['phone']), filter_input_general($contact['fax']), filter_input_general($contact['mobile']))));
+    $email = implode("<br>\n", array_filter(array($email, filter_output_html($contact['phone']), filter_output_html($contact['fax']), filter_output_html($contact['mobile']))));
     $pgp = '';
     if ($contact['pgp_id']) {
         $pgpid = $contact['pgp_id'];
         if (strlen($pgpid) > 20) {
             $pgpid = substr($pgpid, 0, 20).' '.substr($pgpid, 20);
         }
-        $pgp = '<p class="contact-pgp">'.other_icon('key.png').' PGP ID:<br>'.$pgpid.'</p>';
+        $pgp = '<p class="contact-pgp">'.other_icon('key.png').' PGP ID:<br>'.filter_output_html($pgpid).'</p>';
     }
 
     $contact_string = "<p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>$pgp";

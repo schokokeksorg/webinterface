@@ -62,10 +62,11 @@ if (isset($_REQUEST['username'])) {
     output('<p>Geben Sie hier die Login-Daten ein um Ihren Zugang zu testen.</p>');
 }
 
-$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_input_general($username).'" /></p>
+$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_output_html($username).'" /></p>
 <p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass" /></p>
 <p>Der aktuellste Einmal-Code: <input type="text" name="totp_code" /></p>
 <p><input type="submit" value="Prüfen!" /></p>';
 
 
 output(html_form('webmailtotp_test', 'test', '', $form));
+

@@ -24,7 +24,7 @@ $section = 'invoice_current';
 title('Rechnung');
 output('<p>Detailansicht Ihrer Rechnung. Beachten Sie bitte, dass diese Informationsseite sowie auch ein Ausdruck dieser Seite keine Rechnung darstellt. Ein gültiges Rechnungsdokument stellt lediglich die signierte PDF-Version bzw. eine Papierrechnung dar, die Sie von uns erhalten haben.</p>');
 
-$invoice_id = (int) filter_input_general($_GET['id']);
+$invoice_id = (int) $_GET['id'];
 
 output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe ".internal_link("pdf", "als PDF-Datei <img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice_id}").".</p>
 <p>&#160;</p>");

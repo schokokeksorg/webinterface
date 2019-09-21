@@ -39,7 +39,7 @@ if ($_SESSION['role'] == ROLE_VMAIL_ACCOUNT) {
     $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
     $account = get_account_details($id, false);
     $accountlogin = true;
-    $accountname = filter_input_general($_SESSION['mailaccount']);
+    $accountname = filter_output_html($_SESSION['mailaccount']);
 }
 
 
@@ -79,7 +79,7 @@ if (! $accountlogin) {
             $domain = (int) $_GET['domain'];
         }
         $form .= "
-    <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"{$account['local']}\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($domain)."</p>";
+    <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"".filter_output_html($account['local'])."\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($domain)."</p>";
     }
     $password_message = '';
     $password_value = '';
@@ -150,10 +150,7 @@ $form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id
   "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /><br/><small>(Automatische Antworten sind nur befristet erlaubt. Benötigen Sie langfristig funktionierende automatische Antworten, sprechen Sie unsere Administratoren bitte an, dann suchen wir eine Lösung.)</small></p>";
 */
 
-$subject = filter_input_general($ar['subject']);
-if ($subject == null) {
-    $subject = '';
-}
+$subject = filter_output_html($ar['subject']);
 $ar_subject_default_checked = ($subject == null) ? ' checked="checked"' : '';
 $ar_subject_custom_checked = ($subject) ? ' checked="checked"' : '';
 $form .= "<h4>Betreffzeile der automatischen Antwort</h4>".
@@ -162,9 +159,9 @@ $form .= "<h4>Betreffzeile der automatischen Antwort</h4>".
   "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked} /> ".
   "<label for=\"ar_subject_custom\">Anderer Betreff:</label> <input type=\"text\" name=\"ar_subject_value\" id=\"ar_subject_value\" value=\"{$subject}\"/></p>";
 
-$message = filter_input_general($ar['message']);
+$message = filter_output_html($ar['message']);
 $form .= "<h4>Inhalt der automatischen Antwort</h4>".
-  "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">".filter_input_general($ar['message'])."</textarea></p>";
+  "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">{$message}</textarea></p>";
 $quote = $ar['quote'];
 if (! $quote) {
     $quote = 'none';
@@ -178,7 +175,7 @@ $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
 
 $ar_from_default_checked = ($ar['fromname'] == null) ? ' checked="checked"' : '';
 $ar_from_custom_checked = ($ar['fromname'] != null) ? ' checked="checked"' : '';
-$fromname = filter_input_general($ar['fromname']);
+$fromname = filter_output_html($ar['fromname']);
 $form .= "<h4>Absender der automatischen Antwort</h4>".
   "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked} /> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br />".
   "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked} /> <label for=\"ar_from_custom\">Mit Name: </label> ".
@@ -211,7 +208,7 @@ for ($i = 0 ; $i < max($numforwards, 10) ; $i++) {
     $num = $i+1;
     $form .= "<div class=\"vmail-forward\" id=\"vmail_forward_{$num}\">
   <div style=\"float: right;\" class=\"delete_forward\">".icon_delete("Diese Weiterleitung entfernen")."</div>
-  <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"{$account['forwards'][$i]['destination']}\" /></p>
+  <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"".filter_output_html($account['forwards'][$i]['destination'])."\" /></p>
   </div>\n";
 }
 $form .= '</div>';

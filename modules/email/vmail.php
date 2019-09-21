@@ -136,8 +136,7 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         }
                     }
                     foreach ($acc['forwards'] as $fwd) {
-                        $fwd['destination'] = filter_input_general($fwd['destination']);
-                        array_push($actions, "Weiterleitung an <strong>{$fwd['destination']}</strong>");
+                        array_push($actions, "Weiterleitung an <strong>".filter_output_html($fwd['destination'])."</strong>");
                     }
                     $dest = '';
                     if (count($actions) > 0) {
@@ -148,10 +147,10 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         $dest .= '</ul>';
                     }
                     if ($acc['smtpreply']) {
-                        output('<p><strike>'.$acc['local'].'@'.$this_account['domainname'].'</strike> '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
+                        output('<p><strike>'.$filter_output_html(acc['local'].'@'.$this_account['domainname']).'</strike> '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
                         output("<ul><li>".icon_disabled()." Diese Adresse ist stillgelegt. <strong>".internal_link('suspend', 'Stilllegung ändern/aufheben', 'account='.$acc['id']).'</strong></li></ul>');
                     } else {
-                        output('<p>'.internal_link('edit', $acc['local'].'@'.$this_account['domainname'], 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
+                        output('<p>'.internal_link('edit', filter_output_html($acc['local'].'@'.$this_account['domainname']), 'id='.$acc['id']).' '.internal_link("save", '<img src="'.$prefix.'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=".$acc['id']).'</p>');
                         output('<p>'.$dest.'</p>');
                     }
                 }
@@ -167,5 +166,5 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
 
 
     /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
-    output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: '.config('company_name').' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
+    output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: '.filter_output_html(config('company_name')).' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>'.internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create").'</p>');
 }

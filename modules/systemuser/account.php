@@ -57,7 +57,7 @@ if (! customer_may_have_useraccounts()) {
         }
         $realname = $acc['name'] ? $acc['name'] : $_SESSION['customerinfo']['name'];
         $quotastring = implode('', $quota);
-        output("<tr><td><p><strong>{$acc['username']}</strong> - {$realname}</p><p style=\"color: #555;\">Existiert seit {$acc['erstellungsdatum']}<br />Verwendete Shell: {$shell}</p></td>");
+        output("<tr><td><p><strong>{$acc['username']}</strong> - ".filter_output_html($realname)."</p><p style=\"color: #555;\">Existiert seit {$acc['erstellungsdatum']}<br />Verwendete Shell: {$shell}</p></td>");
         output("<td>{$quotastring}</td>");
         output("<td>".internal_link('edit', other_icon('user_edit.png', 'Bearbeiten'), "uid={$acc['uid']}"));
 

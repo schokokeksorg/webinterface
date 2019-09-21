@@ -34,10 +34,10 @@ if (isset($_REQUEST['domain'])) {
     if (substr($request, 0, 4) == 'www.') {
         $request = str_replace('www.', '', $request);
     }
-    verify_input_general($request);
+    verify_input_hostname_utf8($request);
     $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
     if (!check_domain($punycode)) {
-        warning("Ungültiger Domainname: ".filter_input_general($request));
+        warning("Ungültiger Domainname: ".filter_output_html($request));
         redirect('adddomain');
     }
     $dom = new Domain();
@@ -170,7 +170,7 @@ $form .='</table>';
 $form .= '<p>Mit dieser Bestellung geben Sie eine verbindliche Willenserklärung ab, diese Domain registrieren zu wollen. Sie treten in ein Vertragsverhältnis zu '.config('company_name').' unter dem Vorbehalt, dass die Domain registriert werden kann. Die Hoheit über die Vergabe der Domains hat die jeweils zuständige Registrierungsstelle. Es gelten die Vergabe-Bedingungen der jeweils zuständigen Registrierungsstelle.</p>
 <p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils '.$pricedata['interval'].' Monate. Er verlängert sich stets automatisch um weitere '.$pricedata['interval'].' Monate, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
 
-$form .= '<p><input type="hidden" name="domain" value="'.filter_input_general($dom->fqdn).'">
+$form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($dom->fqdn).'">
 <input type="submit" name="submit" value="Kostenpflichtigen Vertrag abschließen"></p>';
 output(html_form('domains_domainreg', 'domainreg_save', '', $form));
 output('<p>'.internal_link('domains', 'Zurück').'</p>');

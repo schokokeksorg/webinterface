@@ -30,10 +30,10 @@ $request = idn_to_utf8($_REQUEST['domain'], 0, INTL_IDNA_VARIANT_UTS46);
 if (substr($request, 0, 4) == 'www.') {
     $request = str_replace('www.', '', $request);
 }
-verify_input_general($request);
+verify_input_hostname_utf8($request);
 $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
 if (!check_domain($punycode)) {
-    warning("Ungültiger Domainname: ".filter_input_general($request));
+    warning("Ungültiger Domainname: ".filter_output_html($request));
     redirect('');
 }
 

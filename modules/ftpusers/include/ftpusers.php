@@ -56,7 +56,7 @@ function save_ftpuser($data)
     if ($data['username'] == '') {
         system_failure('Bitte geben Sie eine Erweiterung für den Benutzernamen an!');
     }
-    $homedir = filter_input_general($data['homedir']);
+    $homedir = $data['homedir'];
     if (substr($homedir, 0, 1) == '/') {
         $homedir = substr($homedir, 1);
     }

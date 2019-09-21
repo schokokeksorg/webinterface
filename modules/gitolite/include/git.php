@@ -120,6 +120,7 @@ function list_repos()
             }
             DEBUG("found repo ".$m[1]);
             $current_repo = chop($m[1]);
+            verify_input_identifier($current_repo);
             $current_repo_users = array();
         } elseif (preg_match('/^\s*(R|RW|RW\+)\s*=\s*([[:alnum:]][[:alnum:]._-]*)\s*$/', $line, $m) != 0) {
             DEBUG("found access rule: ".$m[1]." for ".$m[2]);
@@ -151,7 +152,9 @@ function list_users()
     foreach ($lines as $line) {
         $m = array();
         if (preg_match('_# user ([^]]+)_', $line, $m) != 0) {
-            $users[] = chop($m[1]);
+            $currentuser = trim($m[1]);
+            verify_input_identifier($currentuser);
+            $users[] = $currentuser;
         }
         if (preg_match('_^\s*repo .*_', $line) != 0) {
             break;

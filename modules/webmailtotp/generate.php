@@ -42,7 +42,7 @@ output('<h4>Ihr Initialisierungs-Code</h4><p style="font-size: 120%;">'.$secret.
 
 output('<h3>Testen Sie es...</h3><p>Nachdem Sie den Startwert in Ihren TOTP-Generator eingegeben haben bzw. den QRCode eingescannt haben, erhalten Sie umgehend einen Zugangscode. Geben Sie diesen hier ein um die Funktion zu testen:</p>');
 
-$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_input_general($username).'" /></p>
+$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_output_html($username).'" /></p>
 <p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass" /></p>
 <p>Der aktuellste Einmal-Code: <input type="text" name="totp_code" /></p>
 <p><input type="submit" value="Prüfen!" /></p>';

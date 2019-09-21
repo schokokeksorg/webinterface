@@ -38,7 +38,7 @@ if (count($repos) == 0) {
 }
 
 foreach ($repos as $repo => $settings) {
-    $description = $settings['description'] ? '<br /><em>"'.filter_input_general($settings['description']).'"</em>' : '';
+    $description = $settings['description'] ? '<br /><em>"'.filter_output_html($settings['description']).'"</em>' : '';
     $url = get_git_url($repo);
     $public = isset($settings['users']['gitweb']) && $settings['users']['gitweb'] == 'R';
     $public_string = '';

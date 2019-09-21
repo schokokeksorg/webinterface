@@ -62,7 +62,7 @@ function create_dyndns_account($handle, $password_http, $sshkey)
         system_failure('Sie müssen entweder einen SSH-Key oder ein Passwort zum Web-Update eingeben.');
     }
 
-    $handle = filter_input_username($handle);
+    $handle = verify_input_identifier($handle);
 
     if (strlen(trim($sshkey)) == 0) {
         $sshkey = null;
@@ -94,9 +94,9 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
 {
     $id = (int) $id;
     $oldaccount = get_dyndns_account($id);
-    $handle = filter_input_username($handle);
-    $sshkey = filter_input_general($sshkey);
-    if (chop($sshkey) == '') {
+    $handle = verify_input_identifier($handle);
+    $sshkey = verify_input_ascii($sshkey);
+    if (trim($sshkey) == '') {
         $sshkey = null;
     }
 

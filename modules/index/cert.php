@@ -48,10 +48,10 @@ if (isset($_SESSION['clientcert_cert'])) {
     global $menu;
     output('<div style="margin: 1em; padding: 1em; border: 2px solid green;">');
     output('<p>Es wurde folgendes Client-Zertifikat von Ihrem Browser gesendet:</p>
-<div style="margin-left: 2em;"><strong>DN:</strong> '.filter_input_general($_SESSION['clientcert_dn']).'<br />
-<strong>Aussteller-DN:</strong> '.filter_input_general($_SESSION['clientcert_issuer']).'<br />
-<strong>Seriennummer:</strong> '.filter_input_general($_SESSION['clientcert_serial']).'<br />
-<strong>Gültigkeit:</strong> '.filter_input_general($_SESSION['clientcert_valid_from']).' bis '.filter_input_general($_SESSION['clientcert_valid_until']).'</div>
+<div style="margin-left: 2em;"><strong>DN:</strong> '.filter_output_html($_SESSION['clientcert_dn']).'<br />
+<strong>Aussteller-DN:</strong> '.filter_output_html($_SESSION['clientcert_issuer']).'<br />
+<strong>Seriennummer:</strong> '.filter_output_html($_SESSION['clientcert_serial']).'<br />
+<strong>Gültigkeit:</strong> '.filter_output_html($_SESSION['clientcert_valid_from']).' bis '.filter_output_html($_SESSION['clientcert_valid_until']).'</div>
 <p>Soll dieses Zertifikat für den Zugang für <strong>'.$username.'</strong> verwendet werden?</p>');
     output(html_form('clientcert_add', 'certsave.php', 'action=new', '<p><input type="submit" name="submit" value="Ja, dieses Zertifikat einrichten" /> &#160; '.internal_link('cert', 'Nein', 'clear').'</p>'));
     output('</div>');
@@ -64,8 +64,8 @@ if ($certs != null) {
     output('<p>Sie haben bereits Zertifikate für den Zugang eingerichtet.</p>
   <ul>');
     foreach ($certs as $cert) {
-        output('<li>'.filter_input_general($cert['dn'].' / Seriennummer '.$cert['serial'].' / '.'Gültig von '.$cert['valid_from'].' bis '.$cert['valid_until']).'<br />');
-        output('<em>ausgestellt von </em>'.filter_input_general($cert['issuer']));
+        output('<li>'.filter_output_html($cert['dn'].' / Seriennummer '.$cert['serial'].' / '.'Gültig von '.$cert['valid_from'].' bis '.$cert['valid_until']).'<br />');
+        output('<em>ausgestellt von </em>'.filter_output_html($cert['issuer']));
         output('<br />'.internal_link('certsave', 'Dieses Zertifikat löschen', 'action=delete&id='.$cert['id']));
         output('</li>');
     }

@@ -92,14 +92,14 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     } elseif ($_REQUEST['salutation'] == 'Frau') {
         $c['salutation'] = 'Frau';
     }
-    $c['company'] = verify_input_general(maybe_null($_REQUEST['firma']));
-    $c['name'] = verify_input_general(maybe_null($_REQUEST['name']));
-    $c['address'] = verify_input_general(maybe_null($_REQUEST['adresse']));
-    $c['country'] = verify_input_general(maybe_null(strtoupper($_REQUEST['land'])));
-    $c['zip'] = verify_input_general(maybe_null($_REQUEST['plz']));
-    $c['city'] = verify_input_general(maybe_null($_REQUEST['ort']));
+    $c['company'] = filter_input_general(maybe_null($_REQUEST['firma']));
+    $c['name'] = filter_input_general(maybe_null($_REQUEST['name']));
+    $c['address'] = filter_input_general(maybe_null($_REQUEST['adresse']));
+    $c['country'] = filter_input_oneline(maybe_null(strtoupper($_REQUEST['land'])));
+    $c['zip'] = filter_input_oneline(maybe_null($_REQUEST['plz']));
+    $c['city'] = filter_input_oneline(maybe_null($_REQUEST['ort']));
     if ($new && isset($_REQUEST['email'])) {
-        $c['email'] = verify_input_general(maybe_null($_REQUEST['email']));
+        $c['email'] = filter_input_oneline(maybe_null($_REQUEST['email']));
         if (!check_emailaddr($c['email'])) {
             system_failure("Ungültige E-Mail-Adresse!");
         }
@@ -107,7 +107,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
 
     if (isset($_REQUEST['telefon']) && $_REQUEST['telefon'] != '') {
-        $num = format_number(verify_input_general($_REQUEST['telefon']), $_REQUEST['land']);
+        $num = format_number(filter_input_oneline($_REQUEST['telefon']), $_REQUEST['land']);
         if ($num) {
             $c['phone'] = $num;
         } else {
@@ -117,9 +117,13 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $c['phone'] = null;
     }
     if (isset($_REQUEST['mobile']) && $_REQUEST['mobile'] != '') {
-        $num = format_number(verify_input_general($_REQUEST['mobile']), $_REQUEST['land']);
+        $num = format_number(filter_input_oneline($_REQUEST['mobile']), $_REQUEST['land']);
         if ($num) {
             $c['mobile'] = $num;
+            if (! $c['phone']) {
+                // dupliziere die Mobiltelefonnummer als normale Nummer wegen der Nutzung als Domainhandles
+                $c['phone'] = $num;
+            }
         } else {
             system_failure('Die eingegebene Mobiltelefonnummer scheint nicht gültig zu sein!');
         }
@@ -127,7 +131,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $c['mobile'] = null;
     }
     if (isset($_REQUEST['telefax']) && $_REQUEST['telefax'] != '') {
-        $num = format_number(verify_input_general($_REQUEST['telefax']), $_REQUEST['land']);
+        $num = format_number(filter_input_oneline($_REQUEST['telefax']), $_REQUEST['land']);
         if ($num) {
             $c['fax'] = $num;
         } else {
@@ -188,9 +192,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $id = save_contact($c);
     $c['id'] = $id;
 
-    if (isset($_REQUEST['email']) && ($new || $c['email'] != $_REQUEST['email'])) {
+    if (isset($_REQUEST['email']) && check_emailaddr($_REQUEST['email']) && ($new || $c['email'] != $_REQUEST['email'])) {
         if (have_mailaddress($_REQUEST['email'])) {
-            save_emailaddress($c['id'], verify_input_general($_REQUEST['email']));
+            save_emailaddress($c['id'], $_REQUEST['email']);
         } else {
             send_emailchange_token($c['id'], $_REQUEST['email']);
         }

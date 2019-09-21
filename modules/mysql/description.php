@@ -37,7 +37,7 @@ if (isset($_GET['db'])) {
         }
     }
     $form = '<p>Ändern Sie hier die Beschreibung der Datenbank <strong>'.$thisdb['name'].'</strong>.</p>';
-    $form .= '<p><input type="text" name="description" value="'.filter_input_general($thisdb['description']).'" /></p>
+    $form .= '<p><input type="text" name="description" value="'.filter_output_html($thisdb['description']).'" /></p>
 <p><input type="submit" value="Speichern" /></p>';
     output(html_form('mysql_description', 'save', "action=description&db={$thisdb['name']}", $form));
 }
@@ -49,7 +49,7 @@ if (isset($_GET['username'])) {
         }
     }
     $form = '<p>Ändern Sie hier die Beschreibung des DB-Benutzers <strong>'.$thisuser['username'].'</strong>.</p>';
-    $form .= '<p><input type="text" name="description" value="'.filter_input_general($thisuser['description']).'" /></p>
+    $form .= '<p><input type="text" name="description" value="'.filter_output_html($thisuser['description']).'" /></p>
 <p><input type="submit" value="Speichern" /></p>';
     output(html_form('mysql_description', 'save', "action=description&username={$thisuser['username']}", $form));
 }

@@ -22,7 +22,7 @@ $section = 'git_git';
 
 $handle = '';
 if (isset($_GET['handle'])) {
-    $handle = filter_input_general($_GET['handle']);
+    $handle = verify_input_identifier($_GET['handle']);
 }
 
 $action = '';
@@ -45,11 +45,11 @@ $userprefix = $_SESSION['userinfo']['username'].'-';
 
 $form .= '<table><tr><td><label for="handle" />Name des Benutzers:</label></td>';
 if ($handle) {
-    $form .= '<td><input type="hidden" name="handle" value="'.str_replace($userprefix, '', $handle).'" /><strong>'.$handle.'</strong></td></tr>';
+    $form .= '<td><input type="hidden" name="handle" value="'.filter_output_html(str_replace($userprefix, '', $handle)).'" /><strong>'.filter_output_html($handle).'</strong></td></tr>';
 } else {
     $form .= '<td>'.$userprefix.'<input type="text" id="handle" name="handle" value="'.$handle.'" /></td></tr>';
 }
-$form .= '<tr><td><label for="pubkey">SSH-Public-Key:</label></td><td><textarea name="pubkey" id="pubkey" cols="70" rows="10">'.$pubkey.'</textarea></td></tr>
+$form .= '<tr><td><label for="pubkey">SSH-Public-Key:</label></td><td><textarea name="pubkey" id="pubkey" cols="70" rows="10">'.filter_output_html($pubkey).'</textarea></td></tr>
   </table>
   <p><input type="submit" value="Speichern" /></p>
   ';

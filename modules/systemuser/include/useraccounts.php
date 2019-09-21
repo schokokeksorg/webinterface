@@ -110,8 +110,8 @@ function set_account_details($account)
     if ($account['name'] == '') {
         $account['name'] = null;
     }
-    $args = array(":fullname" => filter_input_general($account['name']),
-                ":shell" => filter_input_general($account['shell']),
+    $args = array(":fullname" => filter_input_oneline($account['name']),
+                ":shell" => filter_input_oneline($account['shell']),
                 ":quota" => $account['quota'],
                 ":uid" => $account['uid'],
                 ":customerno" => $customerno);
