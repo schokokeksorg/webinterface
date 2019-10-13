@@ -109,6 +109,8 @@ if (count($vhosts) > 0) {
                 $logfiles .= ' + Fehler';
             }
         }
+        output("<td>{$logfiles}</td>");
+
 
         if ($vhost['ssl'] == 'http') {
             output("<td>".icon_disabled('HTTPS ausgeschaltet')."</td>");
