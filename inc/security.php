@@ -59,6 +59,7 @@ function filter_input_general($input)
     if ($input === null) {
         return null;
     }
+    $input = (string) $input;
     $filtered = preg_replace('/[\x00-\x09\x0b-\x0c\x0e-\x1f]/', '', $input);
     if ($filtered !== $input) {
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
@@ -72,10 +73,11 @@ function filter_input_oneline($input)
     if ($input === null) {
         return null;
     }
+    $input = (string) $input;
     $filtered = preg_replace('/[\x00-\x1f]/', '', $input);
     if ($filtered !== $input) {
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
-        logger(LOG_WARNING, 'inc/security', 'filter_input_general', 'Ungültige Daten!');
+        logger(LOG_WARNING, 'inc/security', 'filter_input_oneline', 'Ungültige Daten!');
     }
     return $filtered;
 }
@@ -89,6 +91,7 @@ function filter_output_html($data)
 
 function verify_input_ascii($data)
 {
+    $data = (string) $data;
     $filtered = filter_var($data, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
     if ($filtered != $data) {
         logger(LOG_WARNING, 'inc/security', 'verify_input_ascii', 'Ungültige Daten: '.$data);
@@ -100,6 +103,7 @@ function verify_input_ascii($data)
 
 function verify_input_identifier($data)
 {
+    $data = (string) $data;
     if ($data === "") {
         system_failure("Leerer Bezeichner");
     }

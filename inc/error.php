@@ -75,7 +75,7 @@ function get_messages()
     <ul>
     ';
         foreach ($input_error as $error) {
-            $messages .= '<li>'.nl2br(filter_input_general($error))."</li>\n";
+            $messages .= '<li>'.nl2br(filter_output_html($error))."</li>\n";
         }
         $messages .= '</ul>
     </div>';
@@ -85,7 +85,7 @@ function get_messages()
     <ul>
     ';
         foreach ($_SESSION['warning'] as $msg) {
-            $messages .= '<li>'.nl2br(filter_input_general($msg))."</li>\n";
+            $messages .= '<li>'.nl2br(filter_output_html($msg))."</li>\n";
         }
         $messages .= '</ul>
     </div>';
@@ -96,7 +96,7 @@ function get_messages()
     <ul>
     ';
         foreach ($_SESSION['success_msg'] as $msg) {
-            $messages .= '<li>'.nl2br(filter_input_general($msg))."</li>\n";
+            $messages .= '<li>'.nl2br(filter_output_html($msg))."</li>\n";
         }
         $messages .= '</ul>
     </div>';

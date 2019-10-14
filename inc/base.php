@@ -422,8 +422,8 @@ function html_select($name, $options, $default='', $free='')
         if ($default == $key) {
             $selected = ' selected="selected" ';
         }
-        $key = filter_input_general($key);
-        $value = filter_input_general($value);
+        $key = filter_output_html($key);
+        $value = filter_output_html($value);
         $ret .= "  <option value=\"{$key}\"{$selected}>{$value}</option>\n";
     }
     $ret .= '</select>';
