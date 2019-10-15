@@ -16,6 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('newpass.php');
 require_once('session/checkuser.php');
+require_once('inc/base.php');
 
 function send_user_token($username)
 {
