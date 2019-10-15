@@ -473,6 +473,16 @@ function get_modules_info()
     return $modconfig;
 }
 
+
+function send_mail($address, $subject, $body)
+{
+    if (strstr($subject, "\n") !== false) {
+        die("Zeilenumbruch im subject!");
+    }
+    $header = "From: ".config('company_name')." Web Administration <noreply@".config('masterdomain').">\r\nReply-To: ".config('adminmail')."\r\nCc: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: 8bit";
+    mail($address, $subject, $body, $header);
+}
+
 function handle_exception($e)
 {
     if (config('enable_debug')) {
