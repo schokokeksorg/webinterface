@@ -45,7 +45,7 @@ if ($dom->status == 'pretransfer') {
     $authinfo = chop($_REQUEST['authinfo']);
 }
 
-$customerno = (int) $customerno;
+$customerno = (int) $_SESSION['customerinfo']['customerno'];
 $customer = get_customer_info($customerno);
 $msg = 'Sie haben in Ihrem Kundenkonto bei '.config('company_name').' eine Domainregistrierung 
 in Auftrag gegeben.
