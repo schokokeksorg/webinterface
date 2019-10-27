@@ -74,4 +74,3 @@ Gültigkeit.
 ";
     send_mail($customer['email'], "Passwortanforderung fuer Webinterface", $msg);
 }
-

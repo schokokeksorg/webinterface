@@ -33,8 +33,7 @@ if ($_GET['action'] == 'new') {
         $_SESSION['clientcert_serial'],
         $_SESSION['clientcert_valid_from'],
         $_SESSION['clientcert_valid_until']
-
-  );
+    );
 
     // Räume session auf
     unset($_SESSION['clientcert_cert']);

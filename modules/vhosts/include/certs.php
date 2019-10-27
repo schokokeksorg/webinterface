@@ -228,7 +228,7 @@ function save_cert($info, $cert, $key)
         "INSERT INTO vhosts.certs (uid, subject, cn, san, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :san, :valid_from, :valid_until, :chain, :cert, :key)",
         array(":uid" => $uid, ":subject" => filter_input_oneline($info['subject']), ":cn" => filter_input_oneline($info['cn']), ":san" => $info['san'], ":valid_from" => $info['valid_from'],
               ":valid_until" => $info['valid_until'], ":chain" => get_chain($cert), ":cert" => $cert, ":key" => $key)
-  );
+    );
 }
 
 
@@ -375,7 +375,7 @@ function save_csr($cn, $bits, $replace=null)
         "INSERT INTO vhosts.csr (uid, hostname, san, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :san, :bits, :replace, :csr, :key)",
         array(":uid" => $uid, ":cn" => $cn, ":san" => $san, ":bits" => $bits,
                  ":replace" => $replace, ":csr" => $csr, ":key" => $key)
-  );
+    );
     $id = db_insert_id();
     return $id;
 }

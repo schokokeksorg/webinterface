@@ -111,7 +111,6 @@ function verify_input_identifier($data)
     if ($filtered !== $data) {
         logger(LOG_WARNING, 'inc/security', 'verify_input_identifier', 'Ungültige Daten: '.$data);
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
-
     }
     return $filtered;
 }

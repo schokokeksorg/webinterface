@@ -136,5 +136,5 @@ function delete_clientcert($id)
     db_query(
         "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
         array(":id" => $id, ":type" => $type, ":username" => $username)
-  );
+    );
 }

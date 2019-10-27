@@ -79,7 +79,7 @@ function create_dyndns_account($handle, $password_http, $sshkey)
         "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
            "(:uid, :handle, :pwhash, :sshkey)",
         array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey)
-  );
+    );
     $dyndns_id = db_insert_id();
     //$masterdomain = new Domain(config('masterdomain'));
     //db_query("INSERT INTO dns.custom_records (type, domain, hostname, dyndns, ttl) VALUES ".
@@ -107,7 +107,7 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
              "hostname=:oldhostname AND domain=:dom AND dyndns=:dyndns AND ip IS NULL",
             array(":dom" => $masterdomain->id, ":newhostname" => filter_input_hostname($handle).'.'.$_SESSION['userinfo']['username'],
                    ":oldhostname" => $oldaccount['handle'].'.'.$_SESSION['userinfo']['username'],  ":dyndns" => $id)
-    );
+        );
     }
 
     $args = array(":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id);

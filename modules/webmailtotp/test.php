@@ -69,4 +69,3 @@ $form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="
 
 
 output(html_form('webmailtotp_test', 'test', '', $form));
-

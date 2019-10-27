@@ -251,7 +251,7 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
         array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
                 ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
                 ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname)
-  );
+    );
 }
 
 

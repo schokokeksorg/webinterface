@@ -92,4 +92,3 @@ $form .= '</td></tr></table>';
 $form .= '<p><input type="submit" value="Speichern" /></p>';
 
 output(html_form('git_edit', 'save', 'action='.$action, $form));
-
