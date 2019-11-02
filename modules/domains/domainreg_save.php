@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once("class/domain.php");
+require_once("inc/debug.php");
 require_once("domains.php");
 require_once("domainapi.php");
 require_role(ROLE_CUSTOMER);
@@ -76,6 +77,10 @@ Ihre Admins von '.config('company_name');
 
 $msg .= "\n\nDiese Bestellung haben wir am ".date("r")." von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
 
+$recipient = $customer['email'];
+if ($debugmode) {
+    $recipient = config('adminmail');
+}
 send_mail($customer['email'], 'Domainregistrierung '.$dom->fqdn, $msg);
 
 api_register_domain($dom->fqdn, $authinfo);
