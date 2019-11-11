@@ -60,7 +60,7 @@ if ($_GET['action'] == 'new') {
     $account_string = $account['local'].'@'.$account['domain'];
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=delete&account={$_GET['account']}", "Möchten Sie den Account »".filter_output_html($account_string})."« wirklich löschen?");
+        are_you_sure("action=delete&account={$_GET['account']}", "Möchten Sie den Account »".filter_output_html($account_string)."« wirklich löschen?");
     } elseif ($sure === true) {
         delete_jabber_account($account['id']);
         if (! $debugmode) {
