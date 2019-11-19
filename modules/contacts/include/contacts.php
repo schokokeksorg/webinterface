@@ -58,6 +58,7 @@ function get_contact($id, $customer = null)
         "id" => (int) $id);
     $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id AND customer=:cid", $args);
     if ($result->rowCount() == 0) {
+        DEBUG("Soll Kontakt #".$id." laden, MySQL lieferte aber keine Daten");
         system_failure("Kontakt nicht gefunden oder gehört nicht diesem Kunden");
     }
     $contact = $result->fetch();

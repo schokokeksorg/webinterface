@@ -74,6 +74,9 @@ function get_vmail_id_by_emailaddr($emailaddr)
 {
     $result = db_query("SELECT id FROM mail.v_vmail_accounts WHERE CONCAT(local, '@', domainname) = ?", array($emailaddr));
     $entry = $result->fetch();
+    if ($entry === false) {
+        return false;
+    }
     return (int) $entry['id'];
 }
 
