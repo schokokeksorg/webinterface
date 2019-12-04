@@ -56,9 +56,7 @@ if ($_GET['action'] == 'new') {
     }
 
     create_list($_POST['listname'], $maildomain, $_POST['admin']);
-    if (! $debugmode) {
-        header('Location: lists');
-    }
+    redirect('lists');
 } elseif ($_GET['action'] == 'newpw') {
     $list = get_list($_GET['id']);
     $sure = user_is_sure();
@@ -66,13 +64,9 @@ if ($_GET['action'] == 'new') {
         are_you_sure('action=newpw&id='.$list['id'], 'Möchten Sie für die Mailingliste »<strong>'.$list['listname'].'</strong>@'.$list['fqdn'].'« ein neues Passwort anfordern? (Das neue Passwort wird dem Listenverwalter zugeschickt.)');
     } elseif ($sure === true) {
         request_new_password($list['id']);
-        if (! $debugmode) {
-            header('Location: lists');
-        }
+        redirect('lists');
     } elseif ($sure === false) {
-        if (! $debugmode) {
-            header('Location: lists');
-        }
+        redirect('lists');
     }
 } elseif ($_GET['action'] == 'delete') {
     $list = get_list($_GET['id']);
@@ -81,13 +75,9 @@ if ($_GET['action'] == 'new') {
         are_you_sure('action=delete&id='.$list['id'], 'Möchten Sie die Mailingliste »<strong>'.$list['listname'].'</strong>@'.$list['fqdn'].'« wirklich löschen?');
     } elseif ($sure === true) {
         delete_list($list['id']);
-        if (! $debugmode) {
-            header('Location: lists');
-        }
+        redirect('lists');
     } elseif ($sure === false) {
-        if (! $debugmode) {
-            header('Location: lists');
-        }
+        redirect('lists');
     }
 } else {
     system_failure('Function not implemented');
