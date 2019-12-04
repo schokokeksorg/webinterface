@@ -24,14 +24,35 @@ $maildomains = array('0' => config('mailman_host'));
 foreach ($domains as $domain) {
     $maildomains[$domain['id']] = $domain['fqdn'];
 }
-
+DEBUG("maildomains");
+DEBUG($maildomains);
 
 if ($_GET['action'] == 'new') {
     $maildomain = $_POST['maildomain'];
-    if ($maildomain == 0) {
-        $maildomain = null;
-    } elseif (! isset($maildomains[$maildomain])) {
+    DEBUG("maildomain: ".$maildomain);
+    if ($maildomain == null) {
         system_failure('Ihre Domain-Auswahl scheint ungültig zu sein');
+    } elseif ('0' === (string) $maildomain) {
+        DEBUG("maildomain == 0");
+        $maildomain = null;
+    } elseif (isset($maildomains[$maildomain])) {
+        DEBUG("maildomain in \$maildomains");
+        // regular, OK
+    } else {
+        DEBUG("possible new maildomain");
+        $possible = get_possible_mailmandomains();
+        $found = false;
+        foreach ($possible as $domain) {
+            if ($maildomain == 'd'.$domain['id']) {
+                // lege Mailman-Domain neu an
+                $found = true;
+                $maildomain = insert_mailman_domain('lists', $domain['id']);
+                warning('Die Domain '.$domain['fqdn'].' wurde erstmals für eine Mailingliste benutzt. Aufgrund der dafür nötigen Änderungen kann es bis zu 1 Stunde dauern, bis Mails an diese Adresse korrekt zugestellt werden.');
+            }
+        }
+        if (! $found) {
+            system_failure('Ihre Domain-Auswahl scheint ungültig zu sein');
+        }
     }
 
     create_list($_POST['listname'], $maildomain, $_POST['admin']);

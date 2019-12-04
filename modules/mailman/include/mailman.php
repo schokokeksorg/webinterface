@@ -91,9 +91,41 @@ function create_list($listname, $maildomain, $admin)
     DEBUG('Neue ID: '.db_insert_id());
 }
 
+function get_possible_mailmandomains()
+{
+    DEBUG('get_possible_mailmandomains()');
+    $uid = (int) $_SESSION['userinfo']['uid'];
+    $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS fqdn FROM kundendaten.domains AS d LEFT JOIN mail.mailman_domains AS m ON (m.domain=d.id) WHERE d.useraccount=:uid AND m.id IS NULL ORDER BY CONCAT_WS('.',d.domainname,d.tld)", array(":uid" => $uid));
+    $ret = array();
+    while ($dom = $result->fetch()) {
+        $ret[] = $dom;
+    }
+    DEBUG($ret);
+    return $ret;
+}
+
+
+function insert_mailman_domain($subdomain, $domainid)
+{
+    DEBUG("insert_mailman_domain($subdomain, $domainid)");
+    $possible = get_possible_mailmandomains();
+    $found = false;
+    foreach ($possible as $dom) {
+        if ($domainid == $dom['id']) {
+            $found = true;
+        }
+    }
+    if (! $found) {
+        system_failue('invalid domain id');
+    }
+    db_query("INSERT INTO mail.mailman_domains (hostname, domain) VALUES (:hostname, :domain)", array(":hostname" => $subdomain, ":domain" => $domainid));
+    return db_insert_id();
+}
+
 
 function get_mailman_domains()
 {
+    DEBUG('get_mailman_domains()');
     $uid = (int) $_SESSION['userinfo']['uid'];
     $result = db_query("SELECT md.id, md.fqdn FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user=?", array($uid));
     $ret = array();

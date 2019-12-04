@@ -26,18 +26,27 @@ foreach ($domains as $domain) {
     $maildomains[$domain['id']] = $domain['fqdn'];
 }
 
+$newdomains = get_possible_mailmandomains();
+if ($newdomains) {
+    $maildomains[null] = '--------------------------';
+    foreach ($newdomains as $domain) {
+        $maildomains['d'.$domain['id']] = 'lists.'.$domain['fqdn'];
+    }
+}
 output(
-    '<p>Tragen Sie hier die benötigten Daten zur Erstellung einer neuen Mailingliste ein. Die Liste wird <strong>mit etwas Zeitverzögerung</strong> angelegt, Sie erhalten dann eine E-Mail an die unten angegebene Adresse des Listen-Verwalters.</p>
+    '<p>Erstellen Sie hier eine neue Mailingliste auf unserem zentralen Mailinglisten-Manager (Mailman). Die Liste wird <strong>mit etwas Zeitverzögerung</strong> angelegt, Sie erhalten dann eine E-Mail an die unten angegebene Adresse des Listen-Verwalters.</p>
     <p><strong>Hinweis zum Listen-Verwalter:</strong> Der Listen-Verwalter bzw. Moderator erhält später im Betrieb auch die Nachrichten, die Mailman nicht zur Liste sendet mit der Bitte um Moderation/Freigabe. Bitte geben Sie hier eine E-Mail-Adresse an, die über keinen besonders aggressiven Spamfilter verfügt und auf der keine Autoresponder aktiviert werden.</p>
 
 '.html_form('mailman_newlist', 'save', 'action=new', '
 <table>
-<tr><td>Listenname:</td><td><input type="text" name="listname" value="" />&#160;@&#160;'.html_select('maildomain', $maildomains).'</td></tr>
+<tr><td>Listenname:</td><td><input type="text" name="listname" value="" />&#160;@&#160;'.html_select('maildomain', $maildomains, '0').'</td></tr>
 <tr><td>E-Mail-Adresse des Listen-Verwalters:</td><td><input type="text" name="admin" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></td></tr>
 </table>
 <br />
 <input type="submit" name="submit" value="Anlegen" />
 ').'
 
-<p><strong>Hinweis zu Domains:</strong> Aufgrund der Architektur von Mailman ist es momentan notwendig, bestimmte Domains oder Subdomains vollständig auf Mailman zu konfigurieren. Unter diesen Domains oder Subdomains kann keine anderweitige E-Mail-Adresse benutzt werden. Sofern Sie eine Ihrer eigenen Domains oder eine Subdomain unter einer Ihrer Domains für Mailinglisten benutzen möchten, müssen Sie diese Domain oder Subdomain vorher von einem Administrator anlegen lassen. Sie können danach in dieser Auswahlliste Ihre eigene Domain wählen.</p>'
+<h4>Hinweis zu Domains:</h4>
+<p>Die Angabe der Listen-Domain ist bei Mailman eher kosmetischer Natur. Auch wenn Sie eine eigene Domain benutzen, muss der Listennamen dennoch eindeutig auf dem gesamten Server sein.</p>
+<p>Aufgrund der Architektur von Mailman ist es zudem notwendig, für einen Hostname jeweils die Mail-Zustellung fest auf Mailman zu konfigurieren. Unter diesen Subdomains kann keine anderweitige E-Mail-Adresse benutzt werden. Sofern Sie erstmalig eine Ihrer eigenen Domains für eine Mailingliste wählen (im Auswahlfeld unter der Linie) wird eine entsprechende Konfiguration erstellt. Die Liste ist in dem Fall erst nach einigen Minuten (bis zu maximal einer Stunde) für eingehende E-Mails erreichbar.</p>'
 );
