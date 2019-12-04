@@ -123,6 +123,29 @@ function insert_mailman_domain($subdomain, $domainid)
 }
 
 
+function lists_on_domain($domainid)
+{
+    DEBUG("lists_on_domain()");
+    $result = db_query("SELECT id, listname FROM mail.mailman_lists WHERE status != 'delete' AND maildomain=(SELECT id FROM mail.mailman_domains WHERE domain=?)", array($domainid));
+    $ret = array();
+    while ($l = $result->fetch()) {
+        $ret[] = $l;
+    }
+    return $ret;
+}
+
+
+function delete_mailman_domain($domainid)
+{
+    DEBUG("delete_mailman_domain()");
+    $lists = lists_on_domain($domainid);
+    if (count($lists) > 0) {
+        system_failure("Es gibt noch Mailinglisten unter diesem Domainnamen, er kann daher nicht gelöscht werden");
+    } else {
+        db_query("DELETE FROM mail.mailman_domains WHERE domain=? AND (SELECT COUNT(*) FROM mail.mailman_lists WHERE maildomain=mail.mailman_domains.id)=0;", array($domainid));
+    }
+}
+
 function get_mailman_domains()
 {
     DEBUG('get_mailman_domains()');

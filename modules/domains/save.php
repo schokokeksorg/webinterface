@@ -51,4 +51,24 @@ if ($_REQUEST['action'] == 'delete') {
     check_form_token('domains_transfer');
     api_unlock_domain($dom->fqdn);
     redirect('detail?id='.$dom->id);
+} elseif ($_REQUEST['action'] == 'nomailman') {
+    if (have_module('mailman')) {
+        use_module('mailman');
+        include('mailman.php');
+        if (count(lists_on_domain($dom->id)) > 0) {
+            system_failure("Es gibt noch Mailinglisten auf dieser Domain, daher kann sie nicht gelöscht werden");
+        }
+        $sure = user_is_sure();
+        if ($sure === null) {
+            are_you_sure("action=nomailman&domain={$dom->id}", "Möchten Sie die Domain »{$dom->fqdn}« wirklich aus der Mailinglisten-Konfiguration entfernen?");
+        } elseif ($sure === true) {
+            delete_mailman_domain($dom->id);
+            redirect('detail?id='.$dom->id);
+        } elseif ($sure === false) {
+            redirect('detail?id='.$dom->id);
+        }
+
+    } else {
+        system_failure('Das Mailman-Modul ist nicht verfügbar');
+    }
 }

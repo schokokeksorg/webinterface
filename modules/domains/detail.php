@@ -114,12 +114,19 @@ if ($is_current_user) {
         $everused = true;
     }
     if (have_module('mailman') && mailman_subdomains($dom->id)) {
+        use_module('mailman');
+        include('mailman.php');
         $mailmanhosts = mailman_subdomains($dom->id);
         $hostname = $dom->fqdn;
         if (count($mailmanhosts) == 1) {
             $hostname = $mailmanhosts[0]['hostname'].'.'.$dom->fqdn;
         }
-        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten", 'filter='.$hostname)."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p></div>");
+        $lists = lists_on_domain($dom->id);
+        $delete = '';
+        if (count($lists) == 0) {
+            $delete = '<p class="delete">'.internal_link('save', "Nicht mehr für Mailinglisten verwenden", "action=nomailman&domain=".$dom->id).'</p>';
+        }
+        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten", 'filter='.$hostname)."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p>$delete</div>");
         $used = true;
         $everused = true;
     }
