@@ -122,11 +122,11 @@ if ($is_current_user) {
             $hostname = $mailmanhosts[0]['hostname'].'.'.$dom->fqdn;
         }
         $lists = lists_on_domain($dom->id);
-        $delete = '';
+        $msg = '<p>Diese Domain wird für Mailinglisten verwendet</p>';
         if (count($lists) == 0) {
-            $delete = '<p class="delete">'.internal_link('save', "Nicht mehr für Mailinglisten verwenden", "action=nomailman&domain=".$dom->id).'</p>';
+            $msg = '<p>Für Mailinglisten eingerichtet aber keine Mailingliste mehr vorhanden.</p><p class="delete">'.internal_link('save', "Nicht mehr für Mailinglisten verwenden", "action=nomailman&domain=".$dom->id).'</p>';
         }
-        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten", 'filter='.$hostname)."</strong></p><p>Diese Domain wird für Mailinglisten verwendet</p>$delete</div>");
+        output("<div class=\"tile usage used\"><p><strong>".internal_link('../mailman/lists', "Mailinglisten", 'filter='.$hostname)."</strong></p>$msg</div>");
         $used = true;
         $everused = true;
     }
