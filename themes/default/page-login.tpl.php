@@ -14,7 +14,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 ?><!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,13 +29,13 @@ if ($title) {
 <link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal" />
 <link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon" />
 <?php echo $html_header; ?>
-<script type="text/javascript" src="<?php echo $THEME_PATH; ?>script.js"></script>
+<script src="<?php echo $THEME_PATH; ?>script.js"></script>
 </head>
 
 <body onload="javascript:document.getElementById('username').focus();">
 <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
 
-<a href="javascript:void(0);" class="menuicon" id="showmenu" onclick="showMenu()"><img src="<?php echo $THEME_PATH; ?>images/bars.svg"><span id="showmenutext">Menü</span></a>
+<a href="javascript:void(0);" class="menuicon" id="showmenu" onclick="showMenu()"><img src="<?php echo $THEME_PATH; ?>images/bars.svg" alt=""><span id="showmenutext">Menü</span></a>
 <a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
 <div class="sidebar" id="sidebar">
 
@@ -58,7 +58,7 @@ if ($messages) {
 
 <h3 class="headline">schokokeks.org Hosting Webinterface</h3>
 <p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org Hosting festlegen. Sofern Sie noch kein Kunde von schokokeks.org Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="https://schokokeks.org">öffentliche Seite</a>.</p>
-<form action="" method="post">
+<form method="post">
 <p class="login_field"><label for="username" class="login_label">Benutzername oder E-Mail-Adresse:</label> <input type="text" id="username" name="webinterface_username" size="30" /></p>
 <p class="login_field"><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="webinterface_password" size="30" /></p>
 <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>

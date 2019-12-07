@@ -55,7 +55,7 @@ if ($messages) {
 
 <h3 class="headline">Sicherheits-Code</h3>
 <p>Ihr Zugang ist mit Zwei-Faktor-Anmeldung geschützt. Sie müssen daher jetzt noch den aktuellsten Code Ihres TOTP-Geräts eingeben.</p>
-<form action="" method="post">
+<form method="post">
 <p><label for="code" class="login_label">Google-Authenticator-Code:</label> <input type="text" id="code" name="webinterface_totpcode" size="20" /></p>
 <p><span class="login_label">&#160;</span> <input type="submit" value="Prüfen" /></p>
 </form>
