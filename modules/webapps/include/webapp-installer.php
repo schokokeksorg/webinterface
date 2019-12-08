@@ -97,7 +97,7 @@ function get_url_for_dir($docroot, $cutoff = '')
     if ($tmp['ssl'] == 'forward' || $tmp['ssl'] == 'https') {
         $prefix = 'https://';
     }
-    return $prefix.$tmp['fqdn'].$cutoff;
+    return $prefix.$tmp['fqdn'].filter_output_html($cutoff);
 }
 
 

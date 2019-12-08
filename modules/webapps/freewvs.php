@@ -53,7 +53,7 @@ foreach ($results as $app) {
     if ($app['state'] == 'ok') {
         output("<img src='{$prefix}images/ok.png' />\n");
         output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-        output("<p>Gefunden in {$app['directory']} (<a href=\"{$url}\">{$url}</a>)</p>\n");
+        output("<p>Gefunden in ".filter_output_html($app['directory'])." (<a href=\"{$url}\">{$url}</a>)</p>\n");
         output("<p>Diese Anwendung hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
     } else {
         $vulnlink = $app['vulninfo'];
@@ -63,7 +63,7 @@ foreach ($results as $app) {
         }
         output("<img src='{$prefix}images/error.png' />\n");
         output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-        output("<p>Gefunden in {$app['directory']} (<a href=\"{$url}\">{$url}</a>)</p>\n");
+        output("<p>Gefunden in ".filter_output_html($app['directory'])." (<a href=\"{$url}\">{$url}</a>)</p>\n");
         if ($app['safeversion'] != '') {
             output("<p>Diese Anwendung ist von Sicherheits-Problemen betroffen. Ein <strong>Update auf Version {$app['safeversion']}</strong> wird dringend empfohlen. Prüfen Sie anhand der unten genannten Referenz welche Gefahren von dieser Anwendung momentan ausgehen.</p>\n");
         } else {
