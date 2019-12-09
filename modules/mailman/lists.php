@@ -72,9 +72,13 @@ if (! empty($lists)) {
 
         $admin = str_replace(',', ', ', $list['admin']);
 
+        $lastactivity = $list['lastactivity'];
+        if (! $lastactivity || $lastactivity < '2000') {
+            $lastactivity = '<em>nie</em>';
+        }
 
         output("<div class=\"mailman_list $class\"><p class=\"listname\"><span class=\"listname\">{$list['listname']}</span>@{$list['fqdn']}</p>
-        <p class=\"listadmin\">Verwalter: {$admin}</p><p class=\"status\">Status: {$status}</p><p class=\"archivesize\">Archivgröße: {$sizestr}</p>");
+        <p class=\"listadmin\">Verwalter: {$admin}</p><p class=\"status\">Status: {$status}<br/>Anzahl Mitglieder: {$list['subscribers']}<br/>Letzte Nutzung: {$lastactivity}</p><p class=\"archivesize\">Archivgröße: {$sizestr}</p>");
         if ($list['status'] == 'running') {
             output("<p class=\"operations\">".internal_link('save', other_icon("lock.png", "Neues Passwort anfordern").' Neues Passwort anfordern', "action=newpw&id={$list['id']}")."<br>".internal_link('save', icon_delete("Mailingliste löschen").' Liste löschen', "action=delete&id={$list['id']}")."<br><a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")." Verwaltung aufrufen</a></p></div>\n");
         } else {

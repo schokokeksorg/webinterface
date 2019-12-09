@@ -25,9 +25,9 @@ function get_lists($filter)
     $result = null;
     if ($filter) {
         $filter = '%'.$filter.'%';
-        $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
+        $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize, subscribers, lastactivity FROM mail.v_mailman_lists WHERE owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
     } else {
-        $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid ORDER BY listname", array('uid' => $uid));
+        $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize, subscribers, lastactivity FROM mail.v_mailman_lists WHERE owner=:uid ORDER BY listname", array('uid' => $uid));
     }
     $ret = array();
     while ($list = $result->fetch()) {
@@ -42,7 +42,7 @@ function get_list($id)
 {
     $args = array(":id" => $id,
                 ":uid" => $_SESSION['userinfo']['uid']);
-    $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
+    $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize, subscribers, lastactivity FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
     if ($result->rowCount() < 1) {
         system_failure('Die gewünschte Mailingliste konnte nicht gefunden werden');
     }
