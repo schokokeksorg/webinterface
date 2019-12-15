@@ -67,7 +67,6 @@ if ($_REQUEST['action'] == 'delete') {
         } elseif ($sure === false) {
             redirect('detail?id='.$dom->id);
         }
-
     } else {
         system_failure('Das Mailman-Modul ist nicht verfügbar');
     }

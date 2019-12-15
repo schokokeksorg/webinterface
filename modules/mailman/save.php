@@ -36,8 +36,8 @@ if ($_GET['action'] == 'new') {
         DEBUG("maildomain == 0");
         $maildomain = null;
     } elseif (isset($maildomains[$maildomain])) {
-        DEBUG("maildomain in \$maildomains");
         // regular, OK
+        DEBUG("maildomain in \$maildomains");
     } else {
         DEBUG("possible new maildomain");
         $possible = get_possible_mailmandomains();
