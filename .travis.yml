@@ -6,5 +6,5 @@ install:
   - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar
   - wget https://get.sensiolabs.org/security-checker.phar
 script:
-  - php php-cs-fixer-v2.phar fix --dry-run --diff .
+  - php php-cs-fixer-v2.phar fix --rules @PSR1,@PSR2,no_whitespace_in_blank_line --dry-run --diff .
   - php security-checker.phar security:check
