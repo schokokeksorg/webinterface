@@ -22,7 +22,7 @@ require_once("inc/theme.php");
 
 set_exception_handler('handle_exception');
 
-if (!isset($_GET['go'])) {
+if (!isset($_GET['go']) || !is_string($_GET['go'])) {
     die("No command");
 }
 $go = $_GET['go'];
