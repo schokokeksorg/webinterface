@@ -38,6 +38,8 @@ if (substr($go, strlen($go) - 4) == '.php') {
 
 DEBUG($go);
 
+// Can throw invalid open_basedir warnings,
+// see https://bugs.php.net/52065
 if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go.php")) or (! is_file("modules/$go.php"))) {
     die("illegal command");
 }
