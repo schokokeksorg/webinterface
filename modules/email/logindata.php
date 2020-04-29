@@ -51,8 +51,8 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dl>
 <dt>Protokoll</dt><dd>IMAP</dd>
 <dt>Servername</dt><dd>'.$servername.'</dd>
-<dt>Port</dt><dd>143</dd>
-<dt>Verschlüsselung</dt><dd>STARTTLS</dd>
+<dt>Port</dt><dd>993</dd>
+<dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
 <dt>Benutzername</dt><dd><em>'.($type=='manual'? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
@@ -64,8 +64,8 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dl>
 <dt>Protokoll</dt><dd>POP3</dd>
 <dt>Servername</dt><dd>'.$servername.'</dd>
-<dt>Port</dt><dd>110</dd>
-<dt>Verschlüsselung</dt><dd>STARTTLS</dd>
+<dt>Port</dt><dd>995</dd>
+<dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
 <dt>Benutzername</dt><dd><em>'.($type=='manual'? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
@@ -75,8 +75,8 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <p>Zum Verschicken von E-Mails muss sich Ihr E-Mail-Programm auch per SMTP anmelden. Benutzen Sie dafür bitte die folgenden Daten:</p>
 <dt>Protokoll</dt><dd>SMTP</dd>
 <dt>Servername</dt><dd>'.$servername.'</dd>
-<dt>Port</dt><dd>587</dd>
-<dt>Verschlüsselung</dt><dd>TLS (oder STARTTLS)</dd>
+<dt>Port</dt><dd>465</dd>
+<dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
 <dt>Benutzername</dt><dd><em>'.($type=='manual'? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 <br />
