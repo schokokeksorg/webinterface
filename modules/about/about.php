@@ -29,7 +29,7 @@ output('<p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webh
 <p>Einzelne Grafiken wurden aus freien Projekten entnommen oder es wurden freie Grafiken verwendet.</p>
 <p>Der Ursprung von Grafiken ist:</p>
 <ul>
-  <li><a href="http://www.famfamfam.com/lab/icons/silk/">Das »Silk«-Iconset von Mark James</a>, lizensiert unter <a href="http://creativecommons.org/licenses/by/2.5/">CC-by 2.5</a></li>
+  <li><a href="http://www.famfamfam.com/lab/icons/silk/">Das »Silk«-Iconset von Mark James</a>, lizensiert unter <a href="https://creativecommons.org/licenses/by/2.5/">CC-by 2.5</a></li>
   <li>Icons vom <a href="https://www.phpmyadmin.net/">phpMyAdmin-Projekt</a>, lizensiert unter <a href="https://www.gnu.org/licenses/gpl-2.0.html">GNU GPL 2.0</a></li>
   <li>Das Logo der <a href="https://www.jabber.org/">Jabber Software Foundation</a>, lizensiert unter <a href="https://creativecommons.org/licenses/by/2.5/">CC-by 2.5</a></li>
   <li>Das Logo <a href="https://letsencrypt.org/">von Let\'s Encrypt, der freien und automatisierten Zertifizierungsstelle der Internet Security Research Group (ISRG).</a></li>
