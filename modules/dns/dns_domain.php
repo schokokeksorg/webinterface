@@ -72,7 +72,7 @@ foreach ($records as $rec) {
             }
         }
     }
-    if ($rec['type'] == 'mx') {
+    if ($rec['type'] == 'mx' || $rec['type'] == 'srv') {
         $data .= ' ('.(int) $rec['spec'].')';
     }
     if ($rec['type'] == 'sshfp') {
@@ -83,7 +83,7 @@ foreach ($records as $rec) {
     }
     $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
     $link = $rec['fqdn'];
-    if (!in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp', 'caa'))) {
+    if (!in_array($rec['type'], array('a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp', 'srv', 'caa'))) {
         $editable = false;
     }
     $delete = internal_link('dns_record_save', icon_delete('Record löschen'), "id={$rec['id']}&action=delete");
@@ -98,6 +98,9 @@ foreach ($records as $rec) {
 }
 foreach ($auto_records as $rec) {
     $data = filter_output_html($rec['ip'] ? $rec['ip'] : $rec['data']);
+    if ($rec['type'] == 'mx' || $rec['type'] == 'srv') {
+        $data .= ' ('.(int) $rec['spec'].')';
+    }
     $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
     output("<tr><td><em>{$rec['fqdn']}</em></td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
 }
@@ -128,6 +131,7 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <li>'.internal_link('dns_record_edit', 'TXT', 'id=new&type=txt&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'SSHFP', 'id=new&type=sshfp&domain='.$domain->id).'</li>
 <li>'.internal_link('dns_record_edit', 'CAA', 'id=new&type=caa&domain='.$domain->id).'</li>
+<li>'.internal_link('dns_record_edit', 'SRV', 'id=new&type=srv&domain='.$domain->id).'</li>
 </ul>
 
 <h4>Automatische DNS-Records</h4>
