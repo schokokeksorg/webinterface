@@ -56,3 +56,14 @@ output('</table>');
 
 addnew("new_account", "Neues Jabber-Konto anlegen");
 addnew("new_domain", "Eigene Domain für Jabber freischalten");
+
+$obsolete_domains = domains_without_accounts();
+
+if (count($obsolete_domains) > 0) {
+    output('<h4>Unbenutzte Jabber-Domains</h4>');
+    output('<p>Folgende Domains sind für die Nutzung im Jabber-Server eingerichtet, werden aber momentan nicht genutzt (kein Jabber-Account vorhanden).</p><ul>');
+    foreach ($obsolete_domains as $d) {
+        output('<li><strong>'.$d->fqdn.'</strong> '.internal_link('save', icon_delete('Domain aus dem Jabber-Server entfernen'), 'action=deldomain&domain='.$d->id).'</li>');
+    }
+    output('</ul>');
+}

@@ -75,6 +75,25 @@ if ($_GET['action'] == 'new') {
     check_form_token('jabber_new_domain');
     new_jabber_domain($_REQUEST['domain']);
     header("Location: accounts");
+} elseif ($_GET['action'] == 'deldomain') {
+    $title = "Jabber-Domain löschen";
+    $section = 'jabber_accounts';
+    $domain = new Domain((int) $_GET['domain']);
+    $sure = user_is_sure();
+    if ($sure === null) {
+        are_you_sure("action=deldomain&domain={$_GET['domain']}", "Möchten Sie die Domain »".filter_output_html($domain->fqdn)."« aus der Jabber-Konfiguration entfernen?");
+    } elseif ($sure === true) {
+        delete_jabber_domain($domain->id);
+        if (! $debugmode) {
+            header("Location: accounts");
+        }
+    } elseif ($sure === false) {
+        if (! $debugmode) {
+            header("Location: accounts");
+        }
+    }
+
+
 } else {
     system_failure("Unimplemented action");
 }

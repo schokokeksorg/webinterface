@@ -142,6 +142,45 @@ function delete_jabber_account($id)
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");
 }
 
+function domains_without_accounts() 
+{
+    $domains = get_domain_list((int) $_SESSION['customerinfo']['customerno']);
+    $accounts = get_jabber_accounts();
+    $obsolete_domains = array();
+    foreach ($domains as $d) {
+        if ($d->jabber != 1) {
+            continue;
+        }
+        $found = false;
+        foreach ($accounts as $a) {
+            if ($a['domain'] == $d->id) {
+                $found = true;
+            }
+        }
+        if (! $found) {
+            $obsolete_domains[] = $d;
+        }
+    }
+    return $obsolete_domains;
+}
+
+
+function delete_jabber_domain($id) 
+{
+    $d = new Domain((int) $id);
+    $d->ensure_customerdomain();
+    $obsolete_domains = domains_without_accounts();
+    $found = false;
+    foreach ($obsolete_domains as $od) {
+        if ($od->id == $d->id) {
+            $found = true;
+        }
+    }
+    if (! $found) {
+        system_failure('Diese Domain ist nicht unbenutzt.');
+    }
+    db_query("UPDATE kundendaten.domains SET jabber=0 WHERE jabber=1 AND id=?", array($d->id));
+}
 
 function new_jabber_domain($id)
 {
