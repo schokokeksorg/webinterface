@@ -200,6 +200,9 @@ function get_max_mailboxquota($server, $oldquota)
     $server = (int) $server;
     $result = db_query("SELECT systemquota - (COALESCE(systemquota_used,0) + COALESCE(mailquota,0)) AS free FROM system.v_quota WHERE uid=:uid AND server=:server", array(":uid" => $uid, ":server" => $server));
     $item = $result->fetch();
+    if (! $item) {
+        return $oldquota - config('vmail_basequota');
+    }
     DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
     return max(0, $item['free'] + ($oldquota - config('vmail_basequota')));
 }
