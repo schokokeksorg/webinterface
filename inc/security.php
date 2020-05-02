@@ -306,3 +306,24 @@ function check_domain($input)
 {
     return (bool) preg_match("/^[a-z0-9\.\-]+\.[a-z\-]{2,63}$/i", $input);
 }
+
+function check_input_types($input, $types)
+{
+    foreach ($types as $key => $type) {
+        if (!array_key_exists($key, $input)) {
+            system_failure("Interner Fehler bei Eingabevariablen");
+        }
+        if ($type === 'int') {
+            if ($input[$key] !== (string)(int)$input[$key]) {
+                system_failure("Interner Fehler bei Eingabevariablen");
+            }
+            continue;
+        } elseif ($type === 'string') {
+            if (!is_string($input[$key])) {
+                system_failure("Interner Fehler bei Eingabevariablen");
+            }
+        } else {
+            system_failure("Interner Fehler: Ungültier Typ");
+        }
+    }
+}
