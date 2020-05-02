@@ -220,7 +220,8 @@ function get_domain_auto_records($domainname)
 }
 
 
-function warn_autorecord_collission($hostname, $domain, $type) {
+function warn_autorecord_collission($hostname, $domain, $type)
+{
     $autorecords = get_domain_auto_records($domain);
     foreach ($autorecords as $ar) {
         if ($ar['hostname'] == $hostname && $ar['type'] == $type) {

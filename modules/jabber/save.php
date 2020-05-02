@@ -92,8 +92,6 @@ if ($_GET['action'] == 'new') {
             header("Location: accounts");
         }
     }
-
-
 } else {
     system_failure("Unimplemented action");
 }

@@ -142,7 +142,7 @@ function delete_jabber_account($id)
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");
 }
 
-function domains_without_accounts() 
+function domains_without_accounts()
 {
     $domains = get_domain_list((int) $_SESSION['customerinfo']['customerno']);
     $accounts = get_jabber_accounts();
@@ -165,7 +165,7 @@ function domains_without_accounts()
 }
 
 
-function delete_jabber_domain($id) 
+function delete_jabber_domain($id)
 {
     $d = new Domain((int) $id);
     $d->ensure_customerdomain();
