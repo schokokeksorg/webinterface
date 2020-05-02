@@ -44,6 +44,7 @@ if (have_module('webmailtotp') && isset($_POST['webinterface_totpcode']) && isse
 }
 
 if (isset($_POST['webinterface_username']) && isset($_POST['webinterface_password'])) {
+    check_input_types($_POST, array('webinterface_username' => 'string', 'webinterface_password' => 'string'));
     $role = find_role($_POST['webinterface_username'], $_POST['webinterface_password']);
     if ($role === null) {
         $_SESSION['role'] = ROLE_ANONYMOUS;
