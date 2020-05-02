@@ -18,6 +18,9 @@ require_once("inc/security.php");
 
 function system_failure($reason)
 {
+    if (!isset($_SESSION['role'])) {
+        $_SESSION['role'] = ROLE_ANONYMOUS;
+    }
     input_error($reason);
     show_page();
     die();
