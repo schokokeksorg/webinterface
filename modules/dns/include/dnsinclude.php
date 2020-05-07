@@ -345,13 +345,13 @@ function save_dns_record($id, $record)
       if (! $record['data']) {
           system_failure('SRV target missing');
       }
-      $data = explode(':', $record['data'], 2);
+      $data = explode(':', $record['data']);
       if (count($data) != 2) {
           system_failure('Das eingegebene Ziel war nicht im Format hostname:port');
       }
       list($hostname, $port) = $data;
       verify_input_hostname($hostname);
-      if ($port != (int) $port || $port == 0) {
+      if ($port !== (string)(int) $port || (int)$port < 1 || (int)$port > 65535) {
           system_failure('Ungültige Portnummer');
       }
       $record['ip'] = null;
