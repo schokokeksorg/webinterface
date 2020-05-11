@@ -125,7 +125,7 @@ output('<p>Sie können Ihr Mandat jederzeit widerrufen. Senden Sie uns dazu bitt
 
 
 
-output("<h3>Offene und zukünftige Rechnungsposten</h3>");
+output("<h3>Rechnungs-Vorschau</h3>");
 output('<p>Hier sehen Sie einen Überblick über Posten die in den nächsten 3 Monaten fällig werden.</p>');
 
 
