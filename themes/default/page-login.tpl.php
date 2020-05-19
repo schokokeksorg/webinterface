@@ -60,12 +60,11 @@ if ($messages) {
 <p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org Hosting festlegen. Sofern Sie noch kein Kunde von schokokeks.org Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="https://schokokeks.org">öffentliche Seite</a>.</p>
 <form method="post">
 <p class="login_field"><label for="username" class="login_label">Benutzername oder E-Mail-Adresse:</label> <input type="text" id="username" name="webinterface_username" size="30" /></p>
-<p class="login_field"><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="webinterface_password" size="30" /></p>
+<p class="login_field"><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="webinterface_password" size="30" /> &nbsp; (<a href="<?php echo $BASE_PATH; ?>go/index/lost_password">Passwort vergessen?</a>)</p>
 <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden" /></p>
 </form>
 <p>Sie können sich hier mit Ihrem System-Benutzernamen, Ihrer E-Mail-Adresse oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
 <?php /* <p>Sollten Sie Ihr Benutzer-Passwort nicht mehr kennen, wenden Sie sich bitte an den Support. Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p> */ ?>
-<p><a href="<?php echo $BASE_PATH; ?>go/index/lost_password">Sollten Sie Ihr Kunden-Passwort nicht mehr kennen, klicken Sie bitte hier.</a> Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p>
 
 <p><em><a href="../../certlogin/?destination=go/<?php echo $go; ?>"  >Mit einem Client-Zertifikat anmelden</a></em> (<a href="../../go/index/certinfo"  >Wie geht das?</a>)</p>
 
