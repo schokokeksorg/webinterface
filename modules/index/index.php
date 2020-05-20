@@ -61,8 +61,11 @@ title('Übersicht');
 headline('Administration');
 output('<p>Herzlich willkommen, '.$role.".</p>\n");
 
-output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>
-<p>Nachfolgend sehen Sie eine Auswahl typischer Aufgaben.</p>\n");
+output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>");
+if (is_locked()) {
+    output('<div class="error"><p><strong>Achtung: Ihr Kundenkonto ist gesperrt!</strong></p><p>Ihr Kundenkonto ist im Moment gesperrt. Das bedeutet, dass Ihre Websites nicht mehr abrufbar sind und Ihre E-Mail-Adresen keine Nachrichten mehr empfangen können.</p><p>Um die Sperrung aufzuheben, nehmen Sie bitte Kontakt mit uns auf!</p></div>');
+}
+output("<p>Nachfolgend sehen Sie eine Auswahl typischer Aufgaben.</p>\n");
 
 $modules = get_modules_info();
 

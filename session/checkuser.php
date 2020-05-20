@@ -149,6 +149,23 @@ function find_role($login, $password, $i_am_admin = false)
     return null;
 }
 
+function is_locked()
+{
+    $result = null;
+    if (isset($_SESSION['customerinfo']['customerno'])) {
+        $result = db_query("SELECT gesperrt FROM kundendaten.kunden WHERE id=?", array($_SESSION['customerinfo']['customerno']));
+    } elseif (isset($_SESSION['userinfo']['uid'])) {
+        $result = db_query("SELECT (SELECT gesperrt FROM kundendaten.kunden WHERE id=useraccounts.kunde) AS gesperrt FROM system.useraccounts WHERE uid=?", array($_SESSION['userinfo']['uid']));
+    }
+    if ($result) {
+        $line = $result->fetch();
+        if ($line['gesperrt'] == 1) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 function get_customer_info($customer)
 {
