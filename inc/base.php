@@ -479,8 +479,8 @@ function send_mail($address, $subject, $body)
     if (strstr($subject, "\n") !== false) {
         die("Zeilenumbruch im subject!");
     }
-    $header = "From: ".config('company_name')." Web Administration <noreply@".config('masterdomain').">\r\nReply-To: ".config('adminmail')."\r\nCc: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable";
-    $subject = "=?UTF-8?Q?".quoted_printable_encode($subject)."?=";
+    $header = "From: ".config('company_name')." Web Administration <noreply@".config('masterdomain').">\r\nReply-To: ".config('adminmail')."\r\nCc: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\nX-schokokeks-org-message: webinterface";
+    $subject = mb_encode_mimeheader($subject, "utf-8", "Q");
     $body = quoted_printable_encode($body);
     mail($address, $subject, $body, $header);
 }
