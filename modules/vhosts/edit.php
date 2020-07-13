@@ -126,7 +126,7 @@ $form .= "<br />
 /*
  * Choose what PHP version to use
  */
-$options = array("none" => 'ausgeschaltet', "default" => "Eingeschaltet (neueste Version)");
+$options = array("none" => 'ausgeschaltet', "default" => "Eingeschaltet (empfohlene Version)");
 $phpinfo = valid_php_versions();
 $php_default_version = null;
     foreach ($phpinfo as $v) {
@@ -149,7 +149,7 @@ $phpoptions = "
 <h5>PHP</h5>
 <div style=\"margin-left: 2em;\">
     ".html_select("php", $options, $vhost['php'])."<br>
-    <p>Aktuelle Standardversion: $php_default_version. Bei der Einstellung \"neueste Version\" wird Ihre Website immer mit der neuesten stabilen PHP-Version betrieben.</p>
+    <p>Aktuell empfohlene Version: $php_default_version.<br>Bei der Einstellung \"empfohlene Version\" wird Ihre Website immer mit einer von uns ausgesuchten PHP-Version betrieben. Meist ist dies die zweit-neueste Version.</p>
 </div>";
 
 $safemode = ($vhost['cgi'] == 1 ? '' : ' checked="checked" ');

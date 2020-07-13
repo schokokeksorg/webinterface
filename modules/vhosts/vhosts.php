@@ -159,7 +159,7 @@ if (count($vhosts) > 0) {
                         $php_default_version = $v['major'].'.'.$v['minor'];
                     }
                 }
-                $php = icon_enabled('PHP in der neuesten stabilen Version eingeschaltet ('.$php_default_version.')');
+                $php = icon_enabled('PHP in der empfohlenen Version eingeschaltet ('.$php_default_version.')');
             } elseif (array_key_exists($php, $phpinfo)) {
                 $phpinfo = $phpinfo[$php];
                 /* To create new PHP icon:
