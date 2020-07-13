@@ -152,7 +152,15 @@ if (count($vhosts) > 0) {
         } else {
             $php = $vhost['php'];
             $phpinfo = valid_php_versions($php);
-            if (array_key_exists($php, $phpinfo)) {
+            if ($php == 'default') {
+                $php_default_version = null;
+                foreach ($phpinfo as $v) {
+                    if ($v['default'] == true) {
+                        $php_default_version = $v['major'].'.'.$v['minor'];
+                    }
+                }
+                $php = icon_enabled('PHP in der neuesten stabilen Version eingeschaltet ('.$php_default_version.')');
+            } elseif (array_key_exists($php, $phpinfo)) {
                 $phpinfo = $phpinfo[$php];
                 /* To create new PHP icon:
                    convert ok.png -gravity center -draw "text 0,0 '7.2'" ok-php72.png

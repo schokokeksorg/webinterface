@@ -54,11 +54,12 @@ function valid_php_versions()
         $ret[$key] = $ver;
     }
     /* Bis hier: aus der Datenbank ausgelesen */
+    krsort($ret);
     DEBUG($ret);
     /* Sonderfall: Wenn ein User noch Vhosts einer anderen Version hat, dann bleibt diese erlaubt */
     $list = list_vhosts();
     foreach ($list as $vhost) {
-        if ($vhost['php'] && !array_key_exists($vhost['php'], $ret)) {
+        if ($vhost['php'] && $vhost['php'] != 'default' && !array_key_exists($vhost['php'], $ret)) {
             $key = $vhost['php'];
             $ret = array($key => array('major' => null, 'minor' => null, 'status' => 'used', 'default' => false)) + $ret;
             /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und
@@ -134,13 +135,7 @@ function empty_vhost()
     $vhost['homedir'] = $_SESSION['userinfo']['homedir'];
     $vhost['docroot'] = null;
 
-    $vhost['php'] = null;
-    $phpversions = valid_php_versions();
-    foreach ($phpversions as $tag => $info) {
-        if ($info['default']) {
-            $vhost['php'] = $tag;
-        }
-    }
+    $vhost['php'] = 'default';
     $vhost['cgi'] = 1;
     $vhost['ssl'] = null;
     $vhost['hsts'] = -1;

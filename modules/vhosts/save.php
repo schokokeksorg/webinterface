@@ -95,7 +95,7 @@ if ($_GET['action'] == 'edit') {
     $php = null;
     if ($_POST['vhost_type'] == 'regular' && isset($_POST['php'])) {
         $phpinfo = valid_php_versions();
-        if (array_key_exists($_POST['php'], $phpinfo)) {
+        if ($_POST['php'] == 'default' || array_key_exists($_POST['php'], $phpinfo)) {
             $php = $_POST['php'];
         } else {
             $php = null;

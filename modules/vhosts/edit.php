@@ -124,25 +124,18 @@ $form .= "<br />
 ";
 
 /*
- * Boolean option, to be used when only one PHP version is available
- */
-$have_php = ($vhost['php'] == 'php56' ? ' checked="checked" ' : '');
-
-/*
-$phpoptions = "<h5>PHP</h5>
-  <div style=\"margin-left: 2em;\">
-    <input type=\"checkbox\" name=\"php\" id=\"php\" value=\"php53\" {$have_php}/>&#160;<label for=\"php\">PHP einschalten</label>
-  </div>
-";
-*/
-/*
  * Choose what PHP version to use
  */
-//if ($vhost['php'] == 'php54')
-//{
-  $options = array("none" => 'ausgeschaltet');
-  $phpinfo = valid_php_versions();
-  foreach ($phpinfo as $tag => $info) {
+$options = array("none" => 'ausgeschaltet', "default" => "Eingeschaltet (neueste Version)");
+$phpinfo = valid_php_versions();
+$php_default_version = null;
+    foreach ($phpinfo as $v) {
+        if ($v['default'] == true) {
+            $php_default_version = $v['major'].'.'.$v['minor'];
+            break;
+        }
+    }
+foreach ($phpinfo as $tag => $info) {
       $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
       if ($info['status'] == 'deprecated') {
           $options[$tag] .= ' (veraltet)';
@@ -151,13 +144,13 @@ $phpoptions = "<h5>PHP</h5>
       } elseif ($info['status'] == 'used') {
           $options[$tag] .= ' (nur Bestandsschutz)';
       }
-  }
-  $phpoptions = "
-  <h5>PHP</h5>
-  <div style=\"margin-left: 2em;\">
-    ".html_select("php", $options, $vhost['php'])."
-  </div>";
-//}
+}
+$phpoptions = "
+<h5>PHP</h5>
+<div style=\"margin-left: 2em;\">
+    ".html_select("php", $options, $vhost['php'])."<br>
+    <p>Aktuelle Standardversion: $php_default_version. Bei der Einstellung \"neueste Version\" wird Ihre Website immer mit der neuesten stabilen PHP-Version betrieben.</p>
+</div>";
 
 $safemode = ($vhost['cgi'] == 1 ? '' : ' checked="checked" ');
 
