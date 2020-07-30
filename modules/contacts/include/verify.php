@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once("inc/api.php");
+require_once("contacts.php");
 
 function verify_mail_token($token)
 {
@@ -43,6 +44,7 @@ function update_mailaddress($daten)
     $args = array(':contact' => $contact,
                   ':email' => $email);
     db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:contact", $args);
+    sync_legacy_contactdata();
 }
 
 
