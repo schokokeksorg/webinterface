@@ -78,7 +78,7 @@ function get_account_details($uid, $customerno=0)
         $customerno = $_SESSION['customerinfo']['customerno'];
     }
     $args = array(":uid" => $uid, ":customerno" => $customerno);
-    $result = db_query("SELECT uid,username,name,shell,server,quota,erstellungsdatum FROM system.useraccounts WHERE kunde=:customerno AND uid=:uid", $args);
+    $result = db_query("SELECT uid,username,name,shell,server,quota,erstellungsdatum,passwordlogin FROM system.useraccounts WHERE kunde=:customerno AND uid=:uid", $args);
     if ($result->rowCount() == 0) {
         system_failure("Cannot find the requestes useraccount (for this customer).");
     }
@@ -114,9 +114,10 @@ function set_account_details($account)
                 ":shell" => filter_input_oneline($account['shell']),
                 ":quota" => $account['quota'],
                 ":uid" => $account['uid'],
-                ":customerno" => $customerno);
+                ":customerno" => $customerno,
+                ":passwordlogin" => $account['passwordlogin']);
 
-    db_query("UPDATE system.useraccounts SET name=:fullname, quota=:quota, shell=:shell WHERE kunde=:customerno AND uid=:uid", $args);
+    db_query("UPDATE system.useraccounts SET name=:fullname, quota=:quota, shell=:shell, passwordlogin=:passwordlogin WHERE kunde=:customerno AND uid=:uid", $args);
     logger(LOG_INFO, "modules/systemuser/include/useraccounts", "systemuser", "updated details for uid {$args[":uid"]}");
 }
 

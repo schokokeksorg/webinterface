@@ -51,12 +51,28 @@ if ($role & ROLE_CUSTOMER) {
     $customer = $_SESSION['customerinfo'];
 }
 
-$form = '
-
+$form = '';
+$form .= '
 <h5>Name (E-Mail-Absender, ...)</h5>
 <div style="margin-left: 2em;"> 
   <p><input type="radio" name="defaultname" id="defaultname" value="1" '.$defaultname.'/> <label for="defaultname">Kundenname: <strong>'.$customer['name'].'</strong></label></p>
   <p><input type="radio" name="defaultname" id="nondefaultname" value="0" '.$nondefaultname.'/> <label for="nondefaultname">Abweichend:</label> <input type="text" name="fullname" id="fullname" value="'.$account['name'].'" /></p>
+</div>
+';
+
+$defaultpwlogin = 'checked';
+$defaultnopwlogin = '';
+
+if ($account['passwordlogin'] == 0) {
+    $defaultpwlogin = '';
+    $defaultnopwlogin = 'checked';
+}
+
+$form .= '
+<h5>Passwort-Login</h5>
+<div style="margin-left: 2em;"> 
+  <p><input type="radio" name="passwordlogin" id="passwordlogin_ja" value="1" '.$defaultpwlogin.'/> <label for="passwordlogin_ja">SSH-Login mit Passwort erlauben</label></p>
+  <p><input type="radio" name="passwordlogin" id="passwordlogin_nein" value="0" '.$defaultnopwlogin.'/> <label for="passwordlogin_nein">SSH-Login nur mit SSH-Key ermglichen</label></p>
 </div>
 ';
 

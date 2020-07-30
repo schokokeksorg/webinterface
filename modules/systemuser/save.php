@@ -95,6 +95,10 @@ else
         $account['name'] = filter_input_oneline($_POST['fullname']);
     }
 
+    if (isset($_POST['passwordlogin'])) {
+        $account['passwordlogin'] = (int) $_POST['passwordlogin'];
+    }
+
     $shells = available_shells();
     if (isset($shells[$_POST['shell']])) {
         $account['shell'] = $_POST['shell'];
