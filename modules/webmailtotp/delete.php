@@ -15,25 +15,30 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
-require_role(ROLE_SYSTEMUSER);
+require_role(array(ROLE_SYSTEMUSER, ROLE_MAILACCOUNT, ROLE_VMAIL_ACCOUNT));
 
 require_once('totp.php');
 
 $id = (int) $_REQUEST['id'];
 
+$startpage = 'account';
+if (have_role(ROLE_SYSTEMUSER)) {
+    $startpage = 'overview';
+}
+
 $account = accountname($id);
 $sure = user_is_sure();
 if ($sure === null) {
-    $section='webmailtotp_overview';
+    $section='webmailtotp_'.$startpage;
     title("Zwei-Faktor-Anmeldung am Webmailer");
     are_you_sure("id={$id}", "Möchten Sie die Zwei-Faktor-Anmeldung für das Postfach »{$account}« wirklich entfernen?");
 } elseif ($sure === true) {
     delete_totp($id);
     if (! $debugmode) {
-        header("Location: overview");
+        header("Location: ".$startpage);
     }
 } elseif ($sure === false) {
     if (! $debugmode) {
-        header("Location: overview");
+        header("Location: ".$startpage);
     }
 }

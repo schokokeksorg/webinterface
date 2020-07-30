@@ -15,7 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
-require_role(ROLE_SYSTEMUSER);
+require_role(array(ROLE_SYSTEMUSER, ROLE_MAILACCOUNT, ROLE_VMAIL_ACCOUNT));
 
 require_once('totp.php');
 

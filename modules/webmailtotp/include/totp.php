@@ -45,6 +45,10 @@ function validate_password($username, $password)
 
 function store_webmail_password($username, $oldpw, $newpw)
 {
+    $qual = strong_password($newpw);
+    if ($qual !== true) {
+        system_failure('Fehler beim Webmail-Passwort: '.$qual);
+    }
     $secret = $newpw;
     if (strlen($oldpw) > strlen($newpw)) {
         $secret = str_pad($newpw, strlen($oldpw), $newpw);
