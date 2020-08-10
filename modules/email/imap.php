@@ -28,7 +28,6 @@ $user = $_SESSION['userinfo'];
 
 title("E-Mail-Accounts");
 
-
 if (isset($_GET['action']) && $_GET['action'] == 'save') {
     if (isset($_GET['id'])) {
         check_form_token('email_imap_edit');
