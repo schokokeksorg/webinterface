@@ -45,15 +45,13 @@ if (isset($_POST['password1']) && $_POST['password1'] != '') {
         if ($role & ROLE_VMAIL_ACCOUNT) {
             DEBUG("Ändere VMail-Passwort");
             change_vmail_password($accname, $_POST['password1']);
+            success_msg('Ihr Passwort wurde geändert!');
         } elseif ($role & ROLE_MAILACCOUNT) {
             DEBUG("Ändere IMAP-Passwort");
             change_mailaccount(get_mailaccount_id($accname), array('password' => $_POST['password1']));
+            success_msg('Ihr Passwort wurde geändert!');
         }
-        if (! $debugmode) {
-            header('Location: /');
-        } else {
-            output('');
-        }
+        redirect('/');
     }
 }
 
