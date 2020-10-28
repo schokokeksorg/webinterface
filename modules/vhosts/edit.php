@@ -136,14 +136,14 @@ $php_default_version = null;
         }
     }
 foreach ($phpinfo as $tag => $info) {
-      $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
-      if ($info['status'] == 'deprecated') {
-          $options[$tag] .= ' (veraltet)';
-      } elseif ($info['status'] == 'beta') {
-          $options[$tag] .= ' (Testversion)';
-      } elseif ($info['status'] == 'used') {
-          $options[$tag] .= ' (nur Bestandsschutz)';
-      }
+    $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
+    if ($info['status'] == 'deprecated') {
+        $options[$tag] .= ' (veraltet)';
+    } elseif ($info['status'] == 'beta') {
+        $options[$tag] .= ' (Testversion)';
+    } elseif ($info['status'] == 'used') {
+        $options[$tag] .= ' (nur Bestandsschutz)';
+    }
 }
 $phpoptions = "
 <h5>PHP</h5>
