@@ -39,7 +39,7 @@ class DB extends PDO
     /*
       Wenn Parameter übergeben werden, werden Queries immer als Prepared statements übertragen
     */
-    public function query($stmt, $params = null, $allowempty = false)
+    public function myquery($stmt, $params = null, $allowempty = false)
     {
         if (is_array($params)) {
             if (config("enable_debug") && !$allowempty) {
@@ -131,7 +131,7 @@ function db_query($stmt, $params = null, $allowempty = false)
         DEBUG($params);
     }
     try {
-        $result = $_db->query($stmt, $params, $allowempty);
+        $result = $_db->myquery($stmt, $params, $allowempty);
         DEBUG('=> '.$result->rowCount().' rows');
     } catch (PDOException $e) {
         global $debugmode;

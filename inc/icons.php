@@ -22,7 +22,7 @@ function icon_warning($title = '')
     return "<img src=\"{$prefix}images/warning.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";
 }
 
-function icon_enabled_phpxx($title = '', $major, $minor)
+function icon_enabled_phpxx($title, $major, $minor)
 {
     global $prefix;
     return "<img src=\"{$prefix}images/ok-php$major$minor.png\" style=\"height: 16px; width: 16px;\" alt=\"{$title}\" title=\"{$title}\" />";

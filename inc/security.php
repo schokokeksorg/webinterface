@@ -45,7 +45,11 @@ function strong_password($password, $user = array())
     // Kein Online-Check eingerichtet oder der request war nicht erfolgreich
     DEBUG('using Zxcvbn for password check!');
     $passwordchecker = new ZxcvbnPhp\Zxcvbn();
-    $strength = $passwordchecker->passwordStrength($password, $user);
+    if ($user) {
+        $strength = $passwordchecker->passwordStrength($password, $user);
+    } else {
+        $strength = $passwordchecker->passwordStrength($password);
+    }
     DEBUG('password strength: '.$strength['score']);
     if ($strength['score'] < 2) {
         return "Das Passwort ist zu einfach!";
