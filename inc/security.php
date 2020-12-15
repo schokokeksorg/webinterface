@@ -243,7 +243,7 @@ function filter_ssh_key($key)
         system_failure("Ungültiger SSH-Key!");
     }
 
-    if ((count($keyparts) === 3) && (preg_match("/^[a-zA-Z0-9@.-_]+$/", $keyparts[2]) === 0)) {
+    if ((count($keyparts) === 3) && (preg_match("/^[a-zA-Z0-9@._-]+$/", $keyparts[2]) === 0)) {
         system_failure("Ungültige Zeichen im Kommentar des SSH-Keys!");
     }
 
