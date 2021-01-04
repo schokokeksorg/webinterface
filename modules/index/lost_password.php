@@ -33,7 +33,7 @@ if (isset($_POST['username'])) {
     success_msg('Sofern der Benutzername korrekt war, erhalten Sie umgehend eine E-Mail.');
 }
 
-output('<p>Wenn Sie Ihr Benutzer-Passwort nicht mehr kennen, können Sie hier ein neues Passwort beantragen. Sie müssen dafür Ihren Benutzernamen kennen, der z.B. auf unseren Rechnungen erkennbar ist. Kennen Sie den Benutzernamen nicht, wenden Sie sich bitte <a href="mailto:'.config('adminmail').'">an die Administratoren</a>.</p>
+output('<p>Wenn Sie Ihr Benutzer-Passwort nicht mehr kennen, können Sie hier ein neues Passwort beantragen. Sie müssen dafür Ihren Benutzernamen / Accountnamen kennen, der z.B. auf unseren Rechnungen erkennbar ist. Kennen Sie den Benutzernamen nicht, wenden Sie sich bitte <a href="mailto:'.config('adminmail').'">an die Administratoren</a>.</p>
 <p>Nach dem Ausfüllen dieses Formulars erhalten Sie eine E-Mail an die bei uns hinterlegte E-Mail-Adresse. Diese Mail enthält einem Link, den Sie in Ihrem Browser öffnen müssen. Dort können Sie dann ein neues Passwort eingeben.</p>
 <p><span style="font-weight: bold;">Hinweis:</span> Sie können auf diesem Weg nur das Passwort des Hauptbenutzers neu anfordern. Sind Sie Mitbenutzer eines anderen Kunden, dann kann dieser Ihr Passwort neu setzen.</p>
 <form method="post">
