@@ -264,14 +264,7 @@ function set_systemuser_password($uid, $newpass)
 {
     $uid = (int) $uid;
     require_once('inc/base.php');
-    if (defined("CRYPT_SHA512") && CRYPT_SHA512 == 1) {
-        $rounds = rand(1000, 5000);
-        $salt = "rounds=".$rounds."$".random_string(8);
-        $newpass = crypt($newpass, "\$6\${$salt}\$");
-    } else {
-        $salt = random_string(8);
-        $newpass = crypt($newpass, "\$1\${$salt}\$");
-    }
+    $newpass = crypt($newpass, '$6$'.random_string(8).'$');
     db_query("UPDATE system.passwoerter SET passwort=:newpass WHERE uid=:uid", array(":newpass" => $newpass, ":uid" => $uid));
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
 }
