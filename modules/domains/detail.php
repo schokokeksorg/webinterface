@@ -246,7 +246,8 @@ if ($is_current_customer && !$domain_in_use && ($dom->status == 'prereg' || $dom
     output('<h4>Domain kündigen</h4>');
     $info = api_download_domain($dom->id);
     if ($info['authInfo']) {
-        output('<p>Das Auth-Info für diese Domain lautet: <strong>'.$info['authInfo'].'</strong></p>');
+        output('<p>Für die Domain <strong>'.$dom->fqdn.'</strong> ist der Umzug zu einem andren Anbieter möglich.</p>');
+        output('<p>Das Auth-Info für die Domain <strong>'.$dom->fqdn.'</strong> lautet: <strong>'.$info['authInfo'].'</strong></p>');
         output('<p>Wenden Sie sich an den Support, wenn Sie den Domainumzug wieder sperren möchten.</p>');
     } else {
         output('<p>Hier können Sie die Domain zum Umzug freigeben.</p>');
@@ -257,7 +258,7 @@ if ($is_current_customer && !$domain_in_use && ($dom->status == 'prereg' || $dom
     if ($info['deletionDate']) {
         output('<p>Es liegt aktuell eine Kündigung vor auf <strong>'.$info['deletionDate'].'</strong></p><p>Um die Kündigung aufzuheben, wenden Sie sich bitte an den Support.</p>');
     } else {
-        output('<p>Die Laufzeit wird automatisch um ein weiteres Jahr verlängert, sofern Sie keine Kündigung auslösen oder die Domain zu einem anderen Anbieter umziehen.</p>');
+        output('<p>Die Laufzeit wird automatisch um ein weiteres Jahr verlängert, sofern Sie keine Kündigung auslösen oder die Domain vor diesem Datum zu einem anderen Anbieter umziehen.</p>');
         output('<p class="delete">'.internal_link('save', 'Die Domain '.$dom->fqdn.' kündigen', 'action=cancel&domain='.$dom->id).'</p>');
     }
 }
