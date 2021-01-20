@@ -33,7 +33,7 @@ function strong_password($password, $user = array())
         curl_setopt($req, CURLOPT_FOLLOWLOCATION, 0);
         curl_setopt($req, CURLOPT_POST, 1);
         curl_setopt($req, CURLOPT_SAFE_UPLOAD, 1);
-        curl_setopt($req, CURLOPT_POSTFIELDS, array("password" => $password));
+        curl_setopt($req, CURLOPT_POSTFIELDS, "password=".urlencode($password));
         $result = chop(curl_exec($req));
         DEBUG($result);
     }
