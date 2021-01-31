@@ -22,11 +22,7 @@ function DEBUG($str)
 {
     global $debugmode;
     if ($debugmode) {
-        if (is_string($str)) {
-            echo htmlspecialchars($str) . "<br />\n";
-        } else {
-            echo "<pre>".htmlspecialchars(print_r($str, true))."</pre>\n";
-        }
+        echo "<pre>".htmlspecialchars(print_r($str, true))."</pre>\n";
     }
 }
 
