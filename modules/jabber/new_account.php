@@ -28,8 +28,13 @@ $jabberdomains = get_jabberable_domains();
 
 DEBUG($jabberdomains);
 
+$need_warning = false;
 $options = '';
 foreach ($jabberdomains as $dom) {
+    if ($dom->jabber == 2) { // New domain, not yet ready for use
+        $need_warning = true;
+        continue;
+    }
     $options .= '<option value="'.$dom->id.'">'.$dom->fqdn.'</option>'."\n";
 }
 
@@ -46,3 +51,19 @@ output('<p>Erstellen Sie hier ein neues Jabber-Konto. Ihre Änderungen werden na
 <br />
 <input type="submit" name="submit" value="Anlegen" />
 '));
+
+
+if ($need_warning) {
+    output('<h3>Noch nicht nutzbare Domains</h3>
+<p>Folgende Domains sind zwar zur Nutzung im Jabber-Server vorgesehen, wurden aber noch nicht in die Serverkonfiguration übernommen. Für diese Domains können Sie bisher noch keine Accounts anlegen.</p>
+<ul>');
+    foreach ($jabberdomains as $dom) {
+        if ($dom->jabber == 2) {
+            output('<li>'.$dom->fqdn.'</li>');
+        }
+    }
+    output('</ul>');
+}
+
+
+
