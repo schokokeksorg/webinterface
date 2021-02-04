@@ -25,9 +25,9 @@ function get_lists($filter)
     $result = null;
     if ($filter) {
         $filter = '%'.$filter.'%';
-        $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize, subscribers, lastactivity FROM mail.v_mailman_lists WHERE owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
+        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
     } else {
-        $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize, subscribers, lastactivity FROM mail.v_mailman_lists WHERE owner=:uid ORDER BY listname", array('uid' => $uid));
+        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE owner=:uid ORDER BY listname", array('uid' => $uid));
     }
     $ret = array();
     while ($list = $result->fetch()) {
@@ -42,7 +42,7 @@ function get_list($id)
 {
     $args = array(":id" => $id,
                 ":uid" => $_SESSION['userinfo']['uid']);
-    $result = db_query("SELECT id, created, status, listname, fqdn, admin, archivesize, subscribers, lastactivity FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
+    $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
     if ($result->rowCount() < 1) {
         system_failure('Die gewünschte Mailingliste konnte nicht gefunden werden');
     }
@@ -77,6 +77,7 @@ function create_list($listname, $maildomain, $admin)
     if (! check_emailaddr($admin)) {
         system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
     }
+    # FIXME: Zukünftig soll diese Beschränkung weg fallen!
     $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname LIKE ?", array($listname));
     if ($result->rowCount() > 0) {
         system_failure('Eine Liste mit diesem Namen existiert bereits auf unserem Mailinglisten-Server (unter einer Ihrer Domains oder unter einer Domain eines anderen Kunden). Jeder Listenname kann auf dem gesamten Server nur einmal verwendet werden.');
@@ -95,7 +96,7 @@ function get_possible_mailmandomains()
 {
     DEBUG('get_possible_mailmandomains()');
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS fqdn FROM kundendaten.domains AS d LEFT JOIN mail.mailman_domains AS m ON (m.domain=d.id) WHERE d.useraccount=:uid AND m.id IS NULL ORDER BY CONCAT_WS('.',d.domainname,d.tld)", array(":uid" => $uid));
+    $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS fqdn, m.backend AS backend FROM kundendaten.domains AS d LEFT JOIN mail.mailman_domains AS m ON (m.domain=d.id) WHERE d.useraccount=:uid AND m.id IS NULL ORDER BY CONCAT_WS('.',d.domainname,d.tld)", array(":uid" => $uid));
     $ret = array();
     while ($dom = $result->fetch()) {
         $ret[] = $dom;
@@ -105,9 +106,9 @@ function get_possible_mailmandomains()
 }
 
 
-function insert_mailman_domain($subdomain, $domainid)
+function insert_mailman_domain($subdomain, $domainid, $backend = 'mailman')
 {
-    DEBUG("insert_mailman_domain($subdomain, $domainid)");
+    DEBUG("insert_mailman_domain($subdomain, $domainid, $backend)");
     $possible = get_possible_mailmandomains();
     $found = false;
     foreach ($possible as $dom) {
@@ -118,7 +119,7 @@ function insert_mailman_domain($subdomain, $domainid)
     if (! $found) {
         system_failue('invalid domain id');
     }
-    db_query("INSERT INTO mail.mailman_domains (hostname, domain) VALUES (:hostname, :domain)", array(":hostname" => $subdomain, ":domain" => $domainid));
+    db_query("INSERT INTO mail.mailman_domains (hostname, domain, backend) VALUES (:hostname, :domain, :backend)", array(":hostname" => $subdomain, ":domain" => $domainid, ":backend" => $backend));
     return db_insert_id();
 }
 
@@ -150,7 +151,7 @@ function get_mailman_domains()
 {
     DEBUG('get_mailman_domains()');
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT md.id, md.fqdn FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user=?", array($uid));
+    $result = db_query("SELECT md.id, md.fqdn, md.is_webhost, md.backend FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user=?", array($uid));
     $ret = array();
     while ($dom = $result->fetch()) {
         $ret[] = $dom;

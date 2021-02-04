@@ -80,10 +80,20 @@ if (! empty($lists)) {
         output("<div class=\"mailman_list $class\"><p class=\"listname\"><span class=\"listname\">{$list['listname']}</span>@{$list['fqdn']}</p>
         <p class=\"listadmin\">Verwalter: {$admin}</p><p class=\"status\">Status: {$status}<br/>Anzahl Mitglieder: {$list['subscribers']}<br/>Letzte Nutzung: {$lastactivity}</p><p class=\"archivesize\">Archivgröße: {$sizestr}</p>");
         if ($list['status'] == 'running') {
-            output("<p class=\"operations\">".internal_link('save', other_icon("lock.png", "Neues Passwort anfordern").' Neues Passwort anfordern', "action=newpw&id={$list['id']}")."<br>".internal_link('save', icon_delete("Mailingliste löschen").' Liste löschen', "action=delete&id={$list['id']}")."<br><a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")." Verwaltung aufrufen</a></p></div>\n");
-        } else {
-            output("</div>\n");
+            if ($list['backend'] == 'mailman' || $list['backend'] === null) {
+                output("<p class=\"operations\">".
+                    internal_link('save', other_icon("lock.png", "Neues Passwort anfordern").' Neues Passwort anfordern', "action=newpw&id={$list['id']}")."<br>".
+                    internal_link('save', icon_delete("Mailingliste löschen").' Liste löschen', "action=delete&id={$list['id']}")."<br>".
+                    "<a href=\"https://".config('mailman_host')."/mailman/admin.cgi/{$list['listname']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")." Verwaltung aufrufen</a>".
+                    "</p>\n");
+            } elseif ($list['backend'] == 'mailman3') {
+                output("<p class=\"operations\">".
+                    internal_link('save', icon_delete("Mailingliste löschen").' Liste löschen', "action=delete&id={$list['id']}")."<br>".
+                    "<a href=\"https://".$list['urlhost']."/postorius/lists/{$list['listname']}.{$list['fqdn']}\">".other_icon("database_go.png", "Listen-Verwaltung aufrufen")." Verwaltung aufrufen</a>".
+                    "</p>\n");
+            }
         }
+        output("</div>\n");
     }
     output("</div>");
 } else {
