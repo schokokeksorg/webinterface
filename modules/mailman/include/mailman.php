@@ -25,9 +25,9 @@ function get_lists($filter)
     $result = null;
     if ($filter) {
         $filter = '%'.$filter.'%';
-        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
+        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE status!='deleted' AND owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
     } else {
-        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE owner=:uid ORDER BY listname", array('uid' => $uid));
+        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE status!='deleted' AND owner=:uid ORDER BY listname", array('uid' => $uid));
     }
     $ret = array();
     while ($list = $result->fetch()) {
@@ -127,7 +127,7 @@ function insert_mailman_domain($subdomain, $domainid, $backend = 'mailman')
 function lists_on_domain($domainid)
 {
     DEBUG("lists_on_domain()");
-    $result = db_query("SELECT id, listname FROM mail.mailman_lists WHERE status != 'delete' AND maildomain=(SELECT id FROM mail.mailman_domains WHERE domain=?)", array($domainid));
+    $result = db_query("SELECT id, listname FROM mail.mailman_lists WHERE status != 'delete' AND status != 'deleted' AND maildomain=(SELECT id FROM mail.mailman_domains WHERE domain=?)", array($domainid));
     $ret = array();
     while ($l = $result->fetch()) {
         $ret[] = $l;
