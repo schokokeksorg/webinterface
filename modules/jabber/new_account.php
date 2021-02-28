@@ -64,6 +64,3 @@ if ($need_warning) {
     }
     output('</ul>');
 }
-
-
-
