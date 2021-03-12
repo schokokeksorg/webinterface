@@ -61,7 +61,7 @@ if (! empty($lists)) {
             $status = 'Wird gelöscht';
         } elseif ($list['status'] == 'deleted') {
             # liste ist schon gelöscht
-            continue
+            continue;
         } elseif ($list['status'] == 'pending') {
             $class = 'new';
             $status = 'Wird angelegt';
