@@ -59,6 +59,9 @@ if (! empty($lists)) {
         if ($list['status'] == 'delete') {
             $class = 'deleted';
             $status = 'Wird gelöscht';
+        } elseif ($list['status'] == 'deleted') {
+            # liste ist schon gelöscht
+            continue
         } elseif ($list['status'] == 'pending') {
             $class = 'new';
             $status = 'Wird angelegt';
