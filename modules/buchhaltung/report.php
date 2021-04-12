@@ -40,7 +40,7 @@ $umsatzsteuer = 0.0;
 $ustbetraege = array();
 $vorsteuer = 0.0;
 foreach ($types as $id => $t) {
-    if (count($data_by_type[$id]) == 0) {
+    if (count($data_by_type[$id]) == 0 || $t=='Privatentnahme') {
         continue;
     }
     output("<h3>$t</h3>");
@@ -106,7 +106,7 @@ output("<tr><td>Einnahme Umsatzsteuer 19%</td><td style=\"text-align: right;\">"
 $einnahmensumme += $ustbetraege[19];
 output("<tr><td>Einnahmen innergem. Lieferung (steuerfrei §4/1b UStG)</td><td style=\"text-align: right;\">".number_format($net_by_type[0][0], 2, ',', '.')." €</td></tr>");
 $einnahmensumme += $net_by_type[0][0];
-output("<tr><td>Einnahmen EU-Ausland (VATMOSS)</td><td style=\"text-align: right;\">".number_format($net_by_type[0][-1], 2, ',', '.')." €</td></tr>");
+output("<tr><td>Einnahmen andere Steuersätze</td><td style=\"text-align: right;\">".number_format($net_by_type[0][-1], 2, ',', '.')." €</td></tr>");
 $einnahmensumme += $net_by_type[0][-1];
 $einzelust = '';
 foreach ($ustbetraege as $satz => $ust) {
