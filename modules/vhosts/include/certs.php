@@ -138,26 +138,47 @@ function validate_certificate($cert, $key)
         system_failure("In dem eingetragenen Zertifikat wurde kein öffentlicher Schlüssel gefunden.");
     }
     // Parse Details über den pubkey
-    $certinfo = openssl_pkey_get_details($pubkey);
-    DEBUG($certinfo);
-    if ($certinfo === false) {
+    $pubkeyinfo = openssl_pkey_get_details($pubkey);
+    DEBUG($pubkeyinfo);
+    if ($pubkeyinfo === false) {
         system_failure("Der öffentliche Schlüssel des Zertifikats konnte nicht gelesen werden");
     }
 
     // Apache unterstützt nur Schlüssel vom Typ RSA oder DSA
-    if (! in_array($certinfo['type'], array(OPENSSL_KEYTYPE_RSA, OPENSSL_KEYTYPE_DSA))) {
+    if ($pubkeyinfo['type'] !== OPENSSL_KEYTYPE_RSA) {
         system_failure("Dieser Schlüssel nutzt einen nicht unterstützten Algorithmus.");
     }
 
     // Bei ECC-Keys treten kürzere Schlüssellängen auf, die können wir aktuell aber sowieso nicht unterstützen
-    if ($certinfo['bits'] < 2048) {
-        warning("Dieser Schlüssel hat eine sehr geringe Bitlänge und ist daher als nicht besonders sicher einzustufen!");
+    // Wir blockieren zu kurze und zu lange Schlüssel hart, da Apache sonst nicht startet
+    if ($pubkeyinfo['bits'] < 2048) {
+        system_failure("Schlüssellänge ist zu kurz");
+    }
+    if ($pubkeyinfo['bits'] > 4096) {
+        system_failure("Schlüssellänge ist zu lang");
+    }
+
+    $x509info = openssl_x509_parse($cert);
+    if ($x509info === false) {
+        system_failure("Zertifikat konnte nicht verarbeitet werden");
+    }
+    if (!in_array($x509info['signatureTypeSN'], array("RSA-SHA256", "RSA-SHA385", "RSA-SHA512"))) {
+        system_failure("Nicht unterstützer Signatur-Hashalgorithmus!");
     }
 
     // Prüfe ob Key und Zertifikat zusammen passen
     if (openssl_x509_check_private_key($cert, $key) !== true) {
         DEBUG("Zertifikat und Key passen nicht zusammen: ".openssl_x509_check_private_key($cert, $key));
         return CERT_INVALID;
+    }
+
+    // Check von openssl_x509_check_private_key() ist leider nicht ausreichend
+    $testdata = base64_encode(random_bytes(32));
+    if (openssl_sign($testdata, $signature, $seckey) !== true) {
+        system_failure("Kann keine Testsignatur erstellen, Key ungültig!");
+    }
+    if (openssl_verify($testdata, $signature, $pubkey) !== 1) {
+        system_failure("Testsignatur ungültig, Key vermutlich fehlerhaft!");
     }
 
     $cacerts = array('/etc/ssl/certs');
