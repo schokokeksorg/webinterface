@@ -44,6 +44,7 @@ function empty_account()
         'local' => '',
         'domain' => null,
         'password' => null,
+        'enableextensions' => false,
     'smtpreply' => null,
     'quota' => config('vmail_basequota'),
     'quota_threshold' => 20,
@@ -91,7 +92,7 @@ function get_account_details($id, $checkuid = true)
         $uid_check = "useraccount=:uid AND ";
         $args[":uid"] = $uid;
     }
-    $result = db_query("SELECT id, local, domain, password, smtpreply, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id=:id LIMIT 1", $args);
+    $result = db_query("SELECT id, local, domain, password, enableextensions, smtpreply, forwards, autoresponder, server, quota, COALESCE(quota_used, 0) AS quota_used, quota_threshold from mail.v_vmail_accounts WHERE {$uid_check}id=:id LIMIT 1", $args);
     if ($result->rowCount() == 0) {
         system_failure('Ungültige ID oder kein eigener Account');
     }
@@ -226,6 +227,7 @@ function save_vmail_account($account)
         $newaccount = true;
     }
 
+    $account['enableextensions'] = (bool) $account['enableextensions'];
     if ($accountlogin) {
         if ($account['domain'] != $oldaccount['domain']) {
             system_failure('Sie können die E-Mail-Adresse nicht ändern!');

@@ -51,6 +51,10 @@ if ($_GET['action'] == 'edit') {
             $account['local'] = $_POST['local'];
             $account['domain'] = (int) $_POST['domain'];
         }
+        $account['enableextensions'] = false;
+        if (isset($_POST['enableextensions']) && $_POST['enableextensions'] == 'yes') {
+            $account['enableextensions'] = true;
+        }
         $account['password'] = $_POST['password'];
 
         if (($account['password'] == '') && (isset($_POST['mailbox']) && $_POST['mailbox'] == 'yes')) {

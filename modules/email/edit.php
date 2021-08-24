@@ -54,7 +54,7 @@ if ($id == 0) {
     }
 }
 
-
+$has_extensions = $account['enableextensions'];
 $is_autoresponder = is_array($account['autoresponder']) && $account['autoresponder']['valid_from'] != null && ($account['autoresponder']['valid_until'] > date('Y-m-d') || $account['autoresponder']['valid_until'] == null);
 $is_forward = (count($account['forwards']) > 0);
 $is_mailbox = ($account['password'] != null  ||  $id == 0);
@@ -81,6 +81,7 @@ if (! $accountlogin) {
         $form .= "
     <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"".filter_output_html($account['local'])."\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($domain)."</p>";
     }
+    $form .= '<p><input type="checkbox" id="enableextensions" name="enableextensions" value="yes" '.($has_extensions ? 'checked="checked" ' : '').'/><label for=enableextensions">&#160;Ermögliche die Nutzung von Erweiterungsadressen (<a href="https://wiki.schokokeks.org/E-Mail/Erweiterungsadressen">Hilfe</a>)';
     $password_message = '';
     $password_value = '';
     if ($is_mailbox and ($account['password'] != '')) {
