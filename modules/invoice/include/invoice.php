@@ -252,8 +252,10 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
                 ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
                 ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname)
     );
-    db_query("UPDATE kundendaten.ausgestellte_rechnungen SET abbuchung=1 WHERE kunde = :cid AND datum >= :gueltig_ab",
-        array(":cid" => $cid, ":gueltig_ab" => $gueltig_ab));
+    db_query(
+        "UPDATE kundendaten.ausgestellte_rechnungen SET abbuchung=1 WHERE kunde = :cid AND datum >= :gueltig_ab and bezahlt=0",
+        array(":cid" => $cid, ":gueltig_ab" => $gueltig_ab)
+    );
 }
 
 
