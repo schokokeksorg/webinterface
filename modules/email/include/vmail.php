@@ -227,7 +227,7 @@ function save_vmail_account($account)
         $newaccount = true;
     }
 
-    $account['enableextensions'] = (bool) $account['enableextensions'];
+    $account['enableextensions'] = (int) (bool) $account['enableextensions'];
     if ($accountlogin) {
         if ($account['domain'] != $oldaccount['domain']) {
             system_failure('Sie können die E-Mail-Adresse nicht ändern!');
