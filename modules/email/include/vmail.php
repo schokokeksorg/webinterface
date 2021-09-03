@@ -334,6 +334,7 @@ function save_vmail_account($account)
     $args = array(":local" => $account['local'],
                 ":domain" => $account['domain'],
                 ":password" => $password,
+                ":enableextensions" => $account['enableextensions'],
                 ":smtpreply" => $account['smtpreply'],
                 ":quota" => $account['quota'],
                 ":quota_threshold" => $account['quota_threshold'],
@@ -342,7 +343,7 @@ function save_vmail_account($account)
     $query = '';
     if ($newaccount) {
         unset($args[":id"]);
-        $query = "INSERT INTO mail.vmail_accounts (local, domain, password, smtpreply, quota, quota_threshold) VALUES (:local, :domain, :password, :smtpreply, :quota, :quota_threshold)";
+        $query = "INSERT INTO mail.vmail_accounts (local, domain, password, enableextensions, smtpreply, quota, quota_threshold) VALUES (:local, :domain, :password, :enableextensions, :smtpreply, :quota, :quota_threshold)";
     } else {
         if ($set_password) {
             $pw=", password=:password";
@@ -350,7 +351,7 @@ function save_vmail_account($account)
             unset($args[":password"]);
             $pw='';
         }
-        $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, smtpreply=:smtpreply, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
+        $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, enableextensions=:enableextensions, smtpreply=:smtpreply, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
     }
     db_query($query, $args);
     if ($newaccount) {
