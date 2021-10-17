@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+surl=$(curl -s https://api.github.com/repos/fabpot/local-php-security-checker/releases/latest | grep https://.*linux_amd64 -o)
+
+[ -e local-php-security-checker ] || curl -L $surl >local-php-security-checker
+[ -e php-cs-fixer ] || curl -L https://cs.symfony.com/download/php-cs-fixer-v3.phar >php-cs-fixer
+chmod +x local-php-security-checker php-cs-fixer
+
+./php-cs-fixer fix --rules @PSR1,@PSR2,no_whitespace_in_blank_line --dry-run --diff .
+
+./local-php-security-checker
