@@ -23,8 +23,8 @@ require_once("inc/debug.php");
 function list_subusers()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid=?", array($uid));
-    $subusers = array();
+    $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid=?", [$uid]);
+    $subusers = [];
     while ($item = $result->fetch()) {
         $item['modules'] = explode(',', $item['modules']);
         $subusers[] = $item;
@@ -36,7 +36,7 @@ function list_subusers()
 
 function load_subuser($id)
 {
-    $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id, ":uid" => $_SESSION['userinfo']['uid']];
 
     $result = db_query("SELECT id, username, modules FROM system.subusers WHERE uid=:uid AND id=:id", $args);
     $item = $result->fetch();
@@ -47,7 +47,7 @@ function load_subuser($id)
 
 function available_modules()
 {
-    $modules = array();
+    $modules = [];
     $allmodules = get_modules_info();
 
     // Das su-Modul ist hierfuer unwichtig
@@ -63,16 +63,16 @@ function available_modules()
 
 function delete_subuser($id)
 {
-    $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id, ":uid" => $_SESSION['userinfo']['uid']];
 
     db_query("DELETE FROM system.subusers WHERE id=:id AND uid=:uid", $args);
 }
 
 function empty_subuser()
 {
-    $subuser = array("id" => null,
+    $subuser = ["id" => null,
                    "username" => $_SESSION['userinfo']['username'].'_',
-                   "modules" => array('index'));
+                   "modules" => ['index'], ];
     return $subuser;
 }
 
@@ -89,7 +89,7 @@ function new_subuser($username, $requested_modules, $password)
     }
     DEBUG($requested_modules);
     $allmods = available_modules();
-    $modules = array();
+    $modules = [];
     foreach ($requested_modules as $mod) {
         if (isset($allmods[$mod])) {
             $modules[] = $mod;
@@ -105,10 +105,10 @@ function new_subuser($username, $requested_modules, $password)
         system_failure("Unsicheres Passwort: ".$result);
     }
 
-    $args = array(":uid" => $_SESSION['userinfo']['uid'],
+    $args = [":uid" => $_SESSION['userinfo']['uid'],
                 ":username" => $username,
                 ":password" => hash("sha256", $password),
-                ":modules" => implode(',', $modules));
+                ":modules" => implode(',', $modules), ];
 
     db_query("INSERT INTO system.subusers (uid, username, password, modules) VALUES (:uid, :username, :password, :modules)", $args);
 }
@@ -141,7 +141,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
         system_failure("Module nicht als array erhalten!");
     }
     $allmods = available_modules();
-    $modules = array();
+    $modules = [];
     foreach ($requested_modules as $mod) {
         if (isset($allmods[$mod])) {
             $modules[] = $mod;
@@ -151,10 +151,10 @@ function edit_subuser($id, $username, $requested_modules, $password)
         system_failure("Es sind (nach der Filterung) keine Module mehr übrig!");
     }
 
-    $args = array(":uid" => $_SESSION['userinfo']['uid'],
+    $args = [":uid" => $_SESSION['userinfo']['uid'],
                 ":id" => $id,
                 ":username" => $username,
-                ":modules" => implode(',', $modules));
+                ":modules" => implode(',', $modules), ];
 
     $pwchange = '';
     if ($password) {

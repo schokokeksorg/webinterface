@@ -15,7 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 global $config;
-$config = array();
+$config = [];
 
 // either...
 $config['db_socket'] = '/var/run/mysqld/mysqld-sys.sock';
@@ -28,7 +28,7 @@ $config['db_user'] = 'username';
 $config['db_pass'] = 'password';
 
 
-$config['modules'] = array("index", "domains", "imap", "mysql", "jabber", "vhosts", "register", "systemuser", "su");
+$config['modules'] = ["index", "domains", "imap", "mysql", "jabber", "vhosts", "register", "systemuser", "su"];
 
 $config['enable_debug'] = true;
 $config['logging'] = LOG_ERR;

@@ -17,5 +17,5 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 $role = $_SESSION['role'];
 
 if ($role & ROLE_SYSTEMUSER) {
-    $menu['greylisting_whitelist'] = array("label" => "Greylisting", "file" => "whitelist", "weight" => 5, 'submenu' => 'email_vmail');
+    $menu['greylisting_whitelist'] = ["label" => "Greylisting", "file" => "whitelist", "weight" => 5, 'submenu' => 'email_vmail'];
 }

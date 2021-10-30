@@ -25,11 +25,11 @@ require_once('dnsinclude.php');
 
 $section = 'dns_dns';
 
-$data = array();
+$data = [];
 $type = null;
 
 $dyndns = false;
-$dyndns_accounts = array();
+$dyndns_accounts = [];
 foreach (get_dyndns_accounts() as $t) {
     $dyndns_accounts[$t['id']] = $t['handle'];
 }
@@ -123,11 +123,11 @@ if ($type == 'spf' || $type == 'txt') {
 }
 
 if ($type == 'sshfp') {
-    $algs = array(
+    $algs = [
     1 => "RSA",
     2 => "DSA",
     3 => "ECDSA",
-    4 => "ED25519" );
+    4 => "ED25519", ];
 
     $option="";
     foreach ($algs as $key => $alg) {

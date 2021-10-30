@@ -20,7 +20,7 @@ require_once('inc/api.php');
 
 function api_domain_available($domainname)
 {
-    $args = array("domainNames" => array($domainname));
+    $args = ["domainNames" => [$domainname]];
     $result = api_request('domainStatus', $args);
     $resp = $result["responses"][0];
     return ($resp["status"] == "available");

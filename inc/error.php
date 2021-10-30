@@ -31,7 +31,7 @@ function input_error($reason)
 {
     global $input_error;
     if (!isset($input_error)) {
-        $input_error = array();
+        $input_error = [];
     }
     array_push($input_error, $reason);
 }
@@ -39,7 +39,7 @@ function input_error($reason)
 function warning($msg)
 {
     if (!isset($_SESSION['warning'])) {
-        $_SESSION['warning'] = array();
+        $_SESSION['warning'] = [];
     }
     array_push($_SESSION['warning'], $msg);
     $backtrace = debug_backtrace();
@@ -49,7 +49,7 @@ function warning($msg)
 function success_msg($msg)
 {
     if (!isset($_SESSION['success_msg'])) {
-        $_SESSION['success_msg'] = array();
+        $_SESSION['success_msg'] = [];
     }
     array_push($_SESSION['success_msg'], $msg);
 }
@@ -116,7 +116,7 @@ function show_messages()
 function require_role($roles)
 {
     if (! is_array($roles)) {
-        $roles = array($roles);
+        $roles = [$roles];
     }
     $allow = false;
     foreach ($roles as $role) {

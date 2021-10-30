@@ -61,8 +61,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
 
     $record['hostname'] = $_REQUEST['hostname'];
     $record['domain'] = (int) $_REQUEST['domain'];
-    $record['ip'] = (isset($_REQUEST['ip']) ? $_REQUEST['ip'] : null);
-    $record['data'] = (isset($_REQUEST['data']) ? $_REQUEST['data'] : null);
+    $record['ip'] = ($_REQUEST['ip'] ?? null);
+    $record['data'] = ($_REQUEST['data'] ?? null);
     $record['dyndns'] = (isset($_REQUEST['dyndns']) ? (int) $_REQUEST['dyndns'] : null);
     $record['spec'] = (isset($_REQUEST['spec']) ? (int) $_REQUEST['spec'] : null);
     $record['ttl'] = (int) $_REQUEST['ttl'];

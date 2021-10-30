@@ -69,7 +69,7 @@ if ($_GET['action'] == 'edit') {
         }
     }
 
-    $fqdn = ($hostname!==""?$hostname.".":"").$domainname;
+    $fqdn = ($hostname!=="" ? $hostname."." : "").$domainname;
     verify_input_hostname_utf8($fqdn);
     if ($aliaswww) {
         verify_input_hostname_utf8("www.".$fqdn);
@@ -167,7 +167,7 @@ if ($_GET['action'] == 'edit') {
 
     $cert = (isset($_POST['cert']) ? (int) $_POST['cert'] : null);
 
-    $ipv4 = (isset($_POST['ipv4']) ? $_POST['ipv4'] : null);
+    $ipv4 = ($_POST['ipv4'] ?? null);
 
     if (isset($_POST['ipv6']) && $_POST['ipv6'] == 'yes') {
         $vhost['autoipv6'] = 1;
@@ -200,11 +200,11 @@ if ($_GET['action'] == 'edit') {
 
     $old_options = explode(',', $vhost['options']);
     if ($vhost['options'] == '') {
-        $old_options = array();
+        $old_options = [];
     }
-    $new_options = array();
+    $new_options = [];
     foreach ($old_options as $op) {
-        if (! in_array($op, array('aliaswww', 'forwardwww', 'forwardnowww', 'hsts_subdomains', 'hsts_preload'))) {
+        if (! in_array($op, ['aliaswww', 'forwardwww', 'forwardnowww', 'hsts_subdomains', 'hsts_preload'])) {
             array_push($new_options, $op);
         }
     }
@@ -302,18 +302,18 @@ if ($_GET['action'] == 'edit') {
     }
 
     if (! is_array($_POST['options'])) {
-        $_POST['options'] = array();
+        $_POST['options'] = [];
     }
     $aliaswww = in_array('aliaswww', $_POST['options']);
     $forward = in_array('forward', $_POST['options']);
 
-    $fqdn = ($hostname!==""?$hostname.".":"").$domainname;
+    $fqdn = ($hostname!=="" ? $hostname."." : "").$domainname;
     verify_input_hostname_utf8($fqdn);
     if ($aliaswww) {
         verify_input_hostname_utf8("www.".$fqdn);
     }
 
-    $new_options = array();
+    $new_options = [];
     if ($aliaswww) {
         array_push($new_options, 'aliaswww');
     }

@@ -19,7 +19,7 @@ require_once('inc/base.php');
 function user_has_accounts()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT id from `mail`.`mailaccounts` WHERE uid=?", array($uid));
+    $result = db_query("SELECT id from `mail`.`mailaccounts` WHERE uid=?", [$uid]);
     DEBUG($result->rowCount()." accounts");
     return ($result->rowCount() > 0);
 }
@@ -32,7 +32,7 @@ if (! function_exists("user_has_vmail_domain")) {
             return false;
         }
         $uid = (int) $_SESSION['userinfo']['uid'];
-        $result = db_query("SELECT COUNT(*) FROM mail.v_vmail_domains WHERE useraccount=?", array($uid));
+        $result = db_query("SELECT COUNT(*) FROM mail.v_vmail_domains WHERE useraccount=?", [$uid]);
         $row = $result->fetch();
         $count = $row[0];
         DEBUG("User has {$count} vmail-domains");

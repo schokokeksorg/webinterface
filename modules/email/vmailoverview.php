@@ -23,7 +23,7 @@ require_once('include/vmail.php');
 
 $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
 $acc = get_account_details($id, false);
-$actions = array();
+$actions = [];
 DEBUG($acc);
 
 $content = '<h3>Aktueller Speicherplatzverbrauch</h3>';

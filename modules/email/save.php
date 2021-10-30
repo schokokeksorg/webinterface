@@ -18,7 +18,7 @@ require_once('session/start.php');
 
 require_once('vmail.php');
 
-require_role(array(ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT));
+require_role([ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT]);
 
 require_once("inc/debug.php");
 global $debugmode;
@@ -35,7 +35,7 @@ if ($_GET['action'] == 'edit') {
         $id = get_vmail_id_by_emailaddr($_SESSION['mailaccount']);
         $account = get_account_details($id, false);
         // Leere das, sonst werden die vervielfacht
-        $account['forwards'] = array();
+        $account['forwards'] = [];
     } else {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
@@ -162,7 +162,7 @@ if ($_GET['action'] == 'edit') {
                 break;
             }
             if (isset($_POST['forward_to_'.$num]) && chop($_POST['forward_to_'.$num]) != '') {
-                $fwd = array("destination" => chop($_POST['forward_to_'.$num]));
+                $fwd = ["destination" => chop($_POST['forward_to_'.$num])];
                 array_push($account['forwards'], $fwd);
             }
             $num++;

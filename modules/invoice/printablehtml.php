@@ -276,7 +276,7 @@ $html .= '<table style="width: 100%;">
 
 $vattype = null;
 // An der ersten Zeile entscheidet sich, ob die gesamte Rechnung als Netto- oder Bruttorechnung erstellt wird
-$einzelsummen = array();
+$einzelsummen = [];
 $summe = 0.0;
 
 $odd = true;
@@ -312,9 +312,9 @@ foreach ($items as $item) {
         $einzelsummen[$item['mwst']]['vat'] += $gesamt / (1 + ($item['mwst'] / 100)) * ($item['mwst'] / 100);
         $einzelsummen[$item['mwst']]['gross'] += $gesamt;
     } else {
-        $einzelsummen[$item['mwst']] = array('net' => $gesamt / (1 + ($item['mwst'] / 100)),
+        $einzelsummen[$item['mwst']] = ['net' => $gesamt / (1 + ($item['mwst'] / 100)),
                                              'vat' => $gesamt / (1 + ($item['mwst'] / 100)) * ($item['mwst'] / 100),
-                                             'gross' => $gesamt);
+                                             'gross' => $gesamt, ];
     }
     $summe += $gesamt;
 
@@ -378,7 +378,7 @@ $dompdf->loadHtml($html);
 $dompdf->render();
 
 if ($outformat == 'pdf') {
-    $dompdf->stream("sample.pdf", array("Attachment"=>0));
+    $dompdf->stream("sample.pdf", ["Attachment"=>0]);
 } else {
     echo $html;
 }

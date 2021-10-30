@@ -26,11 +26,11 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
         }
     }
     if ($found > 0) {
-        $shortcuts[] = array( 'section' => 'Webserver',
+        $shortcuts[] = [ 'section' => 'Webserver',
                           'weight'  => 40,
                           'file'    => 'freewvs',
                           'icon'    => 'warning.png',
                           'title'   => 'Web-Anwendungen',
-                          'alert'   => "{$found} unsicher" );
+                          'alert'   => "{$found} unsicher", ];
     }
 }

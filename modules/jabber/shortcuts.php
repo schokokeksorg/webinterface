@@ -15,10 +15,10 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 if ($_SESSION['role'] & ROLE_CUSTOMER) {
-    $shortcuts[] = array( 'section' => 'Jabber',
+    $shortcuts[] = [ 'section' => 'Jabber',
                         'weight'  => 10,
                         'file'    => 'accounts',
                         'icon'    => 'jabber.png',
                         'title'   => 'Jabber-Accounts',
-                        'alert'   => null );
+                        'alert'   => null, ];
 }

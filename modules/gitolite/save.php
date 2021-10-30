@@ -64,7 +64,7 @@ if ($_GET['action'] == 'newuser') {
     die();
 } elseif ($_GET['action'] == 'newrepo' || $_GET['action'] == 'editrepo') {
     check_form_token('git_edit');
-    $permissions = array();
+    $permissions = [];
     $users = array_merge(list_users(), list_foreign_users());
     foreach ($users as $u) {
         if (isset($_POST[$u])) {

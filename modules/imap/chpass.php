@@ -39,7 +39,7 @@ if ($_POST['password1'] != '') {
     } elseif (($check = strong_password($_POST['password1'])) !== true) {
         input_error("Das Passwort ist zu einfach ({$check})!");
     } else {
-        change_mailaccount(get_mailaccount_id($_SESSION['mailaccount']), array('password' => $_POST['password1']));
+        change_mailaccount(get_mailaccount_id($_SESSION['mailaccount']), ['password' => $_POST['password1']]);
         if (! $debugmode) {
             header('Location: chpass');
         } else {

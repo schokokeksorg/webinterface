@@ -20,7 +20,7 @@ require_once('inc/debug.php');
 
 class Domain
 {
-    protected $data = array();
+    protected $data = [];
     public function __construct($init = null)
     {
         $this->setup();
@@ -61,7 +61,7 @@ class Domain
 
     public function loadByID($id)
     {
-        $res = db_query("SELECT * FROM kundendaten.domains WHERE id=?", array($id));
+        $res = db_query("SELECT * FROM kundendaten.domains WHERE id=?", [$id]);
         if ($res->rowCount() < 1) {
             return false;
         }
@@ -73,7 +73,7 @@ class Domain
     {
         $raw = $name;
         $utf8 = idn_to_utf8($raw, 0, INTL_IDNA_VARIANT_UTS46);
-        $res = db_query("SELECT * FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=? OR CONCAT_WS('.', domainname, tld)=?", array($raw, $utf8));
+        $res = db_query("SELECT * FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=? OR CONCAT_WS('.', domainname, tld)=?", [$raw, $utf8]);
         if ($res->rowCount() < 1) {
             return false;
         }
@@ -115,7 +115,7 @@ class Domain
 
     public function setup()
     {
-        $fields = array();
+        $fields = [];
         $res = db_query("DESCRIBE kundendaten.domains");
         while ($f = $res->fetch(PDO::FETCH_OBJ)) {
             $fields[$f->Field] = $f->Default;
@@ -163,8 +163,8 @@ function get_domain_list($customerno = null, $uid = null)
         $query .= " kunde={$customerno}";
     }
     $query .= " ORDER BY domainname,tld";
-    $result = db_query($query, array()); // FIXME Übergebe leeren array um die Warnung zu unterdrücken
-    $domains = array();
+    $result = db_query($query, []); // FIXME Übergebe leeren array um die Warnung zu unterdrücken
+    $domains = [];
     DEBUG('Result set is '.$result->rowCount()." rows.<br />\n");
     if ($result->rowCount() > 0) {
         while ($domain = $result->fetch(PDO::FETCH_OBJ)) {
@@ -184,7 +184,7 @@ function get_jabberable_domains()
 
     $domains = get_domain_list($customerno);
     DEBUG($domains);
-    $result = array( new Domain() );
+    $result = [ new Domain() ];
     $result[0]->id = 0;
     $result[0]->fqdn = config('masterdomain');
     foreach ($domains as $dom) {

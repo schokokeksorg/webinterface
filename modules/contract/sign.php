@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contract.php');
 
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 
 if (isset($_REQUEST['agree']) && $_REQUEST['agree'] == 'yes') {
     require_once('vendor/autoload.php');

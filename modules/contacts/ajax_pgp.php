@@ -17,8 +17,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('contacts.php');
 
 if (isset($_GET['q']) || isset($_GET['id'])) {
-    $result = array("status" => "notfound",
-                    "id" => null);
+    $result = ["status" => "notfound",
+                    "id" => null, ];
     $id = null;
     if (isset($_GET['q'])) {
         $id = search_pgp_key($_GET['q']);

@@ -21,7 +21,7 @@ require_once('inc/icons.php');
 require_once('session/start.php');
 
 
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 
 title("Adressen verwalten");
 
@@ -32,8 +32,8 @@ $kundenkontakte = get_kundenkontakte();
 output('<p>Sie haben aktuell diese Adressen gespeichert:</p>
 <div class="contact-list">');
 
-$liste = array_merge(array_filter(array($kundenkontakte['kunde'], $kundenkontakte['rechnung'], $kundenkontakte['extern'])), array_keys($contacts));
-$already_displayed = array();
+$liste = array_merge(array_filter([$kundenkontakte['kunde'], $kundenkontakte['rechnung'], $kundenkontakte['extern']]), array_keys($contacts));
+$already_displayed = [];
 foreach ($liste as $id) {
     if (in_array($id, $already_displayed)) {
         continue;
@@ -44,7 +44,7 @@ foreach ($liste as $id) {
         system_failure('Fehlerhafte Kunden-Zuordnung bei den Kontakten');
     }
     $contact = $contacts[$id];
-    $usage = array();
+    $usage = [];
     if ($id == $kundenkontakte['kunde']) {
         $cssclass .= 'mainaddress';
         $usage[] = 'Stamm-Adresse';

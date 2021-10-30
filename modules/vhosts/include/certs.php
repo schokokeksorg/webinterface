@@ -24,8 +24,8 @@ define("CERT_NOCHAIN", 2);
 function user_certs()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=? ORDER BY cn", array($uid));
-    $ret = array();
+    $result = db_query("SELECT id, valid_from, valid_until, subject, cn FROM vhosts.certs WHERE uid=? ORDER BY cn", [$uid]);
+    $ret = [];
     while ($i = $result->fetch()) {
         $ret[] = $i;
     }
@@ -36,8 +36,8 @@ function user_certs()
 function user_csr()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=? ORDER BY hostname", array($uid));
-    $ret = array();
+    $result = db_query("SELECT id, created, hostname, bits FROM vhosts.csr WHERE uid=? ORDER BY hostname", [$uid]);
+    $ret = [];
     while ($i = $result->fetch()) {
         $ret[] = $i;
     }
@@ -63,7 +63,7 @@ function cert_details($id)
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
 
-    $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, chain, cert, `key` FROM vhosts.certs WHERE uid=:uid AND id=:id", array(":uid" => $uid, ":id" => $id));
+    $result = db_query("SELECT id, lastchange, valid_from, valid_until, subject, cn, chain, cert, `key` FROM vhosts.certs WHERE uid=:uid AND id=:id", [":uid" => $uid, ":id" => $id]);
     if ($result->rowCount() != 1) {
         system_failure("Ungültiges Zertifikat #{$id}");
     }
@@ -86,7 +86,7 @@ function csr_details($id)
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
 
-    $result = db_query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid=:uid AND id=:id", array(":uid" => $uid, ":id" => $id));
+    $result = db_query("SELECT id, created, hostname, bits, `replace`, csr, `key` FROM vhosts.csr WHERE uid=:uid AND id=:id", [":uid" => $uid, ":id" => $id]);
     if ($result->rowCount() != 1) {
         system_failure("Ungültiger CSR");
     }
@@ -115,7 +115,7 @@ function get_chain($cert)
     if (! isset($certdata['issuer']['CN'])) {
         return null;
     }
-    $result = db_query("SELECT id FROM vhosts.certchain WHERE cn=?", array($certdata['issuer']['CN']));
+    $result = db_query("SELECT id FROM vhosts.certchain WHERE cn=?", [$certdata['issuer']['CN']]);
     if ($result->rowCount() > 0) {
         $c = $result->fetch();
         //$chainfile = '/etc/apache2/certs/chains/'.$c['id'].'.pem';
@@ -162,7 +162,7 @@ function validate_certificate($cert, $key)
     if ($x509info === false) {
         system_failure("Zertifikat konnte nicht verarbeitet werden");
     }
-    if (!in_array($x509info['signatureTypeSN'], array("RSA-SHA256", "RSA-SHA385", "RSA-SHA512"))) {
+    if (!in_array($x509info['signatureTypeSN'], ["RSA-SHA256", "RSA-SHA385", "RSA-SHA512"])) {
         system_failure("Nicht unterstützer Signatur-Hashalgorithmus!");
     }
 
@@ -181,10 +181,10 @@ function validate_certificate($cert, $key)
         system_failure("Testsignatur ungültig, Key vermutlich fehlerhaft!");
     }
 
-    $cacerts = array('/etc/ssl/certs');
+    $cacerts = ['/etc/ssl/certs'];
     $chain = (int) get_chain($cert);
     if ($chain) {
-        $result = db_query("SELECT content FROM vhosts.certchain WHERE id=?", array($chain));
+        $result = db_query("SELECT content FROM vhosts.certchain WHERE id=?", [$chain]);
         $tmp = $result->fetch();
         $chaincert = $tmp['content'];
         $chainfile = tempnam(sys_get_temp_dir(), 'webinterface');
@@ -224,7 +224,7 @@ validTo_time_t => 1267190790
     if (isset($certdata['issuer']['O'])) {
         $issuer = $certdata['issuer']['O'];
     }
-    $san = array();
+    $san = [];
     $raw_san = explode(', ', $certdata['extensions']['subjectAltName']);
     foreach ($raw_san as $name) {
         if (! substr($name, 0, 4) == 'DNS:') {
@@ -235,7 +235,7 @@ validTo_time_t => 1267190790
     }
     $san = implode("\n", $san);
     DEBUG("SAN: <pre>".$san."</pre>");
-    return array('subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN'], 'san' => $san);
+    return ['subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN'], 'san' => $san];
 }
 
 
@@ -247,8 +247,8 @@ function save_cert($info, $cert, $key)
 
     db_query(
         "INSERT INTO vhosts.certs (uid, subject, cn, san, valid_from, valid_until, chain, cert, `key`) VALUES (:uid, :subject, :cn, :san, :valid_from, :valid_until, :chain, :cert, :key)",
-        array(":uid" => $uid, ":subject" => filter_input_oneline($info['subject']), ":cn" => filter_input_oneline($info['cn']), ":san" => $info['san'], ":valid_from" => $info['valid_from'],
-              ":valid_until" => $info['valid_until'], ":chain" => get_chain($cert), ":cert" => $cert, ":key" => $key)
+        [":uid" => $uid, ":subject" => filter_input_oneline($info['subject']), ":cn" => filter_input_oneline($info['cn']), ":san" => $info['san'], ":valid_from" => $info['valid_from'],
+              ":valid_until" => $info['valid_until'], ":chain" => get_chain($cert), ":cert" => $cert, ":key" => $key, ]
     );
 }
 
@@ -260,14 +260,14 @@ function refresh_cert($id, $info, $cert, $key = null)
 
     $id = (int) $id;
     $oldcert = cert_details($id);
-    $args = array(":subject" => filter_input_oneline($info['subject']),
+    $args = [":subject" => filter_input_oneline($info['subject']),
                 ":cn" => filter_input_oneline($info['cn']),
                 ":san" => $info['san'],
                 ":cert" => $cert,
                 ":valid_from" => $info['valid_from'],
                 ":valid_until" => $info['valid_until'],
                 ":chain" => get_chain($cert),
-                ":id" => $id);
+                ":id" => $id, ];
 
     $keyop = '';
     if ($key) {
@@ -284,7 +284,7 @@ function delete_cert($id)
     $uid = (int) $_SESSION['userinfo']['uid'];
     $id = (int) $id;
 
-    db_query("DELETE FROM vhosts.certs WHERE uid=? AND id=?", array($uid, $id));
+    db_query("DELETE FROM vhosts.certs WHERE uid=? AND id=?", [$uid, $id]);
 }
 
 function delete_csr($id)
@@ -292,13 +292,13 @@ function delete_csr($id)
     $uid = (int) $_SESSION['userinfo']['uid'];
     $id = (int) $id;
 
-    db_query("DELETE FROM vhosts.csr WHERE uid=? AND id=?", array($uid, $id));
+    db_query("DELETE FROM vhosts.csr WHERE uid=? AND id=?", [$uid, $id]);
 }
 
 
 function split_cn($cn)
 {
-    $domains = array();
+    $domains = [];
     if (strstr($cn, ',') or strstr($cn, "\n")) {
         $domains = preg_split("/[, \n]+/", $cn);
         DEBUG("Domains:");
@@ -315,7 +315,7 @@ function split_cn($cn)
 function create_csr($cn, $bits)
 {
     $domains = split_cn($cn);
-    $tmp = array();
+    $tmp = [];
     foreach ($domains as $dom) {
         $tmp[] = 'DNS:'.$dom;
     }
@@ -374,7 +374,7 @@ commonName_default = {$cn}
     unlink($keyfile);
     unlink($config);
 
-    return array($csr, $key);
+    return [$csr, $key];
 }
 
 
@@ -389,13 +389,13 @@ function save_csr($cn, $bits, $replace=null)
     $san = implode("\n", $domains);
     $csr = null;
     $key = null;
-    list($csr, $key) = create_csr(implode(',', $domains), $bits);
+    [$csr, $key] = create_csr(implode(',', $domains), $bits);
 
     $uid = (int) $_SESSION['userinfo']['uid'];
     db_query(
         "INSERT INTO vhosts.csr (uid, hostname, san, bits, `replace`, csr, `key`) VALUES (:uid, :cn, :san, :bits, :replace, :csr, :key)",
-        array(":uid" => $uid, ":cn" => $cn, ":san" => $san, ":bits" => $bits,
-                 ":replace" => $replace, ":csr" => $csr, ":key" => $key)
+        [":uid" => $uid, ":cn" => $cn, ":san" => $san, ":bits" => $bits,
+                 ":replace" => $replace, ":csr" => $csr, ":key" => $key, ]
     );
     $id = db_insert_id();
     return $id;

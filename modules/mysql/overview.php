@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('session/start.php');
 require_once('inc/icons.php');
-require_role(array(ROLE_SYSTEMUSER));
+require_role([ROLE_SYSTEMUSER]);
 
 global $prefix;
 
@@ -105,7 +105,7 @@ addnew('newdb', 'Neue Datenbank');
 addnew('newuser', 'Neuer DB-Benutzer');
 
 if (count($dbs) > 0) {
-    $myservers = array();
+    $myservers = [];
     foreach ($servers as $s) {
         if (! in_array($s, $myservers)) {
             $myservers[] = $s;
@@ -125,7 +125,7 @@ if (count($users) > 0) {
 
 
 
-    $my_users = array();
+    $my_users = [];
     foreach ($users as $u) {
         $my_users[$u['username']] = $u['username'];
     }

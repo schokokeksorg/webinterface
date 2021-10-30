@@ -25,11 +25,11 @@ function get_lists($filter)
     $result = null;
     if ($filter) {
         $filter = '%'.$filter.'%';
-        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE status!='deleted' AND owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", array('uid' => $uid, 'filter' => $filter));
+        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE status!='deleted' AND owner=:uid AND (listname LIKE :filter OR fqdn LIKE :filter OR admin LIKE :filter) ORDER BY listname", ['uid' => $uid, 'filter' => $filter]);
     } else {
-        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE status!='deleted' AND owner=:uid ORDER BY listname", array('uid' => $uid));
+        $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE status!='deleted' AND owner=:uid ORDER BY listname", ['uid' => $uid]);
     }
-    $ret = array();
+    $ret = [];
     while ($list = $result->fetch()) {
         $ret[] = $list;
     }
@@ -40,8 +40,8 @@ function get_lists($filter)
 
 function get_list($id)
 {
-    $args = array(":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid'], ];
     $result = db_query("SELECT id, created, status, listname, fqdn, urlhost, admin, archivesize, subscribers, lastactivity, backend FROM mail.v_mailman_lists WHERE owner=:uid AND id=:id", $args);
     if ($result->rowCount() < 1) {
         system_failure('Die gewünschte Mailingliste konnte nicht gefunden werden');
@@ -55,15 +55,15 @@ function get_list($id)
 
 function delete_list($id)
 {
-    $args = array(":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid'], ];
     db_query("UPDATE mail.mailman_lists SET status='delete' WHERE owner=:uid AND id=:id", $args);
 }
 
 function request_new_password($id)
 {
-    $args = array(":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid'], ];
     db_query("UPDATE mail.mailman_lists SET status='newpw' WHERE owner=:uid AND id=:id", $args);
 }
 
@@ -71,22 +71,22 @@ function create_list($listname, $maildomain, $admin)
 {
     $listname = strtolower($listname);
     verify_input_username($listname);
-    if (in_array($listname, array("admin", "administrator", "webmaster", "hostmaster", "postmaster"))) {
+    if (in_array($listname, ["admin", "administrator", "webmaster", "hostmaster", "postmaster"])) {
         system_failure('Der Mailinglistenname '.$listname.' ist unzulässig.');
     }
     if (! check_emailaddr($admin)) {
         system_failure('Der Verwalter muss eine gültige E-Mail-Adresse sein ('.$admin.').');
     }
     # FIXME: Zukünftig soll diese Beschränkung weg fallen!
-    $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname LIKE ?", array($listname));
+    $result = db_query("SELECT id FROM mail.mailman_lists WHERE listname LIKE ?", [$listname]);
     if ($result->rowCount() > 0) {
         system_failure('Eine Liste mit diesem Namen existiert bereits auf unserem Mailinglisten-Server (unter einer Ihrer Domains oder unter einer Domain eines anderen Kunden). Jeder Listenname kann auf dem gesamten Server nur einmal verwendet werden.');
     }
 
-    $args = array(":listname" => $listname,
+    $args = [":listname" => $listname,
                 ":maildomain" => $maildomain,
                 ":owner" => $_SESSION['userinfo']['uid'],
-                ":admin" => $admin);
+                ":admin" => $admin, ];
 
     db_query("INSERT INTO mail.mailman_lists (status, listname, maildomain, owner, admin) VALUES ('pending', :listname, :maildomain, :owner, :admin)", $args);
     DEBUG('Neue ID: '.db_insert_id());
@@ -96,8 +96,8 @@ function get_possible_mailmandomains()
 {
     DEBUG('get_possible_mailmandomains()');
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS fqdn, m.backend AS backend FROM kundendaten.domains AS d LEFT JOIN mail.mailman_domains AS m ON (m.domain=d.id) WHERE d.useraccount=:uid AND m.id IS NULL ORDER BY CONCAT_WS('.',d.domainname,d.tld)", array(":uid" => $uid));
-    $ret = array();
+    $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS fqdn, m.backend AS backend FROM kundendaten.domains AS d LEFT JOIN mail.mailman_domains AS m ON (m.domain=d.id) WHERE d.useraccount=:uid AND m.id IS NULL ORDER BY CONCAT_WS('.',d.domainname,d.tld)", [":uid" => $uid]);
+    $ret = [];
     while ($dom = $result->fetch()) {
         $ret[] = $dom;
     }
@@ -119,7 +119,7 @@ function insert_mailman_domain($subdomain, $domainid, $backend = 'mailman')
     if (! $found) {
         system_failue('invalid domain id');
     }
-    db_query("INSERT INTO mail.mailman_domains (hostname, domain, backend) VALUES (:hostname, :domain, :backend)", array(":hostname" => $subdomain, ":domain" => $domainid, ":backend" => $backend));
+    db_query("INSERT INTO mail.mailman_domains (hostname, domain, backend) VALUES (:hostname, :domain, :backend)", [":hostname" => $subdomain, ":domain" => $domainid, ":backend" => $backend]);
     return db_insert_id();
 }
 
@@ -127,8 +127,8 @@ function insert_mailman_domain($subdomain, $domainid, $backend = 'mailman')
 function lists_on_domain($domainid)
 {
     DEBUG("lists_on_domain()");
-    $result = db_query("SELECT id, listname FROM mail.mailman_lists WHERE status != 'delete' AND status != 'deleted' AND maildomain=(SELECT id FROM mail.mailman_domains WHERE domain=?)", array($domainid));
-    $ret = array();
+    $result = db_query("SELECT id, listname FROM mail.mailman_lists WHERE status != 'delete' AND status != 'deleted' AND maildomain=(SELECT id FROM mail.mailman_domains WHERE domain=?)", [$domainid]);
+    $ret = [];
     while ($l = $result->fetch()) {
         $ret[] = $l;
     }
@@ -143,7 +143,7 @@ function delete_mailman_domain($domainid)
     if (count($lists) > 0) {
         system_failure("Es gibt noch Mailinglisten unter diesem Domainnamen, er kann daher nicht gelöscht werden");
     } else {
-        db_query("DELETE FROM mail.mailman_domains WHERE domain=? AND (SELECT COUNT(*) FROM mail.mailman_lists WHERE maildomain=mail.mailman_domains.id)=0;", array($domainid));
+        db_query("DELETE FROM mail.mailman_domains WHERE domain=? AND (SELECT COUNT(*) FROM mail.mailman_lists WHERE maildomain=mail.mailman_domains.id)=0;", [$domainid]);
     }
 }
 
@@ -151,8 +151,8 @@ function get_mailman_domains()
 {
     DEBUG('get_mailman_domains()');
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT md.id, md.fqdn, md.is_webhost, md.backend FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user=?", array($uid));
-    $ret = array();
+    $result = db_query("SELECT md.id, md.fqdn, md.is_webhost, md.backend FROM mail.v_mailman_domains AS md left join mail.v_domains AS d on (d.id=md.domain) where d.user=?", [$uid]);
+    $ret = [];
     while ($dom = $result->fetch()) {
         $ret[] = $dom;
     }

@@ -15,7 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('totp.php');
-require_role(array(ROLE_MAILACCOUNT, ROLE_VMAIL_ACCOUNT));
+require_role([ROLE_MAILACCOUNT, ROLE_VMAIL_ACCOUNT]);
 
 title("Zwei-Faktor-Anmeldung am Webmailer");
 

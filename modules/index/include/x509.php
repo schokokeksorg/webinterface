@@ -25,12 +25,12 @@ function do_ajax_cert_login()
 
 function get_logins_by_cert($cert)
 {
-    $result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", array($cert));
+    $result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", [$cert]);
     if ($result->rowCount() < 1) {
         DEBUG("No certlogin found for this cert!");
         return null;
     } else {
-        $ret = array();
+        $ret = [];
         while ($row = $result->fetch()) {
             $ret[] = $row;
         }
@@ -46,7 +46,7 @@ function get_cert_by_id($id)
     if ($id == 0) {
         system_failure('no ID');
     }
-    $result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,username,startpage FROM system.clientcert WHERE `id`=?", array($id));
+    $result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,username,startpage FROM system.clientcert WHERE `id`=?", [$id]);
     if ($result->rowCount() < 1) {
         return null;
     }
@@ -61,7 +61,7 @@ function get_certs_by_username($username)
     if ($username == '') {
         system_failure('empty username');
     }
-    $result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,startpage FROM system.clientcert WHERE `username`=?", array($username));
+    $result = db_query("SELECT id,dn,issuer,serial,valid_from,valid_until,cert,startpage FROM system.clientcert WHERE `username`=?", [$username]);
     if ($result->rowCount() < 1) {
         return null;
     }
@@ -98,7 +98,7 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $start
         system_failure('Kein Zertifikat');
     }
 
-    $args = array(":dn" => $dn,
+    $args = [":dn" => $dn,
                 ":issuer" => $issuer,
                 ":serial" => $serial,
                 ":vstart" => $vstart,
@@ -106,7 +106,7 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $start
                 ":certdata" => $certdata,
                 ":type" => $type,
                 ":username" => $username,
-                ":startpage" => $startpage);
+                ":startpage" => $startpage, ];
     DEBUG($args);
 
     db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `valid_from`, `valid_until`, `cert`, `type`, `username`, `startpage`) 
@@ -135,6 +135,6 @@ function delete_clientcert($id)
     }
     db_query(
         "DELETE FROM system.clientcert WHERE id=:id AND type=:type AND username=:username",
-        array(":id" => $id, ":type" => $type, ":username" => $username)
+        [":id" => $id, ":type" => $type, ":username" => $username]
     );
 }

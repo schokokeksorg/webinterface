@@ -35,7 +35,7 @@ if (! customer_may_have_useraccounts()) {
     foreach ($accounts as $acc) {
         $shell = $shells[$acc['shell']];
         $usedquota = get_used_quota($acc['uid']);
-        $quota = array();
+        $quota = [];
         foreach ($usedquota as $q) {
             $mailbar = '';
             $mailstring = '';

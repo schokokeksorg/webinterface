@@ -18,8 +18,8 @@ require_once('session/checkuser.php');
 
 function user_customer_match($cust, $user)
 {
-    $args = array(":cid" => $cust,
-                ":user" => $user);
+    $args = [":cid" => $cust,
+                ":user" => $user, ];
     $result = db_query("SELECT uid FROM system.useraccounts WHERE kunde=:cid AND username=:user AND kundenaccount=1", $args);
     if ($result->rowCount() > 0) {
         return true;
@@ -29,7 +29,7 @@ function user_customer_match($cust, $user)
 
 function find_username($input)
 {
-    $args = array(":user" => $input);
+    $args = [":user" => $input];
     $result = db_query("SELECT username FROM system.useraccounts WHERE username=:user AND kundenaccount=1", $args);
     if ($result->rowCount() > 0) {
         $line = $result->fetch();
@@ -41,8 +41,8 @@ function find_username($input)
 
 function customer_has_email($customerno, $email)
 {
-    $args = array(":cid" => $customerno,
-                ":email" => $email);
+    $args = [":cid" => $customerno,
+                ":email" => $email, ];
     $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=:cid AND (email=:email OR email_extern=:email OR email_rechnung=:email)", $args);
     return ($result->rowCount() > 0);
 }
@@ -51,8 +51,8 @@ function customer_has_email($customerno, $email)
 function validate_token($customerno, $token)
 {
     expire_tokens();
-    $args = array(":cid" => $customerno,
-                ":token" => $token);
+    $args = [":cid" => $customerno,
+                ":token" => $token, ];
     $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=:cid AND token=:token", $args);
     return ($result->rowCount() > 0);
 }
@@ -61,7 +61,7 @@ function validate_token($customerno, $token)
 function get_uid_for_token($token)
 {
     expire_tokens();
-    $result = db_query("SELECT uid FROM system.usertoken WHERE token=?", array($token));
+    $result = db_query("SELECT uid FROM system.usertoken WHERE token=?", [$token]);
     if ($result->rowCount() == 0) {
         return null;
     }
@@ -71,7 +71,7 @@ function get_uid_for_token($token)
 
 function get_username_for_uid($uid)
 {
-    $result = db_query("SELECT username FROM system.useraccounts WHERE uid=?", array($uid));
+    $result = db_query("SELECT username FROM system.useraccounts WHERE uid=?", [$uid]);
     if ($result->rowCount() != 1) {
         system_failure("Unexpected number of users with this uid (!= 1)!");
     }
@@ -82,8 +82,8 @@ function get_username_for_uid($uid)
 function validate_uid_token($uid, $token)
 {
     expire_tokens();
-    $args = array(":uid" => $uid,
-                ":token" => $token);
+    $args = [":uid" => $uid,
+                ":token" => $token, ];
     $result = db_query("SELECT NULL FROM system.usertoken WHERE uid=:uid AND token=:token", $args);
     return ($result->rowCount() > 0);
 }
@@ -98,27 +98,27 @@ function expire_tokens()
 
 function invalidate_customer_token($customerno)
 {
-    db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id=?", array($customerno));
+    db_query("UPDATE kundendaten.kunden SET token=NULL, token_create=NULL WHERE id=?", [$customerno]);
 }
 
 function invalidate_systemuser_token($uid)
 {
-    db_query("DELETE FROM system.usertoken WHERE uid=?", array($uid));
+    db_query("DELETE FROM system.usertoken WHERE uid=?", [$uid]);
 }
 
 function create_token($username)
 {
     expire_tokens();
-    $result = db_query("SELECT uid FROM system.useraccounts WHERE username=?", array($username));
+    $result = db_query("SELECT uid FROM system.useraccounts WHERE username=?", [$username]);
     $uid = (int) $result->fetch()['uid'];
 
-    $result = db_query("SELECT created FROM system.usertoken WHERE uid=?", array($uid));
+    $result = db_query("SELECT created FROM system.usertoken WHERE uid=?", [$uid]);
     if ($result->rowCount() > 0) {
         system_failure("Für Ihr Benutzerkonto ist bereits eine Passwort-Erinnerung versendet worden. Bitte wenden Sie sich an den Support wenn Sie diese nicht erhalten haben.");
     }
 
-    $args = array(":uid" => $uid,
-                ":token" => random_string(16));
+    $args = [":uid" => $uid,
+                ":token" => random_string(16), ];
     db_query("INSERT INTO system.usertoken VALUES (:uid, NOW(), NOW() + INTERVAL 1 DAY, :token)", $args);
     return true;
 }
@@ -126,7 +126,7 @@ function create_token($username)
 
 function emailaddress_for_user($username)
 {
-    $result = db_query("SELECT k.email FROM kundendaten.kunden AS k INNER JOIN system.useraccounts AS u ON (u.kunde=k.id) WHERE u.username=?", array($username));
+    $result = db_query("SELECT k.email FROM kundendaten.kunden AS k INNER JOIN system.useraccounts AS u ON (u.kunde=k.id) WHERE u.username=?", [$username]);
     $data = $result->fetch();
     return $data['email'];
 }
@@ -135,7 +135,7 @@ function emailaddress_for_user($username)
 function get_customer_token($customerno)
 {
     expire_tokens();
-    $result = db_query("SELECT token FROM kundendaten.kunden WHERE id=? AND token IS NOT NULL", array($customerno));
+    $result = db_query("SELECT token FROM kundendaten.kunden WHERE id=? AND token IS NOT NULL", [$customerno]);
     if ($result->rowCount() < 1) {
         system_failure("Kann das Token nicht auslesen!");
     }
@@ -145,7 +145,7 @@ function get_customer_token($customerno)
 
 function get_user_token($username)
 {
-    $result = db_query("SELECT token FROM system.usertoken AS t INNER JOIN system.useraccounts AS u USING (uid) WHERE username=?", array($username));
+    $result = db_query("SELECT token FROM system.usertoken AS t INNER JOIN system.useraccounts AS u USING (uid) WHERE username=?", [$username]);
     $tmp = $result->fetch();
     return $tmp['token'];
 }

@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/debug.php');
 require_once('inc/icons.php');
 require_once('inc/security.php');
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 require_once('class/domain.php');
 
 require_once('contactapi.php');
@@ -25,7 +25,7 @@ require_once('contactapi.php');
 
 function new_contact()
 {
-    return array("id" => null,
+    return ["id" => null,
         "state" => null,
         "lastchange" => time(),
         "nic_handle" => null,
@@ -43,7 +43,7 @@ function new_contact()
         "email" => null,
         "pgp_id" => null,
         "pgp_key" => null,
-        "customer" => $_SESSION['customerinfo']['customerno']);
+        "customer" => $_SESSION['customerinfo']['customerno'], ];
 }
 
 
@@ -53,9 +53,9 @@ function get_contact($id, $customer = null)
     if ($customer != null && have_role(ROLE_SYSADMIN)) {
         $c = $customer;
     }
-    $args = array(
+    $args = [
         "cid" => (int) $c,
-        "id" => (int) $id);
+        "id" => (int) $id, ];
     $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id AND customer=:cid", $args);
     if ($result->rowCount() == 0) {
         DEBUG("Soll Kontakt #".$id." laden, MySQL lieferte aber keine Daten");
@@ -68,8 +68,8 @@ function get_contact($id, $customer = null)
 function get_contacts()
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY COALESCE(company, name)", array($cid));
-    $ret = array();
+    $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE (state<>'deleted' OR state IS NULL) AND customer=? ORDER BY COALESCE(company, name)", [$cid]);
+    $ret = [];
     while ($contact = $result->fetch()) {
         $ret[$contact['id']] = $contact;
     }
@@ -81,7 +81,7 @@ function get_contacts()
 function is_domainholder($contactid)
 {
     $contactid = (int) $contactid;
-    $result = db_query("SELECT id FROM kundendaten.domains WHERE owner=? OR admin_c=?", array($contactid, $contactid));
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE owner=? OR admin_c=?", [$contactid, $contactid]);
     if ($result->rowCount() > 0) {
         return true;
     }
@@ -91,7 +91,7 @@ function is_domainholder($contactid)
 function possible_domainholders()
 {
     $allcontacts = get_contacts();
-    $ret = array();
+    $ret = [];
     foreach ($allcontacts as $id => $c) {
         if (possible_domainholder($c)) {
             $ret[$id] = $c;
@@ -111,7 +111,7 @@ function possible_domainholder($c)
 function have_mailaddress($email)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id FROM kundendaten.contacts WHERE customer=? AND email=?", array($cid, $email));
+    $result = db_query("SELECT id FROM kundendaten.contacts WHERE customer=? AND email=?", [$cid, $email]);
     if ($result->rowCount() > 0) {
         return true;
     }
@@ -134,10 +134,10 @@ function set_kundenkontakt($typ, $id)
     } else {
         $id = (int) $id;
     }
-    $args = array(
+    $args = [
         "kunde" => (int) $_SESSION['customerinfo']['customerno'],
-        "contact" => $id
-        );
+        "contact" => $id,
+        ];
     $field = null;
     if ($typ == 'kunde') {
         $field = 'contact_kunde';
@@ -166,7 +166,7 @@ function sync_legacy_contactdata()
         $vorname = explode(' ', $kunde['name'], 2)[0];
         $nachname = explode(' ', $kunde['name'], 2)[1];
     }
-    $args = array("firma" => $kunde['company'],
+    $args = ["firma" => $kunde['company'],
             "anrede" => $kunde['salutation'],
             "vorname" => $vorname,
             "nachname" => $nachname,
@@ -180,25 +180,25 @@ function sync_legacy_contactdata()
             "email" => $kunde['email'],
             "pgp_id" => $kunde['pgp_id'],
             "pgp_key" => $kunde['pgp_key'],
-            "cid" => $cid);
+            "cid" => $cid, ];
     db_query("UPDATE kundendaten.kunden SET anrede=:anrede, firma=:firma, vorname=:vorname, nachname=:nachname, adresse=:adresse,
             plz=:plz, ort=:ort, land=:land, telefon=:telefon, mobile=:mobile, telefax=:telefax, email=:email, 
             pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:cid", $args);
     if ($kundenkontakte['extern']) {
         $extern = get_contact($kundenkontakte['extern'])['email'];
         if ($extern) {
-            db_query("UPDATE kundendaten.kunden SET email_extern=? WHERE id=?", array($extern, $cid));
+            db_query("UPDATE kundendaten.kunden SET email_extern=? WHERE id=?", [$extern, $cid]);
         }
     }
     if ($kundenkontakte['rechnung']) {
         $kunde = get_contact($kundenkontakte['rechnung']);
-        $args = array("firma" => $kunde['company'],
+        $args = ["firma" => $kunde['company'],
                 "name" => $kunde['name'],
                 "adresse" => $kunde['address'],
                 "plz" => $kunde['zip'],
                 "ort" => $kunde['city'],
                 "email" => $kunde['email'],
-                "cid" => $cid);
+                "cid" => $cid, ];
         db_query("UPDATE kundendaten.kunden SET re_firma=:firma, re_name=:name, re_adresse=:adresse,
                 re_plz=:plz, re_ort=:ort, email_rechnung=:email WHERE id=:cid", $args);
     }
@@ -211,21 +211,21 @@ function get_kundenkontakte($customer = null)
     if ($customer and have_role(ROLE_SYSADMIN)) {
         $cid = (int) $customer;
     }
-    $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung, contact_dataprotection FROM kundendaten.kunden WHERE id=?", array($cid));
+    $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung, contact_dataprotection FROM kundendaten.kunden WHERE id=?", [$cid]);
     $res = $result->fetch();
-    $ret = array("kunde" => $res['contact_kunde'],
+    $ret = ["kunde" => $res['contact_kunde'],
                  "extern" => $res['contact_extern'],
                  "rechnung" => $res['contact_rechnung'],
-                 "dataprotection" => $res['contact_dataprotection']);
+                 "dataprotection" => $res['contact_dataprotection'], ];
     return $ret;
 }
 
 function save_emailaddress($id, $email)
 {
     // Speichert eine E-Mail-Adresse direkt, z.B. wenn diese schonmal geprüft wurde
-    $args = array("cid" => (int) $_SESSION['customerinfo']['customerno'],
+    $args = ["cid" => (int) $_SESSION['customerinfo']['customerno'],
         "id" => (int) $id,
-        "email" => $email);
+        "email" => $email, ];
     db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:id AND customer=:cid", $args);
 }
 
@@ -263,9 +263,9 @@ function send_emailchange_token($id, $email)
     if (! check_emailaddr($email)) {
         system_falure("Die E-Mail-Adresse scheint nicht gültig zu sein.");
     }
-    $args = array("id" => (int) $id,
+    $args = ["id" => (int) $id,
         "email" => $email,
-        "token" => random_string(20));
+        "token" => random_string(20), ];
 
     db_query("INSERT INTO kundendaten.mailaddress_token (token, expire, contact, email) VALUES (:token, NOW() + INTERVAL 1 DAY, :id, :email)", $args);
     DEBUG('Token erzeugt: '.print_r($args, true));
@@ -291,7 +291,7 @@ https://schokokeks.org
 function update_pending($contactid)
 {
     $contactid = (int) $contactid;
-    $result = db_query("SELECT email FROM kundendaten.mailaddress_token WHERE contact=?", array($contactid));
+    $result = db_query("SELECT email FROM kundendaten.mailaddress_token WHERE contact=?", [$contactid]);
     if ($result->rowCount() == 0) {
         return null;
     }
@@ -319,7 +319,7 @@ function delete_contact($id)
         $c['state'] = 'deleted';
         upload_contact($c);
     }
-    db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", array($c['id']));
+    db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", [$c['id']]);
 }
 
 
@@ -329,12 +329,12 @@ function search_pgp_key($search)
         # Keine Ausgabe weil diese Funktion im AJAX-Call verwendet wird
         return null;
     }
-    $output = array();
+    $output = [];
     $command = 'LC_ALL=C /usr/bin/timeout 10 /usr/bin/gpg --batch --with-colons --keyserver hkps://hkps.pool.sks-keyservers.net --search-key '.escapeshellarg($search);
     DEBUG($command);
     exec($command, $output);
     DEBUG($output);
-    $keys = array();
+    $keys = [];
     foreach ($output as $row) {
         if (substr($row, 0, 4) === 'pub:') {
             $parts = explode(':', $row);
@@ -359,7 +359,7 @@ function search_pgp_key($search)
 
 function fetch_pgp_key($pgp_id)
 {
-    $output = array();
+    $output = [];
     $ret = null;
     $command = '/usr/bin/timeout 10 /usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key '.escapeshellarg($pgp_id);
     DEBUG($command);
@@ -406,8 +406,8 @@ function test_pgp_key($pgp_id)
 function domainlist_by_contact($c)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id FROM kundendaten.domains WHERE (owner=? OR admin_c=?) AND kunde=?", array($c['id'], $c['id'], $cid));
-    $ret = array();
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE (owner=? OR admin_c=?) AND kunde=?", [$c['id'], $c['id'], $cid]);
+    $ret = [];
     while ($domain = $result->fetch()) {
         $ret[] = new Domain((int) $domain['id']);
     }
@@ -430,7 +430,7 @@ function contact_as_string($contact)
     if ($new_email) {
         $email = "<strike>$email</strike><br/>".filter_output_html($new_email).footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
-    $email = implode("<br>\n", array_filter(array($email, filter_output_html($contact['phone']), filter_output_html($contact['fax']), filter_output_html($contact['mobile']))));
+    $email = implode("<br>\n", array_filter([$email, filter_output_html($contact['phone']), filter_output_html($contact['fax']), filter_output_html($contact['mobile'])]));
     $pgp = '';
     if ($contact['pgp_id']) {
         $pgpid = $contact['pgp_id'];

@@ -31,10 +31,10 @@ $term = $_GET['term'];
 
 $allentries = build_results($term);
 
-$out = array();
+$out = [];
 
 foreach ($allentries as $entry) {
-    $out[] = array('id' => $entry['id'], 'value' => $entry['value']);
+    $out[] = ['id' => $entry['id'], 'value' => $entry['value']];
 }
 
 

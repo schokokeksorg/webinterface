@@ -25,7 +25,7 @@ require_role(ROLE_SYSTEMUSER);
 
 $acc = get_account_details($_SESSION['userinfo']['uid'], $_SESSION['userinfo']['customerno']);
 $usedquota = get_used_quota($acc['uid']);
-$quota = array();
+$quota = [];
 $multiserver = count($usedquota) > 1;
 $need_more_storage = false;
 foreach ($usedquota as $q) {

@@ -21,13 +21,13 @@ require_once('inc/error.php');
 
 require_once('class/domain.php');
 
-$caa_properties= array( 0 => "issue", 1 => "issuewild", 2 => "iodef" );
+$caa_properties= [ 0 => "issue", 1 => "issuewild", 2 => "iodef" ];
 
 function get_dyndns_accounts()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT * FROM dns.dyndns WHERE uid=?", array($uid));
-    $list = array();
+    $result = db_query("SELECT * FROM dns.dyndns WHERE uid=?", [$uid]);
+    $list = [];
     while ($item = $result->fetch()) {
         array_push($list, $item);
     }
@@ -38,8 +38,8 @@ function get_dyndns_accounts()
 
 function get_dyndns_account($id, $ignore=true)
 {
-    $args = array(":id" => (int) $id,
-                ":uid" => (int) $_SESSION['userinfo']['uid']);
+    $args = [":id" => (int) $id,
+                ":uid" => (int) $_SESSION['userinfo']['uid'], ];
     $result = db_query("SELECT * FROM dns.dyndns WHERE id=:id AND uid=:uid", $args);
     if ($result->rowCount() != 1) {
         if ($ignore) {
@@ -78,7 +78,7 @@ function create_dyndns_account($handle, $password_http, $sshkey)
     db_query(
         "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
            "(:uid, :handle, :pwhash, :sshkey)",
-        array(":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey)
+        [":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey]
     );
     $dyndns_id = db_insert_id();
     //$masterdomain = new Domain(config('masterdomain'));
@@ -100,7 +100,7 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
         $sshkey = null;
     }
 
-    $args = array(":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id);
+    $args = [":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id];
     $pwhash = null;
     if ($password_http && $password_http != '************') {
         $args[":pwhash"] = "{SHA}".base64_encode(sha1($password_http, true));
@@ -116,7 +116,7 @@ function delete_dyndns_account($id)
 {
     $id = (int) $id;
 
-    db_query("DELETE FROM dns.dyndns WHERE id=?", array($id));
+    db_query("DELETE FROM dns.dyndns WHERE id=?", [$id]);
     logger(LOG_INFO, "modules/dns/include/dnsinclude", "dyndns", "deleted account »{$id}«");
 }
 
@@ -124,8 +124,8 @@ function delete_dyndns_account($id)
 function get_dyndns_records($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT hostname, domain, type, ttl, lastchange, id FROM dns.custom_records WHERE dyndns=?", array($id));
-    $data = array();
+    $result = db_query("SELECT hostname, domain, type, ttl, lastchange, id FROM dns.custom_records WHERE dyndns=?", [$id]);
+    $data = [];
     while ($entry = $result->fetch()) {
         $dom = new Domain((int) $entry['domain']);
         if ($dom->fqdn != config('masterdomain') && $dom->fqdn != config('user_vhosts_domain')) {
@@ -141,7 +141,7 @@ function get_dyndns_records($id)
     return $data;
 }
 
-$valid_record_types = array('a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp', 'caa', 'srv');
+$valid_record_types = ['a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp', 'caa', 'srv'];
 
 
 function blank_dns_record($type)
@@ -150,14 +150,14 @@ function blank_dns_record($type)
     if (!in_array(strtolower($type), $valid_record_types)) {
         system_failure('invalid type: '.$type);
     }
-    $rec = array('hostname' => null,
+    $rec = ['hostname' => null,
                'domain' => 0,
                'type' => strtolower($type),
                'ttl' => 3600,
                'ip' => null,
                'dyndns' => null,
                'data' => null,
-               'spec' => null);
+               'spec' => null, ];
     if (strtolower($type) == 'mx') {
         $rec['data'] = config('default_mx');
         $rec['spec'] = '5';
@@ -168,7 +168,7 @@ function blank_dns_record($type)
 function get_dns_record($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT hostname, domain, type, ip, dyndns, spec, data, ttl FROM dns.custom_records WHERE id=?", array($id));
+    $result = db_query("SELECT hostname, domain, type, ip, dyndns, spec, data, ttl FROM dns.custom_records WHERE id=?", [$id]);
     if ($result->rowCount() != 1) {
         system_failure('illegal ID');
     }
@@ -183,8 +183,8 @@ function get_dns_record($id)
 function get_domain_records($dom)
 {
     $dom = (int) $dom;
-    $result = db_query("SELECT hostname, domain, type, ip, dyndns, spec, data, ttl, id FROM dns.custom_records WHERE domain=?", array($dom));
-    $data = array();
+    $result = db_query("SELECT hostname, domain, type, ip, dyndns, spec, data, ttl, id FROM dns.custom_records WHERE domain=?", [$dom]);
+    $data = [];
     while ($entry = $result->fetch()) {
         $dom = new Domain((int) $entry['domain']);
         $dom->ensure_userdomain();
@@ -200,8 +200,8 @@ function get_domain_records($dom)
 
 function get_domain_auto_records($domainname)
 {
-    $result = db_query("SELECT hostname, domain, CONCAT_WS('.', hostname, domain) AS fqdn, type, ip, spec, data, ttl FROM dns.tmp_autorecords WHERE domain=?", array($domainname));
-    $data = array();
+    $result = db_query("SELECT hostname, domain, CONCAT_WS('.', hostname, domain) AS fqdn, type, ip, spec, data, ttl FROM dns.tmp_autorecords WHERE domain=?", [$domainname]);
+    $data = [];
     while ($entry = $result->fetch()) {
         array_push($data, $entry);
     }
@@ -222,7 +222,7 @@ function warn_autorecord_collission($hostname, $domain, $type)
 }
 
 
-$implemented_record_types = array('a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp', 'caa');
+$implemented_record_types = ['a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp', 'caa'];
 
 function save_dns_record($id, $record)
 {
@@ -339,7 +339,7 @@ function save_dns_record($id, $record)
       if (count($data) != 2) {
           system_failure('Das eingegebene Ziel war nicht im Format hostname:port');
       }
-      list($hostname, $port) = $data;
+      [$hostname, $port] = $data;
       verify_input_hostname($hostname);
       if ($port !== (string)(int) $port || (int)$port < 1 || (int)$port > 65535) {
           system_failure('Ungültige Portnummer');
@@ -350,14 +350,14 @@ function save_dns_record($id, $record)
       system_failure('Not implemented');
   }
     $id = (int) $id;
-    $args = array(":domain" => $dom->id,
+    $args = [":domain" => $dom->id,
                 ":hostname" => $record['hostname'],
                 ":type" => $record['type'],
                 ":ttl" => ($record['ttl'] == 0 ? null : (int) $record['ttl']),
                 ":ip" => $record['ip'],
                 ":dyndns" => $record['dyndns'],
                 ":data" => $record['data'],
-                ":spec" => $record['spec']);
+                ":spec" => $record['spec'], ];
     if ($id) {
         $args[":id"] = $id;
         db_query("UPDATE dns.custom_records SET hostname=:hostname, domain=:domain, type=:type, ttl=:ttl, ip=:ip, dyndns=:dyndns, data=:data, spec=:spec WHERE id=:id", $args);
@@ -372,7 +372,7 @@ function delete_dns_record($id)
     $id = (int) $id;
     // Diese Funktion prüft, ob der Eintrag einer eigenen Domain gehört
     $record = get_dns_record($id);
-    db_query("DELETE FROM dns.custom_records WHERE id=?", array($id));
+    db_query("DELETE FROM dns.custom_records WHERE id=?", [$id]);
 }
 
 
@@ -382,7 +382,7 @@ function convert_from_autorecords($domainid)
     $dom->ensure_userdomain();
     $dom = $dom->id;
 
-    db_query("INSERT IGNORE INTO dns.custom_records SELECT r.id, r.lastchange, type, d.id, hostname, ip, NULL AS dyndns, data, spec, ttl FROM dns.v_tmptable_allrecords AS r INNER JOIN dns.v_domains AS d ON (d.name=r.domain) WHERE d.id=?", array($dom));
+    db_query("INSERT IGNORE INTO dns.custom_records SELECT r.id, r.lastchange, type, d.id, hostname, ip, NULL AS dyndns, data, spec, ttl FROM dns.v_tmptable_allrecords AS r INNER JOIN dns.v_domains AS d ON (d.name=r.domain) WHERE d.id=?", [$dom]);
     disable_autorecords($dom);
     db_query("UPDATE dns.dnsstatus SET status='outdated'");
     warning("Die automatischen Einträge werden in Kürze abgeschaltet, bitte haben Sie einen Moment Geduld.");
@@ -395,8 +395,8 @@ function enable_autorecords($domainid)
     $dom->ensure_userdomain();
     $dom = $dom->id;
 
-    db_query("UPDATE kundendaten.domains SET autodns=1 WHERE id=?", array($dom));
-    db_query("DELETE FROM dns.custom_records WHERE type='ns' AND domain=? AND hostname IS NULL", array($dom));
+    db_query("UPDATE kundendaten.domains SET autodns=1 WHERE id=?", [$dom]);
+    db_query("DELETE FROM dns.custom_records WHERE type='ns' AND domain=? AND hostname IS NULL", [$dom]);
     warning("Die automatischen Einträge werden in Kürze aktiviert, bitte haben Sie einen Moment Geduld.");
 }
 
@@ -406,20 +406,20 @@ function disable_autorecords($domainid)
     $dom->ensure_userdomain();
     $dom = $dom->id;
 
-    db_query("UPDATE kundendaten.domains SET autodns=0 WHERE id=?", array($dom));
+    db_query("UPDATE kundendaten.domains SET autodns=0 WHERE id=?", [$dom]);
 }
 
 
 function domain_is_maildomain($domain)
 {
     $domain = (int) $domain;
-    $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", array($domain));
+    $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", [$domain]);
     $dom = $result->fetch();
     return ($dom['mail'] != 'none');
 }
 
 
-$own_ns = array();
+$own_ns = [];
 
 function own_ns()
 {
@@ -436,7 +436,7 @@ function own_ns()
 }
 
 
-$tld_ns = array();
+$tld_ns = [];
 
 function check_dns($domainname, $tld)
 {
@@ -478,7 +478,7 @@ function remove_from_dns($dom)
     if (! $current) {
         system_failure("Domain nicht gefunden!");
     }
-    db_query("UPDATE kundendaten.domains SET dns=0 WHERE id=?", array($current->id));
+    db_query("UPDATE kundendaten.domains SET dns=0 WHERE id=?", [$current->id]);
 }
 
 function add_to_dns($dom)
@@ -494,5 +494,5 @@ function add_to_dns($dom)
     if (! $current) {
         system_failure("Domain nicht gefunden!");
     }
-    db_query("UPDATE kundendaten.domains SET dns=1, autodns=1 WHERE id=?", array($current->id));
+    db_query("UPDATE kundendaten.domains SET dns=1, autodns=1 WHERE id=?", [$current->id]);
 }

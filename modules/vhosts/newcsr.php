@@ -33,7 +33,7 @@ günstige CAs) würde diese Zusatzinformationen sowieso aus dem Zertifikat entfe
 Einstellungen stehen Ihnen die OpenSSL-Programme in Ihrem Benutzeraccount zur Verfügung.</p>
 ");
 
-$bitselect = array(2048 => 2048, 4096 => 4096);
+$bitselect = [2048 => 2048, 4096 => 4096];
 
 $form = '<p><label for="commonname">Domain-/Hostname:</label> <input type="text" name="commonname" id="commonname" /> (Mehrere Hostnames ggf. mit Komma trennen.)</p>
 <p><label for="bitlength">Bitlänge:</label> '.html_select('bitlength', $bitselect, 2048).'</p>

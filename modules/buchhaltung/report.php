@@ -11,15 +11,15 @@ if (isset($_GET['year'])) {
 }
 
 $typeresult = db_query("SELECT id, description, investment FROM buchhaltung.types");
-$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", array(":from" => $year."-01-01", ":to" => $year."-12-31"));
+$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", [":from" => $year."-01-01", ":to" => $year."-12-31"]);
 
-$types = array();
-$data_by_type = array();
-$sum_by_type = array();
-$investment_types = array();
+$types = [];
+$data_by_type = [];
+$sum_by_type = [];
+$investment_types = [];
 while ($t = $typeresult->fetch()) {
     $types[$t['id']] = $t['description'];
-    $data_by_type[$t['id']] = array();
+    $data_by_type[$t['id']] = [];
     $sum_by_type[$t['id']] = 0.0;
     if ($t['investment'] == 1) {
         $investment_types[$t['id']] = $t;
@@ -35,9 +35,9 @@ output("Journal für $year (01.01.$year-31.12.$year, gruppiert nach Buchungskont
 
 DEBUG($types);
 DEBUG($investment_types);
-$net_by_type = array(0 => array(-1 => array(), 0 => array(), 19 => array()));
+$net_by_type = [0 => [-1 => [], 0 => [], 19 => []]];
 $umsatzsteuer = 0.0;
-$ustbetraege = array();
+$ustbetraege = [];
 $vorsteuer = 0.0;
 foreach ($types as $id => $t) {
     if (count($data_by_type[$id]) == 0 || $t=='Privatentnahme') {

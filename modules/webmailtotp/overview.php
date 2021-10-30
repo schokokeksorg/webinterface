@@ -39,7 +39,7 @@ if (! (user_has_accounts() || count(get_vmail_accounts())>0)) {
     $domains = get_vmail_domains();
     $vmail_accounts = get_vmail_accounts();
 
-    $sorted_by_domains = array();
+    $sorted_by_domains = [];
     foreach ($vmail_accounts as $account) {
         if ($account['password'] == '') {
             continue;
@@ -47,7 +47,7 @@ if (! (user_has_accounts() || count(get_vmail_accounts())>0)) {
         if (array_key_exists($account['domain'], $sorted_by_domains)) {
             array_push($sorted_by_domains[$account['domain']], $account);
         } else {
-            $sorted_by_domains[$account['domain']] = array($account);
+            $sorted_by_domains[$account['domain']] = [$account];
         }
     }
 

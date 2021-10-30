@@ -70,7 +70,7 @@ $form .= "
 
 $vhosts = list_vhosts();
 
-$options = array();
+$options = [];
 foreach ($vhosts as $vhost) {
     $options[$vhost['docroot']] = $vhost['fqdn'];
 }

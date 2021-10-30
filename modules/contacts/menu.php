@@ -18,5 +18,5 @@ $role = $_SESSION['role'];
 
 
 if (($role & ROLE_CUSTOMER)) {
-    $menu["contacts_list"] = array("label" => "Adressen verwalten", "file" => "list", "weight" => 1, "submenu" => "index_index");
+    $menu["contacts_list"] = ["label" => "Adressen verwalten", "file" => "list", "weight" => 1, "submenu" => "index_index"];
 }

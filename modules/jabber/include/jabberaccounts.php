@@ -23,8 +23,8 @@ function get_jabber_accounts()
 {
     require_role(ROLE_CUSTOMER);
     $customerno = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, `create`, created, lastactivity, local, domain FROM jabber.accounts WHERE customerno=? AND `delete`=0", array($customerno));
-    $accounts = array();
+    $result = db_query("SELECT id, `create`, created, lastactivity, local, domain FROM jabber.accounts WHERE customerno=? AND `delete`=0", [$customerno]);
+    $accounts = [];
     if (@$result->rowCount() > 0) {
         while ($acc = @$result->fetch()) {
             array_push($accounts, $acc);
@@ -38,8 +38,8 @@ function get_jabber_accounts()
 function get_jabberaccount_details($id)
 {
     require_role(ROLE_CUSTOMER);
-    $args = array(":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":id" => $id);
+    $args = [":customerno" => $_SESSION['customerinfo']['customerno'],
+                ":id" => $id, ];
 
     $result = db_query("SELECT id, local, domain FROM jabber.accounts WHERE customerno=:customerno AND id=:id", $args);
     if ($result->rowCount() != 1) {
@@ -71,9 +71,9 @@ function valid_jabber_password($pass)
 function create_jabber_account($local, $domain, $password)
 {
     require_role(ROLE_CUSTOMER);
-    $data = array(":customerno" => $_SESSION['customerinfo']['customerno'],
+    $data = [":customerno" => $_SESSION['customerinfo']['customerno'],
                 ":local" => filter_input_username(strtolower($local)),
-                ":domain" => $domain);
+                ":domain" => $domain, ];
     if (!valid_jabber_password($password)) {
         system_failure('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
     }
@@ -84,7 +84,7 @@ function create_jabber_account($local, $domain, $password)
     $data[':password'] = $password;
 
     if ($domain > 0) {
-        $args = array(":domain" => $data[":domain"], ":customerno" => $data[":customerno"]);
+        $args = [":domain" => $data[":domain"], ":customerno" => $data[":customerno"]];
         $result = db_query("SELECT id FROM kundendaten.domains WHERE kunde=:customerno AND jabber=1 AND id=:domain", $args);
         if ($result->rowCount() == 0) {
             logger(LOG_WARNING, "modules/jabber/include/jabberaccounts", "jabber", "attempt to create account for invalid domain »{$domain}«");
@@ -92,7 +92,7 @@ function create_jabber_account($local, $domain, $password)
         }
     }
 
-    $args = array(":domain" => $data[":domain"], ":local" => $data[":local"]);
+    $args = [":domain" => $data[":domain"], ":local" => $data[":local"]];
     $domainquery = "domain=:domain";
     if ($domain == 0) {
         unset($args[":domain"]);
@@ -121,9 +121,9 @@ function change_jabber_password($id, $password)
     if ($check !== true) {
         system_failure('Das Passwort ist nicht sicher genug.');
     }
-    $args = array(":customerno" => $_SESSION['customerinfo']['customerno'],
+    $args = [":customerno" => $_SESSION['customerinfo']['customerno'],
                 ":id" => $id,
-                ":password" => $password);
+                ":password" => $password, ];
 
     db_query("UPDATE jabber.accounts SET password=:password WHERE customerno=:customerno AND id=:id", $args);
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "changed password for account  »{$id}«");
@@ -135,8 +135,8 @@ function delete_jabber_account($id)
 {
     require_role(ROLE_CUSTOMER);
 
-    $args = array(":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":id" => $id);
+    $args = [":customerno" => $_SESSION['customerinfo']['customerno'],
+                ":id" => $id, ];
 
     db_query("UPDATE jabber.accounts SET `delete`=1 WHERE customerno=:customerno AND id=:id", $args);
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");
@@ -146,7 +146,7 @@ function domains_without_accounts()
 {
     $domains = get_domain_list((int) $_SESSION['customerinfo']['customerno']);
     $accounts = get_jabber_accounts();
-    $obsolete_domains = array();
+    $obsolete_domains = [];
     foreach ($domains as $d) {
         if ($d->jabber != 1) {
             continue;
@@ -179,12 +179,12 @@ function delete_jabber_domain($id)
     if (! $found) {
         system_failure('Diese Domain ist nicht unbenutzt.');
     }
-    db_query("UPDATE kundendaten.domains SET jabber=0 WHERE jabber=1 AND id=?", array($d->id));
+    db_query("UPDATE kundendaten.domains SET jabber=0 WHERE jabber=1 AND id=?", [$d->id]);
 }
 
 function new_jabber_domain($id)
 {
     $d = new Domain((int) $id);
     $d->ensure_customerdomain();
-    db_query("UPDATE kundendaten.domains SET jabber=2 WHERE jabber=0 AND id=?", array($d->id));
+    db_query("UPDATE kundendaten.domains SET jabber=2 WHERE jabber=0 AND id=?", [$d->id]);
 }

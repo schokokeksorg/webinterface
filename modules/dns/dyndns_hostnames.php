@@ -27,7 +27,7 @@ $dyndns = get_dyndns_account($_REQUEST['id']);
 
 title("Hostnames für DynDNS-Account ".filter_output_html($dyndns['handle']));
 
-$available_domains = array();
+$available_domains = [];
 
 $domains = get_domain_list($_SESSION['customerinfo']['customerno'], $_SESSION['userinfo']['uid']);
 foreach ($domains as $d) {

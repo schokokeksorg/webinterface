@@ -20,7 +20,7 @@ require_role(ROLE_SYSTEMUSER);
 $title = "Neue Mailingliste erstellen";
 $domains = get_mailman_domains();
 
-$maildomains = array('0' => config('mailman_host'));
+$maildomains = ['0' => config('mailman_host')];
 foreach ($domains as $domain) {
     $maildomains[$domain['id']] = $domain['fqdn'];
 }

@@ -25,7 +25,7 @@ $section = 'dns_dyndns';
 
 
 $new = true;
-$dyndns = array();
+$dyndns = [];
 if (isset($_REQUEST['id'])) {
     $dyndns = get_dyndns_account($_REQUEST['id']);
     $new = false;
@@ -71,7 +71,7 @@ if (! $new) {
   </div>';
 }
 
-$form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" name="handle" id="handle" value="'.(isset($dyndns['handle']) ? $dyndns['handle'] : '').'" onkeyup="updateUsernameHTTP()" /></p>
+$form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" name="handle" id="handle" value="'.($dyndns['handle'] ?? '').'" onkeyup="updateUsernameHTTP()" /></p>
 
 <h4>Update per HTTPs</h4>
 <p style="margin-left: 2em;">Geben Sie hier ein Passwort ein um das Update per HTTPs zu aktivieren.'.$http_update_info.'</p>
@@ -80,7 +80,7 @@ $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" nam
 
 <h4>Update per SSH</h4>
 <p style="margin-left: 2em;">Kopieren Sie Ihren SSH-public-Key im OpenSSH-Format in dieses Eingabefeld um das Update per SSH zu aktivieren.</p>
-<p style="margin-left: 2em; vertical-align: middle;"><label for="sshkey">SSH Public-Key:</label><br /><textarea style="height: 10em; width: 80%;" id="sshkey" name="sshkey">'.(isset($dyndns['sshkey']) ? $dyndns['sshkey'] : '').'</textarea></p>
+<p style="margin-left: 2em; vertical-align: middle;"><label for="sshkey">SSH Public-Key:</label><br /><textarea style="height: 10em; width: 80%;" id="sshkey" name="sshkey">'.($dyndns['sshkey'] ?? '').'</textarea></p>
 
 <p style="margin-left: 2em;"><input type="submit" value="Speichern" /></p>
 ';

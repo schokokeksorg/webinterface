@@ -20,8 +20,8 @@ require_once('inc/security.php');
 function list_ftpusers()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=?", array($uid));
-    $ftpusers = array();
+    $result = db_query("SELECT id, username, homedir, active, forcessl FROM system.ftpusers WHERE uid=?", [$uid]);
+    $ftpusers = [];
     while ($u = $result->fetch()) {
         $ftpusers[] = $u;
     }
@@ -31,7 +31,7 @@ function list_ftpusers()
 function empty_ftpuser()
 {
     $myserver = my_server_id();
-    return array("id" => "0", "username" => "", "password" => "", "homedir" => "", "active" => "1", "forcessl" => "1", "server" => $myserver);
+    return ["id" => "0", "username" => "", "password" => "", "homedir" => "", "active" => "1", "forcessl" => "1", "server" => $myserver];
 }
 
 function load_ftpuser($id)
@@ -39,7 +39,7 @@ function load_ftpuser($id)
     if ($id == 0) {
         return empty_ftpuser();
     }
-    $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id, ":uid" => $_SESSION['userinfo']['uid']];
     $result = db_query("SELECT id, username, password, homedir, active, forcessl, server FROM system.ftpusers WHERE uid=:uid AND id=:id", $args);
     if ($result->rowCount() != 1) {
         system_failure("Fehler beim auslesen des Accounts");
@@ -85,12 +85,12 @@ function save_ftpuser($data)
         system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
     }
 
-    $args = array(":username" => $_SESSION['userinfo']['username'].'-'.$data['username'],
+    $args = [":username" => $_SESSION['userinfo']['username'].'-'.$data['username'],
                 ":homedir" => $homedir,
                 ":active" => ($data['active'] == 1 ? 1 : 0),
                 ":forcessl" => ($data['forcessl'] == 0 ? 0 : 1),
                 ":server" => $server,
-                ":uid" => $_SESSION['userinfo']['uid']);
+                ":uid" => $_SESSION['userinfo']['uid'], ];
 
     if ($data['id']) {
         $args[":id"] = $data['id'];
@@ -109,14 +109,14 @@ function save_ftpuser($data)
 
 function delete_ftpuser($id)
 {
-    $args = array(":id" => $id, ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id, ":uid" => $_SESSION['userinfo']['uid']];
     db_query("DELETE FROM system.ftpusers WHERE id=:id AND uid=:uid", $args);
 }
 
 
 function get_gid($groupname)
 {
-    $result = db_query("SELECT gid FROM system.gruppen WHERE name=?", array($groupname));
+    $result = db_query("SELECT gid FROM system.gruppen WHERE name=?", [$groupname]);
     if ($result->rowCount() != 1) {
         system_failure('cannot determine gid of ftpusers group');
     }
@@ -131,7 +131,7 @@ function get_gid($groupname)
 
 function have_regular_ftp()
 {
-    $args = array(":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']];
     $result = db_query("SELECT * FROM system.gruppenzugehoerigkeit WHERE gid=:gid AND uid=:uid", $args);
     return ($result->rowCount() > 0);
 }
@@ -140,12 +140,12 @@ function have_regular_ftp()
 function enable_regular_ftp()
 {
     require_role(ROLE_SYSTEMUSER);
-    $args = array(":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']];
     db_query("REPLACE INTO system.gruppenzugehoerigkeit (gid, uid) VALUES (:gid, :uid)", $args);
 }
 
 function disable_regular_ftp()
 {
-    $args = array(":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":gid" => get_gid('ftpusers'), ":uid" => $_SESSION['userinfo']['uid']];
     db_query("DELETE FROM system.gruppenzugehoerigkeit WHERE gid=:gid AND uid=:uid", $args);
 }

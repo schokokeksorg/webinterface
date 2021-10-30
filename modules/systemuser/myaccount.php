@@ -30,7 +30,7 @@ output("<p>Daten zu Ihrem Benutzeraccount:</p>");
 $acc = get_account_details($_SESSION['userinfo']['uid'], $_SESSION['userinfo']['customerno']);
 $shell = $shells[$acc['shell']];
 $usedquota = get_used_quota($acc['uid']);
-$quota = array();
+$quota = [];
 foreach ($usedquota as $q) {
     $mailbar = '';
     $mailstring = '';

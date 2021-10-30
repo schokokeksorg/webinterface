@@ -17,5 +17,5 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 $role = $_SESSION['role'];
 
 if ($role & ROLE_SYSTEMUSER) {
-    $menu["git_git"] = array("label" => "Git-Zugänge", "file" => "git", "weight" => 1, "submenu" => "systemuser_account");
+    $menu["git_git"] = ["label" => "Git-Zugänge", "file" => "git", "weight" => 1, "submenu" => "systemuser_account"];
 }

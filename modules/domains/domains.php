@@ -21,7 +21,7 @@ require_once('inc/icons.php');
 require_once('class/domain.php');
 require_once('domains.php');
 
-require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER));
+require_role([ROLE_SYSTEMUSER, ROLE_CUSTOMER]);
 
 if (have_role(ROLE_CUSTOMER)) {
     $user_domains = get_domain_list($_SESSION['customerinfo']['customerno']);
@@ -88,7 +88,7 @@ foreach ($user_domains as $domain) {
         $regdate = '<em>Zuständige Kundennummer: '.$domain->kunde.'</em>';
     }
 
-    $features = array();
+    $features = [];
     if ($domain->dns == 1) {
         if (dns_in_use($domain->id)) {
             $features[] = 'DNS';

@@ -53,12 +53,12 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
     $domains = get_vmail_domains();
     $all_accounts = get_vmail_accounts();
 
-    $sorted_by_domains = array();
+    $sorted_by_domains = [];
     foreach ($all_accounts as $account) {
         if (array_key_exists($account['domain'], $sorted_by_domains)) {
             array_push($sorted_by_domains[$account['domain']], $account);
         } else {
-            $sorted_by_domains[$account['domain']] = array($account);
+            $sorted_by_domains[$account['domain']] = [$account];
         }
     }
 
@@ -107,7 +107,7 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         continue;
                     }
                     $acc = get_account_details($this_account['id']);
-                    $actions = array();
+                    $actions = [];
                     DEBUG($acc);
                     if ($acc['password'] != '') {
                         $percent = round(($acc["quota_used"] / $acc["quota"]) * 100);

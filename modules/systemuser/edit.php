@@ -18,7 +18,7 @@ require_once('inc/base.php');
 
 require_once('useraccounts.php');
 
-require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
+require_role([ROLE_CUSTOMER, ROLE_SYSTEMUSER]);
 
 
 title("System-Benutzeraccounts");

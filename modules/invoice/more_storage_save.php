@@ -53,10 +53,10 @@ if ($stub['anzahl'] == 0) {
 }
 $regular = $items[1];
 
-$clean_items = array();
+$clean_items = [];
 
 if ($stub) {
-    $i = array();
+    $i = [];
     $i['beschreibung'] = $stub['beschreibung'];
     $i['datum'] = $stub['startdatum'];
     $i['kuendigungsdatum'] = $stub['enddatum'];
@@ -67,7 +67,7 @@ if ($stub) {
     $clean_items[] = $i;
 }
 
-$i = array();
+$i = [];
 $i['beschreibung'] = $regular['beschreibung'];
 $i['datum'] = $regular['startdatum'];
 $i['kuendigungsdatum'] = null;

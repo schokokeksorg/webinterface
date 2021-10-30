@@ -33,8 +33,8 @@ if (! count($domains)) {
     system_failure("Sie haben gar keine eigenen Domains.");
 }
 
-$pending_domains = array();
-$available_domains = array();
+$pending_domains = [];
+$available_domains = [];
 
 foreach ($domains as $d) {
     if ($d->jabber == 0) {

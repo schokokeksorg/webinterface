@@ -32,10 +32,10 @@ function valid_php_versions()
             +: Beta-Version
     */
     $tags = explode(',', config('php_versions'));
-    $ret = array();
+    $ret = [];
     foreach ($tags as $t) {
         $key = $t;
-        $ver = array('major' => null, 'minor' => null, 'status' => 'regular', 'default' => false);
+        $ver = ['major' => null, 'minor' => null, 'status' => 'regular', 'default' => false];
         if (substr($t, -1, 1) == '+') {
             $ver['status'] = 'beta';
             $key = substr($t, 0, -1);
@@ -61,7 +61,7 @@ function valid_php_versions()
     foreach ($list as $vhost) {
         if ($vhost['php'] && $vhost['php'] != 'default' && !array_key_exists($vhost['php'], $ret)) {
             $key = $vhost['php'];
-            $ret = array($key => array('major' => null, 'minor' => null, 'status' => 'used', 'default' => false)) + $ret;
+            $ret = [$key => ['major' => null, 'minor' => null, 'status' => 'used', 'default' => false]] + $ret;
             /* Wir nehmen an, dass unsere Tags immer an zweitletzter Stelle die Major-Version und
             an letzter Stelle die Minor-Version enthalten */
             $ret[$key]['major'] = substr($key, -2, 1);
@@ -75,20 +75,20 @@ function valid_php_versions()
 function traffic_month($vhost_id)
 {
     $vhost_id = (int) $vhost_id;
-    $result = db_query("SELECT sum(mb_in+mb_out) as mb FROM vhosts.traffic where date > CURDATE() - INTERVAL 1 MONTH AND vhost_id = ?", array($vhost_id));
+    $result = db_query("SELECT sum(mb_in+mb_out) as mb FROM vhosts.traffic where date > CURDATE() - INTERVAL 1 MONTH AND vhost_id = ?", [$vhost_id]);
     $data = $result->fetch();
     return $data['mb'];
 }
 
 function autoipv6_address($vhost_id, $mode = 1)
 {
-    $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id=?", array($vhost_id));
+    $result = db_query("SELECT uid, v6_prefix FROM vhosts.v_vhost LEFT JOIN system.servers ON (servers.hostname = server) WHERE v_vhost.id=?", [$vhost_id]);
     $data = $result->fetch();
     if (!$data['v6_prefix']) {
         warning("IPv6-Adresse nicht verfügbar, Server unterstützt kein IPv6");
         return "";
     }
-    list($prefix, $null) = explode('/', $data['v6_prefix']);
+    [$prefix, $null] = explode('/', $data['v6_prefix']);
     $vh = ':1';
     if ($mode == 2) {
         $vh = implode(':', str_split(sprintf("%08x", $vhost_id), 4));
@@ -102,13 +102,13 @@ function list_vhosts($filter=null)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid ORDER BY domain,hostname";
-    $params = array(":uid" => $uid);
+    $params = [":uid" => $uid];
     if ($filter) {
         $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE (vh.fqdn LIKE :filter OR vh.id IN (SELECT vhost FROM vhosts.v_alias WHERE fqdn LIKE :filter)) AND uid=:uid ORDER BY hostname";
         $params[":filter"] = "%$filter%";
     }
     $result = db_query($query, $params);
-    $ret = array();
+    $ret = [];
     while ($item = $result->fetch()) {
         array_push($ret, $item);
     }
@@ -117,7 +117,7 @@ function list_vhosts($filter=null)
 
 function ipv6_possible($server)
 {
-    $args = array(":server" => $server);
+    $args = [":server" => $server];
     $result = db_query("SELECT v6_prefix FROM system.servers WHERE id=:server OR hostname=:server", $args);
     $line = $result->fetch();
     DEBUG("Server {$server} is v6-capable: ". ($line['v6_prefix'] != null));
@@ -175,7 +175,7 @@ function userdomain()
     if (config('user_vhosts_domain') === null) {
         return null;
     }
-    $result = db_query("SELECT id,name FROM vhosts.v_domains WHERE name=:dom", array(":dom" => config('user_vhosts_domain')));
+    $result = db_query("SELECT id,name FROM vhosts.v_domains WHERE name=:dom", [":dom" => config('user_vhosts_domain')]);
     $res = $result->fetch();
     return $res;
 }
@@ -226,7 +226,7 @@ function get_vhost_details($id)
     DEBUG("Lese #{$id}...");
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT vh.*,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid AND vh.id=:id", array(":uid" => $uid, ":id" => $id));
+    $result = db_query("SELECT vh.*,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid AND vh.id=:id", [":uid" => $uid, ":id" => $id]);
     if ($result->rowCount() != 1) {
         system_failure('Interner Fehler beim Auslesen der Daten');
     }
@@ -261,8 +261,8 @@ function get_vhost_details($id)
 
 function get_aliases($vhost)
 {
-    $result = db_query("SELECT id,fqdn,options FROM vhosts.v_alias WHERE vhost=?", array($vhost));
-    $ret = array();
+    $result = db_query("SELECT id,fqdn,options FROM vhosts.v_alias WHERE vhost=?", [$vhost]);
+    $ret = [];
     while ($item = $result->fetch()) {
         array_push($ret, $item);
     }
@@ -275,14 +275,14 @@ function get_all_aliases($vhost)
 {
     //$vhost = get_vhost_details( (int) $vhost );
     $aliases = get_aliases($vhost['id']);
-    $ret = array();
+    $ret = [];
     if (strstr($vhost['options'], 'aliaswww')) {
-        array_push($ret, array('id' => 'www', 'fqdn' => 'www.'.$vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : null)));
+        array_push($ret, ['id' => 'www', 'fqdn' => 'www.'.$vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : null)]);
     }
     foreach ($aliases as $item) {
         array_push($ret, $item);
         if (strstr($item['options'], 'aliaswww')) {
-            array_push($ret, array('id' => 'www_'.$item['id'], 'fqdn' => 'www.'.$item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : null)));
+            array_push($ret, ['id' => 'www_'.$item['id'], 'fqdn' => 'www.'.$item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : null)]);
         }
     }
     return $ret;
@@ -292,7 +292,7 @@ function get_all_aliases($vhost)
 function list_available_webapps()
 {
     $result = db_query("SELECT id,displayname FROM vhosts.global_webapps");
-    $ret = array();
+    $ret = [];
     while ($item = $result->fetch()) {
         array_push($ret, $item);
     }
@@ -308,7 +308,7 @@ function delete_vhost($id)
     }
     $vhost = get_vhost_details($id);
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Removing vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
-    db_query("DELETE FROM vhosts.vhost WHERE id=?", array($vhost['id']));
+    db_query("DELETE FROM vhosts.vhost WHERE id=?", [$vhost['id']]);
 }
 
 
@@ -320,8 +320,8 @@ function make_svn_vhost($id)
         system_failure("id == 0");
     }
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to SVN');
-    db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES (?, 'svn')", array($id));
-    db_query("DELETE FROM vhosts.webapps WHERE vhost=?", array($id));
+    db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES (?, 'svn')", [$id]);
+    db_query("DELETE FROM vhosts.webapps WHERE vhost=?", [$id]);
 }
 
 function make_dav_vhost($id)
@@ -331,8 +331,8 @@ function make_dav_vhost($id)
         system_failure("id == 0");
     }
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
-    db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES (?, 'dav', 'nouserfile')", array($id));
-    db_query("DELETE FROM vhosts.webapps WHERE vhost=?", array($id));
+    db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES (?, 'dav', 'nouserfile')", [$id]);
+    db_query("DELETE FROM vhosts.webapps WHERE vhost=?", [$id]);
 }
 
 function make_regular_vhost($id)
@@ -342,8 +342,8 @@ function make_regular_vhost($id)
         system_failure("id == 0");
     }
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to regular');
-    db_query("DELETE FROM vhosts.dav WHERE vhost=?", array($id));
-    db_query("DELETE FROM vhosts.webapps WHERE vhost=?", array($id));
+    db_query("DELETE FROM vhosts.dav WHERE vhost=?", [$id]);
+    db_query("DELETE FROM vhosts.webapps WHERE vhost=?", [$id]);
 }
 
 
@@ -354,13 +354,13 @@ function make_webapp_vhost($id, $webapp)
     if ($id == 0) {
         system_failure("id == 0");
     }
-    $result = db_query("SELECT displayname FROM vhosts.global_webapps WHERE id=?", array($webapp));
+    $result = db_query("SELECT displayname FROM vhosts.global_webapps WHERE id=?", [$webapp]);
     if ($result->rowCount() == 0) {
         system_failure("webapp-id invalid");
     }
     $webapp_name = $result->fetch(PDO::FETCH_OBJ)->displayname;
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
-    db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES (?, ?)", array($id, $webapp));
+    db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES (?, ?)", [$id, $webapp]);
     mail('webapps-setup@schokokeks.org', 'setup', 'setup');
 }
 
@@ -369,7 +369,7 @@ function check_hostname_collision($hostname, $domain)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     # Neuer vhost => Prüfe Duplikat
-    $args = array(":hostname" => $hostname, ":domain" => $domain, ":uid" => $uid);
+    $args = [":hostname" => $hostname, ":domain" => $domain, ":uid" => $uid];
     $domaincheck = "domain=:domain";
     if ($domain == -1) {
         $userdomain = userdomain();
@@ -474,7 +474,7 @@ function save_vhost($vhost)
         $vhost['ssl'] = null;
     }
 
-    $args = array(":hostname" => ($hostname ? $hostname : null),
+    $args = [":hostname" => ($hostname ? $hostname : null),
                 ":domain" => $domain,
                 ":docroot" => ($vhost['docroot'] ? $vhost['docroot'] : null),
                 ":php" => $vhost['php'],
@@ -489,7 +489,7 @@ function save_vhost($vhost)
                 ":ipv4" => $ipv4,
                 ":autoipv6" => $autoipv6,
                 ":options" => $vhost['options'],
-                ":id" => $id);
+                ":id" => $id, ];
     if ($id != 0) {
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
         db_query("UPDATE vhosts.vhost SET hostname=:hostname, domain=:domain, docroot=:docroot, php=:php, cgi=:cgi, `ssl`=:ssl, hsts=:hsts, `suexec_user`=:suexec_user, `server`=:server, logtype=:logtype, errorlog=:errorlog, certid=:cert, ipv4=:ipv4, autoipv6=:autoipv6, options=:options WHERE id=:id", $args);
@@ -522,7 +522,7 @@ function get_alias_details($id)
 {
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT * FROM vhosts.v_alias WHERE id=?", array($id));
+    $result = db_query("SELECT * FROM vhosts.v_alias WHERE id=?", [$id]);
 
     if ($result->rowCount() != 1) {
         system_failure('Interner Fehler beim Auslesen der Alias-Daten');
@@ -547,7 +547,7 @@ function delete_alias($id)
     $alias = get_alias_details($id);
 
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Removing alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
-    db_query("DELETE FROM vhosts.alias WHERE id=?", array($id));
+    db_query("DELETE FROM vhosts.alias WHERE id=?", [$id]);
 }
 
 function save_alias($alias)
@@ -567,11 +567,11 @@ function save_alias($alias)
     if (! $alias['hostname']) {
         $alias['hostname'] = null;
     }
-    $args = array(":hostname" => $alias['hostname'],
+    $args = [":hostname" => $alias['hostname'],
                 ":domain" => $domain,
                 ":vhost" => $vhost['id'],
                 ":options" => $alias['options'],
-                ":id" => $id);
+                ":id" => $id, ];
     if ($id == 0) {
         unset($args[":id"]);
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
@@ -587,8 +587,8 @@ function save_alias($alias)
 function available_suexec_users()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT uid, username FROM vhosts.available_users LEFT JOIN vhosts.v_useraccounts ON (uid = suexec_user) WHERE mainuser=?", array($uid));
-    $ret = array();
+    $result = db_query("SELECT uid, username FROM vhosts.available_users LEFT JOIN vhosts.v_useraccounts ON (uid = suexec_user) WHERE mainuser=?", [$uid]);
+    $ret = [];
     while ($i = $result->fetch()) {
         $ret[] = $i;
     }
@@ -601,8 +601,8 @@ function available_suexec_users()
 function user_ipaddrs()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT ipaddr FROM vhosts.ipaddr_available WHERE uid=?", array($uid));
-    $ret = array();
+    $result = db_query("SELECT ipaddr FROM vhosts.ipaddr_available WHERE uid=?", [$uid]);
+    $ret = [];
     while ($i = $result->fetch()) {
         $ret[] = $i['ipaddr'];
     }

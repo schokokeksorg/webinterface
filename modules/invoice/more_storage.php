@@ -99,7 +99,7 @@ $stub['enddatum'] = date_format($stub_enddate, 'Y-m-d');
 $stub['anzahl'] = $months;
 $stub['monate'] = $months;
 
-$items = array();
+$items = [];
 $items[] = $stub;
 $items[] = $new_item;
 
@@ -150,7 +150,7 @@ if (have_module('systemuser')) {
     if (count($useraccounts) == 1) {
         $form .= '<input type="hidden" name="more_storage_user" value="'.$useraccounts[0]['uid'].'" />';
     } else {
-        $choices = array('' => 'Nicht zuweisen');
+        $choices = ['' => 'Nicht zuweisen'];
         foreach ($useraccounts as $u) {
             $choices[$u['uid']] = "Benutzer ${u['username']} vergrößern";
         }

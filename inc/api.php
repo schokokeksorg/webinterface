@@ -28,7 +28,7 @@ function api_request($method, $input_data)
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     $result = curl_exec($curl);
     if ($result === false) {
         system_failure("API-Anfrage kaputt");

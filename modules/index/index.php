@@ -69,10 +69,10 @@ output("<p>Nachfolgend sehen Sie eine Auswahl typischer Aufgaben.</p>\n");
 
 $modules = get_modules_info();
 
-$my_shortcuts = array();
+$my_shortcuts = [];
 foreach ($modules as $modname => $info) {
     if (file_exists('modules/'.$modname.'/shortcuts.php')) {
-        $shortcuts = array();
+        $shortcuts = [];
         include('modules/'.$modname.'/shortcuts.php');
         foreach ($shortcuts as $shortcut) {
             $shortcut['module'] = $modname;

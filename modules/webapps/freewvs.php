@@ -19,21 +19,21 @@ require_once('session/start.php');
 require_once('freewvs.php');
 require_once('webapp-installer.php');
 
-require_role(array(ROLE_SYSTEMUSER));
+require_role([ROLE_SYSTEMUSER]);
 
 title("Prüfung Ihrer Web-Anwendungen");
 
 $uid = (int) $_SESSION['userinfo']['uid'];
 
-if (isset($_POST['freq']) && in_array($_POST['freq'], array("day","week","month"))) {
+if (isset($_POST['freq']) && in_array($_POST['freq'], ["day","week","month"])) {
     check_form_token('freewvs_freq');
-    $args = array(":uid" => $uid, ":freq" => $_POST['freq']);
+    $args = [":uid" => $uid, ":freq" => $_POST['freq']];
     db_query("REPLACE INTO qatools.freewvs (user,freq) VALUES (:uid,:freq)", $args);
     header("Location: freewvs");
     die();
 }
 
-$result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid=?", array($uid));
+$result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid=?", [$uid]);
 $result=$result->fetch();
 $freq=$result['freq'];
 
@@ -41,7 +41,7 @@ headline('Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken');
 
 output('<p>Bei '.config('company_name').' werden die von Ihnen installierten Web-Anwendungen (z.B. Blog-Software, Content-Management-Systeme, ...) regelmäßig automatisch auf bekannte Sicherheitsprobleme untersucht. Sie erhalten jeweils umgehend eine Nachricht, wenn wir gefährdete Anwendungen finden. Zudem werden wir Sie regelmäßig an bestehende Sicherheitslücken erinnern.</p>
 <p><strong>Wie häufig möchten Sie an bestehende Sicherheitsprobleme erinnert werden?</strong></p>
-'.html_form('freewvs_freq', 'freewvs', '', '<p>'.html_select('freq', array('day' => 'täglich', 'week' => 'einmal pro Woche', 'month' => 'einmal pro Monat'), $freq).' &#160; <input type="submit" value="speichern" /></p>'));
+'.html_form('freewvs_freq', 'freewvs', '', '<p>'.html_select('freq', ['day' => 'täglich', 'week' => 'einmal pro Woche', 'month' => 'einmal pro Monat'], $freq).' &#160; <input type="submit" value="speichern" /></p>'));
 
 $results = load_results();
 

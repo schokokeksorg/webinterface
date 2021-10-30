@@ -17,13 +17,13 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 function set_newsletter_address($address)
 {
     $cid = $_SESSION['customerinfo']['customerno'];
-    db_query("UPDATE kundendaten.kunden SET email_newsletter=:address WHERE id=:cid", array(":address" => $address, ":cid" => $cid));
+    db_query("UPDATE kundendaten.kunden SET email_newsletter=:address WHERE id=:cid", [":address" => $address, ":cid" => $cid]);
 }
 
 function get_newsletter_address()
 {
     $cid = $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT email_newsletter FROM kundendaten.kunden WHERE id=?", array($cid));
+    $result = db_query("SELECT email_newsletter FROM kundendaten.kunden WHERE id=?", [$cid]);
     $r = $result->fetch();
     return $r['email_newsletter'];
 }
@@ -32,7 +32,7 @@ function get_newsletter_address()
 function get_latest_news()
 {
     $result = db_query("SELECT id, date, subject, content FROM misc.news WHERE date > CURDATE() - INTERVAL 2 YEAR ORDER BY date DESC");
-    $ret = array();
+    $ret = [];
     while ($item = $result->fetch()) {
         $ret[] = $item;
     }
@@ -44,7 +44,7 @@ function get_latest_news()
 function get_news_item($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT date, subject, content FROM misc.news WHERE id=?", array($id));
+    $result = db_query("SELECT date, subject, content FROM misc.news WHERE id=?", [$id]);
     $ret = $result->fetch();
     DEBUG($ret);
     return $ret;

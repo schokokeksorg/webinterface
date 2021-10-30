@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('session/start.php');
 require_once('inc/icons.php');
-require_role(array(ROLE_SYSTEMUSER));
+require_role([ROLE_SYSTEMUSER]);
 
 global $prefix;
 
@@ -29,7 +29,7 @@ $username = $_SESSION['userinfo']['username'];
 $section = 'mysql_overview';
 title('Neue MySQL-Datenbank');
 
-$dbnames = array();
+$dbnames = [];
 foreach ($dbs as $db) {
     $dbnames[] = $db['name'];
 }
@@ -55,7 +55,7 @@ if (count(additional_servers()) > 0) {
     $available_servers[] = my_server_id();
     $available_servers = array_unique($available_servers);
 
-    $selectable_servers = array();
+    $selectable_servers = [];
     $all_servers = server_names();
     foreach ($all_servers as $id => $fqdn) {
         if (in_array($id, $available_servers)) {

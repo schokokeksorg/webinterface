@@ -23,8 +23,8 @@ require_once('contacts.php');
 function my_invoices()
 {
     $c = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung,sepamandat FROM kundendaten.ausgestellte_rechnungen WHERE kunde=? ORDER BY id DESC", array($c));
-    $ret = array();
+    $result = db_query("SELECT id,datum,betrag,bezahlt,abbuchung,sepamandat FROM kundendaten.ausgestellte_rechnungen WHERE kunde=? ORDER BY id DESC", [$c]);
+    $ret = [];
     while ($line = $result->fetch()) {
         array_push($ret, $line);
     }
@@ -36,7 +36,7 @@ function get_pdf($id)
 {
     $c = (int) $_SESSION['customerinfo']['customerno'];
     $id = (int) $id;
-    $result = db_query("SELECT pdfdata FROM kundendaten.ausgestellte_rechnungen WHERE kunde=:c AND id=:id", array(":c" => $c, ":id" => $id));
+    $result = db_query("SELECT pdfdata FROM kundendaten.ausgestellte_rechnungen WHERE kunde=:c AND id=:id", [":c" => $c, ":id" => $id]);
     if ($result->rowCount() == 0) {
         system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
     }
@@ -50,12 +50,12 @@ function invoice_address($customer = null)
     if ($customer != null && have_role(ROLE_SYSADMIN)) {
         $c = (int) $customer;
     }
-    $result = db_query("SELECT contact_kunde, contact_rechnung FROM kundendaten.kunden WHERE id=?", array($c));
+    $result = db_query("SELECT contact_kunde, contact_rechnung FROM kundendaten.kunden WHERE id=?", [$c]);
     $kontakte = $result->fetch();
     $kunde = get_contact($kontakte['contact_kunde'], $c);
     if ($kontakte['contact_rechnung']) {
         $rechnung = get_contact($kontakte['contact_rechnung'], $c);
-        foreach (array('company', 'name', 'address', 'zip', 'city', 'country', 'email') as $field) {
+        foreach (['company', 'name', 'address', 'zip', 'city', 'country', 'email'] as $field) {
             if ($rechnung[$field]) {
                 $kunde[$field] = $rechnung[$field];
             }
@@ -69,7 +69,7 @@ function invoice_address($customer = null)
 function invoice_details($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT kunde,datum,betrag,bezahlt,sepamandat,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE id=:id", array(":id" => $id));
+    $result = db_query("SELECT kunde,datum,betrag,bezahlt,sepamandat,abbuchung FROM kundendaten.ausgestellte_rechnungen WHERE id=:id", [":id" => $id]);
     if ($result->rowCount() == 0) {
         system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
     }
@@ -83,11 +83,11 @@ function invoice_details($id)
 function invoice_items($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer=:id", array(":id" => $id));
+    $result = db_query("SELECT id, beschreibung, datum, enddatum, betrag, einheit, brutto, mwst, anzahl FROM kundendaten.rechnungsposten WHERE rechnungsnummer=:id", [":id" => $id]);
     if ($result->rowCount() == 0) {
         system_failure('Ungültige Rechnungsnummer oder nicht eingeloggt');
     }
-    $ret = array();
+    $ret = [];
     while ($line = $result->fetch()) {
         array_push($ret, $line);
     }
@@ -98,8 +98,8 @@ function invoice_items($id)
 function upcoming_items()
 {
     $c = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT quelle, id, anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde=? ORDER BY startdatum ASC", array($c));
-    $ret = array();
+    $result = db_query("SELECT quelle, id, anzahl, beschreibung, startdatum, enddatum, betrag, einheit, brutto, mwst FROM kundendaten.upcoming_items WHERE kunde=? ORDER BY startdatum ASC", [$c]);
+    $ret = [];
     while ($line = $result->fetch()) {
         array_push($ret, $line);
     }
@@ -125,11 +125,11 @@ DE91602911200041512006
 
 RE '.$id.' KD '.$customerno.' vom '.$datum;
 
-    $descriptorspec = array(
-    0 => array("pipe", "r"),  // STDIN ist eine Pipe, von der das Child liest
-    1 => array("pipe", "w"),  // STDOUT ist eine Pipe, in die das Child schreibt
-    2 => array("pipe", "w")
-  );
+    $descriptorspec = [
+    0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
+    1 => ["pipe", "w"],  // STDOUT ist eine Pipe, in die das Child schreibt
+    2 => ["pipe", "w"],
+  ];
 
     $process = proc_open('qrencode -t PNG -o - -l M', $descriptorspec, $pipes);
 
@@ -158,7 +158,7 @@ RE '.$id.' KD '.$customerno.' vom '.$datum;
 function get_lastschrift($rechnungsnummer)
 {
     $rechnungsnummer = (int) $rechnungsnummer;
-    $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum, sl.status FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.sepamandat=sl.mandatsreferenz) WHERE rechnungsnummer=?", array($rechnungsnummer));
+    $result = db_query("SELECT rechnungsnummer, rechnungsdatum, sl.betrag, buchungsdatum, sl.status FROM kundendaten.sepalastschrift sl LEFT JOIN kundendaten.ausgestellte_rechnungen re ON (re.sepamandat=sl.mandatsreferenz) WHERE rechnungsnummer=?", [$rechnungsnummer]);
     if ($result->rowCount() == 0) {
         return null;
     }
@@ -168,8 +168,8 @@ function get_lastschrift($rechnungsnummer)
 
 function get_lastschriften($mandatsreferenz)
 {
-    $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum, status FROM kundendaten.sepalastschrift WHERE mandatsreferenz=? ORDER BY buchungsdatum DESC", array($mandatsreferenz));
-    $ret = array();
+    $result = db_query("SELECT rechnungsnummer, rechnungsdatum, betrag, buchungsdatum, status FROM kundendaten.sepalastschrift WHERE mandatsreferenz=? ORDER BY buchungsdatum DESC", [$mandatsreferenz]);
+    $ret = [];
     while ($item = $result->fetch()) {
         $ret[] = $item;
     }
@@ -179,15 +179,15 @@ function get_lastschriften($mandatsreferenz)
 
 function get_sepamandat($id)
 {
-    $result = db_query("SELECT id, kunde, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE id=? OR mandatsreferenz=?", array($id, $id));
+    $result = db_query("SELECT id, kunde, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE id=? OR mandatsreferenz=?", [$id, $id]);
     return $result->fetch();
 }
 
 function get_sepamandate()
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT id, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde=?", array($cid));
-    $ret = array();
+    $result = db_query("SELECT id, mandatsreferenz, glaeubiger_id, erteilt, medium, gueltig_ab, gueltig_bis, erstlastschrift, kontoinhaber, adresse, iban, bic, bankname FROM kundendaten.sepamandat WHERE kunde=?", [$cid]);
+    $ret = [];
     while ($entry = $result->fetch()) {
         array_push($ret, $entry);
     }
@@ -197,16 +197,16 @@ function get_sepamandate()
 
 function yesterday($date)
 {
-    $result = db_query("SELECT ? - INTERVAL 1 DAY", array($date));
+    $result = db_query("SELECT ? - INTERVAL 1 DAY", [$date]);
     return $result->fetch()[0];
 }
 
 
 function invalidate_sepamandat($id, $date)
 {
-    $args = array(":cid" => (int) $_SESSION['customerinfo']['customerno'],
+    $args = [":cid" => (int) $_SESSION['customerinfo']['customerno'],
                 ":id" => (int) $id,
-                ":date" => $date);
+                ":date" => $date, ];
     db_query("UPDATE kundendaten.sepamandat SET gueltig_bis=:date WHERE id=:id AND kunde=:cid", $args);
 }
 
@@ -226,7 +226,7 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
         system_failure('Das Mandat kann nicht rückwirkend erteilt werden. Bitte geben Sie ein Datum in der Zukunft an.');
     }
     $alte_mandate = get_sepamandate();
-    $referenzen = array();
+    $referenzen = [];
     foreach ($alte_mandate as $mandat) {
         if ($mandat['gueltig_bis'] == null || $mandat['gueltig_bis'] >= $gueltig_ab) {
             DEBUG('Altes Mandat wird für ungültig erklärt.');
@@ -248,13 +248,13 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
     $today = date('Y-m-d');
     db_query(
         "INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
-        array(":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
+        [":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
                 ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
-                ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname)
+                ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname, ]
     );
     db_query(
         "UPDATE kundendaten.ausgestellte_rechnungen SET abbuchung=1 WHERE kunde = :cid AND datum >= :gueltig_ab and bezahlt=0",
-        array(":cid" => $cid, ":gueltig_ab" => $gueltig_ab)
+        [":cid" => $cid, ":gueltig_ab" => $gueltig_ab]
     );
 }
 
@@ -281,7 +281,7 @@ function get_bank_info($iban)
             break;
         }
     }
-    $bank = array();
+    $bank = [];
     $bank['name'] = iconv('latin1', 'utf8', chop(substr($match, 9, 58)));
     $bank['bic'] = chop(substr($match, 139, 11));
     return $bank;
@@ -299,7 +299,7 @@ function find_iban($blz, $kto)
 function get_customerquota()
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid", array(":cid" => $cid));
+    $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid", [":cid" => $cid]);
     $data = $result->fetch();
     return $data["quota"];
 }
@@ -308,7 +308,7 @@ function save_more_storage($items, $storage)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
 
-    $queries = array();
+    $queries = [];
 
     if ($storage < 1024 || $storage > 10240) {
         input_error('Speicherplatz nicht im erwarteten Bereich');
@@ -318,12 +318,12 @@ function save_more_storage($items, $storage)
         # Über 100 GB soll die Automatik nichts machen
         system_failure("Ihr Speicherplatz kann über diese Funktion nicht weiter erhöht werden. Bitte wenden Sie sich an die Administratoren.");
     }
-    $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid AND lastchange > CURDATE()", array(":cid" => $cid));
+    $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid AND lastchange > CURDATE()", [":cid" => $cid]);
     if ($result->rowcount() > 0) {
         system_failure("Ihr Speicherplatz wurde heute bereits verändert. Sie können dies nur einmal am Tag machen.");
     }
 
-    $queries[] = array("UPDATE system.customerquota SET quota=quota+:storage WHERE cid=:cid", array(":storage" => $storage, ":cid" => $cid));
+    $queries[] = ["UPDATE system.customerquota SET quota=quota+:storage WHERE cid=:cid", [":storage" => $storage, ":cid" => $cid]];
 
     foreach ($items as $data) {
         if ($data['anzahl'] == 0) {
@@ -342,13 +342,13 @@ function save_more_storage($items, $storage)
             return;
         }
 
-        $param = array();
+        $param = [];
         foreach ($data as $k => $v) {
             $param[':'.$k] = $v;
         }
 
-        $queries[] = array("INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES ".
-                       "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param);
+        $queries[] = ["INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES ".
+                       "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param, ];
     }
 
     if (count($queries) < 2) {

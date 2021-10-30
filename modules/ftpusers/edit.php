@@ -44,11 +44,11 @@ $active = ($ftpuser['active'] == 1 ? 'checked="checked" ' : '');
 $forcessl = ($ftpuser['forcessl'] == 1 ? 'checked="checked" ' : '');
 
 $servers = server_names();
-$available_servers = array_merge(array(my_server_id()), additional_servers());
+$available_servers = array_merge([my_server_id()], additional_servers());
 
 $whichserver = '<strong>'.$servers[my_server_id()].'</strong>';
 if (count($available_servers) > 1) {
-    $serverselect = array();
+    $serverselect = [];
     foreach ($available_servers as $s) {
         $serverselect[$s] = $servers[$s];
     }

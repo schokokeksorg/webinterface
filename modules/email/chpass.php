@@ -18,7 +18,7 @@ require_once('session/start.php');
 require_once('vmail.php');
 require_once('mailaccounts.php');
 
-require_role(array(ROLE_VMAIL_ACCOUNT, ROLE_MAILACCOUNT));
+require_role([ROLE_VMAIL_ACCOUNT, ROLE_MAILACCOUNT]);
 
 $role = $_SESSION['role'];
 
@@ -48,7 +48,7 @@ if (isset($_POST['password1']) && $_POST['password1'] != '') {
             success_msg('Ihr Passwort wurde geändert!');
         } elseif ($role & ROLE_MAILACCOUNT) {
             DEBUG("Ändere IMAP-Passwort");
-            change_mailaccount(get_mailaccount_id($accname), array('password' => $_POST['password1']));
+            change_mailaccount(get_mailaccount_id($accname), ['password' => $_POST['password1']]);
             success_msg('Ihr Passwort wurde geändert!');
         }
         redirect('/');

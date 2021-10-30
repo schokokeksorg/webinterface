@@ -66,12 +66,12 @@ foreach ($domains as $id => $dom) {
     $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
     $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
 
-    $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled':'').'" id="buttonset-'.$id.'">
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+    $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled' : '').'" id="buttonset-'.$id.'">
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-webinterface">Webinterface</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-manual">Manuell</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.$check_off.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.$check_off.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-off">Ausgeschaltet</label>
          <input type="submit" value="Speichern" />
       </span>';
@@ -84,12 +84,12 @@ foreach ($domains as $id => $dom) {
             $check_webinterface = ($subdom['type'] == 'virtual' ? ' checked="checked"' : '');
             $check_manual = ($subdom['type'] == 'auto' || $subdom['type'] == 'manual' ? ' checked="checked"' : '');
             $id = $id.'-'.$subdom['name'];
-            $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled':'').'" id="buttonset-'.$id.'">
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+            $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled' : '').'" id="buttonset-'.$id.'">
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-webinterface">Webinterface</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-manual">Manuell</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.($edit_disabled ? ' disabled="disabled"':'').'/>
+         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-off">Ausgeschaltet</label>
       </span>';
             output("<tr{$trextra}><td>{$subdom['name']}.{$dom['name']}</td><td>{$buttons}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");

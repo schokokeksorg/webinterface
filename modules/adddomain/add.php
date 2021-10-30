@@ -37,7 +37,7 @@ if (! $data) {
 }
 
 $users = list_useraccounts();
-$userselect = array();
+$userselect = [];
 foreach ($users as $u) {
     $userselect[$u['uid']] = $u['username'].' / '.$u['name'];
 }

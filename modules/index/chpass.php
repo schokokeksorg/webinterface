@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/debug.php');
 require_once('inc/security.php');
-require_role(array(ROLE_SYSTEMUSER, ROLE_CUSTOMER, ROLE_SUBUSER));
+require_role([ROLE_SYSTEMUSER, ROLE_CUSTOMER, ROLE_SUBUSER]);
 
 title("Passwort ändern");
 $error = '';

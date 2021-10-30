@@ -46,7 +46,7 @@ function find_role($login, $password, $i_am_admin = false)
     if ($uid == 0) {
         $uid = null;
     }
-    $result = db_query("SELECT username, passwort AS password, kundenaccount AS `primary`, status, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid=:uid OR username=:login LIMIT 1;", array(":uid" => $uid, ":login" => $login));
+    $result = db_query("SELECT username, passwort AS password, kundenaccount AS `primary`, status, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid=:uid OR username=:login LIMIT 1;", [":uid" => $uid, ":login" => $login]);
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         if (strcasecmp($entry->username, $login) == 0 && $entry->username != $login) {
@@ -76,9 +76,9 @@ function find_role($login, $password, $i_am_admin = false)
     // Customer?
     $customerno = (int) $login;
     $pass = sha1($password);
-    $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id=:customerno AND passwort=:pass", array(":customerno" => $customerno, ":pass" => $pass));
+    $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id=:customerno AND passwort=:pass", [":customerno" => $customerno, ":pass" => $pass]);
     if ($i_am_admin) {
-        $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id=?", array($customerno));
+        $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id=?", [$customerno]);
     }
     if (@$result->rowCount() > 0) {
         return ROLE_CUSTOMER;
@@ -86,7 +86,7 @@ function find_role($login, $password, $i_am_admin = false)
 
     // Sub-User
 
-    $result = db_query("SELECT password FROM system.subusers WHERE username=?", array($login));
+    $result = db_query("SELECT password FROM system.subusers WHERE username=?", [$login]);
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         $db_password = $entry->password;
@@ -117,7 +117,7 @@ function find_role($login, $password, $i_am_admin = false)
             }
         }
     }
-    $result = db_query("SELECT cryptpass FROM mail.courier_mailaccounts WHERE account=?", array($account));
+    $result = db_query("SELECT cryptpass FROM mail.courier_mailaccounts WHERE account=?", [$account]);
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         $db_password = $entry->cryptpass;
@@ -131,7 +131,7 @@ function find_role($login, $password, $i_am_admin = false)
 
     // virtueller Mail-Account
     $account = $login;
-    $result = db_query("SELECT cryptpass FROM mail.courier_virtual_accounts WHERE account=?", array($account));
+    $result = db_query("SELECT cryptpass FROM mail.courier_virtual_accounts WHERE account=?", [$account]);
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         $db_password = $entry->cryptpass;
@@ -153,9 +153,9 @@ function is_locked()
 {
     $result = null;
     if (isset($_SESSION['customerinfo']['customerno'])) {
-        $result = db_query("SELECT gesperrt FROM kundendaten.kunden WHERE id=?", array($_SESSION['customerinfo']['customerno']));
+        $result = db_query("SELECT gesperrt FROM kundendaten.kunden WHERE id=?", [$_SESSION['customerinfo']['customerno']]);
     } elseif (isset($_SESSION['userinfo']['uid'])) {
-        $result = db_query("SELECT (SELECT gesperrt FROM kundendaten.kunden WHERE id=useraccounts.kunde) AS gesperrt FROM system.useraccounts WHERE uid=?", array($_SESSION['userinfo']['uid']));
+        $result = db_query("SELECT (SELECT gesperrt FROM kundendaten.kunden WHERE id=useraccounts.kunde) AS gesperrt FROM system.useraccounts WHERE uid=?", [$_SESSION['userinfo']['uid']]);
     }
     if ($result) {
         $line = $result->fetch();
@@ -170,17 +170,17 @@ function is_locked()
 function get_customer_info($customer)
 {
     if (! $_SESSION['role'] & ROLE_CUSTOMER) {
-        return array();
+        return [];
     }
-    $ret = array();
+    $ret = [];
     $customerno = (int) $customer;
     if ($customerno != 0) {
         DEBUG('Looking up customerinfo for customer no. '.$customerno);
-        $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden WHERE id=?", array($customerno));
+        $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden WHERE id=?", [$customerno]);
     } else {
         $username = $customer;
         DEBUG('looking up customer info for username '.$username);
-        $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username=?", array($username));
+        $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username=?", [$username]);
     }
     if (@$result->rowCount() == 0) {
         system_failure("Konnte Kundendaten nicht auslesen!");
@@ -199,7 +199,7 @@ function get_customer_info($customer)
 
 function get_subuser_info($username)
 {
-    $result = db_query("SELECT uid, modules FROM system.subusers WHERE username=?", array($username));
+    $result = db_query("SELECT uid, modules FROM system.subusers WHERE username=?", [$username]);
     if ($result->rowCount() < 1) {
         logger(LOG_ERR, "session/checkuser", "login", "error reading subuser's data: »{$username}«");
         system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
@@ -214,48 +214,48 @@ function get_subuser_info($username)
 function get_user_info($username)
 {
     $result = db_query("SELECT kunde AS customerno, username, uid, homedir, name, server
-                      FROM system.v_useraccounts WHERE username=:username OR uid=:username", array(":username" => $username));
+                      FROM system.v_useraccounts WHERE username=:username OR uid=:username", [":username" => $username]);
     if ($result->rowCount() < 1) {
         logger(LOG_ERR, "session/checkuser", "login", "error reading user's data: »{$username}«");
         system_failure('Das Auslesen Ihrer Benutzerdaten ist fehlgeschlagen. Bitte melden Sie dies einem Administrator');
     }
     $val = @$result->fetch(PDO::FETCH_OBJ);
-    return array(
+    return [
           'username'      => $val->username,
           'customerno'    => $val->customerno,
           'uid'           => $val->uid,
           'homedir'       => $val->homedir,
           'server'        => $val->server,
           'name'          => $val->name,
-          );
+          ];
 }
 
 function set_customer_verified($customerno)
 {
     $customerno = (int) $customerno;
-    db_query("UPDATE kundendaten.kunden SET status=0 WHERE id=?", array($customerno));
+    db_query("UPDATE kundendaten.kunden SET status=0 WHERE id=?", [$customerno]);
     logger(LOG_INFO, "session/checkuser", "register", "set customer's status to 0.");
 }
 
 function set_customer_lastlogin($customerno)
 {
     $customerno = (int) $customerno;
-    db_query("UPDATE kundendaten.kunden SET lastlogin=NOW() WHERE id=?", array($customerno));
+    db_query("UPDATE kundendaten.kunden SET lastlogin=NOW() WHERE id=?", [$customerno]);
 }
 
 function set_customer_password($customerno, $newpass)
 {
     $customerno = (int) $customerno;
     $newpass = sha1($newpass);
-    db_query("UPDATE kundendaten.kunden SET passwort=:newpass WHERE id=:customerno", array(":newpass" => $newpass, ":customerno" => $customerno));
+    db_query("UPDATE kundendaten.kunden SET passwort=:newpass WHERE id=:customerno", [":newpass" => $newpass, ":customerno" => $customerno]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed customer's password.");
 }
 
 function set_subuser_password($subuser, $newpass)
 {
-    $args = array(":subuser" => $subuser,
+    $args = [":subuser" => $subuser,
                 ":uid" => (int) $_SESSION['userinfo']['uid'],
-                ":newpass" => sha1($newpass));
+                ":newpass" => sha1($newpass), ];
     db_query("UPDATE system.subusers SET password=:newpass WHERE username=:subuser AND uid=:uid", $args);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed subuser's password.");
 }
@@ -265,14 +265,14 @@ function set_systemuser_password($uid, $newpass)
     $uid = (int) $uid;
     require_once('inc/base.php');
     $newpass = crypt($newpass, '$6$'.random_string(8).'$');
-    db_query("UPDATE system.passwoerter SET passwort=:newpass WHERE uid=:uid", array(":newpass" => $newpass, ":uid" => $uid));
+    db_query("UPDATE system.passwoerter SET passwort=:newpass WHERE uid=:uid", [":newpass" => $newpass, ":uid" => $uid]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
 }
 
 
 function user_for_mailaccount($account)
 {
-    $result = db_query("SELECT uid FROM mail.courier_mailaccounts WHERE account=?", array($account));
+    $result = db_query("SELECT uid FROM mail.courier_mailaccounts WHERE account=?", [$account]);
     if ($result->rowCount() != 1) {
         system_failure('Diese Adresse ist herrenlos?!');
     }
@@ -282,7 +282,7 @@ function user_for_mailaccount($account)
 
 function user_for_vmail_account($account)
 {
-    $result = db_query("SELECT useraccount FROM mail.v_vmail_accounts WHERE CONCAT_WS('@', local, domainname)=?", array($account));
+    $result = db_query("SELECT useraccount FROM mail.v_vmail_accounts WHERE CONCAT_WS('@', local, domainname)=?", [$account]);
     if ($result->rowCount() != 1) {
         system_failure('Diese Adresse ist herrenlos?!');
     }
@@ -302,7 +302,7 @@ function setup_session($role, $useridentity)
         $_SESSION['restrict_modules'] = explode(',', $info['modules']);
         $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_SUBUSER;
         $_SESSION['subuser'] = $useridentity;
-        $data = db_query("SELECT kundenaccount FROM system.useraccounts WHERE username=?", array($info['username']));
+        $data = db_query("SELECT kundenaccount FROM system.useraccounts WHERE username=?", [$info['username']]);
         if ($entry = $data->fetch()) {
             if ($entry['kundenaccount'] == 1) {
                 $customer = get_customer_info($_SESSION['userinfo']['username']);
@@ -345,6 +345,6 @@ function setup_session($role, $useridentity)
         DEBUG("We are virtual mailaccount: {$_SESSION['mailaccount']}");
     }
     if (! ($role & ROLE_CUSTOMER)) {
-        $_SESSION['customerinfo'] = array();
+        $_SESSION['customerinfo'] = [];
     }
 }

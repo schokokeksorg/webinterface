@@ -21,13 +21,13 @@ require_once("inc/debug.php");
 function customer_may_have_useraccounts()
 {
     $customerno = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT COUNT(*) FROM system.useraccounts WHERE kunde=?", array($customerno));
+    $result = db_query("SELECT COUNT(*) FROM system.useraccounts WHERE kunde=?", [$customerno]);
     return ($result->rowCount() > 0);
 }
 
 function customer_useraccount($uid)
 {
-    $args = array(":uid" => $uid, ":customerno" => $_SESSION['customerinfo']['customerno']);
+    $args = [":uid" => $uid, ":customerno" => $_SESSION['customerinfo']['customerno']];
     $result = db_query("SELECT 1 FROM system.useraccounts WHERE kunde=:customerno AND uid=:uid AND kundenaccount=1", $args);
     return $result->rowCount() > 0;
 }
@@ -38,7 +38,7 @@ function primary_useraccount()
         return null;
     }
     $customerno = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT MIN(uid) AS uid FROM system.useraccounts WHERE kunde=?", array($customerno));
+    $result = db_query("SELECT MIN(uid) AS uid FROM system.useraccounts WHERE kunde=?", [$customerno]);
     $uid = $result->fetch(PDO::FETCH_OBJ)->uid;
     DEBUG("primary useraccount: {$uid}");
     return $uid;
@@ -47,8 +47,8 @@ function primary_useraccount()
 
 function available_shells()
 {
-    $result = db_query("SELECT path, name FROM system.shells WHERE usable=?", array(1));
-    $ret = array();
+    $result = db_query("SELECT path, name FROM system.shells WHERE usable=?", [1]);
+    $ret = [];
     while ($s = $result->fetch()) {
         $ret[$s['path']] = $s['name'];
     }
@@ -60,8 +60,8 @@ function available_shells()
 function list_useraccounts()
 {
     $customerno = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT uid,username,name,erstellungsdatum,quota,shell FROM system.useraccounts WHERE kunde=?", array($customerno));
-    $ret = array();
+    $result = db_query("SELECT uid,username,name,erstellungsdatum,quota,shell FROM system.useraccounts WHERE kunde=?", [$customerno]);
+    $ret = [];
     while ($item = $result->fetch()) {
         array_push($ret, $item);
     }
@@ -77,7 +77,7 @@ function get_account_details($uid, $customerno=0)
     if ($customerno == 0) {
         $customerno = $_SESSION['customerinfo']['customerno'];
     }
-    $args = array(":uid" => $uid, ":customerno" => $customerno);
+    $args = [":uid" => $uid, ":customerno" => $customerno];
     $result = db_query("SELECT uid,username,name,shell,server,quota,erstellungsdatum,passwordlogin FROM system.useraccounts WHERE kunde=:customerno AND uid=:uid", $args);
     if ($result->rowCount() == 0) {
         system_failure("Cannot find the requestes useraccount (for this customer).");
@@ -88,8 +88,8 @@ function get_account_details($uid, $customerno=0)
 function get_used_quota($uid)
 {
     $uid = (int) $uid;
-    $result = db_query("SELECT s.hostname AS server, systemquota, systemquota_used, mailquota, mailquota_used FROM system.v_quota AS q LEFT JOIN system.servers AS s ON (s.id=q.server) WHERE uid=?", array($uid));
-    $ret = array();
+    $result = db_query("SELECT s.hostname AS server, systemquota, systemquota_used, mailquota, mailquota_used FROM system.v_quota AS q LEFT JOIN system.servers AS s ON (s.id=q.server) WHERE uid=?", [$uid]);
+    $ret = [];
     while ($line = $result->fetch()) {
         $ret[] = $line;
     }
@@ -110,12 +110,12 @@ function set_account_details($account)
     if ($account['name'] == '') {
         $account['name'] = null;
     }
-    $args = array(":fullname" => filter_input_oneline($account['name']),
+    $args = [":fullname" => filter_input_oneline($account['name']),
                 ":shell" => filter_input_oneline($account['shell']),
                 ":quota" => $account['quota'],
                 ":uid" => $account['uid'],
                 ":customerno" => $customerno,
-                ":passwordlogin" => $account['passwordlogin']);
+                ":passwordlogin" => $account['passwordlogin'], ];
 
     db_query("UPDATE system.useraccounts SET name=:fullname, quota=:quota, shell=:shell, passwordlogin=:passwordlogin WHERE kunde=:customerno AND uid=:uid", $args);
     logger(LOG_INFO, "modules/systemuser/include/useraccounts", "systemuser", "updated details for uid {$args[":uid"]}");
@@ -124,7 +124,7 @@ function set_account_details($account)
 function get_customer_quota()
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT SUM(u.quota) AS assigned, cq.quota AS max FROM system.customerquota AS cq INNER JOIN system.useraccounts AS u ON (u.kunde=cq.cid) WHERE cq.cid=?", array($cid));
+    $result = db_query("SELECT SUM(u.quota) AS assigned, cq.quota AS max FROM system.customerquota AS cq INNER JOIN system.useraccounts AS u ON (u.kunde=cq.cid) WHERE cq.cid=?", [$cid]);
     $ret = $result->fetch();
     DEBUG($ret);
     return $ret;

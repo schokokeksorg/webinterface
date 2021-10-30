@@ -36,17 +36,17 @@ function get_domain_offer($domainname)
 
     $cid = (int) $_SESSION['customerinfo']['customerno'];
 
-    $result = db_query("SELECT id FROM kundendaten.domains WHERE domainname=:domainname AND tld=:tld", array("domainname" => $basename, "tld" => $tld));
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE domainname=:domainname AND tld=:tld", ["domainname" => $basename, "tld" => $tld]);
     if ($result->rowCount() != 0) {
         warning('Diese Domain ist in unserem System bereits vorhanden und kann daher nicht noch einmal eingetragen werden.');
         return;
     }
 
-    $data = array("domainname" => $domainname, "basename" => $basename, "tld" => $tld);
+    $data = ["domainname" => $domainname, "basename" => $basename, "tld" => $tld];
 
-    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
+    $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", [":cid" => $cid, ":tld" => $tld]);
     if ($result->rowCount() != 1) {
-        $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
+        $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", [":tld" => $tld]);
     }
     if ($result->rowCount() != 1) {
         warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
@@ -89,10 +89,10 @@ function register_domain($domainname, $uid)
         system_failure('Kein User gesetzt');
     }
 
-    $args = array(":cid" => $cid,
+    $args = [":cid" => $cid,
                 ":useraccount" => $useraccount,
                 ":basename" => $data['basename'],
-                ":tld" => $data['tld']);
+                ":tld" => $data['tld'], ];
     db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail) VALUES ".
            "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto') ", $args);
     $domid = db_insert_id();
@@ -107,8 +107,8 @@ function register_domain($domainname, $uid)
 function list_useraccounts()
 {
     $customerno = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde=?", array($customerno));
-    $ret = array();
+    $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde=?", [$customerno]);
+    $ret = [];
     while ($item = $result->fetch()) {
         $ret[] = $item;
     }

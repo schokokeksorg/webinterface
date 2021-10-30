@@ -20,7 +20,7 @@ require_once("contacts.php");
 function verify_mail_token($token)
 {
     db_query("DELETE FROM kundendaten.mailaddress_token WHERE expire<NOW()");
-    $args = array(":token" => $token);
+    $args = [":token" => $token];
     $result = db_query("SELECT contact, email FROM kundendaten.mailaddress_token WHERE token=:token AND expire>NOW()", $args);
     if ($result->rowCount() > 0) {
         $line = $result->fetch();
@@ -41,8 +41,8 @@ function update_mailaddress($daten)
         system_failure('Es ist eine ungültige Adresse hinterlegt. So wird das nichts. Bitte die Änderung von vorne machen.');
     }
 
-    $args = array(':contact' => $contact,
-                  ':email' => $email);
+    $args = [':contact' => $contact,
+                  ':email' => $email, ];
     db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:contact", $args);
     sync_legacy_contactdata();
 }
@@ -50,8 +50,8 @@ function update_mailaddress($daten)
 
 function upload_changed_contact($id)
 {
-    $args = array(
-        "id" => (int) $id);
+    $args = [
+        "id" => (int) $id, ];
     $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id", $args);
     if ($result->rowCount() == 0) {
         return ;
@@ -60,7 +60,7 @@ function upload_changed_contact($id)
     if (! ($c['nic_id'] || $c['nic_handle'])) {
         return ;
     }
-    $ac = array();
+    $ac = [];
     $ac['id'] = $c['nic_id'];
     $ac['handle'] = $c['nic_handle'];
     $ac['type'] = 'person';
@@ -76,8 +76,8 @@ function upload_changed_contact($id)
     if ($c['state'] == 'deleted') {
         $ac['hidden'] = true;
     }
-    $data = array("contact" => $ac,
-            "actingAs" => "designatedAgent");
+    $data = ["contact" => $ac,
+            "actingAs" => "designatedAgent", ];
     $result = api_request('contactUpdate', $data);
     if ($result['status'] != 'success') {
         warning("Es gab ein Problem beim Hochladen der geänderten Adresse zum Domainregistrar. Das sollte nicht sein!");

@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('x509.php');
 
-require_role(array(ROLE_SYSTEMUSER, ROLE_SUBUSER, ROLE_VMAIL_ACCOUNT));
+require_role([ROLE_SYSTEMUSER, ROLE_SUBUSER, ROLE_VMAIL_ACCOUNT]);
 
 title('Anmeldung über Client-Zertifikat');
 output('<p>Sie können Sie an diesem Webinterface wahlweise auch über ein SSL-Client-Zertifikat anmelden. Dazu muss das gewünschte Zertifikat <em>vorher</em> in Ihrem Browser installiert werden und kann dann hier hinzugefügt werden.</p>

@@ -21,7 +21,7 @@ require_once('inc/icons.php');
 require_once('vmail.php');
 
 $section = 'email_vmail';
-require_role(array(ROLE_SYSTEMUSER));
+require_role([ROLE_SYSTEMUSER]);
 
 if (! isset($_REQUEST['account'])) {
     system_failure("Fehler beim Aufruf dieser Seite");

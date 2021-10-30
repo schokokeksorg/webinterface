@@ -103,7 +103,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
             $role = find_role($uid, '', true);
             setup_session($role, $uid);
             DEBUG("Set Cookie!");
-            setcookie('CLIENTCERT_AUTOLOGIN', '1', array('expires'=>strtotime("+ 1 year"), 'path'=>'/', 'secure'=>true, 'httponly'=>true, 'samesite'=>'Lax'));
+            setcookie('CLIENTCERT_AUTOLOGIN', '1', ['expires'=>strtotime("+ 1 year"), 'path'=>'/', 'secure'=>true, 'httponly'=>true, 'samesite'=>'Lax']);
             $destination = 'go/index/index';
             if (check_path($ret[0]['startpage'])) {
                 $destination = $ret[0]['startpage'];

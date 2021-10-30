@@ -24,13 +24,13 @@ require_once('contactapi.php');
 
 function api_download_domain($id)
 {
-    $result = db_query("SELECT id, CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c, registrierungsdatum, kuendigungsdatum FROM kundendaten.domains WHERE id=?", array($id));
+    $result = db_query("SELECT id, CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c, registrierungsdatum, kuendigungsdatum FROM kundendaten.domains WHERE id=?", [$id]);
     if ($result->rowCount() < 1) {
         system_failure('Domain nicht gefunden');
     }
     $dom = $result->fetch();
 
-    $data = array("domainName" => $dom['fqdn']);
+    $data = ["domainName" => $dom['fqdn']];
     $result = api_request('domainInfo', $data);
     if ($result['status'] != 'success') {
         system_failure("Abfrage nicht erfolgreich!");
@@ -56,7 +56,7 @@ function api_download_domain($id)
         $admin_c = download_contact($apiadmin_c);
     }
     if ($owner != $dom['owner'] || $admin_c != $dom['admin_c']) {
-        db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=?", array($owner, $admin_c, $id));
+        db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=?", [$owner, $admin_c, $id]);
     }
     return $apidomain;
 }
@@ -64,7 +64,7 @@ function api_download_domain($id)
 
 function api_upload_domain($fqdn)
 {
-    $result = db_query("SELECT id,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($fqdn));
+    $result = db_query("SELECT id,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", [$fqdn]);
     if ($result->rowCount() < 1) {
         system_failure("Unbekannte Domain");
     }
@@ -82,7 +82,7 @@ function api_upload_domain($fqdn)
     $owner = $owner['nic_id'];
     $admin_c = $admin_c['nic_id'];
 
-    $data = array("domainName" => $dom['fqdn']);
+    $data = ["domainName" => $dom['fqdn']];
     $result = api_request('domainInfo', $data);
     if ($result['status'] != 'success') {
         system_failure("Abfrage nicht erfolgreich!");
@@ -96,7 +96,7 @@ function api_upload_domain($fqdn)
             $apidomain['contacts'][$key]['contact'] = $admin_c;
         }
     }
-    $args = array("domain" => $apidomain);
+    $args = ["domain" => $apidomain];
     logger(LOG_INFO, "modules/domains/include/domainapi", "domains", "uploading domain »{$fqdn}«");
     $result = api_request('domainUpdate', $args);
     if ($result['status'] == 'error') {
@@ -110,7 +110,7 @@ function api_upload_domain($fqdn)
 
 function api_register_domain($domainname, $authinfo=null)
 {
-    $result = db_query("SELECT id,status,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", array($domainname));
+    $result = db_query("SELECT id,status,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", [$domainname]);
     if ($result->rowCount() < 1) {
         system_failure("Unbekannte Domain");
     }
@@ -129,13 +129,13 @@ function api_register_domain($domainname, $authinfo=null)
     $admin_c = $admin_c['nic_id'];
 
     // Frage die Masterdomain ab, von dort übernehmen wir Nameserver und zone/tech handles
-    $data = array("domainName" => config('masterdomain'));
+    $data = ["domainName" => config('masterdomain')];
     $result = api_request('domainInfo', $data);
     if ($result['status'] != 'success') {
         system_failure("Abfrage nicht erfolgreich!");
     }
     $masterdomain = $result['response'];
-    $newdomain = array();
+    $newdomain = [];
     $newdomain['name'] = $domainname;
     $newdomain['transferLockEnabled'] = true;
     $newdomain['nameservers'] = $masterdomain['nameservers'];
@@ -151,11 +151,11 @@ function api_register_domain($domainname, $authinfo=null)
     }
     $result = null;
     if ($dom['status'] == 'prereg') {
-        $args = array("domain" => $newdomain);
+        $args = ["domain" => $newdomain];
         logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "register new domain »{$newdomain['name']}«");
         $result = api_request('domainCreate', $args);
     } else {
-        $args = array("domain" => $newdomain, "transferData" => array("authInfo" => $authinfo));
+        $args = ["domain" => $newdomain, "transferData" => ["authInfo" => $authinfo]];
         logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "transfer-in domain »{$newdomain['name']}« with authinfo »{$authinfo}«");
         $result = api_request('domainTransfer', $args);
     }
@@ -169,7 +169,7 @@ function api_register_domain($domainname, $authinfo=null)
 
 function api_domain_available($domainname)
 {
-    $args = array("domainNames" => array($domainname));
+    $args = ["domainNames" => [$domainname]];
     $result = api_request('domainStatus', $args);
     $resp = $result["responses"][0];
     return $resp;
@@ -178,7 +178,7 @@ function api_domain_available($domainname)
 
 function api_cancel_domain($domainname)
 {
-    $data = array("domainName" => $domainname);
+    $data = ["domainName" => $domainname];
     $result = api_request('domainInfo', $data);
     if ($result['status'] != 'success') {
         system_failure("Abfrage nicht erfolgreich!");
@@ -187,7 +187,7 @@ function api_cancel_domain($domainname)
     if (! $apidomain['latestDeletionDateWithoutRenew']) {
         system_failure("Konnte Vertragsende nicht herausfinden.");
     }
-    $args = array("domainName" => $domainname, "execDate" => $apidomain['latestDeletionDateWithoutRenew']);
+    $args = ["domainName" => $domainname, "execDate" => $apidomain['latestDeletionDateWithoutRenew']];
     logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "cancel domain »{$domainname}« at time {$apidomain['latestDeletionDateWithoutRenew']}");
     $result = api_request('domainDelete', $args);
     if ($result['status'] == 'error') {
@@ -201,14 +201,14 @@ function api_cancel_domain($domainname)
 
 function api_unlock_domain($domainname)
 {
-    $data = array("domainName" => $domainname);
+    $data = ["domainName" => $domainname];
     $result = api_request('domainInfo', $data);
     if ($result['status'] != 'success') {
         system_failure("Abfrage nicht erfolgreich!");
     }
     $apidomain = $result['response'];
     $apidomain['transferLockEnabled'] = false;
-    $args = array("domain" => $apidomain);
+    $args = ["domain" => $apidomain];
     logger(LOG_WARNING, "modules/domains/include/domainapi", "domains", "allow transfer for domain »{$domainname}«");
     $result = api_request('domainUpdate', $args);
     if ($result['status'] == 'error') {

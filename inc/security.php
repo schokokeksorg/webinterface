@@ -18,7 +18,7 @@ require_once('inc/error.php');
 require_once('vendor/autoload.php');
 
 
-function strong_password($password, $user = array())
+function strong_password($password, $user = [])
 {
     $pwcheck = config('pwcheck');
     $result = null;

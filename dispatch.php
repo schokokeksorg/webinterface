@@ -43,7 +43,7 @@ DEBUG($go);
 if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go.php")) or (! is_file("modules/$go.php"))) {
     die("illegal command");
 }
-list($module, $page) = explode('/', $go, 2);
+[$module, $page] = explode('/', $go, 2);
 $page = str_replace('/', '-', $page);
 if (! in_array($module, config('modules'))) {
     die("inactive module");

@@ -16,7 +16,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contract.php');
 
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 
 echo contract_html();
 die();

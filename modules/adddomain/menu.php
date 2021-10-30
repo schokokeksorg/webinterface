@@ -18,5 +18,5 @@ $role = $_SESSION['role'];
 
 
 if ($role & ROLE_CUSTOMER) {
-    $menu["adddomain_search"] = array("label" => "Domain hinzufügen", "file" => "search", "weight" => 0, "submenu" => "domains_domains");
+    $menu["adddomain_search"] = ["label" => "Domain hinzufügen", "file" => "search", "weight" => 0, "submenu" => "domains_domains"];
 }

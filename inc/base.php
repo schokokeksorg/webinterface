@@ -33,7 +33,7 @@ function config($key, $localonly = false)
     }
 
     if ($key == 'modules' && isset($_SESSION['restrict_modules'])) {
-        $modules = array();
+        $modules = [];
         foreach ($config['modules'] as $mod) {
             if (in_array($mod, $_SESSION['restrict_modules'])) {
                 $modules[] = $mod;
@@ -84,7 +84,7 @@ function have_role($role)
 function get_server_by_id($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT hostname FROM system.servers WHERE id=?", array($id));
+    $result = db_query("SELECT hostname FROM system.servers WHERE id=?", [$id]);
     $ret = $result->fetch();
     return $ret['hostname'];
 }
@@ -102,7 +102,7 @@ function redirect($target)
         if (strpos($target, '?') === false) {
             print 'REDIRECT: '.internal_link($target, $target);
         } else {
-            list($file, $qs) = explode('?', $target, 2);
+            [$file, $qs] = explode('?', $target, 2);
             print 'REDIRECT: '.internal_link($file, $target, $qs);
         }
     }
@@ -113,7 +113,7 @@ function redirect($target)
 function my_server_id()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT server FROM system.useraccounts WHERE uid=?", array($uid));
+    $result = db_query("SELECT server FROM system.useraccounts WHERE uid=?", [$uid]);
     $r = $result->fetch();
     DEBUG($r);
     return $r['server'];
@@ -123,8 +123,8 @@ function my_server_id()
 function additional_servers()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT server FROM system.user_server WHERE uid=?", array($uid));
-    $servers = array();
+    $result = db_query("SELECT server FROM system.user_server WHERE uid=?", [$uid]);
+    $servers = [];
     while ($s = $result->fetch()) {
         $servers[] = $s['server'];
     }
@@ -136,7 +136,7 @@ function additional_servers()
 function server_names()
 {
     $result = db_query("SELECT id, hostname FROM system.servers");
-    $servers = array();
+    $servers = [];
     while ($s = $result->fetch()) {
         $servers[$s['id']] = $s['hostname'];
     }
@@ -180,11 +180,11 @@ function logger($severity, $scriptname, $scope, $message)
         }
     }
 
-    $args = array(":user" => $user,
+    $args = [":user" => $user,
                 ":remote" => $_SERVER['REMOTE_ADDR'],
                 ":scriptname" => $scriptname,
                 ":scope" => $scope,
-                ":message" => $message);
+                ":message" => $message, ];
 
     db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES (:remote, :user, :scriptname, :scope, :message)", $args);
 }
@@ -195,7 +195,7 @@ function count_failed_logins()
         DEBUG("logging is disabled, no brute force check possible");
         return;
     }
-    $result = db_query("SELECT count(*) AS num FROM misc.scriptlog WHERE user IS NULL AND scriptname='session/start' AND scope='login' AND message LIKE 'wrong user data%' AND remote=:remote AND `timestamp` > NOW() - INTERVAL 10 MINUTE", array(":remote" => $_SERVER['REMOTE_ADDR']));
+    $result = db_query("SELECT count(*) AS num FROM misc.scriptlog WHERE user IS NULL AND scriptname='session/start' AND scope='login' AND message LIKE 'wrong user data%' AND remote=:remote AND `timestamp` > NOW() - INTERVAL 10 MINUTE", [":remote" => $_SERVER['REMOTE_ADDR']]);
     $data = $result->fetch();
     DEBUG('seen '.$data['num'].' failed logins from this address within 10 minutes');
     return $data['num'];
@@ -229,7 +229,7 @@ function footnote($explaination)
 {
     global $footnotes;
     if (!isset($footnotes) || !is_array($footnotes)) {
-        $footnotes = array();
+        $footnotes = [];
     }
     $fnid = array_search($explaination, $footnotes);
     DEBUG($footnotes);
@@ -334,7 +334,7 @@ function use_module($modname)
 {
     global $prefix, $needed_modules;
     if (! isset($needed_modules)) {
-        $needed_modules = array();
+        $needed_modules = [];
     }
     if (in_array($modname, $needed_modules)) {
         return;
@@ -359,7 +359,7 @@ function encode_querystring($querystring)
         $querystring = 'debug&'.$querystring;
     }
     $query = explode('&', $querystring);
-    $new_query = array();
+    $new_query = [];
     foreach ($query as $item) {
         if ($item != '') {
             $split = explode('=', $item, 2);
@@ -433,22 +433,22 @@ function html_select($name, $options, $default='', $free='')
 
 function html_datepicker($nameprefix, $timestamp)
 {
-    $valid_days = array( 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
+    $valid_days = [ 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
                        6 =>  6,  7 =>  7,  8 =>  8,  9 =>  9, 10 => 10,
                       11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15,
                       16 => 16, 17 => 17, 18 => 18, 19 => 19, 20 => 20,
                       21 => 21, 22 => 22, 23 => 23, 24 => 24, 25 => 25,
                       26 => 26, 27 => 27, 28 => 28, 29 => 29, 30 => 30,
-                      31 => 31);
-    $valid_months = array( 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
+                      31 => 31, ];
+    $valid_months = [ 1 =>  1,  2 =>  2,  3 =>  3,  4 =>  4,  5 =>  5,
                          6 =>  6,  7 =>  7,  8 =>  8,  9 =>  9, 10 => 10,
-                        11 => 11, 12 => 12);
+                        11 => 11, 12 => 12, ];
     $current_year = (int) date('Y');
-    $valid_years = array($current_year => $current_year,
+    $valid_years = [$current_year => $current_year,
                        $current_year+1 => $current_year+1,
                        $current_year+2 => $current_year+2,
                        $current_year+3 => $current_year+3,
-                       $current_year+4 => $current_year+4);
+                       $current_year+4 => $current_year+4, ];
 
     $selected_day = date('d', $timestamp);
     $selected_month = date('m', $timestamp);
@@ -463,7 +463,7 @@ function html_datepicker($nameprefix, $timestamp)
 function get_modules_info()
 {
     $modules = config('modules');
-    $modconfig = array();
+    $modconfig = [];
     foreach ($modules as $name) {
         $modconfig[$name] = null;
         if (file_exists('modules/'.$name.'/module.info')) {

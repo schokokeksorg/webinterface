@@ -20,7 +20,7 @@ require_once('inc/icons.php');
 require_once('class/domain.php');
 require_once('domains.php');
 
-require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
+require_role([ROLE_CUSTOMER, ROLE_SYSTEMUSER]);
 
 $dom = null;
 if (isset($_REQUEST['id'])) {
@@ -55,7 +55,7 @@ if (have_role(ROLE_CUSTOMER) && isset($_SESSION['customerinfo']['customerno']) &
             $is_current_user = false;
         }
         // Mehrere User vorhanden
-        $options = array();
+        $options = [];
         foreach ($useraccounts as $u) {
             $options[$u['uid']] = $u['username'];
         }

@@ -23,7 +23,7 @@ require_once('inc/jquery.php');
 require_once('session/start.php');
 
 
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 $section = 'contacts_list';
 
 title("Adresse verwenden als...");
@@ -111,7 +111,7 @@ if (isset($_REQUEST['useas'])) {
     if (possible_domainholder($contact)) {
         $domains = domainlist_by_contact($contact);
         foreach ($domains as $d) {
-            $funktion = array();
+            $funktion = [];
             if ($contact['id'] == $d->owner) {
                 $funktion[] = 'Inhaber';
             }

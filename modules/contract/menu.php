@@ -18,5 +18,5 @@ $role = $_SESSION['role'];
 
 
 if (($role & ROLE_CUSTOMER)) {
-    $menu["contract_list"] = array("label" => "AV-Vertrag", "file" => "list", "weight" => 10, "submenu" => "index_index");
+    $menu["contract_list"] = ["label" => "AV-Vertrag", "file" => "list", "weight" => 10, "submenu" => "index_index"];
 }

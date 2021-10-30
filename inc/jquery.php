@@ -29,7 +29,7 @@ if (! defined('__JQUERY_INCLUDED')) {
 function javascript($file = null, $module = null)
 {
     global $go, $prefix;
-    list($mod, $page) = explode('/', $go, 2);
+    [$mod, $page] = explode('/', $go, 2);
     if (! $file) {
         $file = $page.'.js';
     }

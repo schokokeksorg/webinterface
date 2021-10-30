@@ -37,7 +37,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
         } else {
             $enabled = 'N';
         }
-        $acc = array('id' => $_GET['id'], 'account' => $account, 'mailbox' => $_POST['mailbox'], 'enabled' => $enabled);
+        $acc = ['id' => $_GET['id'], 'account' => $account, 'mailbox' => $_POST['mailbox'], 'enabled' => $enabled];
         if ($_POST['password'] != '') {
             $acc['password'] = $_POST['password'];
         }
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
         } else {
             $enabled = 'N';
         }
-        $acc = array('account' => $account, 'mailbox' => $_POST['mailbox'], 'enabled' => $enabled);
+        $acc = ['account' => $account, 'mailbox' => $_POST['mailbox'], 'enabled' => $enabled];
         if ($_POST['password'] != '') {
             $acc['password'] = $_POST['password'];
         }
@@ -152,7 +152,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
 ');
     $_GET['edit'] = (int) $_GET['edit'];
     $account = get_mailaccount($_GET['edit']);
-    list($username, $domain) = explode('@', $account['account'], 2);
+    [$username, $domain] = explode('@', $account['account'], 2);
     $enabled = ($account['enabled'] ? ' checked="checked"' : '');
     $form = '
   <table style="margin-bottom: 1em;">

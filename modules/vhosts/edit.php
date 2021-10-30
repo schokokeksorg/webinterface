@@ -34,7 +34,7 @@ if ($id != 0) {
 }
 
 $have_v6 = false;
-$server = (isset($vhost['server']) ? $vhost['server'] : $_SESSION['userinfo']['server']);
+$server = ($vhost['server'] ?? $_SESSION['userinfo']['server']);
 if (ipv6_possible($server)) {
     $have_v6 = true;
 }
@@ -91,7 +91,7 @@ foreach ($applist as $app) {
     $webapp_options .= "<option value=\"{$app['id']}\">{$app['displayname']}</option>\n";
 }
 
-$aliaswww_options = array("forwardwww" => "Umleiten auf www-Subdomain", "forwardnowww" => "Umleiten auf Stammdomain (ohne www)", "noforward" => "Keine Umleitung");
+$aliaswww_options = ["forwardwww" => "Umleiten auf www-Subdomain", "forwardnowww" => "Umleiten auf Stammdomain (ohne www)", "noforward" => "Keine Umleitung"];
 $aliaswww_option = 'forwardwww';
 if (strstr($vhost['options'], 'aliaswww')) {
     // Wenn aliaswww gar nicht gesetzt war, dann soll die select-Option für forwardwww trotzdem auf dem default stehen.
@@ -126,7 +126,7 @@ $form .= "<br />
 /*
  * Choose what PHP version to use
  */
-$options = array("none" => 'ausgeschaltet', "default" => "Eingeschaltet (empfohlene Version)");
+$options = ["none" => 'ausgeschaltet', "default" => "Eingeschaltet (empfohlene Version)"];
 $phpinfo = valid_php_versions();
 $php_default_version = null;
     foreach ($phpinfo as $v) {
@@ -188,7 +188,7 @@ if ($vhost_type=='webapp') {
 ";
 }
 $hsts_value = $vhost['hsts'];
-$hsts_preset_values = array("-1" => "aus", "86400" => "1 Tag", "2592000" => "30 Tage", "31536000" => "1 Jahr", "63072000" => "2 Jahre", "custom" => "Individuell");
+$hsts_preset_values = ["-1" => "aus", "86400" => "1 Tag", "2592000" => "30 Tage", "31536000" => "1 Jahr", "63072000" => "2 Jahre", "custom" => "Individuell"];
 $hsts_preset_value = 'custom';
 if (isset($hsts_preset_values[$hsts_value])) {
     $hsts_preset_value = $hsts_value;
@@ -218,7 +218,7 @@ $form .= "
     </div>";
 
 $certs = user_certs();
-$certselect = array();
+$certselect = [];
 $certselect[0] = 'kein Zertifikat / System-Standard benutzen';
 if ($vhost_type != 'dav' && $vhost_type != 'svn') {
     $certselect[-1] = 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt';
@@ -266,7 +266,7 @@ $available_servers = additional_servers();
 $available_servers[] = my_server_id();
 $available_servers = array_unique($available_servers);
 
-$selectable_servers = array();
+$selectable_servers = [];
 $all_servers = server_names();
 foreach ($all_servers as $id => $fqdn) {
     if (in_array($id, $available_servers)) {
@@ -278,7 +278,7 @@ if (!$vhost['server']) {
 }
 
   if (count($ipaddrs)) {
-      $ipselect = array(0 => 'System-Standard');
+      $ipselect = [0 => 'System-Standard'];
       foreach ($ipaddrs as $i) {
           $ipselect[$i] = $i;
       }
@@ -289,7 +289,7 @@ if (!$vhost['server']) {
       </div>";
   }
   if (count($available_users)) {
-      $userselect = array(0 => 'Eigener Benutzeraccount');
+      $userselect = [0 => 'Eigener Benutzeraccount'];
       foreach ($available_users as $u) {
           $userselect[$u['uid']] = $u['username'];
       }

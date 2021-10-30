@@ -17,5 +17,5 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 $role = $_SESSION['role'];
 
 if ($role & ROLE_SYSTEMUSER) {
-    $menu['mailman_lists'] = array("label" => "Mailinglisten", "file" => "lists", "weight" => 5, 'submenu' => 'email_vmail');
+    $menu['mailman_lists'] = ["label" => "Mailinglisten", "file" => "lists", "weight" => 5, 'submenu' => 'email_vmail'];
 }

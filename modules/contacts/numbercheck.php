@@ -19,7 +19,7 @@ require_once('numbers.php');
 $number = $_REQUEST['number'];
 $country = $_REQUEST['country'];
 
-$return = array();
+$return = [];
 $return['field'] = $_REQUEST['field'];
 
 if ($number) {

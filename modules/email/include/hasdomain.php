@@ -22,7 +22,7 @@ if (! function_exists("user_has_vmail_domain")) {
             return false;
         }
         $uid = (int) $_SESSION['userinfo']['uid'];
-        $result = db_query("SELECT COUNT(*) FROM mail.v_vmail_domains WHERE useraccount=?", array($uid));
+        $result = db_query("SELECT COUNT(*) FROM mail.v_vmail_domains WHERE useraccount=?", [$uid]);
         $row = $result->fetch();
         $count = $row[0];
         DEBUG("User has {$count} vmail-domains");
@@ -39,7 +39,7 @@ if (! function_exists("user_has_dotcourier_domain")) {
         }
         $uid = (int) $_SESSION['userinfo']['uid'];
         $result = db_query("select 1 from mail.custom_mappings as c left join mail.v_domains as d on (d.id=c.domain) where d.user=:uid or c.uid=:uid UNION ".
-            "SELECT 1 FROM mail.v_domains AS d WHERE d.user=:uid AND d.mail != 'none' AND d.id != ALL(SELECT domain FROM mail.virtual_mail_domains)", array(":uid" => $uid));
+            "SELECT 1 FROM mail.v_domains AS d WHERE d.user=:uid AND d.mail != 'none' AND d.id != ALL(SELECT domain FROM mail.virtual_mail_domains)", [":uid" => $uid]);
         $ret = ($result->rowCount() > 0);
         if ($ret) {
             DEBUG("User {$uid} has dotcourier-domains");

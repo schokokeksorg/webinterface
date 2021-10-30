@@ -20,8 +20,8 @@ require_once('inc/base.php');
 function load_results()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $result = db_query("SELECT directory, docroot, first_seen, last_seen, first_warned, last_warned, appname, version, state, safeversion, vulninfo FROM qatools.detected_webapps WHERE uid=?", array($uid));
-    $ret = array();
+    $result = db_query("SELECT directory, docroot, first_seen, last_seen, first_warned, last_warned, appname, version, state, safeversion, vulninfo FROM qatools.detected_webapps WHERE uid=?", [$uid]);
+    $ret = [];
     while ($line = $result->fetch()) {
         array_push($ret, $line);
     }
@@ -30,7 +30,7 @@ function load_results()
 
 function get_upgradeinstructions($appname)
 {
-    $result = db_query("SELECT url FROM qatools.freewvs_upgradeinstructions WHERE appname=?", array($appname));
+    $result = db_query("SELECT url FROM qatools.freewvs_upgradeinstructions WHERE appname=?", [$appname]);
     if ($result->rowCount() > 0) {
         $tmp = $result->fetch();
         return $tmp[0];

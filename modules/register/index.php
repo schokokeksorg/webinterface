@@ -22,7 +22,7 @@ require_once('newpass.php');
 require_once('inc/form.php');
 require_once('inc/base.php');
 
-$fail = array();
+$fail = [];
 $success = false;
 $customerno = 0;
 

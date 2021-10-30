@@ -20,7 +20,7 @@ function list_system_users()
 
     $result = db_query("SELECT uid,username FROM system.v_useraccounts ORDER BY username");
 
-    $ret = array();
+    $ret = [];
     while ($item = $result->fetch(PDO::FETCH_OBJ)) {
         array_push($ret, $item);
     }
@@ -34,7 +34,7 @@ function list_customers()
 
     $result = db_query("SELECT id, IF(firma IS NULL, CONCAT_WS(' ', vorname, nachname), CONCAT(firma, ' (', CONCAT_WS(' ', vorname, nachname), ')')) AS name FROM kundendaten.kunden");
 
-    $ret = array();
+    $ret = [];
     while ($item = $result->fetch(PDO::FETCH_OBJ)) {
         array_push($ret, $item);
     }
@@ -44,7 +44,7 @@ function list_customers()
 function customer_details($id)
 {
     $id = (int) $id;
-    $result = db_query("SELECT id, IF(firma IS NULL, CONCAT_WS(' ', vorname, nachname), CONCAT(firma, ' (', CONCAT_WS(' ', vorname, nachname), ')')) AS name FROM kundendaten.kunden WHERE id=?", array($id));
+    $result = db_query("SELECT id, IF(firma IS NULL, CONCAT_WS(' ', vorname, nachname), CONCAT(firma, ' (', CONCAT_WS(' ', vorname, nachname), ')')) AS name FROM kundendaten.kunden WHERE id=?", [$id]);
     if ($result->rowCount() < 1) {
         return null;
     }
@@ -55,8 +55,8 @@ function customer_details($id)
 
 function find_customers($string)
 {
-    $args = array(":string" => '%'.chop($string).'%', ":number" => $string);
-    $return = array();
+    $args = [":string" => '%'.chop($string).'%', ":number" => $string];
+    $return = [];
     $result = db_query("SELECT k.id FROM kundendaten.kunden AS k LEFT JOIN system.useraccounts AS u ON (k.id=u.kunde) WHERE ".
                      "firma LIKE :string OR firma2 LIKE :string OR ".
                      "nachname LIKE :string OR vorname LIKE :string OR ".
@@ -85,9 +85,9 @@ function find_customers($string)
 function find_users_for_customer($id)
 {
     $id = (int) $id;
-    $return = array();
+    $return = [];
     $result = db_query("SELECT uid, username, name FROM system.useraccounts WHERE ".
-                     "kunde=?", array($id));
+                     "kunde=?", [$id]);
     while ($entry = $result->fetch()) {
         $return[] = $entry;
     }
@@ -101,14 +101,14 @@ function find_users_for_customer($id)
 function build_results($term)
 {
     global $ret;
-    $ret = array();
+    $ret = [];
 
     $add = function ($val, $id, $value) {
         global $ret;
         if (isset($ret[$val]) && is_array($ret[$val])) {
-            array_push($ret[$val], array("id" => $id, "value" => $value));
+            array_push($ret[$val], ["id" => $id, "value" => $value]);
         } else {
-            $ret[$val] = array( array("id" => $id, "value" => $value) );
+            $ret[$val] = [ ["id" => $id, "value" => $value] ];
         }
     };
 
@@ -142,7 +142,7 @@ function build_results($term)
 
     ksort($ret);
 
-    $allentries = array();
+    $allentries = [];
     foreach ($ret as $group) {
         usort($group, function ($a, $b) {
             return strnatcmp($a['value'], $b['value']);

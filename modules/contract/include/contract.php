@@ -19,8 +19,8 @@ require_role(ROLE_CUSTOMER);
 
 function get_orderprocessing_contract()
 {
-    $args = array(
-        "cid" => (int) $_SESSION['customerinfo']['customerno']);
+    $args = [
+        "cid" => (int) $_SESSION['customerinfo']['customerno'], ];
     $result = db_query("SELECT id, signed, type, startdate, enddate FROM kundendaten.contract WHERE customer=:cid AND type='orderprocessing' AND (enddate IS NULL OR enddate < CURDATE())", $args);
     if ($result->rowCount() == 0) {
         return null;
@@ -62,8 +62,8 @@ function contract_html()
 
 function save_op_contract($pdfdata)
 {
-    $args = array("cid" => $_SESSION['customerinfo']['customerno'],
-            "pdfdata" => $pdfdata);
+    $args = ["cid" => $_SESSION['customerinfo']['customerno'],
+            "pdfdata" => $pdfdata, ];
     db_query(
         "INSERT INTO kundendaten.contract (customer, signed, type, startdate, pdfdata) VALUES (:cid, NOW(), 'orderprocessing', CURDATE(), :pdfdata)",
         $args
@@ -73,8 +73,8 @@ function save_op_contract($pdfdata)
 
 function get_contract_pdf($id)
 {
-    $args = array("id" => $id,
-        "cid" => $_SESSION['customerinfo']['customerno']);
+    $args = ["id" => $id,
+        "cid" => $_SESSION['customerinfo']['customerno'], ];
     $result = db_query("SELECT pdfdata FROM kundendaten.contract WHERE id=:id AND customer=:cid", $args);
     $line = $result->fetch();
     return $line['pdfdata'];

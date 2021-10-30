@@ -21,7 +21,7 @@ title("Neue Mailingliste erstellen");
 $section = 'mailman_lists';
 $domains = get_mailman_domains();
 
-$maildomains = array('0' => config('mailman_host'));
+$maildomains = ['0' => config('mailman_host')];
 foreach ($domains as $domain) {
     $maildomains[$domain['id']] = $domain['fqdn'];
 }

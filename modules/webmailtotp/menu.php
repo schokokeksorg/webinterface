@@ -17,7 +17,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 $role = $_SESSION['role'];
 
 if ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
-    $menu["webmailtotp_account"] = array("label" => "Zwei-Faktor-Anmeldung", "file" => "account", "weight" => 5);
+    $menu["webmailtotp_account"] = ["label" => "Zwei-Faktor-Anmeldung", "file" => "account", "weight" => 5];
 } elseif ($role & ROLE_SYSTEMUSER) {
-    $menu["webmailtotp_overview"] = array("label" => "Zwei-Faktor-Anmeldung", "file" => "overview", "weight" => 5, "submenu" => "email_vmail" );
+    $menu["webmailtotp_overview"] = ["label" => "Zwei-Faktor-Anmeldung", "file" => "overview", "weight" => 5, "submenu" => "email_vmail" ];
 }

@@ -28,7 +28,7 @@ $show_paid = (isset($_GET['paid']) && $_GET['paid'] == '1');
 $invoices = my_invoices();
 
 $first = true;
-$invoices_to_show = array();
+$invoices_to_show = [];
 foreach ($invoices as $i) {
     if ($first || $show_paid || $i['bezahlt'] == 0) {
         $first = false;

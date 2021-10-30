@@ -17,5 +17,5 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 $role = $_SESSION['role'];
 
 if ($role & ROLE_CUSTOMER) {
-    $menu["newsletter_newsletter"] = array("label" => "Newsletter", "file" => "newsletter", "weight" => 5, "submenu" => "index_index");
+    $menu["newsletter_newsletter"] = ["label" => "Newsletter", "file" => "newsletter", "weight" => 5, "submenu" => "index_index"];
 }

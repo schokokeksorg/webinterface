@@ -19,9 +19,9 @@ require_once('include/certs.php');
 $role = $_SESSION['role'];
 
 if ($role & ROLE_SYSTEMUSER) {
-    $menu["vhosts_vhosts"] = array("label" => "Websites", "file" => "vhosts", "weight" => 2);
+    $menu["vhosts_vhosts"] = ["label" => "Websites", "file" => "vhosts", "weight" => 2];
 
     if (user_has_manual_certs() or ($section == 'vhosts_certs')) {
-        $menu["vhosts_certs"] = array("label" => "TLS-Zertifikate", "file" => "certs", "weight" => 10, "submenu" => "vhosts_vhosts");
+        $menu["vhosts_certs"] = ["label" => "TLS-Zertifikate", "file" => "certs", "weight" => 10, "submenu" => "vhosts_vhosts"];
     }
 }

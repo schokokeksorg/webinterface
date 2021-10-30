@@ -15,12 +15,12 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
-    $shortcuts[] = array( 'section' => 'Webserver',
+    $shortcuts[] = [ 'section' => 'Webserver',
                         'weight'  => 30,
                         'file'    => 'vhosts',
                         'icon'    => 'webserver.png',
                         'title'   => 'Websites verwalten',
-                        'alert'   => null );
+                        'alert'   => null, ];
 }
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     $alert = '';
@@ -47,11 +47,11 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     }
 
     if ($alert) {
-        $shortcuts[] = array( 'section' => 'Webserver',
+        $shortcuts[] = [ 'section' => 'Webserver',
                           'weight'  => 80,
                           'file'    => 'certs',
                           'icon'    => 'key.png',
                           'title'   => 'HTTPS-Zertifikate',
-                          'alert'   => $alert );
+                          'alert'   => $alert, ];
     }
 }

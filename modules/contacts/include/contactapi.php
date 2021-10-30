@@ -21,7 +21,7 @@ require_once('inc/api.php');
 
 function contact_to_apicontact($c)
 {
-    $ac = array();
+    $ac = [];
     $ac['id'] = $c['nic_id'];
     $ac['handle'] = $c['nic_handle'];
     $ac['type'] = 'person';
@@ -65,13 +65,13 @@ function apicontact_to_contact($ac)
 
 function download_contact($nic_id)
 {
-    $data = array("contactId" => $nic_id);
+    $data = ["contactId" => $nic_id];
     $result = api_request('contactInfo', $data);
     if ($result['status'] != 'success') {
         system_failure("Abfrage nicht erfolgreich!");
     }
     $c = apicontact_to_contact($result['response']);
-    $result = db_query("SELECT id FROM kundendaten.contacts WHERE nic_id=?", array($nic_id));
+    $result = db_query("SELECT id FROM kundendaten.contacts WHERE nic_id=?", [$nic_id]);
     if ($result->rowCount() > 0) {
         $data = $result->fetch();
         $c['id'] = $data['id'];
@@ -87,15 +87,15 @@ function upload_contact($c)
     $ac = contact_to_apicontact($c);
     if ($ac['id'] || $ac['handle']) {
         // Update
-        $data = array("contact" => $ac,
-                "actingAs" => "designatedAgent");
+        $data = ["contact" => $ac,
+                "actingAs" => "designatedAgent", ];
         $result = api_request('contactUpdate', $data);
         if ($result['status'] != 'success') {
             system_failure("Es gab ein Problem beim Hochladen der Adresse zum Domainregistrar. Das sollte nicht sein!");
         }
     } else {
         // create
-        $data = array("contact" => $ac);
+        $data = ["contact" => $ac];
         $result = api_request('contactCreate', $data);
         if ($result['status'] == 'success') {
             $c['nic_handle'] = $result['response']['handle'];

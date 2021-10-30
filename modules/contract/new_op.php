@@ -18,7 +18,7 @@ require_once('contract.php');
 require_once('inc/debug.php');
 require_once('inc/icons.php');
 
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 
 title("Neuen AV-Vertrag abschließen");
 

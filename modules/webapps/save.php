@@ -39,7 +39,7 @@ if ($_POST['target'] == 'new') {
     DEBUG('Domain: '.$domainid.' / '.$domainname);
 
     if (! isset($_POST['options']) || ! is_array($_POST['options'])) {
-        $_POST['options'] = array();
+        $_POST['options'] = [];
     }
     $aliaswww = in_array('aliaswww', $_POST['options']);
 
@@ -80,7 +80,7 @@ if ($_POST['target'] == 'new') {
     DEBUG("Logging: {$logtype}");
 
     $old_options = explode(',', $vhost['options']);
-    $new_options = array();
+    $new_options = [];
     foreach ($old_options as $op) {
         if ($op != 'aliaswww') {
             array_push($new_options, $op);

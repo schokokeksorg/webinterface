@@ -21,7 +21,7 @@ require_once('inc/debug.php');
 require_once('session/start.php');
 
 
-require_role(array(ROLE_CUSTOMER));
+require_role([ROLE_CUSTOMER]);
 $section = 'contacts_list';
 
 $back = 'list';

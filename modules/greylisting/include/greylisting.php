@@ -17,8 +17,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 function whitelist_entries()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
-    $res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid=?", array($uid));
-    $return = array();
+    $res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid=?", [$uid]);
+    $return = [];
     while ($line = $res->fetch()) {
         array_push($return, $line);
     }
@@ -28,8 +28,8 @@ function whitelist_entries()
 
 function get_whitelist_details($id)
 {
-    $args = array(":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":id" => $id,
+                ":uid" => $_SESSION['userinfo']['uid'], ];
     $res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid=:uid AND id=:id", $args);
     if ($res->rowCount() != 1) {
         system_failure('Kann diesen Eintrag nicht finden');
@@ -44,7 +44,7 @@ function delete_from_whitelist($id)
     // Check if the ID is valid: This will die if not.
     $entry = get_whitelist_details($id);
 
-    db_query("DELETE FROM mail.greylisting_manual_whitelist WHERE id=?", array($id));
+    db_query("DELETE FROM mail.greylisting_manual_whitelist WHERE id=?", [$id]);
 }
 
 
@@ -57,8 +57,8 @@ function valid_entry($local, $domain)
         }
         return true;
     }
-    $args = array(":domain" => $domain,
-                ":uid" => $_SESSION['userinfo']['uid']);
+    $args = [":domain" => $domain,
+                ":uid" => $_SESSION['userinfo']['uid'], ];
     $res = db_query("SELECT id FROM mail.v_domains WHERE domainname=:domain AND user=:uid", $args);
     if ($res->rowCount() != 1) {
         system_failure('Diese domain gehört Ihnen nicht!');
@@ -70,9 +70,9 @@ function valid_entry($local, $domain)
 function new_whitelist_entry($local, $domain, $minutes)
 {
     valid_entry($local, $domain);
-    $args = array(":uid" => $_SESSION['userinfo']['uid'],
+    $args = [":uid" => $_SESSION['userinfo']['uid'],
                 ":local" => $local,
-                ":domain" => $domain);
+                ":domain" => $domain, ];
 
     $expire = 'NULL';
     if ($minutes == 'none') {

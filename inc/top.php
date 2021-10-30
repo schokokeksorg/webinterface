@@ -21,10 +21,10 @@ if (! defined("TOP_INCLUDED")) {
     require_once("inc/debug.php");
     global $prefix, $section;
 
-    $menuitem = array();
-    $weighted_menuitem = array();
+    $menuitem = [];
+    $weighted_menuitem = [];
 
-    $submenu = array();
+    $submenu = [];
 
     foreach (config('modules') as $module) {
         $menu = false;
@@ -44,15 +44,15 @@ if (! defined("TOP_INCLUDED")) {
             $weight = $menu[$key]["weight"];
             if (isset($menu[$key]['submenu'])) {
                 if (isset($submenu[$menu[$key]['submenu']][$weight])) {
-                    $submenu[$menu[$key]['submenu']][$weight] = array_merge($submenu[$menu[$key]['submenu']][$weight], array($key => $menu[$key]));
+                    $submenu[$menu[$key]['submenu']][$weight] = array_merge($submenu[$menu[$key]['submenu']][$weight], [$key => $menu[$key]]);
                 } else {
-                    $submenu[$menu[$key]['submenu']][$weight] = array($key => $menu[$key]);
+                    $submenu[$menu[$key]['submenu']][$weight] = [$key => $menu[$key]];
                 }
             } else {
                 if (array_key_exists($weight, $weighted_menuitem)) {
-                    $weighted_menuitem[$weight] = array_merge($weighted_menuitem[$weight], array($key => $menu[$key]));
+                    $weighted_menuitem[$weight] = array_merge($weighted_menuitem[$weight], [$key => $menu[$key]]);
                 } else {
-                    $weighted_menuitem[$weight] = array($key => $menu[$key]);
+                    $weighted_menuitem[$weight] = [$key => $menu[$key]];
                 }
             }
         }

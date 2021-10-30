@@ -20,11 +20,11 @@ require_once('inc/debug.php');
 function mailman_subdomains($domain)
 {
     if (! in_array('mailman', config('modules'))) {
-        return array();
+        return [];
     }
     $domain = (int) $domain;
-    $result = db_query("SELECT id, hostname FROM mail.mailman_domains WHERE domain=?", array($domain));
-    $ret = array();
+    $result = db_query("SELECT id, hostname FROM mail.mailman_domains WHERE domain=?", [$domain]);
+    $ret = [];
     while ($line = $result->fetch()) {
         $ret[] = $line;
     }
@@ -37,7 +37,7 @@ function dns_in_use($domain)
         return false;
     }
     $domain = (int) $domain;
-    $result = db_query("SELECT id FROM dns.custom_records WHERE domain=?", array($domain));
+    $result = db_query("SELECT id FROM dns.custom_records WHERE domain=?", [$domain]);
     return ($result->rowCount() > 0);
 }
 
@@ -48,7 +48,7 @@ function mail_in_use($domain)
         return false;
     }
     $domain = (int) $domain;
-    $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", array($domain));
+    $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", [$domain]);
     if ($result->rowCount() < 1) {
         system_failure("Domain not found");
     }
@@ -56,18 +56,18 @@ function mail_in_use($domain)
     if ($d['mail'] == 'none') {
         return false;
     } // manually disabled
-    $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain=?", array($domain));
+    $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain=?", [$domain]);
     if ($result->rowCount() < 1) {
         return true;
     } // .courier
-    $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain=?", array($domain));
+    $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain=?", [$domain]);
     return ($result->rowCount() > 0);
 }
 
 function count_vmail($domain)
 {
     $domain = (int) $domain;
-    $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain=?", array($domain));
+    $result = db_query("SELECT acc.id FROM mail.vmail_accounts acc LEFT JOIN mail.virtual_mail_domains dom ON (acc.domain=dom.id) WHERE dom.domain=?", [$domain]);
     return $result->rowCount();
 }
 
@@ -79,13 +79,13 @@ function web_in_use($domain)
 
     $domain = (int) $domain;
 
-    $result = db_query("SELECT id FROM kundendaten.domains WHERE id=? AND webserver=1", array($domain));
+    $result = db_query("SELECT id FROM kundendaten.domains WHERE id=? AND webserver=1", [$domain]);
     if ($result->rowCount() < 1) {
         return false;
     }
 
-    $result = db_query("SELECT id FROM vhosts.vhost WHERE domain=?", array($domain));
-    $result2 = db_query("SELECT id FROM vhosts.alias WHERE domain=?", array($domain));
+    $result = db_query("SELECT id FROM vhosts.vhost WHERE domain=?", [$domain]);
+    $result2 = db_query("SELECT id FROM vhosts.alias WHERE domain=?", [$domain]);
     return ($result->rowCount() > 0 || $result2->rowCount() > 0);
 }
 
@@ -93,7 +93,7 @@ function domain_ownerchange($fqdn, $owner, $admin_c)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     $dom = new Domain($fqdn);
-    db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=? AND kunde=?", array($owner, $admin_c, $dom->id, $cid));
+    db_query("UPDATE kundendaten.domains SET owner=?, admin_c=? WHERE id=? AND kunde=?", [$owner, $admin_c, $dom->id, $cid]);
     if (update_possible($dom->id)) {
         require_once('domainapi.php');
         DEBUG("Rufe Domain-API auf!");
@@ -110,7 +110,7 @@ function update_possible($domain)
         DEBUG("Domain nicht über uns verwaltet!");
         return false;
     }
-    $result = db_query("SELECT aenderung_eigentuemer, ruecksprache FROM misc.domainpreise WHERE tld=?", array($dom->tld));
+    $result = db_query("SELECT aenderung_eigentuemer, ruecksprache FROM misc.domainpreise WHERE tld=?", [$dom->tld]);
     if ($result->rowCount() < 1) {
         // Endung nicht bei uns in der Liste erfasst
         DEBUG("Endung nicht in der Preisliste!");
@@ -129,14 +129,14 @@ function update_possible($domain)
 function unset_mailserver_lock($dom)
 {
     $id = $dom->id;
-    db_query("UPDATE kundendaten.domains SET secret=NULL, mailserver_lock=0 WHERE id=?", array($id));
+    db_query("UPDATE kundendaten.domains SET secret=NULL, mailserver_lock=0 WHERE id=?", [$id]);
 }
 
 function create_domain_secret($dom)
 {
     $id = $dom->id;
     $secret = md5(random_string(20));
-    db_query("UPDATE kundendaten.domains SET secret=? WHERE id=?", array($secret, $id));
+    db_query("UPDATE kundendaten.domains SET secret=? WHERE id=?", [$secret, $id]);
     $dom->secret = $secret;
     return $secret;
 }
@@ -169,14 +169,14 @@ function get_auth_dns($domainname, $tld)
             $NS_IP = preg_replace("/^.*\\sIN\\s+A\\s+(\\S+)$/", '\1', $l);
         }
     }
-    return array("$NS" => $NS_IP);
+    return ["$NS" => $NS_IP];
 }
 
 
 function own_ns()
 {
     $auth = dns_get_record(config('masterdomain'), DNS_NS);
-    $own_ns = array();
+    $own_ns = [];
     foreach ($auth as $ns) {
         $own_ns[] = $ns['target'];
     }
@@ -224,8 +224,8 @@ function get_txt_record($hostname, $domainname, $tld)
 function list_useraccounts()
 {
     $customerno = (int) $_SESSION['customerinfo']['customerno'];
-    $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde=?", array($customerno));
-    $ret = array();
+    $result = db_query("SELECT uid,username,name FROM system.useraccounts WHERE kunde=?", [$customerno]);
+    $ret = [];
     while ($item = $result->fetch()) {
         $ret[] = $item;
     }
@@ -249,7 +249,7 @@ function change_user($domain, $uid)
     if (! $targetuser) {
         system_failure("Ungültiger Useraccount!");
     }
-    db_query("UPDATE kundendaten.domains SET useraccount=? WHERE id=?", array($targetuser, $domain->id));
+    db_query("UPDATE kundendaten.domains SET useraccount=? WHERE id=?", [$targetuser, $domain->id]);
 }
 
 
@@ -258,11 +258,11 @@ function get_domain_offer($tld)
     $tld = filter_input_hostname($tld);
     $cid = (int) $_SESSION['customerinfo']['customerno'];
 
-    $data = array("tld" => $tld);
+    $data = ["tld" => $tld];
 
-    $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", array(":cid" => $cid, ":tld" => $tld));
+    $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise_kunde WHERE kunde=:cid AND tld=:tld AND ruecksprache='N'", [":cid" => $cid, ":tld" => $tld]);
     if ($result->rowCount() != 1) {
-        $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", array(":tld" => $tld));
+        $result = db_query("SELECT tld, gebuehr, `interval`, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", [":tld" => $tld]);
     }
     if ($result->rowCount() != 1) {
         return false;
@@ -282,7 +282,7 @@ function set_domain_pretransfer($domain)
     $domain = (int) $domain;
     db_query(
         "UPDATE kundendaten.domains SET status='pretransfer', dns=1 WHERE id=? AND kunde=?",
-        array($domain, $cid)
+        [$domain, $cid]
     );
 }
 
@@ -295,7 +295,7 @@ function set_domain_prereg($domain)
     $domain = (int) $domain;
     db_query(
         "UPDATE kundendaten.domains SET status='prereg', dns=1 WHERE id=? AND kunde=?",
-        array($domain, $cid)
+        [$domain, $cid]
     );
 }
 
@@ -306,7 +306,7 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     $uid = (int) $_SESSION['userinfo']['uid'];
     require_once("domainapi.php");
     $info = api_domain_available($domain);
-    if (in_array($info['status'], array('nameContainsForbiddenCharacter', 'suffixDoesNotExist'))) {
+    if (in_array($info['status'], ['nameContainsForbiddenCharacter', 'suffixDoesNotExist'])) {
         system_failure("Diese Domain scheint ungültig zu sein!");
     }
     $tld = $info['domainSuffix'];
@@ -314,14 +314,14 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain '.$info['domainNameUnicode']." DNS:{$dns} / Mail:{$mail}");
 
     db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
-        ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", array($cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')));
+        ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", [$cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')]);
     $id = db_insert_id();
     if ($dns) {
-        db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", array($id));
+        db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", [$id]);
     }
     if ($mail) {
         $vmailserver = (int) $_SESSION['userinfo']['server'];
-        db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES (?, ?)", array($id, $vmailserver));
+        db_query("INSERT INTO mail.virtual_mail_domains (domain, server) VALUES (?, ?)", [$id, $vmailserver]);
     }
     return $id;
 }
@@ -330,5 +330,5 @@ function delete_domain($id)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
     logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Deleting domain '.$id);
-    db_query("DELETE FROM kundendaten.domains WHERE id=? AND kunde=?", array($id, $cid));
+    db_query("DELETE FROM kundendaten.domains WHERE id=? AND kunde=?", [$id, $cid]);
 }

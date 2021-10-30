@@ -28,7 +28,7 @@ if (isset($_GET['aliaswww'])) {
     $alias = get_alias_details($_GET['alias']);
     DEBUG($alias);
     $old_options = explode(',', $alias['options']);
-    $new_options = array();
+    $new_options = [];
     foreach ($old_options as $op) {
         if ($op !== '' && $op != 'aliaswww') {
             array_push($new_options, $op);
@@ -56,7 +56,7 @@ if (isset($_GET['forward'])) {
     $alias = get_alias_details($_GET['alias']);
     DEBUG($alias);
     $old_options = explode(',', $alias['options']);
-    $new_options = array();
+    $new_options = [];
     foreach ($old_options as $op) {
         if ($op !== '' && $op != 'forward') {
             array_push($new_options, $op);

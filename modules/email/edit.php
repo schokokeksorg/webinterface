@@ -24,7 +24,7 @@ require_once('inc/jquery.php');
 javascript();
 
 $section = 'email_vmail';
-require_role(array(ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT));
+require_role([ROLE_SYSTEMUSER, ROLE_VMAIL_ACCOUNT]);
 
 $account = empty_account();
 $id = (isset($_GET['id']) ? (int) $_GET['id'] : 0);
@@ -168,9 +168,9 @@ if (! $quote) {
     $quote = 'none';
 }
 $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
-  html_select('ar_quote', array("none" => 'nicht in Antwort einschließen',
+  html_select('ar_quote', ["none" => 'nicht in Antwort einschließen',
                                 "teaser" => 'anreißen (erste 10 Zeilen)',
-                                "inline" => 'zitieren (max. 50 Zeilen)'), $quote)."</p>";
+                                "inline" => 'zitieren (max. 50 Zeilen)', ], $quote)."</p>";
                                 //"attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
 
 
@@ -199,11 +199,11 @@ $form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\" class=\"option_
 $form .= '<div id="forward_entries">
 ';
 if (! isset($account['forwards'][0])) {
-    $account['forwards'][0] = array('destination' => '');
+    $account['forwards'][0] = ['destination' => ''];
 }
 while (count($account['forwards']) < 10) {
     // Dummy-Einträge für Leute ohne JavaScript
-    $account['forwards'][] = array('destination' => '');
+    $account['forwards'][] = ['destination' => ''];
 }
 for ($i = 0 ; $i < max($numforwards, 10) ; $i++) {
     $num = $i+1;

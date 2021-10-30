@@ -21,7 +21,7 @@ require_once('useraccounts.php');
 require_once('inc/security.php');
 
 
-require_role(array(ROLE_CUSTOMER, ROLE_SYSTEMUSER));
+require_role([ROLE_CUSTOMER, ROLE_SYSTEMUSER]);
 
 $role = $_SESSION['role'];
 

@@ -32,7 +32,7 @@ class DB extends PDO
         }
         $username = config('db_user', true);
         $password = config('db_pass', true);
-        parent::__construct($dsn, $username, $password, array(PDO::ATTR_TIMEOUT => "30"));
+        parent::__construct($dsn, $username, $password, [PDO::ATTR_TIMEOUT => "30"]);
     }
 
 

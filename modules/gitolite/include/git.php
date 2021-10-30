@@ -66,7 +66,7 @@ function git_wrapper($commandline)
     global $git_wrapper, $data_dir;
 
     $command = $git_wrapper.' '.$commandline;
-    $output = array();
+    $output = [];
     $retval = 0;
     DEBUG($command);
     exec($command, $output, $retval);
@@ -95,25 +95,25 @@ function list_repos()
     DEBUG("using config file ".$userconfig);
     if (! is_file($userconfig)) {
         DEBUG("user-config does not exist");
-        return array();
+        return [];
     }
 
-    $repos = array();
+    $repos = [];
     $lines = file($userconfig);
     $current_repo = null;
-    $current_repo_users = array();
+    $current_repo_users = [];
     foreach ($lines as $line) {
         DEBUG("LINE: ".$line);
-        $m = array();
+        $m = [];
         if (preg_match('/^(\S+) "[^"]+" = "([^"]+)"$/', $line, $m) != 0) {
             if (!array_key_exists($m[1], $repos)) {
-                $repos[$m[1]] = array('users' => null, 'description' => '');
+                $repos[$m[1]] = ['users' => null, 'description' => ''];
             }
             DEBUG("found description: {$m[1]} = \"{$m[2]}\"");
             $repos[$m[1]]['description'] = $m[2];
         } elseif (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
             if (!array_key_exists($m[1], $repos)) {
-                $repos[$m[1]] = array('users' => null, 'description' => '');
+                $repos[$m[1]] = ['users' => null, 'description' => ''];
             }
             if ($current_repo) {
                 $repos[$current_repo]['users'] = $current_repo_users;
@@ -121,7 +121,7 @@ function list_repos()
             DEBUG("found repo ".$m[1]);
             $current_repo = chop($m[1]);
             verify_input_identifier($current_repo);
-            $current_repo_users = array();
+            $current_repo_users = [];
         } elseif (preg_match('/^\s*(R|RW|RW\+)\s*=\s*([[:alnum:]][[:alnum:]._-]*)\s*$/', $line, $m) != 0) {
             DEBUG("found access rule: ".$m[1]." for ".$m[2]);
             $current_repo_users[chop($m[2])] = chop($m[1]);
@@ -144,13 +144,13 @@ function list_users()
     DEBUG("using config file ".$userconfig);
     if (! is_file($userconfig)) {
         DEBUG("user-config does not exist");
-        return array();
+        return [];
     }
 
     $lines = file($userconfig);
-    $users = array();
+    $users = [];
     foreach ($lines as $line) {
-        $m = array();
+        $m = [];
         if (preg_match('_# user ([^]]+)_', $line, $m) != 0) {
             $currentuser = trim($m[1]);
             verify_input_identifier($currentuser);
@@ -173,13 +173,13 @@ function list_foreign_users()
     DEBUG("using config file ".$userconfig);
     if (! is_file($userconfig)) {
         DEBUG("user-config does not exist");
-        return array();
+        return [];
     }
 
     $lines = file($userconfig);
-    $users = array();
+    $users = [];
     foreach ($lines as $line) {
-        $m = array();
+        $m = [];
         if (preg_match('_# foreign user ([^]]+)_', $line, $m) != 0) {
             $users[] = chop($m[1]);
         }
@@ -257,7 +257,7 @@ function delete_foreign_user($handle)
         $content = file($userconfig);
         DEBUG("Old file:");
         DEBUG($content);
-        $newcontent = array();
+        $newcontent = [];
         foreach ($content as $line) {
             if (preg_match('/^# foreign user '.$handle.'$/', $line)) {
                 DEBUG("delete1: ".$line);
@@ -290,7 +290,7 @@ function newkey($pubkey, $handle)
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich und Bindestrich benutzen.");
     }
 
-    $pubkey = trim(str_replace(array("\r", "\n"), ' ', $pubkey));
+    $pubkey = trim(str_replace(["\r", "\n"], ' ', $pubkey));
 
     $keyfile = $key_dir.'/'.$handle.'.pub';
     file_put_contents($keyfile, $pubkey);
@@ -357,7 +357,7 @@ function delete_key($handle)
         $content = file($userconfig);
         DEBUG("Old file:");
         DEBUG($content);
-        $newcontent = array();
+        $newcontent = [];
         foreach ($content as $line) {
             if (preg_match('/^# user '.$handle.'$/', $line)) {
                 DEBUG("delete1: ".$line);
@@ -384,14 +384,14 @@ function remove_repo_from_array($data, $repo)
 {
     DEBUG("Request to remove repo »{$repo}«...");
     $inside = false;
-    $outdata = array();
+    $outdata = [];
     $blank = true;
     foreach ($data as $line) {
         if ($blank && chop($line) == '') {
             continue;
         }
         $blank = (chop($line) == '');
-        $m = array();
+        $m = [];
         if (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
             $inside = ($m[1] == $repo);
         }
@@ -481,7 +481,7 @@ function save_repo($repo, $permissions, $description)
     $username = $_SESSION['userinfo']['username'];
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    $data = array();
+    $data = [];
     if (! is_file($userconfig)) {
         DEBUG("user-config does not exist, creating new one");
         set_user_include();

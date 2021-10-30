@@ -18,7 +18,7 @@ function show_page($path = null)
 {
     global $prefix, $go, $title, $headline, $output, $module, $page, $html_header, $footnotes;
 
-    $styles = array();
+    $styles = [];
     if (file_exists("modules/{$module}/style.css")) {
         $styles[] = "modules/{$module}/style.css";
     }
@@ -33,7 +33,7 @@ function show_page($path = null)
         $theme = 'default';
     }
     $theme_path = "themes/$theme/";
-    $candidates = array();
+    $candidates = [];
     if ($page) {
         $candidates[] = "{$theme_path}page-$module-$page.tpl.php";
     }
