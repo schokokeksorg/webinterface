@@ -2,3 +2,5 @@ config.php
 /vendor/
 .php_cs.cache
 .php-cs-fixer.cache
+php-cs-fixer
+local-php-security-checker
