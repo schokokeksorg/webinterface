@@ -22,6 +22,8 @@ require_role(ROLE_SYSTEMUSER);
 
 title('Mailinglisten');
 
+warning('Bitte beachten Sie: Der Mailinglisten-Dienst wird zum Jahresende 2022 eingestellt. Das Anlegen neuer Listen ist nicht mehr möglich.');
+
 output('<p>Mit <a href="https://www.gnu.org/software/mailman/index.html">Mailman</a> bieten wir Ihnen eine umfangreiche Lösung für E-Mail-Verteilerlisten an.</p>
 <p>Auf dieser Seite können Sie Ihre Mailinglisten verwalten.</p>
 ');
@@ -42,7 +44,7 @@ if (count($lists) > 10 || $filter) {
 
 
 if (! empty($lists)) {
-    addnew('newlist', 'Neue Mailingliste anlegen');
+    #addnew('newlist', 'Neue Mailingliste anlegen');
     output('<div id="mailman_lists_container">');
     foreach ($lists as $list) {
         $size = $list['archivesize'];
@@ -104,7 +106,8 @@ if (! empty($lists)) {
     output('<p><em>Sie betreiben bisher keine Mailinglisten.</em></p>');
 }
 
-addnew('newlist', 'Neue Mailingliste anlegen');
+# 2021-11-13, Ab sofort keine neuen Mailinglisten mehr
+#addnew('newlist', 'Neue Mailingliste anlegen');
 output("
 <p><strong>Hinweise:</strong><br />
 <sup>1</sup>) Sie können später im Webinterface von Mailman einen abweichenden oder auch mehrere Verwalter eintragen. Die Information auf dieser Seite wird zyklisch synchronisiert.<br />
