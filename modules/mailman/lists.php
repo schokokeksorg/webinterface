@@ -22,7 +22,10 @@ require_role(ROLE_SYSTEMUSER);
 
 title('Mailinglisten');
 
-warning('Bitte beachten Sie: Der Mailinglisten-Dienst wird zum Jahresende 2022 eingestellt. Das Anlegen neuer Listen ist nicht mehr möglich.');
+output('<div class="warning">
+    <p><strong>Bitte beachten Sie: Der Mailinglisten-Dienst wird zum Jahresende 2022 eingestellt. Das Anlegen neuer Listen ist nicht mehr möglich.<br>
+    Wenden Sie sich bitte frühzeitig an den Support, wenn Sie Unterstützung beim Umzug zu einem anderen Dienstleister benötigen.</strong></p>
+    </div>');
 
 output('<p>Mit <a href="https://www.gnu.org/software/mailman/index.html">Mailman</a> bieten wir Ihnen eine umfangreiche Lösung für E-Mail-Verteilerlisten an.</p>
 <p>Auf dieser Seite können Sie Ihre Mailinglisten verwalten.</p>
