@@ -243,6 +243,12 @@ function save_contact($c)
     unset($c['lastchange']);
     unset($c['email']);
     $c['customer'] = (int) $_SESSION['customerinfo']['customerno'];
+    if ($c['country'] == 'D') {
+        $c['country'] = 'DE';
+    }
+    if (strlen($c['country']) != 2) {
+        system_failure('Bitte geben Sie das Land als Zwei-Buchstaben-Kürzel an.');
+    }
     if ($c['id']) {
         // Kontakt bestaht schon, Update
         db_query("UPDATE kundendaten.contacts SET nic_id=:nic_id, nic_handle=:nic_handle, salutation=:salutation, company=:company, name=:name, address=:address, zip=:zip, city=:city, country=:country, phone=:phone, mobile=:mobile, fax=:fax, pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:id AND customer=:customer", $c);
