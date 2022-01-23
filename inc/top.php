@@ -27,11 +27,11 @@ if (! defined("TOP_INCLUDED")) {
     $submenu = [];
 
     foreach (config('modules') as $module) {
-        $menu = false;
+        $menu = array();
         if (file_exists("modules/{$module}/menu.php")) {
             include("modules/{$module}/menu.php");
         }
-        if ($menu === false) {
+        if (empty($menu)) {
             #DEBUG("Modul {$module} hat keine Menüeinträge");
             continue;
         }
