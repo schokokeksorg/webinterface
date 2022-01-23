@@ -21,6 +21,9 @@ require_once('inc/security.php');
 
 function get_lists($filter)
 {
+    if (! isset($_SESSION['userinfo'])) {
+        return [];
+    }
     $uid = (int) $_SESSION['userinfo']['uid'];
     $result = null;
     if ($filter) {
