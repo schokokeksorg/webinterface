@@ -27,7 +27,7 @@ if (! defined("TOP_INCLUDED")) {
     $submenu = [];
 
     foreach (config('modules') as $module) {
-        $menu = array();
+        $menu = [];
         if (file_exists("modules/{$module}/menu.php")) {
             include("modules/{$module}/menu.php");
         }
