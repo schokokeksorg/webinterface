@@ -19,7 +19,7 @@ title('Lizenzinformationen');
 output('<p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webhosting. Der Source-Code ist unter <a href="https://source.schokokeks.org/">source.schokokeks.org</a> erhältlich und wurde unter der Lizenz CC0 / Public Domain freigegeben.</p>
 <p>Folgende Bestandteile wurden von anderen Autoren übernommen und unterliegen einer abweichenden Lizenz:</p>
 <ul>
-  <li>Eine <a href="https://github.com/PHPGangsta/GoogleAuthenticator">Bibliothek zur Abwicklung der Google-Authenticator-Anmeldung</a> wurde von <a href="http://www.phpgangsta.de/2-faktor-authentifizierung-mit-dem-google-authenticator">Michael Kliewe (PHPGangsta)</a> übernommen und ist unter der BSD-Lizenz freigegeben</li>
+  <li>Eine <a href="https://github.com/PHPGangsta/GoogleAuthenticator">Bibliothek zur Abwicklung der Google-Authenticator-Anmeldung</a> wurde von <a href="https://www.phpgangsta.de/2-faktor-authentifizierung-mit-dem-google-authenticator">Michael Kliewe (PHPGangsta)</a> übernommen und ist unter der BSD-Lizenz freigegeben</li>
   <li>Die Bibliotheken <a href="https://jquery.com/">JQuery</a> und <a href="https://jqueryui.com/">JQueryUI</a>, veröffentlicht unter <a href="https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt">MIT-Lizenz</a></li>
   <li><a href="https://github.com/globalcitizen/php-iban">php-iban</a>, veröffentlicht unter <a href="https://www.gnu.org/licenses/gpl-3.0">GPLv3</a></li>
   <li><a href="https://github.com/giggsey/libphonenumber-for-php">libphonenumber-for-php</a>, eine PHP-Variante von Googles Telefonnummern-Bibliothek, veröffentlicht unter <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a></li>
