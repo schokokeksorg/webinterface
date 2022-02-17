@@ -88,6 +88,9 @@ function filter_input_oneline($input)
 
 function filter_output_html($data)
 {
+    if (! $data) {
+        return "";
+    }
     return htmlspecialchars($data, ENT_QUOTES);
 }
 
