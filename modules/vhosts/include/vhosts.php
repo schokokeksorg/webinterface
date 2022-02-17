@@ -365,7 +365,7 @@ function make_webapp_vhost($id, $webapp)
 }
 
 
-function check_hostname_collision($hostname, $domain)
+function check_hostname_collision($hostname, $domain, $id=NULL)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     # Neuer vhost => Prüfe Duplikat
@@ -387,7 +387,12 @@ function check_hostname_collision($hostname, $domain)
         $hostnamecheck = "hostname IS NULL";
         unset($args[":hostname"]);
     }
-    $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck} AND user=:uid", $args);
+    $idcheck = '';
+    if ($id) {
+        $idcheck = ' AND id != :id';
+        $args[':id'] = (int) $id;
+    }
+    $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck} AND user=:uid ".$idcheck, $args);
     if ($result->rowCount() > 0) {
         system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
     }
@@ -395,6 +400,7 @@ function check_hostname_collision($hostname, $domain)
         return ;
     }
     unset($args[":uid"]);
+    unset($args[":id"]);
     $result = db_query("SELECT id, vhost FROM vhosts.v_alias WHERE {$hostnamecheck} AND {$domaincheck}", $args);
     if ($result->rowCount() > 0) {
         $data = $result->fetch();
@@ -419,6 +425,8 @@ function save_vhost($vhost)
     }
     if ($id == 0) {
         check_hostname_collision($vhost['hostname'], $vhost['domain_id']);
+    } else {
+        check_hostname_collision($vhost['hostname'], $vhost['domain_id'], $id);
     }
     $hsts = (int) $vhost['hsts'];
     if ($hsts < 0) {
