@@ -365,7 +365,7 @@ function make_webapp_vhost($id, $webapp)
 }
 
 
-function check_hostname_collision($hostname, $domain, $id=NULL)
+function check_hostname_collision($hostname, $domain, $id=null)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     # Neuer vhost => Prüfe Duplikat
