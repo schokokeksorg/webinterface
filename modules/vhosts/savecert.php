@@ -15,6 +15,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once("certs.php");
+require_once("inc/security.php");
 require_role(ROLE_SYSTEMUSER);
 
 $section = 'vhosts_certs';
@@ -118,7 +119,7 @@ if ($_GET['action'] == 'new') {
     $cert = cert_details($_GET['id']);
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=delete&id={$cert['id']}", "Soll das Zertifikat für »{$cert['subject']}« (gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich entfernt werden?");
+        are_you_sure("action=delete&id={$cert['id']}", "Soll das Zertifikat für »".filter_output_html($cert['subject'])."« (gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich entfernt werden?");
     } elseif ($sure === false) {
         header('Location: certs');
         die();
