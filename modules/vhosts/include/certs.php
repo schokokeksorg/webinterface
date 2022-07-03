@@ -210,30 +210,27 @@ function validate_certificate($cert, $key)
 function parse_cert_details($cert)
 {
     $certdata = openssl_x509_parse($cert, true);
-    /*
-name => /CN=*.bwurst.org
-validFrom_time_t => 1204118790
-validTo_time_t => 1267190790
-
-
-    */
     DEBUG($certdata);
-    DEBUG("SAN: ".$certdata['extensions']['subjectAltName']);
-    //return array('subject' => $certdata['name'], 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']));
+
     $issuer = $certdata['issuer']['CN'];
     if (isset($certdata['issuer']['O'])) {
         $issuer = $certdata['issuer']['O'];
     }
-    $san = [];
-    $raw_san = explode(', ', $certdata['extensions']['subjectAltName']);
-    foreach ($raw_san as $name) {
-        if (! substr($name, 0, 4) == 'DNS:') {
-            warning('Unparsable SAN: '.$name);
-            continue;
+    if (isset($certdata['extensions']['subjectAltName'])) {
+        DEBUG("SAN: ".$certdata['extensions']['subjectAltName']);
+        $san = [];
+        $raw_san = explode(', ', $certdata['extensions']['subjectAltName']);
+        foreach ($raw_san as $name) {
+            if (! substr($name, 0, 4) == 'DNS:') {
+                warning('Unparsable SAN: '.$name);
+                continue;
+            }
+            $san[] = str_replace('DNS:', '', $name);
         }
-        $san[] = str_replace('DNS:', '', $name);
+        $san = implode("\n", $san);
+    } else {
+        $san = "\n";
     }
-    $san = implode("\n", $san);
     DEBUG("SAN: <pre>".$san."</pre>");
     return ['subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN'], 'san' => $san];
 }
