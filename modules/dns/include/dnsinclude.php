@@ -247,105 +247,105 @@ function save_dns_record($id, $record)
     }
     warn_autorecord_collission($record['hostname'], $dom->fqdn, $record['type']);
     switch ($record['type']) {
-    case 'a':
-      if ($record['dyndns']) {
-          get_dyndns_account($record['dyndns']);
-          $record['ip'] = null;
-      } else {
-          verify_input_ipv4($record['ip']);
-          $record['data'] = null;
-          $record['spec'] = null;
-      }
-      break;
-    case 'aaaa':
-      if ($record['dyndns']) {
-          get_dyndns_account($record['dyndns']);
-          $record['ip'] = null;
-      } else {
-          $record['dyndns'] = null;
-          verify_input_ipv6($record['ip']);
-          $record['data'] = null;
-          $record['spec'] = null;
-      }
-      break;
-    case 'mx':
-      $record['dyndns'] = null;
-      $record['spec'] = (int) $record['spec'];
-      if ($record['spec'] < 0) {
-          system_failure("invalid priority");
-      }
-      verify_input_hostname($record['data']);
-      if (! $record['data']) {
-          system_failure('MX hostname missing');
-      }
-      $record['ip'] = null;
-      break;
-    case 'ptr':
-    case 'ns':
-      if (!$record['hostname']) {
-          system_failure("Die angestrebte Konfiguration wird nicht funktionieren, Speichern wurde daher verweigert.");
-      }
-      // no break
-    case 'cname':
-      $record['dyndns'] = null;
-      $record['spec'] = null;
-      $record['ip'] = null;
-      verify_input_hostname($record['data']);
-      if (! $record['data']) {
-          system_failure('destination host missing');
-      }
-      break;
+        case 'a':
+            if ($record['dyndns']) {
+                get_dyndns_account($record['dyndns']);
+                $record['ip'] = null;
+            } else {
+                verify_input_ipv4($record['ip']);
+                $record['data'] = null;
+                $record['spec'] = null;
+            }
+            break;
+        case 'aaaa':
+            if ($record['dyndns']) {
+                get_dyndns_account($record['dyndns']);
+                $record['ip'] = null;
+            } else {
+                $record['dyndns'] = null;
+                verify_input_ipv6($record['ip']);
+                $record['data'] = null;
+                $record['spec'] = null;
+            }
+            break;
+        case 'mx':
+            $record['dyndns'] = null;
+            $record['spec'] = (int) $record['spec'];
+            if ($record['spec'] < 0) {
+                system_failure("invalid priority");
+            }
+            verify_input_hostname($record['data']);
+            if (! $record['data']) {
+                system_failure('MX hostname missing');
+            }
+            $record['ip'] = null;
+            break;
+        case 'ptr':
+        case 'ns':
+            if (!$record['hostname']) {
+                system_failure("Die angestrebte Konfiguration wird nicht funktionieren, Speichern wurde daher verweigert.");
+            }
+            // no break
+        case 'cname':
+            $record['dyndns'] = null;
+            $record['spec'] = null;
+            $record['ip'] = null;
+            verify_input_hostname($record['data']);
+            if (! $record['data']) {
+                system_failure('destination host missing');
+            }
+            break;
 
-    case 'spf':
-    case 'txt':
-      $record['dyndns'] = null;
-      $record['spec'] = null;
-      $record['ip'] = null;
-      if (! $record['data']) {
-          system_failure('text entry missing');
-      }
-      break;
+        case 'spf':
+        case 'txt':
+            $record['dyndns'] = null;
+            $record['spec'] = null;
+            $record['ip'] = null;
+            if (! $record['data']) {
+                system_failure('text entry missing');
+            }
+            break;
 
-    case 'sshfp':
-      $record['dyndns'] = null;
-      $record['spec'] = max((int) $record['spec'], 1);
-      $record['ip'] = null;
-      if (! $record['data']) {
-          system_failure('text entry missing');
-      }
-      break;
+        case 'sshfp':
+            $record['dyndns'] = null;
+            $record['spec'] = max((int) $record['spec'], 1);
+            $record['ip'] = null;
+            if (! $record['data']) {
+                system_failure('text entry missing');
+            }
+            break;
 
-    case 'caa':
-      $record['dyndns'] = null;
-      $record['ip'] = null;
-      if (! $record['data']) {
-          system_failure('text entry missing');
-      }
-      break;
+        case 'caa':
+            $record['dyndns'] = null;
+            $record['ip'] = null;
+            if (! $record['data']) {
+                system_failure('text entry missing');
+            }
+            break;
 
-    case 'srv':
-      $record['dyndns'] = null;
-      $record['spec'] = (int) $record['spec'];
-      if ($record['spec'] < 0) {
-          system_failure("invalid priority");
-      }
-      if (! $record['data']) {
-          system_failure('SRV target missing');
-      }
-      $data = explode(':', $record['data']);
-      if (count($data) != 2) {
-          system_failure('Das eingegebene Ziel war nicht im Format hostname:port');
-      }
-      [$hostname, $port] = $data;
-      verify_input_hostname($hostname);
-      if ($port !== (string)(int) $port || (int)$port < 1 || (int)$port > 65535) {
-          system_failure('Ungültige Portnummer');
-      }
-      $record['ip'] = null;
-      break;
-    default:
-      system_failure('Not implemented');
-  }
+        case 'srv':
+            $record['dyndns'] = null;
+            $record['spec'] = (int) $record['spec'];
+            if ($record['spec'] < 0) {
+                system_failure("invalid priority");
+            }
+            if (! $record['data']) {
+                system_failure('SRV target missing');
+            }
+            $data = explode(':', $record['data']);
+            if (count($data) != 2) {
+                system_failure('Das eingegebene Ziel war nicht im Format hostname:port');
+            }
+            [$hostname, $port] = $data;
+            verify_input_hostname($hostname);
+            if ($port !== (string)(int) $port || (int)$port < 1 || (int)$port > 65535) {
+                system_failure('Ungültige Portnummer');
+            }
+            $record['ip'] = null;
+            break;
+        default:
+            system_failure('Not implemented');
+    }
     $id = (int) $id;
     $args = [":domain" => $dom->id,
                 ":hostname" => $record['hostname'],

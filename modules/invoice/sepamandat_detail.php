@@ -36,16 +36,16 @@ if ($m['medium'] == 'legacy') {
 } else {
     $medium = 'über unser Webinterface';
     switch ($m['medium']) {
-    case 'email':
-      $medium = 'per E-Mail';
-      break;
-    case 'fax':
-      $medium = 'per Fax';
-      break;
-    case 'post':
-      $medium = 'per Post';
-      break;
-  }
+        case 'email':
+            $medium = 'per E-Mail';
+            break;
+        case 'fax':
+            $medium = 'per Fax';
+            break;
+        case 'post':
+            $medium = 'per Post';
+            break;
+    }
     output('<p>Wir haben das nachstehende Mandat am '.$m['erteilt'].' '.$medium.' entgegen genommen.</p>');
 }
 output('<h3>Stammdaten</h3>

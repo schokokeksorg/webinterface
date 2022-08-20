@@ -14,8 +14,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 $role = $_SESSION['role'];
 
 switch ($role) {
-  case ROLE_ANONYMOUS:
-    $menu["register_index"] = ["label" => "Kunde werden", "file" => "index", "weight" => 0];
-    break;
-
+    case ROLE_ANONYMOUS:
+        $menu["register_index"] = ["label" => "Kunde werden", "file" => "index", "weight" => 0];
+        break;
 }

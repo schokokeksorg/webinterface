@@ -22,15 +22,15 @@ class Domain
     {
         $this->setup();
         switch (gettype($init)) {
-      case 'string':
-        $this->loadByName($init);
-        break;
-      case 'integer':
-        $this->loadByID($init);
-        break;
-      case 'NULL':
-        break;
-    }
+            case 'string':
+                $this->loadByName($init);
+                break;
+            case 'integer':
+                $this->loadByID($init);
+                break;
+            case 'NULL':
+                break;
+        }
     }
 
     public function __set($key, $value)

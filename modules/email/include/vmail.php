@@ -424,7 +424,7 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
         # send welcome message
         mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "X-schokokeks-org-message: welcome\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
         # notify the vmail subsystem of this new account
-    #mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
+        #mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
     }
 
     // Clean up obsolete quota
@@ -568,18 +568,18 @@ function maildomain_type($type) {
 function maildomain_type($type)
 {
     switch ($type) {
-    case 'none':
-      $type = 'Deaktiviert';
-      break;
-    case 'auto':
-      $type = '.courier-Dateien';
-      break;
-    case 'virtual':
-      $type = 'Webinterface';
-      break;
-    case 'manual':
-      $type = 'Manuell';
-      break;
-  }
+        case 'none':
+            $type = 'Deaktiviert';
+            break;
+        case 'auto':
+            $type = '.courier-Dateien';
+            break;
+        case 'virtual':
+            $type = 'Webinterface';
+            break;
+        case 'manual':
+            $type = 'Manuell';
+            break;
+    }
     return $type;
 }

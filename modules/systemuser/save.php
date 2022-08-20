@@ -27,20 +27,20 @@ global $debugmode;
 
 if ($_GET['action'] == 'new') {
     system_failure('not implemented');
-/*
-check_form_token('systemuser_new');
-if (filter_input_username($_POST['username']) == '' ||
-    filter_shell($_POST['password']) == '')
-{
-  input_error('Sie müssen alle Felder ausfüllen!');
-}
-else
-{
-  create_jabber_account($_POST['local'], $_POST['domain'], $_POST['password']);
-  if (! $debugmode)
-    header('Location: account');
-}
-*/
+    /*
+    check_form_token('systemuser_new');
+    if (filter_input_username($_POST['username']) == '' ||
+        filter_shell($_POST['password']) == '')
+    {
+      input_error('Sie müssen alle Felder ausfüllen!');
+    }
+    else
+    {
+      create_jabber_account($_POST['local'], $_POST['domain'], $_POST['password']);
+      if (! $debugmode)
+        header('Location: account');
+    }
+    */
 } elseif ($_GET['action'] == 'pwchange') {
     if (! $role & ROLE_CUSTOMER) {
         system_failure("Zum Ändern Ihres Passworts verwenden Sie bitte die Funktion im Hauptmenü!");
@@ -113,25 +113,25 @@ else
     }
 } elseif ($_GET['action'] == 'delete') {
     system_failure("Benutzeraccounts zu löschen ist momentan nicht über diese Oberfläche möglich. Bitte wenden Sie sich an einen Administrator.");
-/*
-$account_string = filter_output_html($account['local'].'@'.$account['domain']);
-$sure = user_is_sure();
-if ($sure === NULL)
-{
-  are_you_sure("action=delete&account={$_GET['account']}", "Möchten Sie den Account »{$account_string}« wirklich löschen?");
-}
-elseif ($sure === true)
-{
-  delete_jabber_account($account['id']);
-  if (! $debugmode)
-    header("Location: account");
-}
-elseif ($sure === false)
-{
-  if (! $debugmode)
-    header("Location: account");
-}
-*/
+    /*
+    $account_string = filter_output_html($account['local'].'@'.$account['domain']);
+    $sure = user_is_sure();
+    if ($sure === NULL)
+    {
+      are_you_sure("action=delete&account={$_GET['account']}", "Möchten Sie den Account »{$account_string}« wirklich löschen?");
+    }
+    elseif ($sure === true)
+    {
+      delete_jabber_account($account['id']);
+      if (! $debugmode)
+        header("Location: account");
+    }
+    elseif ($sure === false)
+    {
+      if (! $debugmode)
+        header("Location: account");
+    }
+    */
 } else {
     system_failure("Unimplemented action");
 }

@@ -42,7 +42,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
     if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) && isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) &&
       isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']) &&
       isset($_SERVER[$redirect.'SSL_CLIENT_V_START']) && isset($_SERVER[$redirect.'SSL_CLIENT_V_END'])
-      ) {
+    ) {
         $_SESSION['clientcert_cert'] = $_SERVER[$redirect.'SSL_CLIENT_CERT'];
         $_SESSION['clientcert_dn'] = $_SERVER[$redirect.'SSL_CLIENT_S_DN'];
         $_SESSION['clientcert_issuer'] = $_SERVER[$redirect.'SSL_CLIENT_I_DN'];

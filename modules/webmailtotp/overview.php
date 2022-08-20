@@ -30,8 +30,7 @@ require_once('modules/email/include/vmail.php');
 if (! (user_has_accounts() || count(get_vmail_accounts())>0)) {
     output('<p><em>Bisher haben Sie kein Postfach. Bitte erstellen sie zunächst ein Postfach.</em></p>');
 } else {
-
-/* VMAIL */
+    /* VMAIL */
 
     $domains = get_vmail_domains();
     $vmail_accounts = get_vmail_accounts();

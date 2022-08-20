@@ -84,13 +84,13 @@ if ($domains) {
     $html .= '<tr class="odd" id="designated-row"><td><label for="designated"><strong>Inhaberwechsel:</strong></label></td><td><input type="checkbox" name="designated" id="designated" value="yes"><label for="designated">Die Änderung der E-Mail-Adresse bewirkt rechtlich einen Inhaberwechsel. Ich bestätige, dass mir eine explizite Zustimmung des alten und neuen Inhabers für diese Änderung vorliegt. Eine Speicherung der Änderungen ist nur mit dieser Zustimmung möglich.</label></td></tr>';
 }
 
-  $buttons = '<span class="buttonset" id="buttonset-usepgp">
+$buttons = '<span class="buttonset" id="buttonset-usepgp">
          <input type="radio" name="usepgp" id="usepgp-yes" value="yes" '.($c['pgp_id'] ? 'checked="checked"' : '').'/>
          <label for="usepgp-yes">PGP verwenden</label>
          <input type="radio" name="usepgp" id="usepgp-no" value="no" '.($c['pgp_id'] ? '' : 'checked="checked"').'/>
          <label for="usepgp-no">kein PGP</label>';
- $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="buttonset-usepgp">PGP-Verschlüsselung:</label></td><td>'.$buttons.'</td></tr>';
- $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpid">PGP-Key-ID:</label></td><td><input type="text" name="pgpid" id="pgpid" value="'.filter_output_html($c['pgp_id']).'" size="40"><button id="searchpgp" type="button">Auf Keyserver suchen</button><span id="pgpid_feedback"></span></td></tr>';
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="buttonset-usepgp">PGP-Verschlüsselung:</label></td><td>'.$buttons.'</td></tr>';
+$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpid">PGP-Key-ID:</label></td><td><input type="text" name="pgpid" id="pgpid" value="'.filter_output_html($c['pgp_id']).'" size="40"><button id="searchpgp" type="button">Auf Keyserver suchen</button><span id="pgpid_feedback"></span></td></tr>';
 $odd = !$odd;
 $html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpkey">PGP-Key (ASCII-Armored):</label></td><td><textarea name="pgpkey" id="pgpkey">'.filter_output_html($c['pgp_key']).'</textarea></td></tr>';
 $odd = !$odd;

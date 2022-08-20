@@ -44,7 +44,7 @@ if ($acc['autoresponder']) {
     $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
     if ($valid_from == null) {
         // Autoresponder abgeschaltet
-    //$content .= '<p>'.other_icon('go.png')." Es wird keine automatische Antwort versendet</p>";
+        //$content .= '<p>'.other_icon('go.png')." Es wird keine automatische Antwort versendet</p>";
     } elseif ($valid_from > $now) {
         $content .= '<p>'.other_icon('go.png')." Es wird ab dem {$valid_from_string} eine automatische Antwort versendet</p>";
     } elseif ($valid_until == null) {

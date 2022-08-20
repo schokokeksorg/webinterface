@@ -79,46 +79,46 @@ if (isset($_GET['action']) && $_GET['action'] == 'description') {
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
-    case 'delete_db':
-      if (! has_mysql_database($_GET['db'])) {
-          system_failure('Ungültige Datenbank');
-      }
-      $sure = user_is_sure();
-      if ($sure === null) {
-          are_you_sure("action=delete_db&db={$_GET['db']}", "Möchten Sie die Datenbank »{$_GET['db']}« wirklich löschen?");
-      } elseif ($sure === true) {
-          delete_mysql_database($_GET['db']);
-          redirect('overview');
-      } elseif ($sure === false) {
-          redirect('overview');
-      }
-      break;
-    case 'delete_user':
-      if (! has_mysql_user($_GET['user'])) {
-          system_failure('Ungültiger Benutzer');
-      }
-      $sure = user_is_sure();
-      if ($sure === null) {
-          are_you_sure("action=delete_user&user={$_GET['user']}", "Möchten Sie den Benutzer »{$_GET['user']}« wirklich löschen?");
-      } elseif ($sure === true) {
-          delete_mysql_account($_GET['user']);
-          redirect('overview');
-      } elseif ($sure === false) {
-          redirect('overview');
-      }
-      break;
-    case 'change_pw':
-      check_form_token('mysql_databases');
-      $check = strong_password($_POST['newpass']);
-      if ($check !== true) {
-          system_failure('Das Passwort ist nicht sicher genug.');
-      }
-      set_mysql_password($_POST['mysql_username'], $_POST['newpass']);
-      redirect('overview');
-      break;
-    default:
-      system_failure("Diese Funktion scheint noch nicht eingebaut zu sein!");
-  }
+        case 'delete_db':
+            if (! has_mysql_database($_GET['db'])) {
+                system_failure('Ungültige Datenbank');
+            }
+            $sure = user_is_sure();
+            if ($sure === null) {
+                are_you_sure("action=delete_db&db={$_GET['db']}", "Möchten Sie die Datenbank »{$_GET['db']}« wirklich löschen?");
+            } elseif ($sure === true) {
+                delete_mysql_database($_GET['db']);
+                redirect('overview');
+            } elseif ($sure === false) {
+                redirect('overview');
+            }
+            break;
+        case 'delete_user':
+            if (! has_mysql_user($_GET['user'])) {
+                system_failure('Ungültiger Benutzer');
+            }
+            $sure = user_is_sure();
+            if ($sure === null) {
+                are_you_sure("action=delete_user&user={$_GET['user']}", "Möchten Sie den Benutzer »{$_GET['user']}« wirklich löschen?");
+            } elseif ($sure === true) {
+                delete_mysql_account($_GET['user']);
+                redirect('overview');
+            } elseif ($sure === false) {
+                redirect('overview');
+            }
+            break;
+        case 'change_pw':
+            check_form_token('mysql_databases');
+            $check = strong_password($_POST['newpass']);
+            if ($check !== true) {
+                system_failure('Das Passwort ist nicht sicher genug.');
+            }
+            set_mysql_password($_POST['mysql_username'], $_POST['newpass']);
+            redirect('overview');
+            break;
+        default:
+            system_failure("Diese Funktion scheint noch nicht eingebaut zu sein!");
+    }
 }
 
 $dbs = get_mysql_databases($_SESSION['userinfo']['uid']);

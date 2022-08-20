@@ -91,7 +91,7 @@ foreach ($user_domains as $domain) {
             $features[] = 'DNS';
         }
         //if ($domain->autodns == 1)
-    //  $features[] = 'AutoDNS';
+        //  $features[] = 'AutoDNS';
     }
     $mailman = mailman_subdomains($domain->id);
     if (mail_in_use($domain->id)) {

@@ -126,12 +126,12 @@ $form .= "<br />
 $options = ["none" => 'ausgeschaltet', "default" => "Eingeschaltet (empfohlene Version)"];
 $phpinfo = valid_php_versions();
 $php_default_version = null;
-    foreach ($phpinfo as $v) {
-        if ($v['default'] == true) {
-            $php_default_version = $v['major'].'.'.$v['minor'];
-            break;
-        }
+foreach ($phpinfo as $v) {
+    if ($v['default'] == true) {
+        $php_default_version = $v['major'].'.'.$v['minor'];
+        break;
     }
+}
 foreach ($phpinfo as $tag => $info) {
     $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
     if ($info['status'] == 'deprecated') {
@@ -274,35 +274,35 @@ if (!$vhost['server']) {
     $vhost['server'] = my_server_id();
 }
 
-  if (count($ipaddrs)) {
-      $ipselect = [0 => 'System-Standard'];
-      foreach ($ipaddrs as $i) {
-          $ipselect[$i] = $i;
-      }
-      $form .= "
+if (count($ipaddrs)) {
+    $ipselect = [0 => 'System-Standard'];
+    foreach ($ipaddrs as $i) {
+        $ipselect[$i] = $i;
+    }
+    $form .= "
       <h5>IP-Adresse</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
       </div>";
-  }
-  if (count($available_users)) {
-      $userselect = [0 => 'Eigener Benutzeraccount'];
-      foreach ($available_users as $u) {
-          $userselect[$u['uid']] = $u['username'];
-      }
-      $form .= "
+}
+if (count($available_users)) {
+    $userselect = [0 => 'Eigener Benutzeraccount'];
+    foreach ($available_users as $u) {
+        $userselect[$u['uid']] = $u['username'];
+    }
+    $form .= "
       <h5>SuExec-Benutzeraccount</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
       </div>";
-  }
-  if (count($available_servers) > 1) {
-      $form .= "
+}
+if (count($available_servers) > 1) {
+    $form .= "
       <h5>Einrichten auf Server</h5>
       <div style=\"margin-left: 2em;\">
       ".html_select('server', $selectable_servers, $vhost['server'])."
       </div>";
-  }
+}
 if ($have_v6) {
     $ipv6_address = '';
     if ($vhost['id'] && ($vhost['autoipv6'] >0)) {

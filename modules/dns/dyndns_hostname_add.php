@@ -29,20 +29,20 @@ if (!isset($_REQUEST['id'])) {
 $id = (int) $_REQUEST['id'];
 $dyndns = get_dyndns_account($id);
 
-  $type = 'a';
-  if ($_REQUEST['type'] == 'aaaa') {
-      $type = 'aaaa';
-  }
-  $record = blank_dns_record($type);
-  // Sicherheitsprüfungen passieren im Backend
+$type = 'a';
+if ($_REQUEST['type'] == 'aaaa') {
+    $type = 'aaaa';
+}
+$record = blank_dns_record($type);
+// Sicherheitsprüfungen passieren im Backend
 
-  $record['hostname'] = $_REQUEST['hostname'];
-  $record['domain'] = (int) $_REQUEST['domain'];
-  $record['dyndns'] = $id;
-  $record['ttl'] = 120;
+$record['hostname'] = $_REQUEST['hostname'];
+$record['domain'] = (int) $_REQUEST['domain'];
+$record['dyndns'] = $id;
+$record['ttl'] = 120;
 
-  save_dns_record(null, $record);
+save_dns_record(null, $record);
 
-  if (!$debugmode) {
-      header('Location: dyndns_hostnames?id='.$dyndns['id']);
-  }
+if (!$debugmode) {
+    header('Location: dyndns_hostnames?id='.$dyndns['id']);
+}

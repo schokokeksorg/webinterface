@@ -51,13 +51,13 @@ foreach ($repos as $repo => $settings) {
         }
         $grant = '';
         switch ($rights) {
-      case 'R': $grant = 'Lesezugriff';
+            case 'R': $grant = 'Lesezugriff';
                 break;
-      case 'RW': $grant = 'Lese- und Schreibzugriff';
+            case 'RW': $grant = 'Lese- und Schreibzugriff';
                 break;
-      case 'RW+': $grant = 'erweiterter Zugriff (inkl. "rewind")';
+            case 'RW+': $grant = 'erweiterter Zugriff (inkl. "rewind")';
                 break;
-    }
+        }
         output("<li>{$user}: {$grant}</li>");
     }
     output("</ul></div>");

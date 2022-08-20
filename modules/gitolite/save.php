@@ -66,13 +66,13 @@ if ($_GET['action'] == 'newuser') {
     foreach ($users as $u) {
         if (isset($_POST[$u])) {
             switch ($_POST[$u]) {
-        case 'rwplus': $permissions[$u] = 'RW+';
-          break;
-        case 'rw': $permissions[$u] = 'RW';
-          break;
-        case 'r': $permissions[$u] = 'R';
-          break;
-      }
+                case 'rwplus': $permissions[$u] = 'RW+';
+                    break;
+                case 'rw': $permissions[$u] = 'RW';
+                    break;
+                case 'r': $permissions[$u] = 'R';
+                    break;
+            }
         }
     }
     if (isset($_POST['gitweb']) && ($_POST['gitweb'] == 'r')) {

@@ -168,7 +168,7 @@ $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
   html_select('ar_quote', ["none" => 'nicht in Antwort einschließen',
                                 "teaser" => 'anreißen (erste 10 Zeilen)',
                                 "inline" => 'zitieren (max. 50 Zeilen)', ], $quote)."</p>";
-                                //"attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
+//"attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
 
 
 $ar_from_default_checked = ($ar['fromname'] == null) ? ' checked="checked"' : '';

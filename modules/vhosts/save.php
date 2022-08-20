@@ -133,17 +133,17 @@ if ($_GET['action'] == 'edit') {
 
     $ssl = null;
     switch ($_POST['ssl']) {
-    case 'http':
-      $ssl = 'http';
-      break;
-    case 'https':
-      $ssl = 'https';
-      break;
-    case 'forward':
-      $ssl = 'forward';
-      break;
-    /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
-  }
+        case 'http':
+            $ssl = 'http';
+            break;
+        case 'https':
+            $ssl = 'https';
+            break;
+        case 'forward':
+            $ssl = 'forward';
+            break;
+            /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
+    }
 
     $hsts = null;
     $hsts_subdomains = false;
@@ -178,14 +178,14 @@ if ($_GET['action'] == 'edit') {
 
     $logtype = '';
     switch ($_POST['logtype']) {
-    case 'anonymous':
-      $logtype = 'anonymous';
-      break;
-    case 'default':
-      $logtype = 'default';
-      break;
-    /* Wenn etwas anderes kommt, ist das "kein Logging". So einfach ist das. */
-  }
+        case 'anonymous':
+            $logtype = 'anonymous';
+            break;
+        case 'default':
+            $logtype = 'default';
+            break;
+            /* Wenn etwas anderes kommt, ist das "kein Logging". So einfach ist das. */
+    }
 
     $errorlog = 0;
     if (isset($_POST['errorlog']) and ($_POST['errorlog'] == 1)) {
@@ -227,7 +227,7 @@ if ($_GET['action'] == 'edit') {
             $cert = $vhost['cert'];
         } elseif ($cert > 0) {
             # Das Cert was der user gewählt hat, ist von Lets encrypt
-      # tu nix, $cert ist schon korrekt
+            # tu nix, $cert ist schon korrekt
         } else {
             # Wenn vorher kein Zertifikat aktiv war, dann setze jetzt auch keines.
             # Der letsencrypt-Automatismus macht das dann schon.

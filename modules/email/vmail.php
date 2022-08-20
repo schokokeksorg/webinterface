@@ -121,7 +121,7 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
                         if ($valid_from == null) {
                             // Autoresponder abgeschaltet
-                        //array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
+                            //array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
                         } elseif ($valid_from > $now) {
                             array_push($actions, "<strike>Automatische Antwort versenden</strike> (Wird aktiviert am {$valid_from_string})");
                         } elseif ($valid_until == null) {

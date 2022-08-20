@@ -46,28 +46,28 @@ if ($_POST['target'] == 'new') {
 
     $ssl = '';
     switch ($_POST['ssl']) {
-    case 'http':
-      $ssl = 'http';
-      break;
-    case 'https':
-      $ssl = 'https';
-      break;
-    case 'forward':
-      $ssl = 'forward';
-      break;
-    /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
-  }
+        case 'http':
+            $ssl = 'http';
+            break;
+        case 'https':
+            $ssl = 'https';
+            break;
+        case 'forward':
+            $ssl = 'forward';
+            break;
+            /* Wenn etwas anderes kommt, ist das "beides". So einfach ist das. */
+    }
 
     $logtype = '';
     switch ($_POST['logtype']) {
-    case 'anonymous':
-      $logtype = 'anonymous';
-      break;
-    case 'default':
-      $logtype = 'default';
-      break;
-    /* Wenn etwas anderes kommt, ist das "kein Logging". So einfach ist das. */
-  }
+        case 'anonymous':
+            $logtype = 'anonymous';
+            break;
+        case 'default':
+            $logtype = 'default';
+            break;
+            /* Wenn etwas anderes kommt, ist das "kein Logging". So einfach ist das. */
+    }
 
     $errorlog = 0;
     if (isset($_POST['errorlog']) and ($_POST['errorlog'] == 1)) {
