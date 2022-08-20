@@ -1,7 +1,7 @@
 {
     "name": "schokokeks/webinterface",
     "description": "Webinterface running at config.schokokeks.org",
-    "license": "CC0-1.0",
+    "license": "0BSD",
     "require": {
         "bjeavons/zxcvbn-php": "^1.2",
         "giggsey/libphonenumber-for-php": "^8.8",
