@@ -40,6 +40,16 @@ if (have_role(ROLE_CUSTOMER)) {
 title("Domain {$dom->fqdn}");
 $section = 'domains_domains';
 
+// Block gekündigte Domain in externe Domain umwandeln
+
+if ($dom->status == 'transferout') {
+    output('<h4>Domain wurde transferiert!</h4>');
+    output('<p>Diese Domain wurde zu einem anderen Anbieter umgezogen. Die mit der Domain verbundenen Dienste werden noch für einige Tage weiterhin erbracht und anschließend gelöscht.</p>');
+    output('<p>Wenn Sie diese Domain weiterhin über unsere Anlagen nutzen möchten, müssen Sie diese in eine externe Domain umwandeln.</p>');
+    $form = '<p><input type="hidden" name="domain" value="'.$dom->id.'"><input type="submit" name="submit" value="Die Domain '.$dom->fqdn.' in externe Domain umwandeln"></p>';
+    output(html_form('domains_convertexternal', 'save', 'action=convertexternal', $form));
+}
+
 // Block zuständiger Useraccount
 
 $is_current_user = true;

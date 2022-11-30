@@ -67,4 +67,8 @@ if ($_REQUEST['action'] == 'delete') {
     } else {
         system_failure('Das Mailman-Modul ist nicht verfügbar');
     }
+} elseif ($_REQUEST['action'] == 'convertexternal') {
+    check_form_token('domains_convertexternal');
+    convert_domain_to_external($dom->id);
+    redirect('detail?id='.$dom->id);
 }

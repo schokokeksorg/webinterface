@@ -323,6 +323,13 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     return $id;
 }
 
+
+function convert_domain_to_external($domain)
+{
+    db_query("UPDATE kundendaten.domains SET status='external', billing='external', provider='other', kuendigungsdatum=NULL, registrierungsdatum=NULL, betrag=NULL WHERE id=? AND status='transferout' AND abgerechnet_bis >= kuendigungsdatum",
+    [$domain,]);
+}
+
 function delete_domain($id)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
