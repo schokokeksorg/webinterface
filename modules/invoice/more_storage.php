@@ -50,7 +50,7 @@ if (isset($_REQUEST['count']) && (int) $_REQUEST['count'] > 0) {
     $count = (int) $_REQUEST['count'];
 }
 
-output("<p>Ihr aktuell zugeteilter Speicherplatz (ggf. inklusive Mitbenutzer) beträgt <strong>${customerquota} MB</strong>. Sie können weiteren Speicherplatz hinzubuchen.</p>");
+output("<p>Ihr aktuell zugeteilter Speicherplatz (ggf. inklusive Mitbenutzer) beträgt <strong>{$customerquota} MB</strong>. Sie können weiteren Speicherplatz hinzubuchen.</p>");
 
 $checked = '';
 if ($count == 1024) {
