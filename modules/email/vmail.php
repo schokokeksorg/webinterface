@@ -116,19 +116,20 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                     if ($acc['autoresponder']) {
                         $now = date('Y-m-d');
                         $valid_from = $acc['autoresponder']['valid_from'];
-                        $valid_from_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_from']));
                         $valid_until = $acc['autoresponder']['valid_until'];
-                        $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
                         if ($valid_from == null) {
                             // Autoresponder abgeschaltet
                             //array_push($actions, "<strike>Automatische Antwort versenden</strike> (Abgeschaltet)");
                         } elseif ($valid_from > $now) {
+                            $valid_from_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_from']));
                             array_push($actions, "<strike>Automatische Antwort versenden</strike> (Wird aktiviert am {$valid_from_string})");
                         } elseif ($valid_until == null) {
                             array_push($actions, "Automatische Antwort versenden (Unbefristet)");
                         } elseif ($valid_until > $now) {
+                            $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
                             array_push($actions, "Automatische Antwort versenden (Wird deaktiviert am {$valid_until_string})");
                         } elseif ($valid_until < $now) {
+                            $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
                             array_push($actions, "<strike>Automatische Antwort versenden</strike> (Automatisch abgeschaltet seit {$valid_until_string})");
                         }
                     }
