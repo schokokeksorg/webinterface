@@ -274,6 +274,9 @@ function save_dns_record($id, $record)
             if ($record['spec'] < 0) {
                 system_failure("invalid priority");
             }
+            if (strlen($record['data']) > 255) {
+                system_failure('data field is too long');
+            }
             verify_input_hostname($record['data']);
             if (! $record['data']) {
                 system_failure('MX hostname missing');
@@ -290,6 +293,9 @@ function save_dns_record($id, $record)
             $record['dyndns'] = null;
             $record['spec'] = null;
             $record['ip'] = null;
+            if (strlen($record['data']) > 255) {
+                system_failure('data field is too long');
+            }
             verify_input_hostname($record['data']);
             if (! $record['data']) {
                 system_failure('destination host missing');
@@ -301,6 +307,9 @@ function save_dns_record($id, $record)
             $record['dyndns'] = null;
             $record['spec'] = null;
             $record['ip'] = null;
+            if (strlen($record['data']) > 1024) {
+                system_failure('data field is too long');
+            }
             if (! $record['data']) {
                 system_failure('text entry missing');
             }
@@ -310,6 +319,9 @@ function save_dns_record($id, $record)
             $record['dyndns'] = null;
             $record['spec'] = max((int) $record['spec'], 1);
             $record['ip'] = null;
+            if (strlen($record['data']) > 255) {
+                system_failure('data field is too long');
+            }
             if (! $record['data']) {
                 system_failure('text entry missing');
             }
@@ -318,6 +330,9 @@ function save_dns_record($id, $record)
         case 'caa':
             $record['dyndns'] = null;
             $record['ip'] = null;
+            if (strlen($record['data']) > 255) {
+                system_failure('data field is too long');
+            }
             if (! $record['data']) {
                 system_failure('text entry missing');
             }
@@ -328,6 +343,9 @@ function save_dns_record($id, $record)
             $record['spec'] = (int) $record['spec'];
             if ($record['spec'] < 0) {
                 system_failure("invalid priority");
+            }
+            if (strlen($record['data']) > 255) {
+                system_failure('data field is too long');
             }
             if (! $record['data']) {
                 system_failure('SRV target missing');
