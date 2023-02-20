@@ -121,10 +121,13 @@ output("<tr><td><b>Summe Einnahmen:</b></td><td style=\"text-align: right;\"><b>
 output("<tr><td colspan=\"2\"></td></tr>");
 $ausgabensumme = 0.0;
 foreach ($types as $id => $t) {
+    if ($t == 'Gewerbesteuer') {
+        continue;
+    }
     if ($id == 0 || !isset($net_by_type[$id]) || array_key_exists($id, $investment_types)) {
         continue;
     }
-    $ausgabensumme -= $net_by_type[$id];
+    $ausgabensumme -= round($net_by_type[$id], 2);
     output("<tr><td>".$t."</td><td style=\"text-align: right;\">".number_format(-$net_by_type[$id], 2, ',', '.')." €</td></tr>");
 }
 
