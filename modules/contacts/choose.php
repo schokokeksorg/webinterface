@@ -43,11 +43,22 @@ if (isset($_SESSION['contacts_choose_header'])) {
 
 
 output('<div class="contact-list">');
-$contacts = possible_domainholders();
+$contacts = get_contacts();
+$hvae_invalid = false;
 foreach ($contacts as $c) {
-    output(internal_link('', display_contact($c), "id={$c['id']}", 'class="contacts-choose"'));
+    if (possible_domainholder($c)) {
+        output(internal_link('', display_contact($c), "id={$c['id']}", 'class="contacts-choose"'));
+    } else {
+        $have_invalid = true;
+        output(display_contact($c, '<p><em>Datensatz unvollständig</em></p>'));
+    }
 }
 
 output('</div>');
+
+if ($have_invalid) {
+    warning('Sie haben Kontakte, die nicht als Domaininhaber gewählt werden können.
+    Zur Verwendung als Domaininhaber müssen Name, vollständige Adresse, E-Mail-Adresse sowie Telefonnummer angegeben sein.');
+}
 
 addnew('edit', 'Neue Adresse erstellen', 'id=new&back=choose&domainholder=1');
