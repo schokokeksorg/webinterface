@@ -98,6 +98,9 @@ foreach ($auto_records as $rec) {
     if ($rec['type'] == 'mx' || $rec['type'] == 'srv') {
         $data .= ' ('.(int) $rec['spec'].')';
     }
+    if (($rec['type'] == 'txt') && (strlen($data) > 100)) {
+        $data = substr($data, 0, 100) . "<em>[...]</em>";
+    }
     $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
     output("<tr><td><em>{$rec['fqdn']}</em></td><td>".strtoupper($rec['type'])."</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
 }
