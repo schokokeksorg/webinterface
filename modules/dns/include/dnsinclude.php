@@ -207,10 +207,14 @@ function get_domain_auto_records($domainname)
 }
 
 
-function warn_autorecord_collission($hostname, $domain, $type)
+function warn_autorecord_collission($hostname, $domain, $type, $data)
 {
     $autorecords = get_domain_auto_records($domain);
     foreach ($autorecords as $ar) {
+        if (!str_starts_with($data, "v=spf1") && $hostname == null) {
+            // Spezialfall SPF-Record
+            continue;
+        }
         if ($ar['hostname'] == $hostname && $ar['type'] == $type) {
             warning('Sie haben einen DNS-Record angelegt, für den bisher ein automatisch erzeuger Record vorhanden war. Ihr neuer Eintrag wird den bisherigen ersetzen. Bitte haben Sie einen Moment Geduld und laden Sie diese Seite in wenigen Minuten neu. Der automatisch erzeute Record sollte dann verschwunden sein.');
             break;
@@ -245,7 +249,7 @@ function save_dns_record($id, $record)
     if ($record['ttl'] &&  (int) $record['ttl'] < 1) {
         system_failure('Fehler bei TTL');
     }
-    warn_autorecord_collission($record['hostname'], $dom->fqdn, $record['type']);
+    warn_autorecord_collission($record['hostname'], $dom->fqdn, $record['type'], $record['data']);
     switch ($record['type']) {
         case 'a':
             if ($record['dyndns']) {
