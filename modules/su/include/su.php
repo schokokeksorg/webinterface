@@ -129,7 +129,7 @@ function build_results($term)
                 $add(15, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
             } elseif (strstr($u['username'], $term)) {
                 $add(20, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
-            } elseif (stristr($u['name'], $term)) {
+            } elseif (isset($u['name']) && stristr($u['name'], $term)) {
                 $add(25, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
             } else {
                 $add(85, "u{$u['uid']}", "{$u['username']} (UID {$u['uid']}, {$realname})");
