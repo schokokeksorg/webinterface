@@ -128,25 +128,24 @@ if (! $startdate || $startdate <= date('Y-m-d')) {
 }
 $form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".
   "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_date\">Erst ab dem </label>".
-  "<input type=\"text\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" /></p>";
+  "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"".date('Y-m-d')."\" max=\"".date('Y-m-d', time() + 60*24*60*60)."\" /></p>";
 
-$valid_until_infinity_checked = ($ar['valid_until'] == null) ? ' checked="checked"' : '';
-$valid_until_date_checked = ($ar['valid_until'] != null) ? ' checked="checked"' : '';
 $enddate = $ar['valid_until'];
 if (! $enddate) {
     $enddate = date('Y-m-d', time() + 7*24*60*60);
 }
+$max_end = date('Y-m-d', time() + 60*24*60*60);
+if ($ar['valid_from'] > date('Y-m-d')) {
+    $max_end = date_create($ar['valid_from']);
+    $max_end->modify("+60 day");
+    $max_end = $max_end->format('Y-m-d');
+}
 $form .= "<h4>Deaktivierung</h4>";
 $form .= "<p><label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
-  "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /><br/>";
+  "<input type=\"date\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" min=\"".date('Y-m-d')."\" max=\"".$max_end."\" /><br/>";
 if (!$accountlogin && ($id != 0)) {
     $form .= "<small>(Automatische Antworten sind nur befristet erlaubt. Wenn Sie diese Adresse dauerhaft stilllegen möchten, können Sie dies am Ende dieser Seite tun.)</small></p>";
 }
-/*
-$form .= "<p><input type=\"radio\" name=\"ar_valid_until\" value=\"infinity\" id=\"ar_valid_until_infinity\"{$valid_until_infinity_checked} /> <label for=\"ar_valid_until_infinity\">Unbefristet</label><br />".
-  "<input type=\"radio\" name=\"ar_valid_until\" value=\"date\" id=\"ar_valid_until_date\"{$valid_until_date_checked} /> <label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
-  "<input type=\"text\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" /><br/><small>(Automatische Antworten sind nur befristet erlaubt. Benötigen Sie langfristig funktionierende automatische Antworten, sprechen Sie unsere Administratoren bitte an, dann suchen wir eine Lösung.)</small></p>";
-*/
 
 $subject = filter_output_html($ar['subject']);
 $ar_subject_default_checked = ($subject == null) ? ' checked="checked"' : '';

@@ -26,7 +26,7 @@ if ($_GET['action'] == 'new') {
 
     $gueltig_ab = $_REQUEST['gueltig_ab'];
     if ($gueltig_ab == 'datum') {
-        $gueltig_ab = $_REQUEST['gueltig_ab_datum_year'].'-'.$_REQUEST['gueltig_ab_datum_month'].'-'.$_REQUEST['gueltig_ab_datum_day'];
+        $gueltig_ab = $_REQUEST['gueltig_ab_datum'];
     }
     if (! check_date($gueltig_ab)) {
         system_failure('Konnte das Datum nicht auslesen');

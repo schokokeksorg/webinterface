@@ -146,47 +146,20 @@ $(document).ready(function(){
   $('div.vmail-forward input').change();
 
 
-  $.datepicker.regional['de'] = {clearText: 'löschen', clearStatus: 'aktuelles Datum löschen',
-                closeText: 'schließen', closeStatus: 'ohne Änderungen schließen',
-                prevText: '< zurück', prevStatus: 'letzten Monat zeigen',
-                nextText: 'vor >', nextStatus: 'nächsten Monat zeigen',
-                currentText: 'heute', currentStatus: '',
-                monthNames: ['Januar','Februar','März','April','Mai','Juni',
-                'Juli','August','September','Oktober','November','Dezember'],
-                monthNamesShort: ['Jan','Feb','Mär','Apr','Mai','Jun',
-                'Jul','Aug','Sep','Okt','Nov','Dez'],
-                monthStatus: 'anderen Monat anzeigen', yearStatus: 'anderes Jahr anzeigen',
-                weekHeader: 'Wo', weekStatus: 'Woche des Monats',
-                dayNames: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
-                dayNamesShort: ['So','Mo','Di','Mi','Do','Fr','Sa'],
-                dayNamesMin: ['So','Mo','Di','Mi','Do','Fr','Sa'],
-                dayStatus: 'Setze DD als ersten Wochentag', dateStatus: 'Wähle D, M d',
-                dateFormat: 'dd.mm.yy', firstDay: 1, 
-                initStatus: 'Wähle ein Datum', isRTL: false};
-  $.datepicker.setDefaults( $.datepicker.regional[ "de" ] );
-  $.datepicker.setDefaults({
-    dateFormat: 'yy-mm-dd',
-    minDate: 1,
-    maxDate: "+2m"
+  document.querySelector("#ar_startdate").addEventListener("change", (e) => {
+      document.querySelector("#ar_enddate").min = document.querySelector("#ar_startdate").value;
+      startdate = new Date(document.querySelector("#ar_startdate").value)
+      minenddate = new Date(startdate);
+      minenddate.setDate(startdate.getDate() + 1);
+      document.querySelector("#ar_enddate").min = minenddate.toISOString().split("T")[0];
+      if (document.querySelector("#ar_enddate").value < document.querySelector("#ar_startdate").value) {
+          document.querySelector("#ar_enddate").value = minenddate.toISOString().split("T")[0];
+      }
+      maxenddate = new Date(startdate);
+      maxenddate.setDate(startdate.getDate() + 60);
+      document.querySelector("#ar_enddate").max = maxenddate.toISOString().split("T")[0];
+      });
 
-    });
-
-  $('#ar_startdate').datepicker();
-  $('#ar_startdate').change(function () {
-    $('#ar_valid_from_date').prop('checked', true)
-    mindate = $('#ar_startdate').datepicker("getDate");
-    mindate.setDate(mindate.getDate()+1);
-    $('#ar_enddate').datepicker("option", "minDate", mindate);
-    maxdate = $('#ar_startdate').datepicker("getDate");
-    maxdate.setDate(maxdate.getDate()+60);
-    $('#ar_enddate').datepicker("option", "maxDate", maxdate);
-    });
-
-  $('#ar_enddate').datepicker();
-  $('#ar_enddate').datepicker("option", "minDate", $('#ar_startdate').val());
-  $('#ar_enddate').change(function () {
-    $('#ar_valid_until_date').prop('checked', true)
-    });
 });
 
 
