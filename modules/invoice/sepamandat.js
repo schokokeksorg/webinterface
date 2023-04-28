@@ -61,6 +61,21 @@ function showktoblz( event ) {
 }
 
 
+// Define a convenience method and use it
+var ready = (callback) => {
+  if (document.readyState != "loading") callback();
+  else document.addEventListener("DOMContentLoaded", callback);
+}
+
+ready(() => { 
+  /* Do things after DOM has fully loaded */ 
+
+    document.querySelector("#gueltig_ab_datum").addEventListener("change", (e) => {
+        document.querySelector("#gueltig_ab_auswahl").checked = true;
+        })
+});
+
+
 $(function() {
     $('#iban').on("change keyup paste", searchbank );
     $("#copydata").click(copydata);
