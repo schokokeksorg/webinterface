@@ -158,6 +158,8 @@ $(document).ready(function(){
       maxenddate = new Date(startdate);
       maxenddate.setDate(startdate.getDate() + 60);
       document.querySelector("#ar_enddate").max = maxenddate.toISOString().split("T")[0];
+
+      document.querySelector("#ar_valid_from_date").checked = true;
       });
 
 });
