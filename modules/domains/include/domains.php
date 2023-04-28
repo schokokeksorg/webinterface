@@ -38,6 +38,27 @@ function dns_in_use($domain)
     return ($result->rowCount() > 0);
 }
 
+function mail_setting($domain)
+{
+    if (! in_array('email', config('modules'))) {
+        return null;
+    }
+    $domain = (int) $domain;
+    $result = db_query("SELECT mail FROM kundendaten.domains WHERE id=?", [$domain]);
+    if ($result->rowCount() < 1) {
+        system_failure("Domain not found");
+    }
+    $d = $result->fetch();
+    if ($d['mail'] == 'none') {
+        return 'none';
+    } // manually disabled
+    $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain=?", [$domain]);
+    if ($result->rowCount() > 0) {
+        return 'vmail';
+    }
+    return 'manual';
+}
+
 
 function mail_in_use($domain)
 {

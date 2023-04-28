@@ -111,12 +111,12 @@ if ($is_current_user) {
         $vmail = count_vmail($dom->id);
         if ($used) {
             if ($vmail > 0) {
-                output("<div class=\"tile usage used\"><p><strong>".internal_link('../email/vmail', "E-Mail", 'filter='.$dom->fqdn)."</strong></p><p>E-Mail-Postfächer unter dieser Domain: <strong>{$vmail}</strong></p></div>");
+                output("<div class=\"tile usage used\"><p><strong>".internal_link('email', "E-Mail", 'dom='.$dom->id)."</strong></p><p>E-Mail-Postfächer unter dieser Domain: <strong>{$vmail}</strong></p><p>".internal_link('../email/vmail', "Postfächer verwalten", 'filter='.$dom->fqdn)."</p></div>");
             } else {
-                output("<div class=\"tile usage unused\"><p><strong>".internal_link('../email/imap', "E-Mail")."</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p></div>");
+                output("<div class=\"tile usage unused\"><p><strong>".internal_link('email', "E-Mail", "dom=".$dom->id)."</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p><p>".internal_link('../email/imap', "Accounts verwalten")."</p></div>");
             }
         } else {
-            output("<div class=\"tile usage unused\"><p><strong>".internal_link('../email/vmail', "E-Mail", 'filter='.$dom->fqdn)."</strong></p><p>Bisher keine E-Mail-Postfächer unter dieser Domain.</p></div>");
+            output("<div class=\"tile usage unused\"><p><strong>".internal_link('email', "E-Mail", 'dom='.$dom->id)."</strong></p><p>Bisher keine E-Mail-Postfächer unter dieser Domain.</p><p>".internal_link('../email/vmail', "Postfächer verwalten", "filter=".$dom->fqdn)."</p></div>");
         }
         $everused = true;
     }

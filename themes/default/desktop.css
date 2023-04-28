@@ -120,6 +120,9 @@ p.addnew a:hover {
   border-bottom: 2px solid #257f00;
 }
 
+p.addnew a.grey {
+    color: #555;
+}
 
 p.delete a {
   color: #b22;

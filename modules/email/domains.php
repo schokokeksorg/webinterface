@@ -72,6 +72,28 @@ foreach ($domains as $id => $dom) {
          <label for="option-'.$id.'-off">Ausgeschaltet</label>
          <input type="submit" value="Speichern" />
       </span>';
+    
+    if ($dom['type'] != 'none') {
+        $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
+        $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
+        $check_dkimoff = ($dom['dkim'] == 'none' ? ' checked="checked"' : '');
+        $buttons .= ' <p><label for="dkim-select">DKIM-Einstellung: </label><select name="dkim" id="dkim-select">
+            <option value="dmarc" '.($dom['dkim'] == 'dmarc' ? 'selected' : '').'>DKIM + DMARC</option>
+            <option value="dkim" '.($dom['dkim'] == 'dkim' ? 'selected' : '').'>Nur DKIM</option>
+            <option value="none" '.($dom['dkim'] == 'none' ? 'selected' : '').'>DKIM ausgeschaltet</option>
+        </select></p>
+        <p>Werden E-Mails nur über unsere Anlagen versendet oder nutzen Sie für den Versand unter dieser Domain auch andere Anbieter?</p>
+        <p><span class="buttonset" id="buttonset-dkim-'.$id.'">
+         <input type="radio" name="dkim-'.$id.'" id="dkim-'.$id.'-dmarc" value="dmarc"'.$check_dmarc.' />
+         <label for="dkim-'.$id.'-dmarc">Nur schokokeks.org</label>
+         <input type="radio" name="dkim-'.$id.'" id="dkim-'.$id.'-dkim" value="dkim"'.$check_dkim.' />
+         <label for="dkim-'.$id.'-dkim">Auch andere Anbieter</label>
+         <input type="radio" name="dkim-'.$id.'" id="dkim-'.$id.'-off" value="off"'.$check_dkimoff.' />
+         <label for="dkim-'.$id.'-off">DKIM Ausgeschaltet</label>
+         <input type="submit" value="Speichern" />
+      </span>';
+
+    }
     output("<tr{$trextra}><td>{$dom['name']}</td><td>".html_form('vmail_domainchange', 'domainchange', '', $buttons)."</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
         foreach ($subdomains[$id] as $subdom) {
