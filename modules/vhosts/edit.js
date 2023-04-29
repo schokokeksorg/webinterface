@@ -118,7 +118,7 @@ ready(() => {
   document.querySelector('#use_default_docroot').addEventListener("change", useDefaultDocroot);
   useDefaultDocroot();
 
-  document.querySelector('.usageoption').addEventListener("change", showAppropriateLines);
+  document.querySelectorAll('.usageoption').forEach(el => el.addEventListener("change", showAppropriateLines));
 
   document.querySelector('#aliaswww').addEventListener("change", showAliasWWWOptions);
   showAliasWWWOptions();
