@@ -20,7 +20,7 @@ $result = [
     "iban_ok" => 0,
     "iban" => null,
     "bic" => null,
-    "bankname" => null
+    "bankname" => null,
 ];
 
 $iban = null;
