@@ -14,7 +14,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/icons.php');
 require_once('invoice.php');
 
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 javascript();
 
 require_role(ROLE_CUSTOMER);
@@ -58,7 +58,8 @@ if ($first_date != date('Y-m-d')) {
     $html .= '<p><input type="radio" id="gueltig_ab_'.$first_date.'" name="gueltig_ab" value="'.$first_date.'" checked="checked" /><label for="gueltig_ab_'.$first_date.'">Dieses Mandat gilt <strong>ab '.$first_date.'</strong> (Alle bisher offenen Forderungen werden ebenfalls abgebucht)</label></p>';
 }
 $html .= '<p><input type="radio" id="gueltig_ab_heute" name="gueltig_ab" value="'.date('Y-m-d').'" '.($checked ? '' : 'checked="checked"').' /><label for="gueltig_ab_heute">Dieses Mandat gilt <strong>ab heute</strong> ('.date('Y-m-d').')</label></p>';
-$html .= '<p><input type="radio" id="gueltig_ab_auswahl" name="gueltig_ab" value="datum" /><label for="gueltig_ab_datum">Dieses Mandat gilt <strong>erst ab</strong></label> '.html_datepicker("gueltig_ab_datum", time()).'</p>';
+$html .= '<p><input type="radio" id="gueltig_ab_auswahl" name="gueltig_ab" value="datum" /><label for="gueltig_ab_datum">Dieses Mandat gilt <strong>erst ab</strong></label> <input type="date" id="gueltig_ab_datum" name="gueltig_ab_datum" value="'.date('Y-m-d').'">';
+
 
 $html .= '<h4>Ihre Bankverbindung</h4>';
 $html .= '<table>

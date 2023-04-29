@@ -362,6 +362,9 @@ function search_pgp_key($search)
 
 function fetch_pgp_key($pgp_id)
 {
+    if (! $pgp_id) {
+        return null;
+    }
     $output = [];
     $ret = null;
     $command = '/usr/bin/timeout 10 /usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key '.escapeshellarg($pgp_id);

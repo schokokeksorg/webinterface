@@ -1,6 +1,8 @@
-$(function() {
-    $('#clear').click( function() { 
-        $('#filter').val('');
-        $('#vmail_filter').submit();
-    });
+ready(() => {
+    if (document.querySelector('#clear')) {
+        document.querySelector('#clear').addEventListener("click", () => { 
+            document.querySelector('#filter').value = '';
+            document.querySelector('#vmail_filter').submit();
+        });
+    }
 });

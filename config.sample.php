@@ -35,6 +35,5 @@ $config['mime_type'] = 'text/html';
 
 $config['session_name'] = 'CONFIG_SCHOKOKEKS_ORG';
 $config['theme'] = 'default';
-$config['jquery_ui_path'] = '/external/jquery';
 
 ini_set('display_errors', 'On');

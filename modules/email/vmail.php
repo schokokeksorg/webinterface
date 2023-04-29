@@ -15,7 +15,7 @@ require_once('inc/base.php');
 require_once('inc/icons.php');
 require_once('inc/security.php');
 require_role(ROLE_SYSTEMUSER);
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 javascript();
 
 require_once('hasdomain.php');

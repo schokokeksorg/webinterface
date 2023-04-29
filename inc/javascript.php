@@ -13,13 +13,11 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/base.php');
 
-if (! defined('__JQUERY_INCLUDED')) {
-    define('__JQUERY_INCLUDED', '1');
+if (! defined('__JAVASCRIPT_INCLUDED')) {
+    define('__JAVASCRIPT_INCLUDED', '1');
     global $prefix;
     html_header('
-<link rel="stylesheet" href="'.$prefix.'external/jquery/ui/jquery-ui.min.css" />
-<script type="text/javascript" src="'.$prefix.'external/jquery/jquery.min.js" ></script>
-<script type="text/javascript" src="'.$prefix.'external/jquery/ui/jquery-ui.min.js" ></script>
+<script type="text/javascript" src="'.$prefix.'js/common.js" ></script>
 ');
 }
 

@@ -14,7 +14,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/security.php');
 require_role(ROLE_SYSTEMUSER);
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 javascript('domains.js');
 
 require_once('vmail.php');

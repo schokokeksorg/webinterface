@@ -13,13 +13,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/security.php');
 
-function do_ajax_cert_login()
-{
-    global $prefix;
-    require_once('inc/jquery.php');
-    javascript('certlogin.js', 'index');
-}
-
 function get_logins_by_cert($cert)
 {
     $result = db_query("SELECT type,username,startpage FROM system.clientcert WHERE cert=? ORDER BY type,username", [$cert]);

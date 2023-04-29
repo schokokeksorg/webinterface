@@ -428,14 +428,6 @@ function html_select($name, $options, $default='', $free='')
 }
 
 
-function html_datepicker($htmlname, $timestamp)
-{
-    $date = date('Y-m-d', $timestamp);
-    $ret = '';
-    $ret .= '<input type="date" id="'.$htmlname.'" name="'.$htmlname.'" value="'.$date.'">';
-    return $ret;
-}
-
 function get_modules_info()
 {
     $modules = config('modules');

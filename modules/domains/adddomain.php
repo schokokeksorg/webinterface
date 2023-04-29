@@ -13,8 +13,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/security.php');
 require_once('inc/icons.php');
-require_once('inc/jquery.php');
-javascript();
 
 require_once('domainapi.php');
 require_once('domains.php');
@@ -108,20 +106,20 @@ if (isset($_REQUEST['domain'])) {
                 <p><strong>Beachten Sie:</strong> Um diese Domain nutzen zu können, benötigen Sie bei Ihrem bisherigen Domainregistrar die Möglichkeit, DNS-Records anzulegen oder die zuständigen DNS-Server zu ändern. Sie können dann entweder unsere DNS-Server nutzen oder einzelne DNS-Records auf unsere Server einrichten.</p>');
 
         output('<p>Mit Betätigen des unten stehenden Knopfes bestätigen Sie, dass Sie entweder der Domaininhaber sind oder mit expliziter Zustimmung des Domaininhabers handeln.</p>');
-        $form = '
-            <p class="buttonset" id="buttonset-external">
+        $form = '<p>
+            <span class="buttonset" id="buttonset-external">
             <input type="radio" name="dns" id="option-dns-enable" value="enable" />
             <label for="option-dns-enable">Lokalen DNS-Server aktivieren</label>
             <input type="radio" name="dns" id="option-dns-disable" value="disable" checked="checked" />
             <label for="option-dns-disable">Weiterhin externen DNS verwenden</label>
-            </p>
-
-            <p class="buttonset" id="buttonset-email">
+            </span>
+            </p><p>
+            <span class="buttonset" id="buttonset-email">
             <input type="radio" name="email" id="option-email-enable" value="enable" checked="checked" />
             <label for="option-email-enable">E-Mail-Nutzung aktivieren</label>
             <input type="radio" name="email" id="option-email-disable" value="disable" />
             <label for="option-email-disable">Nicht für E-Mail nutzen</label>
-            </p>';
+            </span></p>';
 
         $form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($request).'">
             <input type="submit" name="submit" value="Diese Domain bei '.config('company_name').' verwenden"></p>';

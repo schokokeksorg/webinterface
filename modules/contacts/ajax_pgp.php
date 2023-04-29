@@ -11,6 +11,10 @@ This code is published under a 0BSD license.
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
+// FIXME: PGP functionality nonfunctional
+// disabled
+die();
+
 require_once('contacts.php');
 
 if (isset($_GET['q']) || isset($_GET['id'])) {
@@ -19,7 +23,9 @@ if (isset($_GET['q']) || isset($_GET['id'])) {
     $id = null;
     if (isset($_GET['q'])) {
         $id = search_pgp_key($_GET['q']);
-        fetch_pgp_key($id);
+        if ($id) {
+            fetch_pgp_key($id);
+        }
     } elseif (isset($_GET['id'])) {
         $id = fetch_pgp_key($_GET['id']);
     }

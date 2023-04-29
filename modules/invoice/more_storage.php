@@ -13,8 +13,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('session/start.php');
 require_once('inc/icons.php');
-require_once('inc/jquery.php');
-javascript('more_storage.js');
+require_once('inc/javascript.php');
+javascript();
 
 require_once('invoice.php');
 
@@ -56,13 +56,13 @@ $checked = '';
 if ($count == 1024) {
     $checked = 'checked="checked" ';
 }
-$form = '<p class="buttonset"><input '.$checked.'type="radio" name="count" value="1024" id="count-1" /><label for="count-1">Zusätzlich <strong>1 GB</strong>, insgesamt also '.($customerquota+1024).' MB</label>';
+$form = '<span class="buttonset"><input '.$checked.'type="radio" name="count" value="1024" id="count-1" /><label for="count-1">Zusätzlich <strong>1 GB</strong>, insgesamt also '.($customerquota+1024).' MB</label> ';
 if ($count == 2048) {
     $checked = 'checked="checked" ';
 } else {
     $checked = '';
 }
-$form .= '<input '.$checked.'type="radio" name="count" value="2048" id="count-2" /><label for="count-2">Zusätzlich <strong>2 GB</strong>, insgesamt also '.($customerquota+2048).' MB</label>';
+$form .= '<input '.$checked.'type="radio" name="count" value="2048" id="count-2" /><label for="count-2">Zusätzlich <strong>2 GB</strong>, insgesamt also '.($customerquota+2048).' MB</label> ';
 if ($count == 5120) {
     $checked = 'checked="checked" ';
 } else {
@@ -70,7 +70,7 @@ if ($count == 5120) {
 }
 $form .= '<input '.$checked.'type="radio" name="count" value="5120" id="count-5" /><label for="count-5">Zusätzlich <strong>5 GB</strong>, insgesamt also '.($customerquota+5120).' MB</label>';
 
-$form .= '<input type="submit" value="Wählen" /></p>';
+$form .= '<input type="submit" value="Wählen" /></span>';
 output(html_form("more_storage_selection", "more_storage", "", $form));
 
 $new_item = $hosting;

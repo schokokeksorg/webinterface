@@ -44,11 +44,14 @@ title("Benutzer wechseln");
 output('<p>Hiermit können Sie (als Admin) das Webinterface mit den Rechten eines beliebigen anderen Benutzers benutzen.</p>
 ');
 
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 // lädt die JS-Datei mit gleichem basename
 javascript();
 
-output(html_form('su_su', '', '', '<p><label for="query"><strong>Suchtext:</strong></label> <input type="text" name="query" id="query" /> <input type="submit" value="Suchen" /></p>
+output(html_form('su_su', '', '', '<label for="query"><strong>Suchtext:</strong></label> <input type="text" name="query" list="suggestions" id="query" autocomplete="off" /> 
+<datalist id="suggestions">
+</datalist>
+<input type="submit" value="Suchen" />
 '));
 
 if ($search) {

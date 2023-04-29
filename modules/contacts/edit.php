@@ -13,7 +13,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('contacts.php');
 require_once('inc/debug.php');
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 javascript();
 
 require_once('session/start.php');

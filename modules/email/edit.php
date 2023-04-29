@@ -17,7 +17,7 @@ require_once('inc/icons.php');
 
 require_once('vmail.php');
 
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 javascript();
 
 $section = 'email_vmail';

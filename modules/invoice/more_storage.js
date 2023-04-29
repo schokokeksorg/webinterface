@@ -1,8 +1,8 @@
-$(function() {
-  $(".buttonset input[type=submit]").remove();
-  $(".buttonset").buttonset();
-  
-  $(".buttonset input").click( function() {
-    $(this).closest("form").submit();
+ready(() => {
+    document.querySelectorAll('.buttonset input[type=submit]').forEach(e => e.remove());
+    document.querySelectorAll('.buttonset').forEach(el => {
+        el.addEventListener('change', (e) => {
+            e.currentTarget.closest('form').submit();
+        });
     });
-  });
+})

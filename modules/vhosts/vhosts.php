@@ -15,7 +15,7 @@ require_once('inc/debug.php');
 require_once('inc/security.php');
 require_once('inc/icons.php');
 
-require_once('inc/jquery.php');
+require_once('inc/javascript.php');
 javascript();
 
 require_once('vhosts.php');

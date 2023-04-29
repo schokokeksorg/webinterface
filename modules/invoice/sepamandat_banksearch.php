@@ -16,6 +16,12 @@ require_once('inc/debug.php');
 
 require_once('invoice.php');
 
+$result = [
+    "iban_ok" => 0,
+    "iban" => null,
+    "bic" => null,
+    "bankname" => null
+];
 
 $iban = null;
 if (isset($_GET['iban'])) {
@@ -23,18 +29,17 @@ if (isset($_GET['iban'])) {
 } elseif (isset($_GET['kto']) && isset($_GET['blz'])) {
     $iban = find_iban($_GET['blz'], $_GET['kto']);
 }
-if ($iban == null) {
-    echo "Fehler!";
-    die();
+if ($iban != null) {
+    $iban_ok = (verify_iban($iban) ? '1' : '0');
+    if ($iban_ok) {
+        $result["iban_ok"] = 1;
+        $result["iban"] = $iban;
+        $bank = get_bank_info($iban);
+        $result["bic"] = $bank["bic"];
+        $result["bankname"] = $bank["name"];
+    }
 }
 
-$iban_ok = (verify_iban($iban) ? '1' : '0');
-
-$bank = get_bank_info($iban);
-
-header("Content-Type: text/javascript");
-echo "[\n";
-echo ' { "iban_ok": "'.$iban_ok.'", "iban": "'.$iban.'", "bic": "'.$bank['bic'].'", "bankname" : "'.$bank['name'].'" } ';
-echo '
-]';
+header("Content-Type: application/json; charset=utf-8");
+echo json_encode($result);
 die();

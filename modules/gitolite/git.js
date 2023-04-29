@@ -1,9 +1,9 @@
 function setup_copy_buttons() {
-    $('button.copyurl').each(
-        function (i, obj) {
-            $(obj).click(function () {
-                var id=this.id;
-                input = $('#'+id+'_url')[0];
+    document.querySelectorAll('button.copyurl').forEach(
+        obj => {
+            obj.addEventListener("click", (e) => {
+                var id=e.currentTarget.id;
+                input = document.querySelector('#'+id+'_url');
                 input.focus();
                 input.select();
                 document.execCommand("copy");
@@ -12,6 +12,6 @@ function setup_copy_buttons() {
     );
 }
 
-$(function () {
+ready(() => {
     setup_copy_buttons();
 });

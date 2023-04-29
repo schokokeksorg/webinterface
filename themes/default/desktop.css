@@ -476,6 +476,32 @@ div.tile-container {
 }
 
 
+span.buttonset input[type="radio"]+label {
+    display: inline-block;
+    /*width: 8em;*/
+    border: 1px solid #425d6c;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 5px 20px;
+}
 
+span.buttonset input[type="radio"] {
+    position: absolute;
+    display: none;
+}
 
+span.buttonset input[type="radio"]:checked+label {
+    background-color: #425d6c;
+    color: #fff;
+}
+
+span.buttonset.disabled {
+    color: #444;
+    background-color: #eee;
+}
+
+span.buttonset.disabled input[type="radio"]:checked+label {
+    color: #eee;
+    background-color: #777;
+}
 

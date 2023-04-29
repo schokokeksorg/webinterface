@@ -1,84 +1,78 @@
 function populate_bankinfo(result) {
-  bank = result[0];
+  bank = result;
   if (bank.iban_ok == 1) {
-    $("#iban_feedback").html('<img src="../../images/ok.png" style="height: 16px; width: 16px;" alt="" title="" />');
-    if ($('#bankname').val() == "") 
-      $('#bankname').val(bank.bankname);
-    if ($('#bic').val() == "")  
-      $('#bic').val(bank.bic);
+    document.querySelector("#iban_feedback").innerHTML = '<img src="../../images/ok.png" style="height: 16px; width: 16px;" alt="" title="" />';
+    if (document.querySelector('#bankname').value == "") 
+      document.querySelector('#bankname').value = bank.bankname;
+    if (document.querySelector('#bic').value == "")  
+      document.querySelector('#bic').value = bank.bic;
   } else {
-    $("#iban_feedback").html('<img src="../../images/error.png" style="height: 16px; width: 16px;" alt="IBAN scheint nicht gültig zu sein" title="IBAN scheint nicht gültig zu sein" />');
-    $('#bankname').val("");
-    $('#bic').val("");
+    document.querySelector("#iban_feedback").innerHTML = '<img src="../../images/error.png" style="height: 16px; width: 16px;" alt="IBAN scheint nicht gültig zu sein" title="IBAN scheint nicht gültig zu sein" />';
+    document.querySelector('#bankname').value = "";
+    document.querySelector('#bic').value = "";
   }
     
 }
 
-function searchbank() 
+async function searchbank() 
 {
-  var iban = $('#iban').val().toUpperCase().replace(/\s/g, '');
+  var iban = document.querySelector('#iban').value.toUpperCase().replace(/\s/g, '');
   if (iban.substr(0,2) == "DE" && iban.length == 22) {
-    $("#iban").val(iban);
-    $("#bankname").prop("disabled", true);
-    $("#bic").prop("disabled", true);
-    $.getJSON("sepamandat_banksearch?iban="+iban, populate_bankinfo)
-      .always( function() {
-        $("#bankname").prop("disabled", false);
-        $("#bic").prop("disabled", false);
-      });
+    document.querySelector("#iban").value = iban;
+    document.querySelector("#bankname").disabled = true;
+    document.querySelector("#bic").disabled = true;
+    const response = await fetch("sepamandat_banksearch?iban="+iban);
+    const data = await response.json();
+    populate_bankinfo(data);
+    document.querySelector("#bankname").disabled = false;
+    document.querySelector("#bic").disabled = false;
   } else {
-    $("#iban_feedback").html("");
+    document.querySelector("#iban_feedback").innerHTML = "";
   }
 }
 
 function copydata_worker( result ) {
-  $("#kontoinhaber").val(result.kundenname);
-  $("#adresse").val(result.adresse);
+  document.querySelector("#kontoinhaber").value = result.kundenname;
+  document.querySelector("#adresse").value = result.adresse;
 }
 
-function copydata( event ) {
+async function copydata( event ) {
   event.preventDefault();
-  var kunde = $.getJSON("sepamandat_copydata", copydata_worker);
+  const response = await fetch("sepamandat_copydata");
+  const data = await response.json();
+  copydata_worker(data);
 }
 
 function populate_iban(result) {
-  info = result[0];
-  $("#iban").val(info.iban);
+  document.querySelector("#iban").value = result.iban;
   populate_bankinfo(result)
 }
 
-function ktoblz( event ) {
+async function ktoblz( event ) {
   event.preventDefault();
-  var kto = $("#kto").val();
-  var blz = $("#blz").val();
-  $.getJSON("sepamandat_banksearch?kto="+kto+"&blz="+blz, populate_iban)
+  var kto = document.querySelector("#kto").value;
+  var blz = document.querySelector("#blz").value;
+  const response = await fetch("sepamandat_banksearch?kto="+kto+"&blz="+blz);
+  const data = await response.json();
+  populate_iban(data);
 }
 
 function showktoblz( event ) {
   event.preventDefault();
-  $("#ktoblz_button").hide();
-  $("#ktoblz_input").show();
-}
-
-
-// Define a convenience method and use it
-var ready = (callback) => {
-  if (document.readyState != "loading") callback();
-  else document.addEventListener("DOMContentLoaded", callback);
+  document.querySelector("#ktoblz_button").style.display = "none";
+  document.querySelector("#ktoblz_input").style.display = "";
 }
 
 ready(() => { 
-  /* Do things after DOM has fully loaded */ 
+    document.querySelector('#iban').addEventListener("change", searchbank );
+    document.querySelector('#iban').addEventListener("keyup", searchbank );
+    document.querySelector('#iban').addEventListener("paste", searchbank );
+    document.querySelector('#copydata').addEventListener("click", copydata);
+    document.querySelector('#showktoblz').addEventListener("click", showktoblz);
+    document.querySelector('#ktoblz').addEventListener("click", ktoblz);
 
     document.querySelector("#gueltig_ab_datum").addEventListener("change", (e) => {
         document.querySelector("#gueltig_ab_auswahl").checked = true;
         })
 });
 
-
-$(function() {
-    $('#iban').on("change keyup paste", searchbank );
-    $("#copydata").click(copydata);
-    $("#showktoblz").click(showktoblz);
-    $("#ktoblz").click(ktoblz);
-});
