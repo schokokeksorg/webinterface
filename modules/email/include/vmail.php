@@ -516,7 +516,7 @@ function domain_has_vmail_accounts($domid)
 function change_domain($id, $type)
 {
     $id = (int) $id;
-    if (domain_has_vmail_accounts($id)) {
+    if (domain_has_vmail_accounts($id) && type != 'virtual') {
         system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
     }
 
@@ -526,7 +526,8 @@ function change_domain($id, $type)
 
     $old = domainsettings($id);
     if ($old['type'] == $type) {
-        system_failure('Domain ist bereits so konfiguriert');
+        return;
+        //system_failure('Domain ist bereits so konfiguriert');
     }
 
     if ($type == 'none') {
@@ -542,6 +543,27 @@ function change_domain($id, $type)
         db_query("DELETE FROM mail.virtual_mail_domains WHERE domain=? AND hostname IS NULL LIMIT 1;", [$id]);
         db_query("DELETE FROM mail.custom_mappings WHERE domain=? AND subdomain IS NULL LIMIT 1;", [$id]);
         db_query("UPDATE kundendaten.domains SET mail='auto', lastchange=NOW() WHERE id=? LIMIT 1;", [$id]);
+    }
+}
+
+function change_domain_dkim($id, $type)
+{
+    if (! in_array($type, ['none','dkim','dmarc'])) {
+        system_failure("Ungültige Aktion");
+    }
+
+    $old = domainsettings($id);
+    if ($old['dkim'] == $type) {
+        return;
+        //system_failure('Domain ist bereits so konfiguriert');
+    }
+
+    if ($type == 'none') {
+        db_query("UPDATE kundendaten.domains SET dkim='none', lastchange=NOW() WHERE id=?", [$id]);
+    } elseif ($type == 'dkim') {
+        db_query("UPDATE kundendaten.domains SET dkim='dkim', lastchange=NOW() WHERE id=?", [$id]);
+    } elseif ($type == 'dmarc') {
+        db_query("UPDATE kundendaten.domains SET dkim='dmarc', lastchange=NOW() WHERE id=?", [$id]);
     }
 }
 
