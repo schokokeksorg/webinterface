@@ -69,7 +69,7 @@ $form .= '
 <h5>Passwort-Login</h5>
 <div style="margin-left: 2em;"> 
   <p><input type="radio" name="passwordlogin" id="passwordlogin_ja" value="1" '.$defaultpwlogin.'/> <label for="passwordlogin_ja">SSH-Login mit Passwort erlauben</label></p>
-  <p><input type="radio" name="passwordlogin" id="passwordlogin_nein" value="0" '.$defaultnopwlogin.'/> <label for="passwordlogin_nein">SSH-Login nur mit SSH-Key ermglichen</label></p>
+  <p><input type="radio" name="passwordlogin" id="passwordlogin_nein" value="0" '.$defaultnopwlogin.'/> <label for="passwordlogin_nein">SSH-Login nur mit SSH-Key ermöglichen</label></p>
 </div>
 ';
 
