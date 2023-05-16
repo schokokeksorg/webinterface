@@ -35,6 +35,10 @@ manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>
 Wenn Sie eine Domain auf Webinterface-Verwaltung einrichten, dann werden eventuell vorhandene .courier-Dateien nicht mehr 
 beachtet. Subdomains können grundsätzlich nur durch Administratoren eingerichtet und verändert werden.</p>
 
+<p><strong>DKIM:</strong> Für jede Domain können Sie zudem einstellen, ob die ausgehenden Mails eine DKIM-Signatur bekommen 
+sollen bzw. ob zusätzlich eine DMARC-Policy veröffentlicht werden soll.</p>
+<p><a href="https://wiki.schokokeks.org/E-Mail/DKIM">Mehr Informationen zu DKIM / DMARC</a></p>
+
 <h4>Ihre Domains sind momentan wie folgt konfiguriert:</h4>
 
 <table>
@@ -84,7 +88,8 @@ foreach ($domains as $id => $dom) {
         </select>
          <input class="hidden" type="submit" value="Speichern" /></p>
       </span>';
-
+    } else {
+        $buttons .= '<p>Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.</p>';
     }
     output("<tr{$trextra}><td>{$dom['name']}</td><td>".html_form('vmail_domainchange', 'domainchange', '', $buttons)."</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
@@ -102,7 +107,8 @@ foreach ($domains as $id => $dom) {
          <label for="option-'.$id.'-manual">Manuell</label>
          <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-off">Ausgeschaltet</label>
-      </span>';
+      </span>
+        <p>Für Subdomains können keine DKIM-Einstellungen gesetzt werden.</p>';
             output("<tr{$trextra}><td>{$subdom['name']}.{$dom['name']}</td><td>{$buttons}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");
         }
     }
