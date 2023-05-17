@@ -508,3 +508,7 @@ span.buttonset.disabled input[type="radio"]:checked+label {
     background-color: #777;
 }
 
+
+.nowrap {
+    white-space: nowrap;
+}
