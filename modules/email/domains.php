@@ -77,19 +77,19 @@ foreach ($domains as $id => $dom) {
          <input type="submit" value="Speichern" />
       </span>';
     
-    if ($dom['type'] != 'none') {
+    if ($dom['type'] != 'none' && $dom['dns'] == 1) {
         $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
         $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
         $check_dkimoff = ($dom['dkim'] == 'none' ? ' checked="checked"' : '');
-        $buttons .= ' <p><label for="dkim-select-'.$id.'">DKIM-Einstellung: </label><select name="dkim-'.$id.'" id="dkim-select-'.$id.'" class="autosubmit">
+        $buttons .= '&nbsp;<select name="dkim-'.$id.'" id="dkim-select-'.$id.'" class="autosubmit">
             <option value="dmarc" '.($dom['dkim'] == 'dmarc' ? 'selected' : '').'>DKIM + DMARC</option>
             <option value="dkim" '.($dom['dkim'] == 'dkim' ? 'selected' : '').'>Nur DKIM</option>
             <option value="none" '.($dom['dkim'] == 'none' ? 'selected' : '').'>DKIM ausgeschaltet</option>
         </select>
-         <input class="hidden" type="submit" value="Speichern" /></p>
-      </span>';
+         <input class="hidden" type="submit" value="Speichern" />
+      ';
     } else {
-        $buttons .= '<p>Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.</p>';
+        //$buttons .= 'Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.';
     }
     output("<tr{$trextra}><td>{$dom['name']}</td><td>".html_form('vmail_domainchange', 'domainchange', '', $buttons)."</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
@@ -107,8 +107,7 @@ foreach ($domains as $id => $dom) {
          <label for="option-'.$id.'-manual">Manuell</label>
          <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.($edit_disabled ? ' disabled="disabled"' : '').'/>
          <label for="option-'.$id.'-off">Ausgeschaltet</label>
-      </span>
-        <p>Für Subdomains können keine DKIM-Einstellungen gesetzt werden.</p>';
+      </span>';
             output("<tr{$trextra}><td>{$subdom['name']}.{$dom['name']}</td><td>{$buttons}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");
         }
     }
