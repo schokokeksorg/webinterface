@@ -76,7 +76,7 @@ foreach ($domains as $id => $dom) {
          <label for="option-'.$id.'-off">Ausgeschaltet</label>
          <input type="submit" value="Speichern" />
       </span>';
-    
+
     if ($dom['type'] != 'none' && $dom['dns'] == 1) {
         $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
         $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
