@@ -31,7 +31,7 @@ output('<p>Sie können bei '.config('company_name').' die E-Mails Ihrer Domains 
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>
 <li>Sie können die manuelle Verwaltung wählen, bei der Sie passende .courier-Dateien für den Empfang und
 manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>
-<p>Diese Wahlmöglichkeit haben Sie pro Domain bzw. Subdomain. Eine parallel Nutzung beider Verfahren ist nicht möglich.
+<p>Diese Wahlmöglichkeit haben Sie pro Domain bzw. Subdomain. Eine parallele Nutzung beider Verfahren ist nicht möglich.
 Wenn Sie eine Domain auf Webinterface-Verwaltung einrichten, dann werden eventuell vorhandene .courier-Dateien nicht mehr 
 beachtet. Subdomains können grundsätzlich nur durch Administratoren eingerichtet und verändert werden.</p>
 
@@ -57,7 +57,7 @@ foreach ($domains as $id => $dom) {
     }
     if (domain_has_vmail_accounts($id)) {
         $edit_disabled = true;
-        $notice = 'Keine Änderung möglich, so lange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
+        $notice = 'Keine Änderung möglich, solange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
     }
     if ($dom['mailserver_lock']) {
         $trextra .= ' style="background-color: #faa;"';
