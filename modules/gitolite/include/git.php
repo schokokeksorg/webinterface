@@ -442,8 +442,9 @@ function delete_repo($repo)
 
 function set_user_include()
 {
-    global $config_file, $userconfig;
+    global $config_file;
     $username = $_SESSION['userinfo']['username'];
+    $userconfig = $config_dir . '/' . $username . '.conf';
     if (!file_exists($userconfig)) {
         // Erzeuge eine leere Konfiguration damit das Include auf jeden Fall funktionieren kann
         file_put_contents($userconfig, '');
