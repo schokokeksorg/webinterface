@@ -63,7 +63,7 @@ foreach ($repos as $repo => $settings) {
     output("</ul></div>");
 }
 
-if (count($users) > 0) {
+if (count($users)+count($foreign_users) > 0) {
     addnew('edit', 'Neues GIT-Repository anlegen');
 } else {
     output('<p><em>Bitte legen Sie zunächst mindestens einen SSH-Key an.</em></p>');
