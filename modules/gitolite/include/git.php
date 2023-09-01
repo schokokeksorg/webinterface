@@ -226,7 +226,7 @@ function new_foreign_user($handle)
     DEBUG("using config file ".$userconfig);
     if (! is_file($userconfig)) {
         DEBUG("user-config does not exist, creating new one");
-        file_put_contents($userconfig, '# user '.$handle."\n");
+        file_put_contents($userconfig, '# foreign user '.$handle."\n");
         set_user_include();
     } elseif (in_array($handle, list_foreign_users())) {
         # user ist schon eingetragen
@@ -236,7 +236,7 @@ function new_foreign_user($handle)
     }
     git_wrapper('add '.$userconfig);
 
-    git_wrapper('commit --allow-empty -m "added new key for '.$handle.'"');
+    git_wrapper('commit --allow-empty -m "added new foreign user for '.$handle.'"');
     git_wrapper('push');
 }
 
