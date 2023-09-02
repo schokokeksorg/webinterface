@@ -17,7 +17,7 @@ require_role([ROLE_SYSTEMUSER, ROLE_MAILACCOUNT, ROLE_VMAIL_ACCOUNT]);
 
 require_once('totp.php');
 
-$section='webmailtotp_overview';
+$section = 'webmailtotp_overview';
 title('Test der Zwei-Faktor-Anmeldung');
 
 if (isset($_REQUEST['username'])) {

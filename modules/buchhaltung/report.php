@@ -5,7 +5,7 @@ require_role(ROLE_SYSADMIN);
 $title = 'Report';
 
 
-$year = date("Y")-1;
+$year = date("Y") - 1;
 if (isset($_GET['year'])) {
     $year = (int) $_GET['year'];
 }
@@ -40,7 +40,7 @@ $umsatzsteuer = 0.0;
 $ustbetraege = [];
 $vorsteuer = 0.0;
 foreach ($types as $id => $t) {
-    if (count($data_by_type[$id]) == 0 || $t=='Privatentnahme') {
+    if (count($data_by_type[$id]) == 0 || $t == 'Privatentnahme') {
         continue;
     }
     output("<h3>$t</h3>");
@@ -53,12 +53,12 @@ foreach ($types as $id => $t) {
     foreach ($data_by_type[$id] as $line) {
         $net = $line['amount'];
         if ($line['gross'] == 1 && $line['tax_rate'] > 0) {
-            $net = $net / (1.0+($line['tax_rate']/100));
+            $net = $net / (1.0 + ($line['tax_rate'] / 100));
         }
         if ($line['direction'] == 'out') {
             $net = -$net;
         }
-        $ust = $net * ($line['tax_rate']/100);
+        $ust = $net * ($line['tax_rate'] / 100);
         if ($line['tax_rate'] == 19.0) {
             $umsatz19proz += $net;
         } elseif ($line['tax_rate'] == 0.0) {
@@ -136,7 +136,7 @@ $ausgabensumme -= $vorsteuer;
 output("<tr><td><b>Summe Ausgaben:</b></td><td style=\"text-align: right;\"><b>".number_format($ausgabensumme, 2, ',', '.')." €</td></tr>");
 output("<tr><td colspan=\"2\"></td></tr>");
 
-output("<tr><td><b>Überschuss aus laufendem Betrieb:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme-$ausgabensumme, 2, ',', '.')." €</td></tr>");
+output("<tr><td><b>Überschuss aus laufendem Betrieb:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme - $ausgabensumme, 2, ',', '.')." €</td></tr>");
 output('</table>');
 
 foreach ($investment_types as $id => $type) {

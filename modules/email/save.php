@@ -91,7 +91,7 @@ if ($_GET['action'] == 'edit') {
         $valid_from_date = time();
         warning('Das Aktivierungs-Datum liegt in der Vergangenheit. Die Funktion wird ab sofort aktiviert.');
     }
-    if ($valid_from_date > time() + 365*24*60*60) {
+    if ($valid_from_date > time() + 365 * 24 * 60 * 60) {
         warning('Das Aktivierungs-Datum liegt mehr als ein Jahr in der Zukunft. Bitte prüfen Sie ob Sie das korrekte Jahr gewählt haben.');
     }
     if (isset($_POST['ar_valid_until']) && ($_POST['ar_valid_until'] == 'infinity')) {

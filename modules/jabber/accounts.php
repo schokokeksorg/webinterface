@@ -34,7 +34,7 @@ foreach ($jabberaccounts as $acc) {
     }
     $lastactivity = $acc['lastactivity'];
     // Innerhalb der letzten Woche verwendet
-    if ($lastactivity > strftime('%Y-%m-%d', time()-7*24*60*60)) {
+    if ($lastactivity > strftime('%Y-%m-%d', time() - 7 * 24 * 60 * 60)) {
         $lastactivity = 'Kürzlich';
     }
     if (! $lastactivity) {

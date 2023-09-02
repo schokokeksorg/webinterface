@@ -18,7 +18,7 @@ require_once('inc/error.php');
 
 require_once('class/domain.php');
 
-$caa_properties= [ 0 => "issue", 1 => "issuewild", 2 => "iodef" ];
+$caa_properties = [ 0 => "issue", 1 => "issuewild", 2 => "iodef" ];
 
 function get_dyndns_accounts()
 {
@@ -33,7 +33,7 @@ function get_dyndns_accounts()
 }
 
 
-function get_dyndns_account($id, $ignore=true)
+function get_dyndns_account($id, $ignore = true)
 {
     $args = [":id" => (int) $id,
                 ":uid" => (int) $_SESSION['userinfo']['uid'], ];
@@ -460,7 +460,7 @@ $tld_ns = [];
 function check_dns($domainname, $tld)
 {
     global $tld_ns;
-    $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+    $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
 
     if (! isset($tld_ns[$tld])) {
         $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');

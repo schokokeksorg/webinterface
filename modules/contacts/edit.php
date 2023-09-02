@@ -106,7 +106,7 @@ if (isset($_REQUEST['back'])) {
 }
 $domainholder = '';
 if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
-    $domainholder='&domainholder=1';
+    $domainholder = '&domainholder=1';
 }
 
 output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id']."&back=".urlencode($back).$domainholder, $html));

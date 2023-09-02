@@ -16,7 +16,7 @@ include('ftpusers.php');
 require_once('inc/base.php');
 require_role(ROLE_SYSTEMUSER);
 
-$section='ftpusers_accounts';
+$section = 'ftpusers_accounts';
 
 $ftpuser = empty_ftpuser();
 
@@ -31,10 +31,10 @@ if ($ftpuser['username']) {
     output('<p style="border: 2px solid red; padding: 1em; padding-left: 4em;"><img src="'.$prefix.'images/warning.png" style="margin-left: -3em; float: left;" /><strong>Bitte beachten Sie:</strong> Ein FTP-Benutzer kann nur im hier angegebenen Verzeichnis (und dallen darin enthaltenen Verzeichnissen) Dateien erstellen oder ändern. Sofern der Benutzer allerdings die Möglichkeit hat, PHP- oder CGI-Programme zu installieren und über den Webserver aufzurufen, kann er damit auch außerhalb dieses Verzeichnisses agieren. Schalten Sie bitte ggf. die PHP- und CGI-Unterstützung für die betreffende Website aus.</p>');
 }
 
-$username = substr($ftpuser['username'], strlen($_SESSION['userinfo']['username'])+1);
+$username = substr($ftpuser['username'], strlen($_SESSION['userinfo']['username']) + 1);
 
 $user_home = $_SESSION['userinfo']['homedir'];
-$homedir = substr($ftpuser['homedir'], strlen($user_home)+1);
+$homedir = substr($ftpuser['homedir'], strlen($user_home) + 1);
 DEBUG($user_home.' / '.$homedir.' / '.$ftpuser['homedir']);
 
 $active = ($ftpuser['active'] == 1 ? 'checked="checked" ' : '');

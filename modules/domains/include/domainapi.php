@@ -105,7 +105,7 @@ function api_upload_domain($fqdn)
 }
 
 
-function api_register_domain($domainname, $authinfo=null)
+function api_register_domain($domainname, $authinfo = null)
 {
     $result = db_query("SELECT id,status,CONCAT_WS('.', domainname, tld) AS fqdn, owner, admin_c FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld)=?", [$domainname]);
     if ($result->rowCount() < 1) {

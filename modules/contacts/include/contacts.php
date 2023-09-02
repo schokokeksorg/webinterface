@@ -233,7 +233,7 @@ function save_contact($c)
             system_failure("Sie haben ein Feld geleert, das für die Eigenschaft als Domaininhaber erhalten bleiben muss. Ihre Änderungen wurden nicht gespeichert.");
         }
     }
-    for ($i=0;array_key_exists($i, $c);$i++) {
+    for ($i = 0;array_key_exists($i, $c);$i++) {
         unset($c[$i]);
     }
     unset($c['state']);
@@ -450,7 +450,7 @@ function contact_as_string($contact)
     return $contact_string;
 }
 
-function display_contact($contact, $additional_html='', $cssclass='')
+function display_contact($contact, $additional_html = '', $cssclass = '')
 {
     $html = contact_as_string($contact);
     $contact_string = "<div class=\"contact {$cssclass}\" id=\"contact-{$contact['id']}\">{$html}{$additional_html}</div>";

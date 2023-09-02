@@ -32,7 +32,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
             }
             if ($c['valid_until'] <= date('Y-m-d')) {
                 $num_expired++;
-            } elseif ($c['valid_until'] <= date('Y-m-d', time()+(30*24*3600))) {
+            } elseif ($c['valid_until'] <= date('Y-m-d', time() + (30 * 24 * 3600))) {
                 $num_warn++;
             }
         }

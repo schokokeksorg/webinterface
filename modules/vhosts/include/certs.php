@@ -300,7 +300,7 @@ function split_cn($cn)
     } else {
         $domains[] = $cn;
     }
-    for ($i=0;$i!=count($domains);$i++) {
+    for ($i = 0;$i != count($domains);$i++) {
         $domains[$i] = filter_input_hostname($domains[$i], true);
     }
     return $domains;
@@ -373,7 +373,7 @@ commonName_default = {$cn}
 
 
 
-function save_csr($cn, $bits, $replace=null)
+function save_csr($cn, $bits, $replace = null)
 {
     if (! $cn) {
         system_failure("Sie müssen einen Domainname eingeben!");

@@ -82,7 +82,7 @@ if (!$pricedata) {
     warning('Die Domain '.$dom->fqdn.' kann nicht über dieses Webinterface umgezogen werden weil bei dieser Endung Besonderheiten zu beachten sind. Bitte kontaktieren Sie den Support.');
     redirect('domains');
 }
-$mode=null;
+$mode = null;
 
 if ($avail['status'] == 'available') {
     set_domain_prereg($dom->id);
@@ -97,7 +97,7 @@ if ($avail['status'] == 'available') {
 
 output("<p>Domainname: <strong>".$dom->fqdn."</strong></p>");
 
-$section='domains_domains';
+$section = 'domains_domains';
 
 
 output('<h4>Inhaber der Domain</h4>');
@@ -163,7 +163,7 @@ $form .= '<p>Für die Verwaltung der Domain fallen folgende Kosten an:</p>
 if ($pricedata['setup']) {
     $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$pricedata['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
 }
-$form .='</table>';
+$form .= '</table>';
 $form .= '<p>Mit dieser Bestellung geben Sie eine verbindliche Willenserklärung ab, diese Domain registrieren zu wollen. Sie treten in ein Vertragsverhältnis zu '.config('company_name').' unter dem Vorbehalt, dass die Domain registriert werden kann. Die Hoheit über die Vergabe der Domains hat die jeweils zuständige Registrierungsstelle. Es gelten die Vergabe-Bedingungen der jeweils zuständigen Registrierungsstelle.</p>
 <p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils '.$pricedata['interval'].' Monate. Er verlängert sich stets automatisch um weitere '.$pricedata['interval'].' Monate, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
 

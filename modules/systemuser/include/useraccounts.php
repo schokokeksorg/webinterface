@@ -67,7 +67,7 @@ function list_useraccounts()
 }
 
 
-function get_account_details($uid, $customerno=0)
+function get_account_details($uid, $customerno = 0)
 {
     $uid = (int) $uid;
     $customerno = (int) $customerno;

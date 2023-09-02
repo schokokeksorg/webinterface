@@ -337,7 +337,7 @@ if ($invoice['abbuchung'] == 1) {
     $sepamandat = get_sepamandat($invoice['sepamandat']);
     $iban = substr($sepamandat['iban'], 0, 8) . '**********' . substr($sepamandat['iban'], -4);
     $display_iban = $iban;
-    for ($i = strlen($iban)-(strlen($iban)%4) ; $i != 0 ; $i -= 4) {
+    for ($i = strlen($iban) - (strlen($iban) % 4) ; $i != 0 ; $i -= 4) {
         $display_iban = substr($display_iban, 0, $i) . ' ' . substr($display_iban, $i);
     }
     $html .= '<p><strong>Bitte nicht überweisen!</strong> Der fällige Betrag wird gemäß dem von Ihnen erteilten 
@@ -375,7 +375,7 @@ $dompdf->loadHtml($html);
 $dompdf->render();
 
 if ($outformat == 'pdf') {
-    $dompdf->stream("sample.pdf", ["Attachment"=>0]);
+    $dompdf->stream("sample.pdf", ["Attachment" => 0]);
 } else {
     echo $html;
 }

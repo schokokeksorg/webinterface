@@ -27,7 +27,7 @@ function mailaccounts($uid)
     $accounts = [];
     if (@$result->rowCount() > 0) {
         while ($acc = @$result->fetch(PDO::FETCH_OBJ)) {
-            array_push($accounts, ['id'=> $acc->id, 'account' => $acc->account, 'mailbox' => $acc->maildir, 'cryptpass' => $acc->cryptpass, 'enabled' => ($acc->aktiv == 1)]);
+            array_push($accounts, ['id' => $acc->id, 'account' => $acc->account, 'mailbox' => $acc->maildir, 'cryptpass' => $acc->cryptpass, 'enabled' => ($acc->aktiv == 1)]);
         }
     }
     return $accounts;
@@ -190,7 +190,7 @@ function check_valid($acc)
     DEBUG("Account-data: ".print_r($acc, true));
     DEBUG("User-data: ".print_r($user, true));
     if ($acc['mailbox'] != '') {
-        if (substr($acc['mailbox'], 0, strlen($user['homedir'])+1) != $user['homedir'].'/') {
+        if (substr($acc['mailbox'], 0, strlen($user['homedir']) + 1) != $user['homedir'].'/') {
             return "Die Mailbox muss innerhalb des Home-Verzeichnisses liegen. Sie haben »".$acc['mailbox']."« als Mailbox angegeben, Ihr Home-Verzeichnis ist »".$user['homedir']."/«.";
         }
         if (! check_path($acc['mailbox'])) {

@@ -15,7 +15,7 @@ require_once('inc/base.php');
 
 # Diese Seiten benötigt keine speziellen Rechte, man darf diese auch unangemeldet anschauen
 
-$section='email_vmail';
+$section = 'email_vmail';
 title("Einstellungen zum E-Mail-Abruf");
 
 $servername = filter_input_hostname($_REQUEST['server']);
@@ -50,7 +50,7 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dt>Servername</dt><dd>'.$servername.'</dd>
 <dt>Port</dt><dd>993</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
-<dt>Benutzername</dt><dd><em>'.($type=='manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
+<dt>Benutzername</dt><dd><em>'.($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
@@ -63,7 +63,7 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dt>Servername</dt><dd>'.$servername.'</dd>
 <dt>Port</dt><dd>995</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
-<dt>Benutzername</dt><dd><em>'.($type=='manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
+<dt>Benutzername</dt><dd><em>'.($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
@@ -74,7 +74,7 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dt>Servername</dt><dd>'.$servername.'</dd>
 <dt>Port</dt><dd>465</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
-<dt>Benutzername</dt><dd><em>'.($type=='manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
+<dt>Benutzername</dt><dd><em>'.($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 <br />
 

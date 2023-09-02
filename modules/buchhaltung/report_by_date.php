@@ -5,7 +5,7 @@ require_role(ROLE_SYSADMIN);
 $title = 'Report';
 
 
-$year = date("Y")-1;
+$year = date("Y") - 1;
 
 $typeresult = db_query("SELECT id, description FROM buchhaltung.types");
 $dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", [":from" => $year."-01-01", ":to" => $year."-12-31"]);
@@ -28,12 +28,12 @@ output("<table>");
 foreach ($data as $line) {
     $net = $line['amount'];
     if ($line['gross'] == 1 && $line['tax_rate'] > 0) {
-        $net = $net / (1.0+($line['tax_rate']/100));
+        $net = $net / (1.0 + ($line['tax_rate'] / 100));
     }
     if ($line['direction'] == 'out') {
         $net = -$net;
     }
-    $ust = $net * ($line['tax_rate']/100);
+    $ust = $net * ($line['tax_rate'] / 100);
     $gross = $net + $ust;
     $net = str_replace('.', ',', sprintf('%.2f €', $net));
     $ust = str_replace('.', ',', sprintf('%.2f €', $ust));

@@ -63,7 +63,7 @@ if ($_GET['action'] == 'new') {
     $bic = null;
     if (empty($_REQUEST['bic'])) {
         if (substr($iban, 0, 2) == 'DE') {
-            $bic=null;
+            $bic = null;
         } else {
             system_failure('Sie haben keinen BIC angegeben. Für Konten außerhalb Deutschlands ist ein BIC weiterhin erforderlich.');
         }

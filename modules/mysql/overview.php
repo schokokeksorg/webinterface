@@ -53,7 +53,7 @@ if (count($dbs) > 0 || count($users) > 0) {
 
     output('
   <table>
-  <tr><th>&#160;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users)+1).'">Benutzerkonten</th></tr>
+  <tr><th>&#160;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="'.(count($users) + 1).'">Benutzerkonten</th></tr>
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>');
 
     foreach ($users as $user) {

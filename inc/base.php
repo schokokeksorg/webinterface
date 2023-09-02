@@ -52,7 +52,7 @@ function config($key, $localonly = false)
 
     while ($object = $result->fetch()) {
         if (!array_key_exists($object['key'], $config)) {
-            $config[$object['key']]=$object['value'];
+            $config[$object['key']] = $object['value'];
         }
     }
     // Sonst wird das Passwort des webadmin-Users mit ausgegeben
@@ -235,12 +235,12 @@ function footnote($explaination)
         $footnotes[] = $explaination;
     }
     $fnid = array_search($explaination, $footnotes);
-    return str_repeat('*', ($fnid+1));
+    return str_repeat('*', ($fnid + 1));
 }
 
 function random_string($len)
 {
-    $s = str_replace('+', '.', base64_encode(random_bytes(ceil($len*3/4))));
+    $s = str_replace('+', '.', base64_encode(random_bytes(ceil($len * 3 / 4))));
     return substr($s, 0, $len);
 }
 
@@ -410,7 +410,7 @@ function html_form($form_id, $scriptname, $querystring, $content)
 }
 
 
-function html_select($name, $options, $default='', $free='')
+function html_select($name, $options, $default = '', $free = '')
 {
     require_once('inc/security.php');
     $ret = "<select name=\"{$name}\" id=\"{$name}\" size=\"1\" {$free} >\n";

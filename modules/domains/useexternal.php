@@ -18,7 +18,7 @@ require_once('domains.php');
 require_role(ROLE_CUSTOMER);
 
 title("Externe Domain hinzufügen");
-$section='domains_domains';
+$section = 'domains_domains';
 
 if (!isset($_REQUEST['domain'])) {
     system_failure('Kein Domainname übergeben');

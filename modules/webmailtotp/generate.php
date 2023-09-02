@@ -28,7 +28,7 @@ if (! validate_password($username, $oldpw)) {
 store_webmail_password($username, $oldpw, $newpw);
 $secret = generate_secret($username);
 
-$section='webmailtotp_overview';
+$section = 'webmailtotp_overview';
 title("Zwei-Faktor-Anmeldung am Webmailer");
 
 output('<p>Bitte geben Sie den folgenden Initialisierungs-Code in Ihre TOTP-Software ein oder scannen Sie den QR-Code mit Ihrem Mobiltelefon.</p>');

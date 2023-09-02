@@ -56,19 +56,19 @@ $checked = '';
 if ($count == 1024) {
     $checked = 'checked="checked" ';
 }
-$form = '<span class="buttonset"><input '.$checked.'type="radio" name="count" value="1024" id="count-1" /><label for="count-1">Zusätzlich <strong>1 GB</strong>, insgesamt also '.($customerquota+1024).' MB</label> ';
+$form = '<span class="buttonset"><input '.$checked.'type="radio" name="count" value="1024" id="count-1" /><label for="count-1">Zusätzlich <strong>1 GB</strong>, insgesamt also '.($customerquota + 1024).' MB</label> ';
 if ($count == 2048) {
     $checked = 'checked="checked" ';
 } else {
     $checked = '';
 }
-$form .= '<input '.$checked.'type="radio" name="count" value="2048" id="count-2" /><label for="count-2">Zusätzlich <strong>2 GB</strong>, insgesamt also '.($customerquota+2048).' MB</label> ';
+$form .= '<input '.$checked.'type="radio" name="count" value="2048" id="count-2" /><label for="count-2">Zusätzlich <strong>2 GB</strong>, insgesamt also '.($customerquota + 2048).' MB</label> ';
 if ($count == 5120) {
     $checked = 'checked="checked" ';
 } else {
     $checked = '';
 }
-$form .= '<input '.$checked.'type="radio" name="count" value="5120" id="count-5" /><label for="count-5">Zusätzlich <strong>5 GB</strong>, insgesamt also '.($customerquota+5120).' MB</label>';
+$form .= '<input '.$checked.'type="radio" name="count" value="5120" id="count-5" /><label for="count-5">Zusätzlich <strong>5 GB</strong>, insgesamt also '.($customerquota + 5120).' MB</label>';
 
 $form .= '<input type="submit" value="Wählen" /></span>';
 output(html_form("more_storage_selection", "more_storage", "", $form));
@@ -76,7 +76,7 @@ output(html_form("more_storage_selection", "more_storage", "", $form));
 $new_item = $hosting;
 unset($new_item['quelle']);
 unset($new_item['id']);
-$gb = $count/1024;
+$gb = $count / 1024;
 $new_item['beschreibung'] = 'Erweiterung Speicherplatz um '.$gb.' GB (Auftrag vom '.date('d.m.Y').')';
 $new_item['betrag'] = $gb;
 

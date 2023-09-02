@@ -280,7 +280,7 @@ function save_vmail_account($account)
         $password = null;
         $set_password = false;
     } else {
-        $password= null;
+        $password = null;
         if ($account['password'] != '') {
             $account['password'] = stripslashes($account['password']);
             $crack = strong_password($account['password']);
@@ -292,7 +292,7 @@ function save_vmail_account($account)
         }
         $set_password = ($id == null || $password != null);
         if ($account['password'] === null) {
-            $set_password=true;
+            $set_password = true;
         }
     }
 
@@ -306,7 +306,7 @@ function save_vmail_account($account)
         }
 
         $newquota = max((int) config('vmail_basequota'), (int) $account['quota']);
-        if ($newquota > config('vmail_basequota') && $newquota > ($free+config('vmail_basequota'))) {
+        if ($newquota > config('vmail_basequota') && $newquota > ($free + config('vmail_basequota'))) {
             $newquota = $free + config('vmail_basequota');
             if (isset($oldaccount) && $account['quota'] >= $oldaccount['quota'] && $newquota < $oldaccount['quota']) {
                 # Wenn das Limit künstlich reduziert wurde, dann maximal auf den alten Wert.
@@ -343,10 +343,10 @@ function save_vmail_account($account)
         $query = "INSERT INTO mail.vmail_accounts (local, domain, password, enableextensions, smtpreply, quota, quota_threshold) VALUES (:local, :domain, :password, :enableextensions, :smtpreply, :quota, :quota_threshold)";
     } else {
         if ($set_password) {
-            $pw=", password=:password";
+            $pw = ", password=:password";
         } else {
             unset($args[":password"]);
-            $pw='';
+            $pw = '';
         }
         $query = "UPDATE mail.vmail_accounts SET local=:local, domain=:domain{$pw}, enableextensions=:enableextensions, smtpreply=:smtpreply, quota=:quota, quota_threshold=:quota_threshold WHERE id=:id";
     }
@@ -390,7 +390,7 @@ function save_vmail_account($account)
 
     if (count($account['forwards']) > 0) {
         $forward_query = "INSERT INTO mail.vmail_forward (account,destination) VALUES (:account, :destination)";
-        for ($i=0;$i < count($account['forwards']); $i++) {
+        for ($i = 0;$i < count($account['forwards']); $i++) {
             if (! isset($account['forwards'][$i]['destination'])) {
                 continue;
             }
@@ -456,7 +456,7 @@ function delete_account($id)
 
 
 
-function domainsettings($only_domain=null)
+function domainsettings($only_domain = null)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     if ($only_domain) {

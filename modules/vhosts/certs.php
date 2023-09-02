@@ -27,11 +27,11 @@ $certs = user_certs();
 if (count($certs) > 0) {
     output("<table><tr><th>Name/Details</th><th>CommonName</th><th>Gültig ab</th><th>Gültig bis</th><th>&#160;</th></tr>");
     foreach ($certs as $c) {
-        $style="";
+        $style = "";
         if ($c['valid_until'] <= date('Y-m-d')) {
-            $style=' style="background-color: #f88;" ';
-        } elseif ($c['valid_until'] <= date('Y-m-d', time()+(30*24*3600)) && !cert_is_letsencrypt($c['id'])) {
-            $style=' style="background-color: #ff8;" ';
+            $style = ' style="background-color: #f88;" ';
+        } elseif ($c['valid_until'] <= date('Y-m-d', time() + (30 * 24 * 3600)) && !cert_is_letsencrypt($c['id'])) {
+            $style = ' style="background-color: #ff8;" ';
         }
         output("<tr><td{$style}>".internal_link('showcert', filter_output_html($c['subject']), "mode=cert&id={$c['id']}")."</td><td{$style}>".filter_output_html($c['cn'])."</td><td{$style}>{$c['valid_from']}</td><td{$style}>{$c['valid_until']}</td><td>".internal_link('newcert', '<img src="'.$prefix.'images/refresh.png" title="Neue Version des Zertifikats einspielen" />', 'replace='.$c['id'])." &#160; ".internal_link('savecert', '<img src="'.$prefix.'images/delete.png" />', 'action=delete&id='.$c['id'])."</td></tr>");
     }

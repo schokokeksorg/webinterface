@@ -23,7 +23,7 @@ if (! config('http.net-apikey')) {
 }
 
 title("Domain hinzufügen");
-$section='domains_domains';
+$section = 'domains_domains';
 
 output('<p>Mit dieser Funktion können Sie eine neue Domain bestellen oder eine bestehende, extern registrierte Domain verfügbar machen.</p>');
 
@@ -66,7 +66,7 @@ if (isset($_REQUEST['domain'])) {
             if ($data['setup']) {
                 $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
             }
-            $form .='</table>';
+            $form .= '</table>';
 
             $form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($request).'">
                 <input type="submit" name="submit" value="Ich möchte diese Domain registrieren"></p>';
@@ -92,7 +92,7 @@ if (isset($_REQUEST['domain'])) {
                 if ($data['setup']) {
                     $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
                 }
-                $form .='</table>';
+                $form .= '</table>';
 
 
                 $form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($avail['domainNameUnicode']).'">

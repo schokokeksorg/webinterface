@@ -39,7 +39,7 @@ foreach ($usedquota as $q) {
         $mailbar = "<div style=\"font-size: 1px; background-color: blue; height: 10px; width: {$mailwidth}px; margin: 0; padding: 0; float: left;\">&#160;</div>";
     }
 
-    $percent = round((($q["systemquota_used"]+$q["mailquota"]) / $q["systemquota"]) * 100);
+    $percent = round((($q["systemquota_used"] + $q["mailquota"]) / $q["systemquota"]) * 100);
     $color = ($percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green"));
     $width = 2 * min($percent, 100) - $mailwidth;
 

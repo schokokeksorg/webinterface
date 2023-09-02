@@ -66,7 +66,7 @@ if ($_GET['action'] == 'edit') {
         }
     }
 
-    $fqdn = ($hostname!=="" ? $hostname."." : "").$domainname;
+    $fqdn = ($hostname !== "" ? $hostname."." : "").$domainname;
     verify_input_hostname_utf8($fqdn);
     if ($aliaswww) {
         verify_input_hostname_utf8("www.".$fqdn);
@@ -304,7 +304,7 @@ if ($_GET['action'] == 'edit') {
     $aliaswww = in_array('aliaswww', $_POST['options']);
     $forward = in_array('forward', $_POST['options']);
 
-    $fqdn = ($hostname!=="" ? $hostname."." : "").$domainname;
+    $fqdn = ($hostname !== "" ? $hostname."." : "").$domainname;
     verify_input_hostname_utf8($fqdn);
     if ($aliaswww) {
         verify_input_hostname_utf8("www.".$fqdn);

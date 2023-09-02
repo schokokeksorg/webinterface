@@ -138,7 +138,7 @@ function verify_input_username($input)
 
 
 
-function filter_input_hostname($input, $wildcard=false)
+function filter_input_hostname($input, $wildcard = false)
 {
     DEBUG('filter_input_hostname("'.$input.'", $wildcard='.$wildcard.')');
     $input = strtolower($input);
@@ -161,7 +161,7 @@ function filter_input_hostname($input, $wildcard=false)
     return $input;
 }
 
-function verify_input_hostname($input, $wildcard=false)
+function verify_input_hostname($input, $wildcard = false)
 {
     if (filter_input_hostname($input, $wildcard) != $input) {
         logger(LOG_WARNING, 'inc/security', 'verify_input_hostname', 'Ungültige Daten: '.$input);

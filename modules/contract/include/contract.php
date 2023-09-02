@@ -44,7 +44,7 @@ function contract_html()
 
     $date = date('d.m.Y');
 
-    $DIR=realpath(dirname(__FILE__).'/..');
+    $DIR = realpath(dirname(__FILE__).'/..');
 
     $vertrag = file_get_contents($DIR.'/vertrag.html');
     $vertrag = str_replace('((ADRESSE))', $address, $vertrag);

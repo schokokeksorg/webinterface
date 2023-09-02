@@ -17,7 +17,7 @@ require_role([ROLE_SYSTEMUSER, ROLE_MAILACCOUNT, ROLE_VMAIL_ACCOUNT]);
 
 $username = urldecode($_REQUEST['username']);
 
-$section='webmailtotp_overview';
+$section = 'webmailtotp_overview';
 title("Zwei-Faktor-Anmeldung am Webmailer");
 
 output('<p><strong>Hinweise:</strong></p><ul><li>Nach Einrichtung der Zwei-Faktor-Anmeldung funktioniert bei der Anmeldung über <a href="'.config('webmail_url').'">die zentrale Webmail-Login-Seite</a> nur noch dieses Passwort zusammen mit dem Einmal-Code, der mit dem TOTP-Generator erzeugt wird.</li>

@@ -38,7 +38,7 @@ foreach ($domains as $dom) {
     if ($dom->provider != 'terions') {
         $external_domains = true;
     }
-    $style="";
+    $style = "";
     if ($dom->dns == 0) {
         if (strstr($dom->domainname, '.')) {
             $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>Subdomain ohne eigene DNS-Zone</td></tr>';
@@ -91,16 +91,16 @@ $output .= '</table><br />';
 if ($external_domains) {
     $own_ns = own_ns();
     asort($own_ns);
-    $output.='<h4>Hinweis zu extern registrierten Domains</h4>
+    $output .= '<h4>Hinweis zu extern registrierten Domains</h4>
 <p>Wenn Sie Ihre Domains bei einem anderen Provider registrieren und dennoch unsere DNS-Server nutzen möchten, dann stellen Sie bitte sicher, dass der DNS-Server oben eingeschaltet ist und stellen Sie dann folgende DNS-Server ein:<p>
 <ul>';
     foreach ($own_ns as $ns) {
-        $output.='<li>'.$ns.'</li>';
+        $output .= '<li>'.$ns.'</li>';
     }
-    $output.='</ul>';
+    $output .= '</ul>';
 }
 if ($unused_dns) {
-    $output.='<h4>Wichtiger Hinweis</h4>
+    $output .= '<h4>Wichtiger Hinweis</h4>
 <p>In der obigen Liste befinden sich Domains, bei denen unser DNS-Server aktiviert ist aber die Domain momentan auf einen anderen DNS-Server eingerichtet ist. <strong>Dies ist normal bei bevorstehenden Domain-Transfers zu uns</strong>, sollte aber nicht dauerhaft so bleiben.<p>
 <p>Wenn Sie weiterhin einen externen DNS-Server benutzen möchten, dann schalten Sie bitte unseren DNS-Server für diese Domain aus, damit es nicht zu Fehlfunktionen kommt.</p>
 <p>Im Zweifel sprechen Sie bitte unseren Support an.</p>';

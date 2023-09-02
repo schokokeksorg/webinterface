@@ -31,8 +31,8 @@ if (isset($_POST['freq']) && in_array($_POST['freq'], ["day","week","month"])) {
 }
 
 $result = db_query("SELECT freq FROM qatools.v_freewvs WHERE uid=?", [$uid]);
-$result=$result->fetch();
-$freq=$result['freq'];
+$result = $result->fetch();
+$freq = $result['freq'];
 
 headline('Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken');
 

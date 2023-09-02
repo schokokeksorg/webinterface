@@ -123,7 +123,7 @@ function domain_ownerchange($fqdn, $owner, $admin_c)
 function update_possible($domain)
 {
     $dom = new Domain((int) $domain);
-    if ($dom->provider != 'terions' || $dom->billing=='external') {
+    if ($dom->provider != 'terions' || $dom->billing == 'external') {
         // Domain nicht über uns verwaltet
         DEBUG("Domain nicht über uns verwaltet!");
         return false;
@@ -162,7 +162,7 @@ function create_domain_secret($dom)
 
 function get_auth_dns($domainname, $tld)
 {
-    $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+    $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
 
     $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
     $line = explode("\n", $resp, 2)[0];
@@ -210,7 +210,7 @@ function has_own_ns($domainname, $tld)
     $nsdata = get_auth_dns($domainname, $tld);
     $NS = null;
     foreach ($nsdata as $host => $ip) {
-        $NS=$host;
+        $NS = $host;
     }
     if (in_array($NS, own_ns())) {
         DEBUG('Domain hat unsere DNS-Server!');
@@ -222,7 +222,7 @@ function has_own_ns($domainname, $tld)
 
 function get_txt_record($hostname, $domainname, $tld)
 {
-    $domain=idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+    $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
     $nsdata = get_auth_dns($domainname, $tld);
     $NS = null;
     foreach ($nsdata as $host => $ip) {

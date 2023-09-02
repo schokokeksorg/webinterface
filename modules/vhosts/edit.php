@@ -110,7 +110,7 @@ $form .= "<br />
     <span id=\"aliaswww_option\"><label for=\"forwardwww\">Umleitungs-Option </label>".html_select('forwardwww', $aliaswww_options, $aliaswww_option)."</span><br />
 </div>
 <div class=\"vhostsidebyside\">
-<div class=\"vhostoptions\" id=\"options_docroot\" ".($vhost_type=='regular' || $vhost_type=='dav' ? '' : 'style="display: none;"').">
+<div class=\"vhostoptions\" id=\"options_docroot\" ".($vhost_type == 'regular' || $vhost_type == 'dav' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>
   <h5>Speicherort für Dateien (»Document Root«)</h5>
   <div style=\"margin-left: 2em;\">
@@ -152,7 +152,7 @@ $phpoptions = "
 $safemode = ($vhost['cgi'] == 1 ? '' : ' checked="checked" ');
 
 $form .= "
-<div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type=='regular' ? '' : 'style="display: none;"').">
+<div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type == 'regular' ? '' : 'style="display: none;"').">
   ".$phpoptions."
   <h5>Abgesicherter Modus</h5>
   <div style=\"margin-left: 2em;\">
@@ -162,7 +162,7 @@ $form .= "
 ";
 
 $form .= "
-<div class=\"vhostoptions\" id=\"options_webapp\" ".($vhost_type=='webapp' ? '' : 'style="display: none;"').">
+<div class=\"vhostoptions\" id=\"options_webapp\" ".($vhost_type == 'webapp' ? '' : 'style="display: none;"').">
   <h4>Optionen</h4>
   <h5>Anwendung</h5>
   <select name=\"webapp\" id=\"webapp\" size=\"1\">
@@ -175,13 +175,13 @@ $form .= "
 $form .= "
 <h4>Verwendung</h4>
         <div style=\"margin-left: 2em;\">
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type=='regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type == 'regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
 ";
-if ($vhost_type=='webapp') {
+if ($vhost_type == 'webapp') {
     // Wird nur noch angezeigt wenn der Vhost schon auf webapp konfiguriert ist, ansonsten nicht.
     // Die User sollen den Webapp-Installer benutzen.
     $form .= "
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type=='webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type == 'webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
 ";
 }
 $hsts_value = $vhost['hsts'];
@@ -191,8 +191,8 @@ if (isset($hsts_preset_values[$hsts_value])) {
     $hsts_preset_value = $hsts_value;
 }
 $form .= "
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type=='dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type=='svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type == 'dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type == 'svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
 	</div>
 <br />
 <br />
@@ -244,7 +244,7 @@ if (count($certselect) > 1) {
     $form .= "<h5>Verwendetes Zertifikat</h5>
     <div style=\"margin-left: 2em;\"><p>Für Sonderanwendungen (WebDAV, SVN) kann momentan kein Lets-Encrypt-Zertifikat verwaltet werden. Bitte beschaffen Sie ggf. ein Zertifikat und tragen Sie dieses unten auf der Websites-Übersichtsseite ein, damit es hier ausgewählt werden kann.</p></div>";
 }
-$form.="
+$form .= "
 <h5>Logfiles</h5>
     <div style=\"margin-left: 2em;\">
       <select name=\"logtype\" id=\"logtype\">
@@ -305,7 +305,7 @@ if (count($available_servers) > 1) {
 }
 if ($have_v6) {
     $ipv6_address = '';
-    if ($vhost['id'] && ($vhost['autoipv6'] >0)) {
+    if ($vhost['id'] && ($vhost['autoipv6'] > 0)) {
         $ipv6_address = '<strong>IPv6-Adresse dieser Website:</strong> '.autoipv6_address($vhost['id'], $vhost['autoipv6']);
     }
     $checked = ($vhost['autoipv6'] > 0) ? ' checked="checked"' : '';

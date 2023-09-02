@@ -45,7 +45,7 @@ if ($_GET['action'] == 'delete') {
         $domain = $_POST['address'];
     } else {
         $local = substr($_POST['address'], 0, $at);
-        $domain = substr($_POST['address'], $at+1);
+        $domain = substr($_POST['address'], $at + 1);
     }
     DEBUG("Whitelisting {$local}@{$domain} for {$_POST['expire']} minutes");
     new_whitelist_entry($local, $domain, $_POST['expire']);

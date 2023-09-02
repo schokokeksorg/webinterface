@@ -359,7 +359,7 @@ function save_more_storage($items, $storage)
     if (! $name && $_SESSION['customerinfo']['name']) {
         $name = $_SESSION['customerinfo']['name'];
     }
-    $allstorage = $oldcustomerquota+$storage;
+    $allstorage = $oldcustomerquota + $storage;
     $emailaddr = $_SESSION['customerinfo']['email'];
     $message = "Hallo,\n\nsoeben wurde im Webinterface von ".config('company_name')." eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.\n\nIhre Kundennummer: {$_SESSION['customerinfo']['customerno']} ({$name})\n";
     send_mail($emailaddr, 'Auftragsbestätigung: Mehr Speicherplatz bei schokokeks.org', $message);

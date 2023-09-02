@@ -95,7 +95,7 @@ function autoipv6_address($vhost_id, $mode = 1)
 }
 
 
-function list_vhosts($filter=null)
+function list_vhosts($filter = null)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     $query = "SELECT vh.id,fqdn,domain,docroot,docroot_is_default,php,cgi,vh.certid AS cert, vh.ssl, vh.options,logtype,errorlog,IF(dav.id IS NULL OR dav.type='svn', 0, 1) AS is_dav,IF(dav.id IS NULL OR dav.type='dav', 0, 1) AS is_svn, IF(webapps.id IS NULL, 0, 1) AS is_webapp FROM vhosts.v_vhost AS vh LEFT JOIN vhosts.dav ON (dav.vhost=vh.id) LEFT JOIN vhosts.webapps ON (webapps.vhost = vh.id) WHERE uid=:uid ORDER BY domain,hostname";
@@ -241,7 +241,7 @@ function get_vhost_details($id)
         if ($ret['hostname'] == $user) {
             $ret['hostname'] = null;
         } elseif (substr($ret['hostname'], -strlen($user), strlen($user)) == $user) {
-            $ret['hostname'] = substr($ret['hostname'], 0, -strlen($user)-1); // Punkt mit entfernen!
+            $ret['hostname'] = substr($ret['hostname'], 0, -strlen($user) - 1); // Punkt mit entfernen!
         } else {
             system_failure('Userdomain ohne Username!');
         }
@@ -362,7 +362,7 @@ function make_webapp_vhost($id, $webapp)
 }
 
 
-function check_hostname_collision($hostname, $domain, $id=null)
+function check_hostname_collision($hostname, $domain, $id = null)
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     # Neuer vhost => Prüfe Duplikat
@@ -449,9 +449,9 @@ function save_vhost($vhost)
 
     if ($vhost['is_svn']) {
         if (! $vhost['options']) {
-            $vhost['options']='nodocroot';
+            $vhost['options'] = 'nodocroot';
         } else {
-            $vhost['options'].=",nodocroot";
+            $vhost['options'] .= ",nodocroot";
         }
     }
 

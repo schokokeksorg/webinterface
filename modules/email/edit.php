@@ -124,17 +124,17 @@ $valid_from_now_checked = ($ar['valid_from'] <= date('Y-m-d H:i:s') || $ar['vali
 $valid_from_future_checked = ($ar['valid_from'] > date('Y-m-d H:i:s')) ? ' checked="checked"' : '';
 $startdate = $ar['valid_from'];
 if (! $startdate || $startdate <= date('Y-m-d')) {
-    $startdate = date('Y-m-d', time() + 1*24*60*60);
+    $startdate = date('Y-m-d', time() + 1 * 24 * 60 * 60);
 }
 $form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".
   "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_date\">Erst ab dem </label>".
-  "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"".date('Y-m-d')."\" max=\"".date('Y-m-d', time() + 60*24*60*60)."\" /></p>";
+  "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"".date('Y-m-d')."\" max=\"".date('Y-m-d', time() + 60 * 24 * 60 * 60)."\" /></p>";
 
 $enddate = $ar['valid_until'];
 if (! $enddate) {
-    $enddate = date('Y-m-d', time() + 7*24*60*60);
+    $enddate = date('Y-m-d', time() + 7 * 24 * 60 * 60);
 }
-$max_end = date('Y-m-d', time() + 60*24*60*60);
+$max_end = date('Y-m-d', time() + 60 * 24 * 60 * 60);
 if ($ar['valid_from'] > date('Y-m-d')) {
     $max_end = date_create($ar['valid_from']);
     $max_end->modify("+60 day");
@@ -202,7 +202,7 @@ while (count($account['forwards']) < 10) {
     $account['forwards'][] = ['destination' => ''];
 }
 for ($i = 0 ; $i < max($numforwards, 10) ; $i++) {
-    $num = $i+1;
+    $num = $i + 1;
     $form .= "<div class=\"vmail-forward\" id=\"vmail_forward_{$num}\">
   <div style=\"float: right;\" class=\"delete_forward\">".icon_delete("Diese Weiterleitung entfernen")."</div>
   <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"".filter_output_html($account['forwards'][$i]['destination'])."\" /></p>

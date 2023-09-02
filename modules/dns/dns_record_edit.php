@@ -126,7 +126,7 @@ if ($type == 'sshfp') {
     3 => "ECDSA",
     4 => "ED25519", ];
 
-    $option="";
+    $option = "";
     foreach ($algs as $key => $alg) {
         $option .= '<option value="'.$key.'" ';
         if ($key == $data['spec']) {
@@ -142,7 +142,7 @@ if ($type == 'sshfp') {
 }
 
 if ($type == 'caa') {
-    $option="";
+    $option = "";
     foreach ($caa_properties as $key => $property) {
         $option .= '<option value="'.$key.'" ';
         if ($key == $data['spec']) {
