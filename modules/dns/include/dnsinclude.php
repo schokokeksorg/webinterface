@@ -129,7 +129,7 @@ function get_dyndns_records($id)
             $dom->ensure_userdomain();
         }
         $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
-        if (! $entry['hostname']) {
+        if (!$entry['hostname']) {
             $entry['fqdn'] = $dom->fqdn;
         }
         array_push($data, $entry);
@@ -186,7 +186,7 @@ function get_domain_records($dom)
         $dom = new Domain((int) $entry['domain']);
         $dom->ensure_userdomain();
         $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
-        if (! $entry['hostname']) {
+        if (!$entry['hostname']) {
             $entry['fqdn'] = $dom->fqdn;
         }
         array_push($data, $entry);
@@ -238,7 +238,7 @@ function save_dns_record($id, $record)
     }
     $dom = new Domain((int) $record['domain']);
     $dom->ensure_userdomain();
-    if (! $dom->id) {
+    if (!$dom->id) {
         system_failure('invalid domain');
     }
     if ($record['hostname'] == '') {
@@ -282,7 +282,7 @@ function save_dns_record($id, $record)
                 system_failure('data field is too long');
             }
             verify_input_hostname($record['data']);
-            if (! $record['data']) {
+            if (!$record['data']) {
                 system_failure('MX hostname missing');
             }
             $record['ip'] = null;
@@ -301,7 +301,7 @@ function save_dns_record($id, $record)
                 system_failure('data field is too long');
             }
             verify_input_hostname($record['data']);
-            if (! $record['data']) {
+            if (!$record['data']) {
                 system_failure('destination host missing');
             }
             break;
@@ -314,7 +314,7 @@ function save_dns_record($id, $record)
             if (strlen($record['data']) > 1024) {
                 system_failure('data field is too long');
             }
-            if (! $record['data']) {
+            if (!$record['data']) {
                 system_failure('text entry missing');
             }
             break;
@@ -326,7 +326,7 @@ function save_dns_record($id, $record)
             if (strlen($record['data']) > 255) {
                 system_failure('data field is too long');
             }
-            if (! $record['data']) {
+            if (!$record['data']) {
                 system_failure('text entry missing');
             }
             break;
@@ -337,7 +337,7 @@ function save_dns_record($id, $record)
             if (strlen($record['data']) > 255) {
                 system_failure('data field is too long');
             }
-            if (! $record['data']) {
+            if (!$record['data']) {
                 system_failure('text entry missing');
             }
             break;
@@ -351,7 +351,7 @@ function save_dns_record($id, $record)
             if (strlen($record['data']) > 255) {
                 system_failure('data field is too long');
             }
-            if (! $record['data']) {
+            if (!$record['data']) {
                 system_failure('SRV target missing');
             }
             $data = explode(':', $record['data']);
@@ -462,7 +462,7 @@ function check_dns($domainname, $tld)
     global $tld_ns;
     $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
 
-    if (! isset($tld_ns[$tld])) {
+    if (!isset($tld_ns[$tld])) {
         $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
         $line = explode("\n", $resp, 2)[0];
         $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
@@ -494,7 +494,7 @@ function remove_from_dns($dom)
             break;
         }
     }
-    if (! $current) {
+    if (!$current) {
         system_failure("Domain nicht gefunden!");
     }
     db_query("UPDATE kundendaten.domains SET dns=0 WHERE id=?", [$current->id]);
@@ -510,7 +510,7 @@ function add_to_dns($dom)
             break;
         }
     }
-    if (! $current) {
+    if (!$current) {
         system_failure("Domain nicht gefunden!");
     }
     db_query("UPDATE kundendaten.domains SET dns=1, autodns=1 WHERE id=?", [$current->id]);

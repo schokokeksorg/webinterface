@@ -20,11 +20,11 @@ function config($key, $localonly = false)
 
     if ($key == "modules") {
         // Stelle sicher, dass das "index"-Modul immer aktiv ist!
-        if (! in_array("index", $config['modules'])) {
+        if (!in_array("index", $config['modules'])) {
             $config['modules'][] = "index";
         }
         // Stelle sicher, dass das "about"-Modul immer aktiv ist!
-        if (! in_array("about", $config['modules'])) {
+        if (!in_array("about", $config['modules'])) {
             $config['modules'][] = "about";
         }
     }
@@ -93,7 +93,7 @@ function redirect($target)
     if ($target == '') {
         $target = $_SERVER['REQUEST_URI'];
     }
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: {$target}");
     } else {
         if (strpos($target, '?') === false) {
@@ -144,7 +144,7 @@ function server_names()
 
 function maybe_null($value)
 {
-    if (! $value) {
+    if (!$value) {
         return null;
     }
 
@@ -292,7 +292,7 @@ function generate_form_token($form_id)
         DEBUG("Uh? Session not running? Wtf?");
         system_failure("Internal error!");
     }
-    if (! isset($_SESSION['session_token'])) {
+    if (!isset($_SESSION['session_token'])) {
         $_SESSION['session_token'] = random_string(10);
     }
     return hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
@@ -310,12 +310,12 @@ function check_form_token($form_id, $formtoken = null)
         system_failure("Internal error! (Session not running)");
     }
 
-    if (! isset($_SESSION['session_token'])) {
+    if (!isset($_SESSION['session_token'])) {
         $_SESSION['session_token'] = random_string(10);
     }
     $correct_formtoken = hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
 
-    if (! ($formtoken == $correct_formtoken)) {
+    if (!($formtoken == $correct_formtoken)) {
         system_failure("Possible cross-site-request-forgery!");
     }
 }
@@ -330,14 +330,14 @@ function have_module($modname)
 function use_module($modname)
 {
     global $prefix, $needed_modules;
-    if (! isset($needed_modules)) {
+    if (!isset($needed_modules)) {
         $needed_modules = [];
     }
     if (in_array($modname, $needed_modules)) {
         return;
     }
     $needed_modules[] = $modname;
-    if (! have_module($modname)) {
+    if (!have_module($modname)) {
         system_failure("Soll nicht verfügbares Modul laden!");
     }
     /* setup module include path */

@@ -58,7 +58,7 @@ function save_ftpuser($data)
         $homedir = substr($homedir, 1);
     }
     $homedir = $_SESSION['userinfo']['homedir'].'/'.$homedir;
-    if (! in_homedir($homedir)) {
+    if (!in_homedir($homedir)) {
         system_failure('Pfad scheint nicht in Ihrem Home zu sein oder enthielt ungültige Zeichen.');
     }
 
@@ -78,7 +78,7 @@ function save_ftpuser($data)
         }
         $password_hash = crypt($data['password'], '$6$'.random_string(8).'$');
         $set_password = true;
-    } elseif (! $data['id']) {
+    } elseif (!$data['id']) {
         system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
     }
 

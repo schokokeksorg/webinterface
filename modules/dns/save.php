@@ -35,11 +35,11 @@ if (isset($_GET['type']) && $_GET['type'] == 'dyndns') {
             are_you_sure("type=dyndns&action=delete&id={$id}", "Möchten Sie den DynDNS-Account wirklich löschen?");
         } elseif ($sure === true) {
             delete_dyndns_account($id);
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header("Location: dyndns");
             }
         } elseif ($sure === false) {
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header("Location: dyndns");
             }
         }
@@ -54,7 +54,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'dyndns') {
             $newid = create_dyndns_account($_POST['handle'], $_POST['password_http'], $_POST['sshkey']);
         }
 
-        if (! ($debugmode || we_have_an_error())) {
+        if (!($debugmode || we_have_an_error())) {
             if ($id) {
                 // Bearbeitung
                 header('Location: dyndns');
@@ -77,7 +77,7 @@ if (isset($_GET['dns']) && isset($_GET['dom'])) {
             break;
         }
     }
-    if (! $dom) {
+    if (!$dom) {
         system_failure("Domain nicht gefunden!");
     }
     if ($_GET['dns'] == 0) {

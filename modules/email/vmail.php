@@ -20,7 +20,7 @@ javascript();
 
 require_once('hasdomain.php');
 
-if (! user_has_vmail_domain()) {
+if (!user_has_vmail_domain()) {
     title("E-Mail-Verwaltung");
 
     output('
@@ -87,7 +87,7 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         }
                     }
                 }
-                if (! $account_found) {
+                if (!$account_found) {
                     continue;
                 }
             }

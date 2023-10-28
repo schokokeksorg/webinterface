@@ -31,11 +31,11 @@ if ($sure === null) {
     are_you_sure("id={$id}", "Möchten Sie die Zwei-Faktor-Anmeldung für das Postfach »{$account}« wirklich entfernen?");
 } elseif ($sure === true) {
     delete_totp($id);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: ".$startpage);
     }
 } elseif ($sure === false) {
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: ".$startpage);
     }
 }

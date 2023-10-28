@@ -45,7 +45,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
             output("");
         } else {
             change_mailaccount($_GET['id'], $acc);
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header('Location: imap');
             }
             die();
@@ -67,7 +67,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
             system_failure($error);
         } else {
             create_mailaccount($acc);
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header('Location: imap');
             }
             die();
@@ -133,12 +133,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
 ');
     } elseif ($sure === true) {
         delete_mailaccount($_GET['account']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: imap');
         }
         die();
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: imap");
         }
         die();

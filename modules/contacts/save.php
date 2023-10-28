@@ -36,11 +36,11 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         are_you_sure("action=delete&id={$contact['id']}&back=".urlencode($back), "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
     } elseif ($sure === true) {
         delete_contact($contact['id']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: ".$back);
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: ".$back);
         }
     }
@@ -56,7 +56,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     }
 
     $c = new_contact();
-    if (! $new) {
+    if (!$new) {
         $c = get_contact($_REQUEST['id']);
     }
 
@@ -117,7 +117,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $num = format_number(filter_input_oneline($_REQUEST['mobile']), $_REQUEST['land']);
         if ($num) {
             $c['mobile'] = $num;
-            if (! $c['phone']) {
+            if (!$c['phone']) {
                 // dupliziere die Mobiltelefonnummer als normale Nummer wegen der Nutzung als Domainhandles
                 $c['phone'] = $num;
             }

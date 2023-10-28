@@ -31,7 +31,7 @@ function customer_useraccount($uid)
 
 function primary_useraccount()
 {
-    if (! ($_SESSION['role'] & ROLE_SYSTEMUSER)) {
+    if (!($_SESSION['role'] & ROLE_SYSTEMUSER)) {
         return null;
     }
     $customerno = (int) $_SESSION['customerinfo']['customerno'];

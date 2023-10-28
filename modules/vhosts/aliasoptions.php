@@ -43,7 +43,7 @@ if (isset($_GET['aliaswww'])) {
     $alias['domainid'] = $alias['domain_id'];
     save_alias($alias);
 
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: aliases?vhost='.$alias['vhost']);
     }
 }
@@ -71,7 +71,7 @@ if (isset($_GET['forward'])) {
     $alias['domainid'] = $alias['domain_id'];
     save_alias($alias);
 
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: aliases?vhost='.$alias['vhost']);
     }
 }

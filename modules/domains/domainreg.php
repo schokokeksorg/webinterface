@@ -21,7 +21,7 @@ require_role(ROLE_CUSTOMER);
 use_module('contacts');
 require_once('contacts.php');
 
-if (! config('http.net-apikey')) {
+if (!config('http.net-apikey')) {
     system_failure("Dieses System ist nicht eingerichtet zum Hinzufügen von Domains");
 }
 

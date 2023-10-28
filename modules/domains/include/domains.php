@@ -16,7 +16,7 @@ require_once('inc/debug.php');
 
 function mailman_subdomains($domain)
 {
-    if (! in_array('mailman', config('modules'))) {
+    if (!in_array('mailman', config('modules'))) {
         return [];
     }
     $domain = (int) $domain;
@@ -30,7 +30,7 @@ function mailman_subdomains($domain)
 
 function dns_in_use($domain)
 {
-    if (! in_array('dns', config('modules'))) {
+    if (!in_array('dns', config('modules'))) {
         return false;
     }
     $domain = (int) $domain;
@@ -40,7 +40,7 @@ function dns_in_use($domain)
 
 function mail_setting($domain)
 {
-    if (! in_array('email', config('modules'))) {
+    if (!in_array('email', config('modules'))) {
         return null;
     }
     $domain = (int) $domain;
@@ -62,7 +62,7 @@ function mail_setting($domain)
 
 function mail_in_use($domain)
 {
-    if (! in_array('email', config('modules'))) {
+    if (!in_array('email', config('modules'))) {
         return false;
     }
     $domain = (int) $domain;
@@ -91,7 +91,7 @@ function count_vmail($domain)
 
 function web_in_use($domain)
 {
-    if (! in_array('vhosts', config('modules'))) {
+    if (!in_array('vhosts', config('modules'))) {
         return false;
     }
 
@@ -264,7 +264,7 @@ function change_user($domain, $uid)
             break;
         }
     }
-    if (! $targetuser) {
+    if (!$targetuser) {
         system_failure("Ungültiger Useraccount!");
     }
     db_query("UPDATE kundendaten.domains SET useraccount=? WHERE id=?", [$targetuser, $domain->id]);

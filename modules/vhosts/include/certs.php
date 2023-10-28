@@ -95,7 +95,7 @@ function get_available_CAs()
 {
     $path = '/etc/apache2/certs/cabundle/';
     $ret = glob($path.'*.pem');
-    if (! $ret) {
+    if (!$ret) {
         system_failure("Konnte die CA-Zertifikate nicht laden");
     }
     DEBUG($ret);
@@ -109,7 +109,7 @@ function get_chain($cert)
     if ($certdata === false) {
         system_failure("Das Zertifikat konnte nicht gelesen werden");
     }
-    if (! isset($certdata['issuer']['CN'])) {
+    if (!isset($certdata['issuer']['CN'])) {
         return null;
     }
     $result = db_query("SELECT id FROM vhosts.certchain WHERE cn=?", [$certdata['issuer']['CN']]);
@@ -218,7 +218,7 @@ function parse_cert_details($cert)
         $san = [];
         $raw_san = explode(', ', $certdata['extensions']['subjectAltName']);
         foreach ($raw_san as $name) {
-            if (! substr($name, 0, 4) == 'DNS:') {
+            if (!substr($name, 0, 4) == 'DNS:') {
                 warning('Unparsable SAN: '.$name);
                 continue;
             }
@@ -375,7 +375,7 @@ commonName_default = {$cn}
 
 function save_csr($cn, $bits, $replace = null)
 {
-    if (! $cn) {
+    if (!$cn) {
         system_failure("Sie müssen einen Domainname eingeben!");
     }
     $domains = split_cn($cn);

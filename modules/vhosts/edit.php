@@ -44,7 +44,7 @@ if ($id == 0) {
 }
 
 $defaultdocroot = $vhost['domain'];
-if (! $vhost['domain']) {
+if (!$vhost['domain']) {
     $defaultdocroot = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
 }
 if ($vhost['domain_id'] == -1) {
@@ -58,7 +58,7 @@ $defaultdocroot = $defaultdocroot.'/htdocs';
 
 $is_default_docroot = ($vhost['docroot'] == null) || ($vhost['homedir'].'/websites/'.$defaultdocroot == $vhost['docroot']);
 
-if ($vhost['docroot'] != '' && ! strstr($vhost['docroot'], '/websites/')) {
+if ($vhost['docroot'] != '' && !strstr($vhost['docroot'], '/websites/')) {
     warning("Sie verwenden einen Speicherplatz außerhalb von »~/websites/«. Diese Einstellung ist momentan nicht mehr gestattet. Ihre Einstellung wurde daher auf die Standardeinstellung zurückgesetzt. Prüfen Sie dies bitte und verschieben Sie ggf. ihre Dateien.");
     $is_default_docroot = true;
 }
@@ -221,7 +221,7 @@ if ($vhost_type != 'dav' && $vhost_type != 'svn') {
     $certselect[-1] = 'Automatische Zertifikatsverwaltung mit Let\'s Encrypt';
 }
 foreach ($certs as $c) {
-    if (! cert_is_letsencrypt($c['id'])) {
+    if (!cert_is_letsencrypt($c['id'])) {
         $certselect[$c['id']] = $c['subject'];
     }
 }

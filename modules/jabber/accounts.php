@@ -37,7 +37,7 @@ foreach ($jabberaccounts as $acc) {
     if ($lastactivity > strftime('%Y-%m-%d', time() - 7 * 24 * 60 * 60)) {
         $lastactivity = 'Kürzlich';
     }
-    if (! $lastactivity) {
+    if (!$lastactivity) {
         $lastactivity = 'Bisher nie verwendet';
     }
     $local = filter_output_html($acc['local']);

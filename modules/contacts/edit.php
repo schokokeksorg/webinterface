@@ -31,7 +31,7 @@ if ($_REQUEST['id'] == 'new') {
 }
 
 $c = new_contact();
-if (! $new) {
+if (!$new) {
     $c = get_contact($_REQUEST['id']);
 } elseif (isset($_REQUEST['copy'])) {
     $c = get_contact($_REQUEST['copy']);

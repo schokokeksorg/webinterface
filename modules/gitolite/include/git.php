@@ -28,16 +28,16 @@ function check_env()
     if (!is_executable($git_wrapper)) {
         system_failure("git_wrapper.sh is not executable: {$git_wrapper}");
     }
-    if (! (is_file($data_dir.'/sshkey') && is_file($data_dir.'/sshkey.pub'))) {
+    if (!(is_file($data_dir.'/sshkey') && is_file($data_dir.'/sshkey.pub'))) {
         system_failure("SSH-key not found. Please setup the gitolite-module correctly. Run ./data/initialize.sh");
     }
-    if (! is_dir($data_dir.'/gitolite-admin')) {
+    if (!is_dir($data_dir.'/gitolite-admin')) {
         system_failure("Repository gitolite-admin ot found. Initial checkout must be made manually. Run ./data/initialize.sh");
     }
-    if (! is_dir($config_dir)) {
+    if (!is_dir($config_dir)) {
         system_failure("gitolite-admin repository is not prepared.");
     }
-    if (! (is_dir($key_dir) && is_writeable($config_file))) {
+    if (!(is_dir($key_dir) && is_writeable($config_file))) {
         system_failure("Repository gitolite-admin is corrupted or webinterface.conf is not writeable.");
     }
 }
@@ -90,7 +90,7 @@ function list_repos()
     $username = $_SESSION['userinfo']['username'];
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist");
         return [];
     }
@@ -139,7 +139,7 @@ function list_users()
     $username = $_SESSION['userinfo']['username'];
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist");
         return [];
     }
@@ -168,7 +168,7 @@ function list_foreign_users()
     $username = $_SESSION['userinfo']['username'];
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist");
         return [];
     }
@@ -192,11 +192,11 @@ function list_foreign_users()
 function get_pubkey($handle)
 {
     global $key_dir;
-    if (! validate_name($handle)) {
+    if (!validate_name($handle)) {
         return '';
     }
     $keyfile = $key_dir.'/'.$handle.'.pub';
-    if (! file_exists($keyfile)) {
+    if (!file_exists($keyfile)) {
         return '';
     }
     return file_get_contents($keyfile);
@@ -209,7 +209,7 @@ function new_foreign_user($handle)
     global $key_dir, $config_dir;
     $username = $_SESSION['userinfo']['username'];
 
-    if (! validate_name($handle)) {
+    if (!validate_name($handle)) {
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich, Binderstrich und Punkt benutzen.");
     }
 
@@ -218,13 +218,13 @@ function new_foreign_user($handle)
     }
 
     $keyfile = $key_dir.'/'.$handle.'.pub';
-    if (! file_exists($keyfile)) {
+    if (!file_exists($keyfile)) {
         system_failure('Diesen GIT-Benutzer gibt es nicht');
     }
 
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist, creating new one");
         file_put_contents($userconfig, '# foreign user '.$handle."\n");
         set_user_include();
@@ -247,7 +247,7 @@ function delete_foreign_user($handle)
 
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist, wtf?");
         system_failure("Es gibt für diesen Benutzer noch keine Konfiguration. Das sollte nicht sein!");
     } else {
@@ -283,7 +283,7 @@ function newkey($pubkey, $handle)
     $username = $_SESSION['userinfo']['username'];
 
     $handle = $username.'-'.$handle;
-    if (! validate_name($handle) || (str_replace(".", "x", $handle) != $handle)) {
+    if (!validate_name($handle) || (str_replace(".", "x", $handle) != $handle)) {
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich und Bindestrich benutzen.");
     }
 
@@ -307,7 +307,7 @@ function newkey($pubkey, $handle)
 
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist, creating new one");
         file_put_contents($userconfig, '# user '.$handle."\n");
         set_user_include();
@@ -329,7 +329,7 @@ function delete_key($handle)
     global $key_dir, $config_dir;
     $username = $_SESSION['userinfo']['username'];
 
-    if (! validate_name($handle)) {
+    if (!validate_name($handle)) {
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich, Binderstrich und Punkt benutzen.");
     }
     if (!in_array($handle, list_users())) {
@@ -339,7 +339,7 @@ function delete_key($handle)
     }
 
     $keyfile = $key_dir.'/'.$handle.'.pub';
-    if (! file_exists($keyfile)) {
+    if (!file_exists($keyfile)) {
         system_failure("Der angegebene Schlüssel scheint nicht mehr vorhanden zu sein. Bitte manuelle Korrektur anfordern!");
     }
     git_wrapper('rm '.$keyfile);
@@ -347,7 +347,7 @@ function delete_key($handle)
 
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist, wtf?");
         system_failure("Es gibt für diesen Benutzer noch keine Konfiguration. Das sollte nicht sein!");
     } else {
@@ -392,7 +392,7 @@ function remove_repo_from_array($data, $repo)
         if (preg_match('_^\s*repo (\S+)\s*$_', $line, $m) != 0) {
             $inside = ($m[1] == $repo);
         }
-        if (! $inside && ! preg_match('/^'.$repo.'\s.*/', $line)) {
+        if (!$inside && !preg_match('/^'.$repo.'\s.*/', $line)) {
             $outdata[] = $line;
         }
     }
@@ -480,7 +480,7 @@ function save_repo($repo, $permissions, $description)
     $userconfig = $config_dir . '/' . $username . '.conf';
     DEBUG("using config file ".$userconfig);
     $data = [];
-    if (! is_file($userconfig)) {
+    if (!is_file($userconfig)) {
         DEBUG("user-config does not exist, creating new one");
         set_user_include();
     } else {

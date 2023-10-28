@@ -208,7 +208,7 @@ function domainselect($selected = null, $selectattribute = '')
     if ($selected == -2) {
         $s = ($selected == -2 ? ' selected="selected"' : '');
         $ret .= ' <option value="-2"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').' (Bitte nicht mehr benutzen!)</option>';
-        if ($selected > 0 and ! $found) {
+        if ($selected > 0 and !$found) {
             system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
         }
     }
@@ -380,7 +380,7 @@ function check_hostname_collision($hostname, $domain, $id = null)
         $domaincheck = "domain IS NULL";
     }
     $hostnamecheck = "hostname=:hostname";
-    if (! $hostname) {
+    if (!$hostname) {
         $hostnamecheck = "hostname IS NULL";
         unset($args[":hostname"]);
     }
@@ -408,7 +408,7 @@ function check_hostname_collision($hostname, $domain, $id = null)
 
 function save_vhost($vhost)
 {
-    if (! is_array($vhost)) {
+    if (!is_array($vhost)) {
         system_failure('$vhost kein array!');
     }
     $id = (int) $vhost['id'];
@@ -448,7 +448,7 @@ function save_vhost($vhost)
     }
 
     if ($vhost['is_svn']) {
-        if (! $vhost['options']) {
+        if (!$vhost['options']) {
             $vhost['options'] = 'nodocroot';
         } else {
             $vhost['options'] .= ",nodocroot";
@@ -557,7 +557,7 @@ function delete_alias($id)
 
 function save_alias($alias)
 {
-    if (! is_array($alias)) {
+    if (!is_array($alias)) {
         system_failure('$alias kein array!');
     }
     $id = (isset($alias['id']) ? (int) $alias['id'] : 0);
@@ -569,7 +569,7 @@ function save_alias($alias)
         $domain = null;
     }
     $vhost = get_vhost_details((int) $alias['vhost']);
-    if (! $alias['hostname']) {
+    if (!$alias['hostname']) {
         $alias['hostname'] = null;
     }
     $args = [":hostname" => $alias['hostname'],

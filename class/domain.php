@@ -80,21 +80,21 @@ class Domain
 
     public function ensure_customerdomain()
     {
-        if (! $this->is_customerdomain()) {
+        if (!$this->is_customerdomain()) {
             system_failure('Diese Domain gehört nicht Ihrem Kundenaccount.');
         }
     }
 
     public function ensure_userdomain()
     {
-        if (! $this->is_userdomain()) {
+        if (!$this->is_userdomain()) {
             system_failure('Diese Domain gehört nicht Ihrem Benutzeraccount.');
         }
     }
 
     public function is_customerdomain()
     {
-        if (! isset($_SESSION['customerinfo'])) {
+        if (!isset($_SESSION['customerinfo'])) {
             return false;
         }
         $customerno = (int) $_SESSION['customerinfo']['customerno'];
@@ -103,7 +103,7 @@ class Domain
 
     public function is_userdomain()
     {
-        if (! isset($_SESSION['userinfo'])) {
+        if (!isset($_SESSION['userinfo'])) {
             return false;
         }
         $uid = (int) $_SESSION['userinfo']['uid'];

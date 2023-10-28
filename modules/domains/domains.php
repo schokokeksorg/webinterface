@@ -108,7 +108,7 @@ foreach ($user_domains as $domain) {
     }
 
     $features = implode(', ', $features);
-    if (! $features) {
+    if (!$features) {
         $features = '<em>unbenutzt</em>';
     }
     $punycode = $domain->punycode;

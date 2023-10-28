@@ -165,12 +165,12 @@ function su($type, $id)
     }
     setup_session($role, $id);
     if ($type == 'c') {
-        if (! (ROLE_CUSTOMER & $_SESSION['role'])) {
+        if (!(ROLE_CUSTOMER & $_SESSION['role'])) {
             session_destroy();
             system_failure('Es wurde ein "su" zu einem Kundenaccount angefordert, das war aber kein Kundenaccount!');
         }
     } elseif ($type == 'u') {
-        if (! (ROLE_SYSTEMUSER & $_SESSION['role'])) {
+        if (!(ROLE_SYSTEMUSER & $_SESSION['role'])) {
             session_destroy();
             system_failure('Es wurde ein "su" zu einem Benutzeraccount angefordert, das war aber kein Benutzeraccount!');
         }

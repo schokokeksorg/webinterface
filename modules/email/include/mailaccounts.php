@@ -193,7 +193,7 @@ function check_valid($acc)
         if (substr($acc['mailbox'], 0, strlen($user['homedir']) + 1) != $user['homedir'].'/') {
             return "Die Mailbox muss innerhalb des Home-Verzeichnisses liegen. Sie haben »".$acc['mailbox']."« als Mailbox angegeben, Ihr Home-Verzeichnis ist »".$user['homedir']."/«.";
         }
-        if (! check_path($acc['mailbox'])) {
+        if (!check_path($acc['mailbox'])) {
             return "Sie verwenden ungültige Zeichen in Ihrem Mailbox-Pfad.";
         }
     }

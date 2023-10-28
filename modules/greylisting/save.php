@@ -24,11 +24,11 @@ if ($_GET['action'] == 'delete') {
         are_you_sure("action=delete&id={$entry['id']}", "Möchten Sie die E-Mail-Adresse »{$entry['local']}@{$entry['domain']}« von der Ausnahmeliste entfernen?");
     } elseif ($sure === true) {
         delete_from_whitelist($entry['id']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: whitelist");
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: whitelist");
         }
     }
@@ -49,7 +49,7 @@ if ($_GET['action'] == 'delete') {
     }
     DEBUG("Whitelisting {$local}@{$domain} for {$_POST['expire']} minutes");
     new_whitelist_entry($local, $domain, $_POST['expire']);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: whitelist");
     }
 }

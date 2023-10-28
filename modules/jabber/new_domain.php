@@ -26,7 +26,7 @@ title("Eigene Domain für Jabber-Nutzung freischalten");
 $domains = get_domain_list((int) $_SESSION['customerinfo']['customerno']);
 DEBUG($domains);
 
-if (! count($domains)) {
+if (!count($domains)) {
     system_failure("Sie haben gar keine eigenen Domains.");
 }
 

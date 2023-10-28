@@ -109,7 +109,7 @@ function create_webapp_mysqldb($application, $sitename)
     // zuerst versuchen wir username_webappname. Wenn das nicht klappt, dann wird hochgezählt
     $handle = $username.'_'.$application;
 
-    if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle))) {
+    if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && !(has_mysql_user($handle) || has_mysql_database($handle))) {
         logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
         create_mysql_database($handle, $description);
         create_mysql_account($handle, $description);
@@ -121,7 +121,7 @@ function create_webapp_mysqldb($application, $sitename)
 
     for ($i = 0; $i < 100 ; $i++) {
         $handle = $username.'_'.$i;
-        if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && ! (has_mysql_user($handle) || has_mysql_database($handle))) {
+        if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && !(has_mysql_user($handle) || has_mysql_database($handle))) {
             logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
             create_mysql_database($handle, $description);
             create_mysql_account($handle, $description);

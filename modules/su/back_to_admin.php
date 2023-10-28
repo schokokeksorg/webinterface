@@ -12,7 +12,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/debug.php');
-if (! isset($_SESSION['admin_user'])) {
+if (!isset($_SESSION['admin_user'])) {
     session_destroy();
     redirect($prefix.'go/su/su');
     die();

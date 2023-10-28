@@ -11,11 +11,11 @@ This code is published under a 0BSD license.
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
 
-if (! function_exists("user_has_vmail_domain")) {
+if (!function_exists("user_has_vmail_domain")) {
     function user_has_vmail_domain()
     {
         $role = $_SESSION['role'];
-        if (! ($role & ROLE_SYSTEMUSER)) {
+        if (!($role & ROLE_SYSTEMUSER)) {
             return false;
         }
         $uid = (int) $_SESSION['userinfo']['uid'];
@@ -27,11 +27,11 @@ if (! function_exists("user_has_vmail_domain")) {
     }
 }
 
-if (! function_exists("user_has_dotcourier_domain")) {
+if (!function_exists("user_has_dotcourier_domain")) {
     function user_has_dotcourier_domain()
     {
         $role = $_SESSION['role'];
-        if (! ($role & ROLE_SYSTEMUSER)) {
+        if (!($role & ROLE_SYSTEMUSER)) {
             return false;
         }
         $uid = (int) $_SESSION['userinfo']['uid'];

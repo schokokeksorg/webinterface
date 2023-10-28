@@ -43,7 +43,7 @@ $form = "<table>
 
 foreach ($whitelist as $entry) {
     $end = $entry['expire'];
-    if (! $end) {
+    if (!$end) {
         $end = '<em>unbegrenzt</em>';
     }
     $local = $entry['local'];

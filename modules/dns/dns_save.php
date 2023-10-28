@@ -34,11 +34,11 @@ if ($_GET['type'] == 'autodns') {
             are_you_sure("type=autodns&action=enable&dom={$dom->id}", "Möchten Sie die automatischen DNS-records für {$dom->fqdn} einschalten?");
         } elseif ($sure === true) {
             enable_autorecords($dom->id);
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header("Location: dns_domain?dom={$dom->id}");
             }
         } elseif ($sure === false) {
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header("Location: dns_domain?dom={$dom->id}");
             }
         }
@@ -51,11 +51,11 @@ if ($_GET['type'] == 'autodns') {
             are_you_sure("type=autodns&action=disable&dom={$dom->id}", "Möchten Sie die automatischen DNS-records für {$dom->fqdn} in manuelle Einträge umwandeln?");
         } elseif ($sure === true) {
             convert_from_autorecords($dom->id);
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header("Location: dns_domain?dom={$dom->id}");
             }
         } elseif ($sure === false) {
-            if (! $debugmode) {
+            if (!$debugmode) {
                 header("Location: dns_domain?dom={$dom->id}");
             }
         }

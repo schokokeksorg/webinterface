@@ -37,7 +37,7 @@ foreach ($liste as $id) {
     }
     $already_displayed[] = $id;
     $cssclass = 'contact-mainlist ';
-    if (! isset($contacts[$id])) {
+    if (!isset($contacts[$id])) {
         system_failure('Fehlerhafte Kunden-Zuordnung bei den Kontakten');
     }
     $contact = $contacts[$id];

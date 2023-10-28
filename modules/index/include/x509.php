@@ -77,10 +77,10 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $start
         $type = 'email';
         $username = $_SESSION['mailaccount'];
     }
-    if (! $type || ! $username) {
+    if (!$type || !$username) {
         system_failure('cannot get type or username of login');
     }
-    if ($startpage &&  ! check_path($startpage)) {
+    if ($startpage &&  !check_path($startpage)) {
         system_failure('Startseite kaputt');
     }
 
@@ -120,7 +120,7 @@ function delete_clientcert($id)
         $type = 'email';
         $username = $_SESSION['mailaccount'];
     }
-    if (! $type || ! $username) {
+    if (!$type || !$username) {
         system_failure('cannot get type or username of login');
     }
     db_query(

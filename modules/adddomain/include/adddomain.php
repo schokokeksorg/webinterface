@@ -54,7 +54,7 @@ function get_domain_offer($domainname)
     $data["setup"] = ($temp["setup"] ? $temp["setup"] : 0.0);
 
     $available = api_domain_available($domainname);
-    if (! $available) {
+    if (!$available) {
         warning('Die Domain »'.$domainname.'« ist leider nicht verfügbar.');
         return;
     }
@@ -67,7 +67,7 @@ function register_domain($domainname, $uid)
 {
     $data = get_domain_offer($domainname);
 
-    if (! $data) {
+    if (!$data) {
         // Die Include-Datei setzt eine passende Warning-Nachricht
         show_warnings();
         system_failure('Interner Fehler');
@@ -82,7 +82,7 @@ function register_domain($domainname, $uid)
             break;
         }
     }
-    if (! $useraccount) {
+    if (!$useraccount) {
         system_failure('Kein User gesetzt');
     }
 

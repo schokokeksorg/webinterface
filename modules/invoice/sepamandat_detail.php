@@ -27,7 +27,7 @@ foreach ($mandate as $man) {
         $m = $man;
     }
 }
-if (! $m) {
+if (!$m) {
     system_failure('Konnte das Mandat nicht finden.');
 }
 
@@ -73,7 +73,7 @@ if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == null || $m['guelt
 
 $lastschriften = get_lastschriften($m['mandatsreferenz']);
 
-if (! $lastschriften) {
+if (!$lastschriften) {
     output('<p>Es wurden bisher keine Abbuchungen mit Bezug auf dieses Mandat durchgeführt.</p>');
 } else {
     output('<p>Dieses Mandat wurde bisher für folgende Abbuchungen in Anspruch genommen:</p>

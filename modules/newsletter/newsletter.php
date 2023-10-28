@@ -24,7 +24,7 @@ $oldaddr = get_newsletter_address();
 
 $yes = ' checked="checked" ';
 $no = '';
-if (! $oldaddr) {
+if (!$oldaddr) {
     $yes = '';
     $no = ' checked="checked" ';
 }

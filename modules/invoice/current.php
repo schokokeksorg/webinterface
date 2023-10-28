@@ -76,7 +76,7 @@ if (count($invoices_to_show) == 0) {
     output('</table>');
 }
 
-if (! $show_paid) {
+if (!$show_paid) {
     $number = count($invoices) - count($invoices_to_show);
     if ($number > 0) {
         output('<p>'.internal_link('', other_icon('control_fastforward.png')." Zeige $number ältere Rechnungen", 'paid=1').'</p>');

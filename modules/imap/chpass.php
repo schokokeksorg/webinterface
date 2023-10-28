@@ -27,7 +27,7 @@ if ($_POST['password1'] != '') {
 
     if ($_POST['old_password'] == '') {
         input_error('Altes Passwort nicht angegeben!');
-    } elseif (! $result & ROLE_MAILACCOUNT) {
+    } elseif (!$result & ROLE_MAILACCOUNT) {
         input_error('Das bisherige Passwort ist nicht korrekt!');
     } elseif ($_POST['password2'] != $_POST['password1']) {
         input_error('Die Bestätigung ist nicht identisch mit dem neuen Passwort!');
@@ -37,7 +37,7 @@ if ($_POST['password1'] != '') {
         input_error("Das Passwort ist zu einfach ({$check})!");
     } else {
         change_mailaccount(get_mailaccount_id($_SESSION['mailaccount']), ['password' => $_POST['password1']]);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: chpass');
         } else {
             output('');

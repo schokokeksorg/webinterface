@@ -126,7 +126,7 @@ function possible_kundenkontakt($c)
 
 function set_kundenkontakt($typ, $id)
 {
-    if (! $id) {
+    if (!$id) {
         $id = null;
     } else {
         $id = (int) $id;
@@ -229,7 +229,7 @@ function save_emailaddress($id, $email)
 function save_contact($c)
 {
     if ($c['nic_id']) {
-        if (! possible_domainholder($c)) {
+        if (!possible_domainholder($c)) {
             system_failure("Sie haben ein Feld geleert, das für die Eigenschaft als Domaininhaber erhalten bleiben muss. Ihre Änderungen wurden nicht gespeichert.");
         }
     }
@@ -263,7 +263,7 @@ function save_contact($c)
 
 function send_emailchange_token($id, $email)
 {
-    if (! check_emailaddr($email)) {
+    if (!check_emailaddr($email)) {
         system_falure("Die E-Mail-Adresse scheint nicht gültig zu sein.");
     }
     $args = ["id" => (int) $id,
@@ -328,7 +328,7 @@ function delete_contact($id)
 
 function search_pgp_key($search)
 {
-    if (! check_emailaddr($search)) {
+    if (!check_emailaddr($search)) {
         # Keine Ausgabe weil diese Funktion im AJAX-Call verwendet wird
         return null;
     }
@@ -362,7 +362,7 @@ function search_pgp_key($search)
 
 function fetch_pgp_key($pgp_id)
 {
-    if (! $pgp_id) {
+    if (!$pgp_id) {
         return null;
     }
     $output = [];
@@ -424,7 +424,7 @@ function domainlist_by_contact($c)
 function contact_as_string($contact)
 {
     $adresse = nl2br(filter_output_html("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']));
-    if (! $contact['city']) {
+    if (!$contact['city']) {
         $adresse = '';
     }
     $name = filter_output_html($contact['name']);

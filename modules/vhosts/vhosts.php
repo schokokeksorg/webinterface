@@ -67,7 +67,7 @@ if (count($vhosts) > 0) {
     $even = true;
 
     foreach ($vhosts as $vhost) {
-        $even = ! $even;
+        $even = !$even;
         $fqdn = $vhost['fqdn'];
         $class = 'odd';
         if ($even) {

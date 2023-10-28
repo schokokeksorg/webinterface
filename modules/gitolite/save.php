@@ -29,7 +29,7 @@ if ($_GET['action'] == 'newuser') {
         system_failure("Ein Benutzer mit diesem Namen existiert bereits.");
     }
     newkey($_POST['pubkey'], $handle);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: git');
     }
     die();
@@ -44,7 +44,7 @@ if ($_GET['action'] == 'newuser') {
         system_failure("Diesen Benutzer haben Sie bereits hinzugefügt.");
     }
     new_foreign_user($handle);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: git');
     }
     die();
@@ -55,7 +55,7 @@ if ($_GET['action'] == 'newuser') {
         system_failure("Leere Benutzerbezeichnung!");
     }
     newkey($_POST['pubkey'], $handle);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: git');
     }
     die();
@@ -83,7 +83,7 @@ if ($_GET['action'] == 'newuser') {
         $description = null;
     }
     save_repo($_POST['repo'], $permissions, $description);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: git');
     }
     die();

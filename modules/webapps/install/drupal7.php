@@ -23,7 +23,7 @@ $section = 'webapps_install';
 $docroot = $_SESSION['webapp_docroot'];
 $url = $_SESSION['webapp_url'];
 
-if (! $docroot) {
+if (!$docroot) {
     system_failure('Kann die Session-Daten nicht auslesen. So geht das nicht.');
 }
 
@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
     check_form_token('install_drupal7');
 
     $data = validate_data($_POST);
-    if (! $data) {
+    if (!$data) {
         system_failure('wtf?!');
     }
     create_new_webapp('drupal7', $docroot, $url, $data);

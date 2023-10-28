@@ -18,13 +18,13 @@ require_once("domainapi.php");
 require_role(ROLE_CUSTOMER);
 check_form_token('domains_domainreg');
 
-if (! (isset($_SESSION['domains_domainreg_owner']) && $_SESSION['domains_domainreg_owner']) ||
-    ! (isset($_SESSION['domains_domainreg_admin_c']) && $_SESSION['domains_domainreg_admin_c']) ||
-    ! (isset($_SESSION['domains_domainreg_domainname']) && $_SESSION['domains_domainreg_domainname'])) {
+if (!(isset($_SESSION['domains_domainreg_owner']) && $_SESSION['domains_domainreg_owner']) ||
+    !(isset($_SESSION['domains_domainreg_admin_c']) && $_SESSION['domains_domainreg_admin_c']) ||
+    !(isset($_SESSION['domains_domainreg_domainname']) && $_SESSION['domains_domainreg_domainname'])) {
     system_failure("Fehler im Programmablauf!");
 }
 
-if (! (isset($_REQUEST['domain']) && $_REQUEST['domain']) ||
+if (!(isset($_REQUEST['domain']) && $_REQUEST['domain']) ||
     $_REQUEST['domain'] != $_SESSION['domains_domainreg_domainname']) {
     system_failure("Fehler im Programmablauf!");
 }
@@ -37,7 +37,7 @@ domain_ownerchange($dom->fqdn, $_SESSION['domains_domainreg_owner'], $_SESSION['
 
 $authinfo = null;
 if ($dom->status == 'pretransfer') {
-    if (! (isset($_REQUEST['authinfo']) && $_REQUEST['authinfo'])) {
+    if (!(isset($_REQUEST['authinfo']) && $_REQUEST['authinfo'])) {
         system_failure("Kein Auth-Info-Code angegeben!");
     }
     $authinfo = chop($_REQUEST['authinfo']);

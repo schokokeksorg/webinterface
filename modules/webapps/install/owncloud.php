@@ -23,7 +23,7 @@ $section = 'webapps_install';
 $docroot = $_SESSION['webapp_docroot'];
 $url = $_SESSION['webapp_url'];
 
-if (! $docroot) {
+if (!$docroot) {
     system_failure('Kann die Session-Daten nicht auslesen. So geht das nicht.');
 }
 

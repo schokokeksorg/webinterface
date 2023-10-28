@@ -318,7 +318,7 @@ foreach ($items as $item) {
     $html .= "<tr class='".($odd ? 'odd' : 'even')."'><td style='text-align: right;'>{$anzahl}</td><td>{$einheit}</td>";
     $html .= "<td>{$desc}</td>";
     $html .= "<td style='text-align: right;'>".number_format($epreis, 2, ',', '.')." €</td><td style='text-align: right;'>".number_format($gesamt, 2, ',', '.')." €</td></tr>\n";
-    $odd = ! $odd;
+    $odd = !$odd;
 }
 $html .= '<tr><td>&nbsp;</td></tr>';
 

@@ -154,7 +154,7 @@ function domains_without_accounts()
                 $found = true;
             }
         }
-        if (! $found) {
+        if (!$found) {
             $obsolete_domains[] = $d;
         }
     }
@@ -173,7 +173,7 @@ function delete_jabber_domain($id)
             $found = true;
         }
     }
-    if (! $found) {
+    if (!$found) {
         system_failure('Diese Domain ist nicht unbenutzt.');
     }
     db_query("UPDATE kundendaten.domains SET jabber=0 WHERE jabber=1 AND id=?", [$d->id]);

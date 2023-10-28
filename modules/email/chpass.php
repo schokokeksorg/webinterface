@@ -30,7 +30,7 @@ if (isset($_POST['password1']) && $_POST['password1'] != '') {
 
     if ($_POST['old_password'] == '') {
         input_error('Altes Passwort nicht angegeben!');
-    } elseif (! $result & ROLE_VMAIL_ACCOUNT) {
+    } elseif (!$result & ROLE_VMAIL_ACCOUNT) {
         input_error('Das bisherige Passwort ist nicht korrekt!');
     } elseif ($_POST['password2'] != $_POST['password1']) {
         input_error('Die Bestätigung ist nicht identisch mit dem neuen Passwort!');

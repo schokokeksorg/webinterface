@@ -25,14 +25,14 @@ if (isset($_REQUEST['username'])) {
     $webmailpw = $_REQUEST['webmailpass'];
     $ga_code = $_REQUEST['totp_code'];
 
-    if (! strstr($username, '@')) {
+    if (!strstr($username, '@')) {
         // Default-Domainname
         $username = $username.'@'.config('masterdomain');
     }
 
     $success = true;
 
-    if (! check_webmail_password($username, $webmailpw)) {
+    if (!check_webmail_password($username, $webmailpw)) {
         input_error('Das Webmail-Passwort hat nicht gestimmt.');
         $success = false;
     }
@@ -40,7 +40,7 @@ if (isset($_REQUEST['username'])) {
     if (check_locked($username)) {
         input_error('Aufgrund einiger Fehlversuche wurde dieses Konto übergangsweise deaktiviert. Bitte warten Sie ein paar Minuten.');
         $success = false;
-    } elseif (! check_totp($username, $ga_code)) {
+    } elseif (!check_totp($username, $ga_code)) {
         input_error('Der TOTP-Code wurde nicht akzeptiert.');
         $success = false;
     }

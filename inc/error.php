@@ -112,7 +112,7 @@ function show_messages()
 
 function require_role($roles)
 {
-    if (! is_array($roles)) {
+    if (!is_array($roles)) {
         $roles = [$roles];
     }
     $allow = false;
@@ -121,7 +121,7 @@ function require_role($roles)
             $allow = true;
         }
     }
-    if (! $allow) {
+    if (!$allow) {
         if ($_SESSION['role'] == ROLE_ANONYMOUS) {
             login_screen();
         } else {
@@ -141,7 +141,7 @@ function login_screen($why = null)
         $title = '';
         system_failure("Zu viele fehlgeschlagenen Login-Versuche! Bitte warten Sie einige Minuten bis zum nächsten Versuch!");
     }
-    if (! $why) {
+    if (!$why) {
         if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
             redirect("/certlogin/index.php?destination=".urlencode($_SERVER['REQUEST_URI']));
         }

@@ -15,7 +15,7 @@ require_once('contract.php');
 require_role(ROLE_CUSTOMER);
 
 $pdfdata = get_contract_pdf($_REQUEST['id']);
-if (! $pdfdata) {
+if (!$pdfdata) {
     system_failure('Die PDF-Version dieses Vertrags konnte nicht ausgelesen werden. Bitte wenden Sie sich an den Support.');
 } else {
     $filename = 'av_vertrag.pdf';

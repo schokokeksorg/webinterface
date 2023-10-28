@@ -35,7 +35,7 @@ if ($_POST['target'] == 'new') {
     }
     DEBUG('Domain: '.$domainid.' / '.$domainname);
 
-    if (! isset($_POST['options']) || ! is_array($_POST['options'])) {
+    if (!isset($_POST['options']) || !is_array($_POST['options'])) {
         $_POST['options'] = [];
     }
     $aliaswww = in_array('aliaswww', $_POST['options']);
@@ -130,7 +130,7 @@ if ($_POST['target'] == 'new') {
             }
         }
     }
-    if (! $url) {
+    if (!$url) {
         system_failure('Datenchaos, so geht das nicht.');
     }
     DEBUG("Existing Vhost: {$url} / {$docroot}");
@@ -140,15 +140,15 @@ if ($_POST['target'] == 'new') {
 
 if ($docroot && $url) {
     $application = $_POST['application'];
-    if (! $application) {
+    if (!$application) {
         system_failure('Keine Web-Anwendung ausgewählt');
     }
 
-    if (! check_path($application)) {
+    if (!check_path($application)) {
         system_failure('HTML-Krams im Namen der Anwendung');
     }
 
-    if (! file_exists(dirname(__FILE__).'/install/'.$application.'.php')) {
+    if (!file_exists(dirname(__FILE__).'/install/'.$application.'.php')) {
         system_failure('Unbekannte Web-Anwendung.');
     }
 

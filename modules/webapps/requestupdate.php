@@ -19,7 +19,7 @@ require_role(ROLE_SYSTEMUSER);
 $section = 'webapps_freewvs';
 $directory = $_GET['dir'];
 
-if (! in_homedir($directory)) {
+if (!in_homedir($directory)) {
     system_failure('Pfad nicht im Homedir oder ungültige Zeichen im Pfad');
 }
 
@@ -32,11 +32,11 @@ if ($sure === null) {
     are_you_sure("dir={$directory}&app=".filter_output_html($app), "Möchten Sie ein Update der Anwendung »".filter_output_html($app)."« im Verzeichnis »{$directory}« automatisch durchführen lassen?");
 } elseif ($sure === true) {
     request_update($app, $directory, get_url_for_dir($directory));
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: waitforupdate");
     }
 } elseif ($sure === false) {
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: freewvs");
     }
 }

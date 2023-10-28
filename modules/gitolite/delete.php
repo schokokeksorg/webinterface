@@ -29,12 +29,12 @@ if (isset($_GET['repo'])) {
     <p>Alle Inhalte die in diesem Repository gespeichert sind, werden gelöscht!</p>');
     } elseif ($sure === true) {
         delete_repo($_GET['repo']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: git');
         }
         die();
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: git");
         }
         die();
@@ -52,12 +52,12 @@ if (isset($_GET['handle'])) {
         are_you_sure("handle={$_GET['handle']}", '<p>Soll der SSH-Key »'.$_GET['handle'].'« wirklich gelöscht werden?</p>');
     } elseif ($sure === true) {
         delete_key($_GET['handle']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: git');
         }
         die();
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: git");
         }
         die();
@@ -75,12 +75,12 @@ if (isset($_GET['foreignhandle'])) {
         are_you_sure("foreignhandle={$_GET['foreignhandle']}", '<p>Soll der GIT-Benutzer »'.$_GET['foreignhandle'].'« wirklich aus Ihrer Konfiguration werden?</p>');
     } elseif ($sure === true) {
         delete_foreign_user($_GET['foreignhandle']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: git');
         }
         die();
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: git");
         }
         die();

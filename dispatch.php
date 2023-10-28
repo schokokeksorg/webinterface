@@ -37,12 +37,12 @@ DEBUG($go);
 
 // Can throw invalid open_basedir warnings,
 // see https://bugs.php.net/52065
-if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (! file_exists("modules/$go.php")) or (! is_file("modules/$go.php"))) {
+if (strstr($go, "..") or strstr($go, "./") or strstr($go, ":") or (!file_exists("modules/$go.php")) or (!is_file("modules/$go.php"))) {
     die("illegal command");
 }
 [$module, $page] = explode('/', $go, 2);
 $page = str_replace('/', '-', $page);
-if (! in_array($module, config('modules'))) {
+if (!in_array($module, config('modules'))) {
     die("inactive module");
 }
 

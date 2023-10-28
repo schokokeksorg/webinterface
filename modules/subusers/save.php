@@ -32,6 +32,6 @@ if (isset($_GET['id']) && (int) $_GET['id'] != 0) {
 }
 
 
-if (! $debugmode) {
+if (!$debugmode) {
     header('Location: subusers');
 }

@@ -59,7 +59,7 @@ $numforwards = max(count($account['forwards']), 1);
 
 $form = '';
 
-if (! $accountlogin) {
+if (!$accountlogin) {
     if ($id != 0) {
         $domainlist = get_vmail_domains();
         $domain = null;
@@ -111,7 +111,7 @@ $form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"autoresponder\
 $form .= "<div style=\"margin-left: 2em;\" id=\"autoresponder_config\" class=\"option_group\">";
 
 $ar = $account['autoresponder'];
-if (! $ar) {
+if (!$ar) {
     $ar = empty_autoresponder_config();
 }
 
@@ -123,7 +123,7 @@ if ($ar['valid_until'] != null && $ar['valid_until'] < date('Y-m-d')) {
 $valid_from_now_checked = ($ar['valid_from'] <= date('Y-m-d H:i:s') || $ar['valid_from'] == null) ? ' checked="checked"' : '';
 $valid_from_future_checked = ($ar['valid_from'] > date('Y-m-d H:i:s')) ? ' checked="checked"' : '';
 $startdate = $ar['valid_from'];
-if (! $startdate || $startdate <= date('Y-m-d')) {
+if (!$startdate || $startdate <= date('Y-m-d')) {
     $startdate = date('Y-m-d', time() + 1 * 24 * 60 * 60);
 }
 $form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".
@@ -131,7 +131,7 @@ $form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_
   "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"".date('Y-m-d')."\" max=\"".date('Y-m-d', time() + 60 * 24 * 60 * 60)."\" /></p>";
 
 $enddate = $ar['valid_until'];
-if (! $enddate) {
+if (!$enddate) {
     $enddate = date('Y-m-d', time() + 7 * 24 * 60 * 60);
 }
 $max_end = date('Y-m-d', time() + 60 * 24 * 60 * 60);
@@ -160,7 +160,7 @@ $message = filter_output_html($ar['message']);
 $form .= "<h4>Inhalt der automatischen Antwort</h4>".
   "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">{$message}</textarea></p>";
 $quote = $ar['quote'];
-if (! $quote) {
+if (!$quote) {
     $quote = 'none';
 }
 $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
@@ -194,7 +194,7 @@ $form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\" class=\"option_
 
 $form .= '<div id="forward_entries">
 ';
-if (! isset($account['forwards'][0])) {
+if (!isset($account['forwards'][0])) {
     $account['forwards'][0] = ['destination' => ''];
 }
 while (count($account['forwards']) < 10) {
@@ -221,6 +221,6 @@ $form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#
 
 output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
 
-if (! $accountlogin && ($id != 0)) {
+if (!$accountlogin && ($id != 0)) {
     output("<p>".internal_link('suspend', 'Diese Adresse stilllegen (mit individuellem Fehlertext)', "account=".$id)."</p>");
 }

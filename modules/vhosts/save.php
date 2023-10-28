@@ -78,7 +78,7 @@ if ($_GET['action'] == 'edit') {
 
         $docroot = '';
         if (isset($_POST['docroot'])) {
-            if (! check_path($_POST['docroot'])) {
+            if (!check_path($_POST['docroot'])) {
                 system_failure("Eingegebener Pfad enthält ungültige Angaben");
             }
             $docroot = $vhost['homedir'].'/websites/'.$_POST['docroot'];
@@ -201,7 +201,7 @@ if ($_GET['action'] == 'edit') {
     }
     $new_options = [];
     foreach ($old_options as $op) {
-        if (! in_array($op, ['aliaswww', 'forwardwww', 'forwardnowww', 'hsts_subdomains', 'hsts_preload'])) {
+        if (!in_array($op, ['aliaswww', 'forwardwww', 'forwardnowww', 'hsts_subdomains', 'hsts_preload'])) {
             array_push($new_options, $op);
         }
     }
@@ -264,7 +264,7 @@ if ($_GET['action'] == 'edit') {
     save_vhost($vhost);
     success_msg("Ihre Einstellungen wurden gespeichert. Es dauert jedoch einige Minuten bis die Änderungen wirksam werden.");
 
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: vhosts');
     }
 } elseif ($_GET['action'] == 'addalias') {
@@ -298,7 +298,7 @@ if ($_GET['action'] == 'edit') {
         $domainname = $_SESSION['userinfo']['username'].".".config('masterdomain');
     }
 
-    if (! is_array($_POST['options'])) {
+    if (!is_array($_POST['options'])) {
         $_POST['options'] = [];
     }
     $aliaswww = in_array('aliaswww', $_POST['options']);
@@ -328,7 +328,7 @@ if ($_GET['action'] == 'edit') {
 
     save_alias($alias);
 
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: aliases?vhost='.$vhost['id']);
     }
 } elseif ($_GET['action'] == 'deletealias') {
@@ -348,11 +348,11 @@ if ($_GET['action'] == 'edit') {
         are_you_sure("action=deletealias&alias={$_GET['alias']}", "Möchten Sie das Alias »{$alias_string}« für die Website »{$vhost_string}« wirklich löschen?");
     } elseif ($sure === true) {
         delete_alias($alias['id']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: aliases?vhost='.$vhost['id']);
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: aliases?vhost='.$vhost['id']);
         }
     }
@@ -368,11 +368,11 @@ if ($_GET['action'] == 'edit') {
         are_you_sure("action=delete&vhost={$_GET['vhost']}", "Möchten Sie die Website »{$vhost_string}« wirklich löschen?");
     } elseif ($sure === true) {
         delete_vhost($vhost['id']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: vhosts");
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: vhosts");
         }
     }

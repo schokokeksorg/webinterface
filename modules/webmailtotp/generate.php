@@ -21,7 +21,7 @@ $username = urldecode($_REQUEST['username']);
 $oldpw = $_REQUEST['oldpw'];
 $newpw = $_REQUEST['newpw'];
 
-if (! validate_password($username, $oldpw)) {
+if (!validate_password($username, $oldpw)) {
     system_failure('Ihr bestehendes Mailbox-Passwort hat nicht gestimmt.');
 }
 

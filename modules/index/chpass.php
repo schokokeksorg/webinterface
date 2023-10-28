@@ -54,7 +54,7 @@ if (isset($_POST['password1'])) {
             system_failure("WTF?! (\$result={$result})");
         }
 
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: index');
         } else {
             output('');
@@ -64,7 +64,7 @@ if (isset($_POST['password1'])) {
 
 
 
-if ($_SESSION['role'] & ROLE_SYSTEMUSER && ! ($_SESSION['role'] & ROLE_SUBUSER)) {
+if ($_SESSION['role'] & ROLE_SYSTEMUSER && !($_SESSION['role'] & ROLE_SUBUSER)) {
     warning('Beachten Sie: Wenn Sie hier Ihr Passwort ändern, betrifft dies auch Ihr Anmelde-Passwort am Server (SSH).');
 }
 

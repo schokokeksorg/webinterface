@@ -23,21 +23,21 @@ if ((isset($_REQUEST['newsletter']) && $_REQUEST['newsletter'] == 'no') || (isse
         are_you_sure("newsletter=no", "Wenn Sie keinen Newsletter abonnieren, erhalten Sie von uns keine Informationen zu laufenden Änderungen bei schokokeks.org. Beachten Sie bitte dennoch regelmäßig die Einträge auf dieser Website, unser Weblog und unsere Status-Seite. Möchten Sie den Newsletter wirklich abbestellen?");
     } elseif ($sure === true) {
         set_newsletter_address(null);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: newsletter');
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: newsletter');
         }
     }
 } else {
     check_form_token('newsletter');
-    if (! check_emailaddr($_REQUEST['recipient'])) {
+    if (!check_emailaddr($_REQUEST['recipient'])) {
         system_failure("Keine gültige E-Mail-Adresse!");
     }
     set_newsletter_address($_REQUEST['recipient']);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header('Location: newsletter');
     }
 }

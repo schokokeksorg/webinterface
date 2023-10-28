@@ -99,7 +99,7 @@ function __ensure_connected()
       aber es hilft uns in unserem prozeduralen Kontext
     */
     global $_db;
-    if (! isset($_db)) {
+    if (!isset($_db)) {
         try {
             DEBUG("Neue Datenbankverbindung!");
             $_db = new DB();

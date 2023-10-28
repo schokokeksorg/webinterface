@@ -72,7 +72,7 @@ if (isset($_REQUEST['useas'])) {
 } else {
     output(display_contact($contact));
     output('<p>'.internal_link('edit', icon_edit('Adresse bearbeiten')." Adresse bearbeiten", 'id='.$id).'</p>');
-    if ($id != $kundenkontakte['kunde'] && ! is_domainholder($id)) {
+    if ($id != $kundenkontakte['kunde'] && !is_domainholder($id)) {
         // Die Stamm-Adresse kann man nicht löschen und verwendete Domain-Kontakte auch nicht
         output('<p class="delete">'.internal_link('save', "Diese Adresse löschen", 'action=delete&id='.$id).'</p>');
     }

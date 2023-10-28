@@ -104,7 +104,7 @@ addnew('newuser', 'Neuer DB-Benutzer');
 if (count($dbs) > 0) {
     $myservers = [];
     foreach ($servers as $s) {
-        if (! in_array($s, $myservers)) {
+        if (!in_array($s, $myservers)) {
             $myservers[] = $s;
         }
     }

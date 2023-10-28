@@ -31,7 +31,7 @@ if ($_GET['action'] == 'new') {
         input_error('Sie müssen alle Felder ausfüllen!');
     } else {
         create_jabber_account($_POST['local'], $_POST['domain'], stripslashes($_POST['password']));
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: accounts');
         }
     }
@@ -45,7 +45,7 @@ if ($_GET['action'] == 'new') {
         input_error('Bitte zweimal ein neues Passwort eingeben!');
     } else {
         change_jabber_password($_POST['accountid'], stripslashes($_POST['newpass']));
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: accounts');
         }
     }
@@ -60,11 +60,11 @@ if ($_GET['action'] == 'new') {
         are_you_sure("action=delete&account={$_GET['account']}", "Möchten Sie den Account »".filter_output_html($account_string)."« wirklich löschen?");
     } elseif ($sure === true) {
         delete_jabber_account($account['id']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: accounts");
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: accounts");
         }
     }
@@ -81,11 +81,11 @@ if ($_GET['action'] == 'new') {
         are_you_sure("action=deldomain&domain={$_GET['domain']}", "Möchten Sie die Domain »".filter_output_html($domain->fqdn)."« aus der Jabber-Konfiguration entfernen?");
     } elseif ($sure === true) {
         delete_jabber_domain($domain->id);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: accounts");
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: accounts");
         }
     }

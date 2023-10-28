@@ -198,7 +198,7 @@ function get_max_mailboxquota($server, $oldquota)
     $server = (int) $server;
     $result = db_query("SELECT systemquota - (COALESCE(systemquota_used,0) + COALESCE(mailquota,0)) AS free FROM system.v_quota WHERE uid=:uid AND server=:server", [":uid" => $uid, ":server" => $server]);
     $item = $result->fetch();
-    if (! $item) {
+    if (!$item) {
         return $oldquota - config('vmail_basequota');
     }
     DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
@@ -257,7 +257,7 @@ function save_vmail_account($account)
                 break;
             }
         }
-        if (($account['domain'] == 0) || (! $valid_domain)) {
+        if (($account['domain'] == 0) || (!$valid_domain)) {
             system_failure('Bitte wählen Sie eine Ihrer Domains aus!');
             return false;
         }
@@ -270,7 +270,7 @@ function save_vmail_account($account)
     $forwards = [];
     if (count($account['forwards']) > 0) {
         for ($i = 0 ; $i < count($account['forwards']) ; $i++) {
-            if (! check_emailaddr($account['forwards'][$i]['destination'])) {
+            if (!check_emailaddr($account['forwards'][$i]['destination'])) {
                 system_failure('Das Weiterleitungs-Ziel »'.filter_output_html($account['forwards'][$i]['destination']).'« ist keine E-Mail-Adresse!');
             }
         }
@@ -365,7 +365,7 @@ function save_vmail_account($account)
         } elseif ($ar['quote'] == 'teaser') {
             $quote = 'teaser';
         }
-        if (! check_emailaddr($ar['fromaddr'])) {
+        if (!check_emailaddr($ar['fromaddr'])) {
             input_error("Die Absenderadresse sieht ungültig aus. Es wird Ihre E-Mail-Adresse benutzt!");
             $ar['fromaddr'] = null;
         }
@@ -384,14 +384,14 @@ function save_vmail_account($account)
 
 
 
-    if (! $newaccount) {
+    if (!$newaccount) {
         db_query("DELETE FROM mail.vmail_forward WHERE account=?", [$id]);
     }
 
     if (count($account['forwards']) > 0) {
         $forward_query = "INSERT INTO mail.vmail_forward (account,destination) VALUES (:account, :destination)";
         for ($i = 0;$i < count($account['forwards']); $i++) {
-            if (! isset($account['forwards'][$i]['destination'])) {
+            if (!isset($account['forwards'][$i]['destination'])) {
                 continue;
             }
             db_query($forward_query, [":account" => $id, ":destination" => $account['forwards'][$i]['destination']]);
@@ -469,7 +469,7 @@ function domainsettings($only_domain = null)
     $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, d.dns, d.dkim, d.mailserver_lock, m.id AS m_id, v.id AS v_id FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NULL) WHERE d.useraccount=:uid OR m.uid=:uid ORDER BY CONCAT_WS('.',d.domainname,d.tld);", [":uid" => $uid]);
 
     while ($mydom = $result->fetch()) {
-        if (! array_key_exists($mydom['id'], $domains)) {
+        if (!array_key_exists($mydom['id'], $domains)) {
             if ($mydom['v_id']) {
                 $mydom['mail'] = 'virtual';
             }
@@ -489,7 +489,7 @@ function domainsettings($only_domain = null)
     // Subdomains
     $result = db_query("SELECT d.id, CONCAT_WS('.',d.domainname,d.tld) AS name, d.mail, m.id AS m_id, v.id AS v_id, IF(ISNULL(v.hostname),m.subdomain,v.hostname) AS hostname FROM kundendaten.domains AS d LEFT JOIN mail.virtual_mail_domains AS v ON (d.id=v.domain AND v.hostname IS NOT NULL) LEFT JOIN mail.custom_mappings AS m ON (d.id=m.domain AND m.subdomain IS NOT NULL) WHERE (m.id IS NOT NULL OR v.id IS NOT NULL) AND d.useraccount=:uid OR m.uid=:uid;", [":uid" => $uid]);
     while ($mydom = $result->fetch()) {
-        if (! array_key_exists($mydom['id'], $subdomains)) {
+        if (!array_key_exists($mydom['id'], $subdomains)) {
             $subdomains[$mydom['id']] = [];
         }
 
@@ -521,7 +521,7 @@ function change_domain($id, $type)
         system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
     }
 
-    if (! in_array($type, ['none','auto','virtual'])) {
+    if (!in_array($type, ['none','auto','virtual'])) {
         system_failure("Ungültige Aktion");
     }
 
@@ -549,7 +549,7 @@ function change_domain($id, $type)
 
 function change_domain_dkim($id, $type)
 {
-    if (! in_array($type, ['none','dkim','dmarc'])) {
+    if (!in_array($type, ['none','dkim','dmarc'])) {
         system_failure("Ungültige Aktion");
     }
 

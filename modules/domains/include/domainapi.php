@@ -44,7 +44,7 @@ function api_download_domain($id)
         }
     }
 
-    if (! $apiowner || !$apiadmin_c) {
+    if (!$apiowner || !$apiadmin_c) {
         system_failure("Ungültige Daten erhalten!");
     }
     $owner = download_contact($apiowner);
@@ -67,12 +67,12 @@ function api_upload_domain($fqdn)
     }
     $dom = $result->fetch();
     $owner = get_contact($dom['owner']);
-    if (! $owner['nic_id']) {
+    if (!$owner['nic_id']) {
         upload_contact($owner);
         $owner = get_contact($dom['owner']);
     }
     $admin_c = get_contact($dom['admin_c']);
-    if (! $admin_c['nic_id']) {
+    if (!$admin_c['nic_id']) {
         upload_contact($admin_c);
         $admin_c = get_contact($dom['admin_c']);
     }
@@ -113,12 +113,12 @@ function api_register_domain($domainname, $authinfo = null)
     }
     $dom = $result->fetch();
     $owner = get_contact($dom['owner']);
-    if (! $owner['nic_id']) {
+    if (!$owner['nic_id']) {
         upload_contact($owner);
         $owner = get_contact($dom['owner']);
     }
     $admin_c = get_contact($dom['admin_c']);
-    if (! $admin_c['nic_id']) {
+    if (!$admin_c['nic_id']) {
         upload_contact($admin_c);
         $admin_c = get_contact($dom['admin_c']);
     }
@@ -181,7 +181,7 @@ function api_cancel_domain($domainname)
         system_failure("Abfrage nicht erfolgreich!");
     }
     $apidomain = $result['response'];
-    if (! $apidomain['latestDeletionDateWithoutRenew']) {
+    if (!$apidomain['latestDeletionDateWithoutRenew']) {
         system_failure("Konnte Vertragsende nicht herausfinden.");
     }
     $args = ["domainName" => $domainname, "execDate" => $apidomain['latestDeletionDateWithoutRenew']];

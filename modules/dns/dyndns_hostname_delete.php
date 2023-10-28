@@ -40,11 +40,11 @@ if ($sure === null) {
     are_you_sure("action=delete&id={$id}", "Möchten Sie den Hostname ".$fqdn." für den DynDNS-Account {$dyndns['handle']} wirklich löschen?");
 } elseif ($sure === true) {
     delete_dns_record($id);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: dyndns_hostnames?id=".$dyndns['id']);
     }
 } elseif ($sure === false) {
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: dyndns_hostnames?id=".$dyndns['id']);
     }
 }

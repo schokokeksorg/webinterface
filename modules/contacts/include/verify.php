@@ -34,7 +34,7 @@ function update_mailaddress($daten)
     $contact = $daten['contact'];
     $email = $daten['email'];
 
-    if (! check_emailaddr($email)) {
+    if (!check_emailaddr($email)) {
         system_failure('Es ist eine ungültige Adresse hinterlegt. So wird das nichts. Bitte die Änderung von vorne machen.');
     }
 
@@ -54,7 +54,7 @@ function upload_changed_contact($id)
         return ;
     }
     $c = $result->fetch();
-    if (! ($c['nic_id'] || $c['nic_handle'])) {
+    if (!($c['nic_id'] || $c['nic_handle'])) {
         return ;
     }
     $ac = [];

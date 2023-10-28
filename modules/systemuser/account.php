@@ -21,7 +21,7 @@ require_role(ROLE_CUSTOMER);
 title("System-Benutzeraccounts");
 
 
-if (! customer_may_have_useraccounts()) {
+if (!customer_may_have_useraccounts()) {
     warning("Sie haben bisher keine Benutzeraccounts. Der erste (»Stamm-«)Account muss von einem Administrator angelegt werden.");
 } else {
     $accounts = list_useraccounts();
@@ -58,7 +58,7 @@ if (! customer_may_have_useraccounts()) {
         output("<td>{$quotastring}</td>");
         output("<td>".internal_link('edit', other_icon('user_edit.png', 'Bearbeiten'), "uid={$acc['uid']}"));
 
-        if (! customer_useraccount($acc['uid'])) {
+        if (!customer_useraccount($acc['uid'])) {
             output(" &#160; ".internal_link('pwchange', icon_pwchange('Passwort neu setzen'), "uid={$acc['uid']}"));
             #output(" &#160; ".internal_link('deluser', other_icon('user_delete.png', 'Benutzer löschen'), "uid={$acc['uid']}"));
         }

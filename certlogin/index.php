@@ -33,7 +33,7 @@ DEBUG('$_SERVER:');
 DEBUG($_SERVER);
 
 $redirect = "";
-if (! isset($_SERVER['SSL_CLIENT_CERT']) && isset($_SERVER['REDIRECT_SSL_CLIENT_CERT'])) {
+if (!isset($_SERVER['SSL_CLIENT_CERT']) && isset($_SERVER['REDIRECT_SSL_CLIENT_CERT'])) {
     $redirect = "REDIRECT_";
 }
 

@@ -42,7 +42,7 @@ if ($_GET['action'] == 'new') {
     }
     */
 } elseif ($_GET['action'] == 'pwchange') {
-    if (! $role & ROLE_CUSTOMER) {
+    if (!$role & ROLE_CUSTOMER) {
         system_failure("Zum Ändern Ihres Passworts verwenden Sie bitte die Funktion im Hauptmenü!");
     }
     $error = false;
@@ -63,7 +63,7 @@ if ($_GET['action'] == 'new') {
         # set_systemuser_password kommt aus den Session-Funktionen!
         set_systemuser_password($user['uid'], $_POST['newpass1']);
     }
-    if (! ($debugmode || $error)) {
+    if (!($debugmode || $error)) {
         header('Location: account');
     }
 } elseif ($_GET['action'] == 'edit') {
@@ -104,7 +104,7 @@ if ($_GET['action'] == 'new') {
     }
 
     set_account_details($account);
-    if (! ($debugmode)) {
+    if (!($debugmode)) {
         $location = 'myaccount';
         if ($_SESSION['role'] & ROLE_CUSTOMER) {
             $location = 'account';

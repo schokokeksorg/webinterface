@@ -84,7 +84,7 @@ foreach ($records as $rec) {
         $editable = false;
     }
     $delete = internal_link('dns_record_save', icon_delete('Record löschen'), "id={$rec['id']}&action=delete");
-    if ($rec['type'] == 'ns' && ! $rec['hostname']) {
+    if ($rec['type'] == 'ns' && !$rec['hostname']) {
         $editable = false;
         $delete = '';
     }

@@ -13,7 +13,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_once('inc/base.php');
 
-if (! defined('__JAVASCRIPT_INCLUDED')) {
+if (!defined('__JAVASCRIPT_INCLUDED')) {
     define('__JAVASCRIPT_INCLUDED', '1');
     global $prefix;
     html_header('
@@ -25,10 +25,10 @@ function javascript($file = null, $module = null)
 {
     global $go, $prefix;
     [$mod, $page] = explode('/', $go, 2);
-    if (! $file) {
+    if (!$file) {
         $file = $page.'.js';
     }
-    if (! $module) {
+    if (!$module) {
         $module = $mod;
     }
     if (file_exists('modules/'.$module.'/'.$file)) {

@@ -127,7 +127,7 @@ function set_mysql_access($db, $account, $status)
         db_query("INSERT INTO misc.mysql_access (`database`,user) VALUES ((SELECT id FROM misc.mysql_database WHERE name=:db AND useraccount=:uid LIMIT 1), (SELECT id FROM misc.mysql_accounts WHERE username=:account AND useraccount=:uid))", $args);
         logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "granting access on »{$db}« to »{$account}«");
     } else {
-        if (! get_mysql_access($db, $account)) {
+        if (!get_mysql_access($db, $account)) {
             return null;
         }
         $args = [":db" => $db, ":account" => $account, ":uid" => $uid];
@@ -139,7 +139,7 @@ function set_mysql_access($db, $account, $status)
 
 function create_mysql_account($username, $description = '')
 {
-    if (! validate_mysql_username($username)) {
+    if (!validate_mysql_username($username)) {
         logger(LOG_WARNING, "modules/mysql/include/mysql", "mysql", "illegal username »{$username}«");
         system_failure("Der eingegebene Benutzername entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
         return null;
@@ -163,12 +163,12 @@ function delete_mysql_account($username)
 
 function create_mysql_database($dbname, $description = null, $server = null)
 {
-    if (! validate_mysql_dbname($dbname)) {
+    if (!validate_mysql_dbname($dbname)) {
         logger(LOG_WARNING, "modules/mysql/include/mysql", "mysql", "illegal db-name »{$dbname}«");
         system_failure("Der eingegebene Datenbankname entspricht leider nicht der Konvention. Bitte tragen Sie einen passenden Namen ein.");
         return null;
     }
-    if (! in_array($server, additional_servers()) || ($server == my_server_id())) {
+    if (!in_array($server, additional_servers()) || ($server == my_server_id())) {
         $server = null;
     }
     $args = [":dbname" => $dbname,

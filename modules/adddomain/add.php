@@ -28,7 +28,7 @@ output('<p>Mit dieser Funktion können Sie eine neue Domain in unsere Datenbank 
 
 $data = get_domain_offer($_REQUEST['domain']);
 
-if (! $data) {
+if (!$data) {
     // Die Include-Datei setzt eine passende Warning-Nachricht
     redirect('search');
 }

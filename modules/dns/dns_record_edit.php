@@ -48,7 +48,7 @@ if ($_REQUEST['id'] == 'new') {
     $domain = new Domain((int) $_REQUEST['domain']);
     $domain->ensure_userdomain();
     $type = $_REQUEST['type'];
-    if (! in_array($type, $valid_record_types)) {
+    if (!in_array($type, $valid_record_types)) {
         system_failure('Ungültiger Record-Typ!');
     }
     $data['domain'] = $domain->id;
@@ -57,13 +57,13 @@ if ($_REQUEST['id'] == 'new') {
     }
 }
 
-if (! $new) {
+if (!$new) {
     $data = get_dns_record($_REQUEST['id']);
     $type = $data['type'];
     $dyndns = isset($data['dyndns']);
     $domain = new Domain((int) $data['domain']);
     $domain->ensure_userdomain();
-    if (! in_array($type, $valid_record_types)) {
+    if (!in_array($type, $valid_record_types)) {
         system_failure('Ungültiger Record-Typ!');
     }
 }
@@ -95,7 +95,7 @@ if ($new) {
 
 $form = '';
 
-if (! $dyndns && ($type == 'a' || $type == 'aaaa')) {
+if (!$dyndns && ($type == 'a' || $type == 'aaaa')) {
     $form .= '
 <tr><td><label for="ip">IP-Adresse:</label></td><td><input type="text" name="ip" id="ip" value="'.$data['ip'].'" /></td></tr>
 ';

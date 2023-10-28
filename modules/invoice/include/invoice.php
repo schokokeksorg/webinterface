@@ -356,7 +356,7 @@ function save_more_storage($items, $storage)
         db_query($q[0], $q[1]);
     }
     $name = $_SESSION['customerinfo']['company'];
-    if (! $name && $_SESSION['customerinfo']['name']) {
+    if (!$name && $_SESSION['customerinfo']['name']) {
         $name = $_SESSION['customerinfo']['name'];
     }
     $allstorage = $oldcustomerquota + $storage;

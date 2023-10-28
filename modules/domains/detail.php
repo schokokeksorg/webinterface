@@ -101,7 +101,7 @@ if ($is_current_user) {
                     $found = true;
                 }
             }
-            if (! $found) {
+            if (!$found) {
                 DEBUG('MX für '.$dom->fqdn.':');
                 DEBUG($mxresult);
                 warning('Bei dieser Domain ist der Mail-Empfang aktiviert, jedoch verweist das DNS-System scheinbar nicht auf unsere Anlagen. Wenn Sie keine E-Mails empfangen möchten, schalten Sie die Mail-Verarbeitung für diese Domain aus.');
@@ -151,7 +151,7 @@ if ($is_current_user) {
         $everused = true;
     }
     output('</div>');
-    if (! $everused) {
+    if (!$everused) {
         output('<p><em>Keine Nutzung dieser Domain (die hier angezeigt wird)</em></p>');
     }
 }

@@ -16,7 +16,7 @@ require_once('inc/base.php');
 
 require_once('contacts.php');
 
-if (! isset($_SESSION['contacts_choose_key'])) {
+if (!isset($_SESSION['contacts_choose_key'])) {
     system_failure("Ungültiger Aufruf dieser Funktion");
 }
 $sesskey = $_SESSION['contacts_choose_key'];

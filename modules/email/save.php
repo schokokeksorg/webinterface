@@ -155,7 +155,7 @@ if ($_GET['action'] == 'edit') {
         $num = 1;
         while (true) {
             // Die ersten 50 Einträge in jedem Fall prüfen, danach nur so lange zusätzliche Einträge vorhanden
-            if (! isset($_POST['forward_to_'.$num]) && $num > 50) {
+            if (!isset($_POST['forward_to_'.$num]) && $num > 50) {
                 break;
             }
             if (isset($_POST['forward_to_'.$num]) && chop($_POST['forward_to_'.$num]) != '') {
@@ -177,7 +177,7 @@ if ($_GET['action'] == 'edit') {
 
     save_vmail_account($account);
 
-    if (! ($debugmode || we_have_an_error())) {
+    if (!($debugmode || we_have_an_error())) {
         if ($accountlogin) {
             header('Location: /');
         } else {
@@ -204,11 +204,11 @@ if ($_GET['action'] == 'edit') {
         are_you_sure("action=delete&id={$account['id']}", "Möchten Sie die E-Mail-Adresse »{$account_string}« wirklich löschen?");
     } elseif ($sure === true) {
         delete_account($account['id']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: vmail");
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: vmail");
         }
     }
@@ -234,7 +234,7 @@ if ($_GET['action'] == 'edit') {
     $account['smtpreply'] = $_POST['smtpreply'];
 
     save_vmail_account($account);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: vmail");
     }
 } elseif ($_GET['action'] == 'unsuspend') {
@@ -256,7 +256,7 @@ if ($_GET['action'] == 'edit') {
     $account['smtpreply'] = null;
 
     save_vmail_account($account);
-    if (! $debugmode) {
+    if (!$debugmode) {
         header("Location: vmail");
     }
 } else {

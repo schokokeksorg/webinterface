@@ -20,7 +20,7 @@ require_once('vmail.php');
 $section = 'email_vmail';
 require_role([ROLE_SYSTEMUSER]);
 
-if (! isset($_REQUEST['account'])) {
+if (!isset($_REQUEST['account'])) {
     system_failure("Fehler beim Aufruf dieser Seite");
 }
 $id = $_REQUEST['account'];

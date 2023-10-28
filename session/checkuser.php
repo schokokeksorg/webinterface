@@ -98,7 +98,7 @@ function find_role($login, $password, $i_am_admin = false)
 
     // Mail-Account
     $account = $login;
-    if (! strstr($account, '@')) {
+    if (!strstr($account, '@')) {
         $account .= '@'.config('masterdomain');
     }
     if (!$i_am_admin && have_module('webmailtotp')) {
@@ -166,7 +166,7 @@ function is_locked()
 
 function get_customer_info($customer)
 {
-    if (! $_SESSION['role'] & ROLE_CUSTOMER) {
+    if (!$_SESSION['role'] & ROLE_CUSTOMER) {
         return [];
     }
     $ret = [];
@@ -326,7 +326,7 @@ function setup_session($role, $useridentity)
     }
     if ($role & ROLE_MAILACCOUNT) {
         $id = $useridentity;
-        if (! strstr($id, '@')) {
+        if (!strstr($id, '@')) {
             $id .= '@'.config('masterdomain');
         }
         $uid = user_for_mailaccount($id);
@@ -341,7 +341,7 @@ function setup_session($role, $useridentity)
         $_SESSION['userinfo'] = get_user_info($uid);
         DEBUG("We are virtual mailaccount: {$_SESSION['mailaccount']}");
     }
-    if (! ($role & ROLE_CUSTOMER)) {
+    if (!($role & ROLE_CUSTOMER)) {
         $_SESSION['customerinfo'] = [];
     }
 }

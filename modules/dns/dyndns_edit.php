@@ -61,7 +61,7 @@ document.getElementById("username_http").firstChild.data = http_username;
 title('DynDNS-Account');
 
 
-if (! $new) {
+if (!$new) {
     $output .= '<div style="padding: 0.5em; border: 1px solid black;"><strong>aktuelle Daten:</strong><br />
   letztes Update: '.$dyndns['lastchange'].'<br />
   aktuelle Adresse: '.$dyndns['address'].'
@@ -86,7 +86,7 @@ $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" nam
 $output .= html_form('dyndns_edit', 'save', 'type=dyndns&action=edit&'.(isset($_REQUEST['id']) ? 'id='.$_REQUEST['id'] : ''), $form);
 
 
-if (! $new) {
+if (!$new) {
     $records = get_dyndns_records($_REQUEST['id']);
 
     $output .= '<h4>Folgende DNS-records sind mit diesem DynDNS-Account verknüpft:</h4>

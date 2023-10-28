@@ -28,7 +28,7 @@ if ($_GET['action'] == 'new') {
     if ($gueltig_ab == 'datum') {
         $gueltig_ab = $_REQUEST['gueltig_ab_datum'];
     }
-    if (! check_date($gueltig_ab)) {
+    if (!check_date($gueltig_ab)) {
         system_failure('Konnte das Datum nicht auslesen');
     }
     DEBUG('Gültig ab: '.$gueltig_ab);
@@ -49,7 +49,7 @@ if ($_GET['action'] == 'new') {
         system_failure('Es wurde keine IBAN angegeben.');
     }
     $iban = str_replace(' ', '', strtoupper($_REQUEST['iban']));
-    if (! verify_iban($iban)) {
+    if (!verify_iban($iban)) {
         system_failure("Die IBAN scheint nicht korrekt zu sein!");
     }
     DEBUG('IBAN: '.$iban);

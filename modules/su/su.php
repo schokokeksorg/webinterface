@@ -34,7 +34,7 @@ $search = null;
 if (isset($_POST['query'])) {
     check_form_token('su_su');
     $id = $_POST['query'];
-    if (! su(null, $id)) {
+    if (!su(null, $id)) {
         $search = $_POST['query'];
     }
 }

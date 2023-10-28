@@ -31,7 +31,7 @@ if (isset($_GET['uid'])) {
             $found = true;
         }
     }
-    if (! $found) {
+    if (!$found) {
         system_failure('Unerlaubter Useraccount');
     }
 

@@ -19,7 +19,7 @@ $section = 'vhosts_certs';
 
 if ($_GET['action'] == 'new') {
     check_form_token('vhosts_certs_new');
-    if (! isset($_POST['cert'])) {
+    if (!isset($_POST['cert'])) {
         system_failure("Es wurde kein Zertifikat eingegeben");
     }
     $cert = $_POST['cert'];
@@ -30,7 +30,7 @@ if ($_GET['action'] == 'new') {
         DEBUG($oldcert);
     }
     $key = null;
-    if (! isset($_POST['key']) && isset($_REQUEST['csr'])) {
+    if (!isset($_POST['key']) && isset($_REQUEST['csr'])) {
         $csr = csr_details($_REQUEST['csr']);
         $key = $csr['key'];
     } elseif (isset($_POST['key']) and $_POST['key']) {
@@ -39,7 +39,7 @@ if ($_GET['action'] == 'new') {
         $key = $oldcert['key'];
     }
 
-    if (! $cert or ! $key) {
+    if (!$cert or !$key) {
         system_failure('Es muss ein Zertifikat und der dazu passende private Schlüssel eingetragen werden');
     }
 
@@ -82,7 +82,7 @@ if ($_GET['action'] == 'new') {
     $key = $oldcert['key'];
     $id = (int) $_REQUEST['id'];
 
-    if (! $cert) {
+    if (!$cert) {
         system_failure('Es muss ein Zertifikat eingetragen werden');
     }
 

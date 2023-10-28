@@ -25,12 +25,12 @@ if (isset($_GET['subuser'])) {
     <p>Soll der zusätzliche Admin-Zugang »'.$subuser['username'].'« wirklich gelöscht werden?</p>');
     } elseif ($sure === true) {
         delete_subuser($_GET['subuser']);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header('Location: subusers');
         }
         die();
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: subusers");
         }
         die();

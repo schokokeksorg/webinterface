@@ -45,11 +45,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
         are_you_sure("action=delete&id={$id}", "Möchten Sie den ".strtoupper($record['type'])."-Record für ".$fqdn." wirklich löschen?");
     } elseif ($sure === true) {
         delete_dns_record($id);
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: dns_domain?dom=".$record['domain']);
         }
     } elseif ($sure === false) {
-        if (! $debugmode) {
+        if (!$debugmode) {
             header("Location: dns_domain?dom=".$record['domain']);
         }
     }

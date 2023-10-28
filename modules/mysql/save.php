@@ -80,7 +80,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'description') {
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'delete_db':
-            if (! has_mysql_database($_GET['db'])) {
+            if (!has_mysql_database($_GET['db'])) {
                 system_failure('Ungültige Datenbank');
             }
             $sure = user_is_sure();
@@ -94,7 +94,7 @@ if (isset($_GET['action'])) {
             }
             break;
         case 'delete_user':
-            if (! has_mysql_user($_GET['user'])) {
+            if (!has_mysql_user($_GET['user'])) {
                 system_failure('Ungültiger Benutzer');
             }
             $sure = user_is_sure();
@@ -131,7 +131,7 @@ if (isset($_POST['accesseditor'])) {
         $db = $db['name'];
         foreach ($users as $user) {
             $user = $user['username'];
-            if (! isset($_POST['access'][$db])) {
+            if (!isset($_POST['access'][$db])) {
                 set_mysql_access($db, $user, false);
             } else {
                 set_mysql_access($db, $user, in_array($user, $_POST['access'][$db]));

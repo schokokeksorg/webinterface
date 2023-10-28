@@ -27,7 +27,7 @@ output('<p>Sie können bei '.config('company_name').' den Zugang zum Webmailer m
 require_once('modules/email/include/hasaccount.php');
 require_once('modules/email/include/vmail.php');
 
-if (! (user_has_accounts() || count(get_vmail_accounts()) > 0)) {
+if (!(user_has_accounts() || count(get_vmail_accounts()) > 0)) {
     output('<p><em>Bisher haben Sie kein Postfach. Bitte erstellen sie zunächst ein Postfach.</em></p>');
 } else {
     /* VMAIL */

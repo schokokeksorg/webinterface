@@ -21,11 +21,11 @@ function user_has_accounts()
     return ($result->rowCount() > 0);
 }
 
-if (! function_exists("user_has_vmail_domain")) {
+if (!function_exists("user_has_vmail_domain")) {
     function user_has_vmail_domain()
     {
         $role = $_SESSION['role'];
-        if (! ($role & ROLE_SYSTEMUSER)) {
+        if (!($role & ROLE_SYSTEMUSER)) {
             return false;
         }
         $uid = (int) $_SESSION['userinfo']['uid'];

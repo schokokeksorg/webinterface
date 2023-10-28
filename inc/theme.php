@@ -26,7 +26,7 @@ function show_page($path = null)
         $module = $path;
     }
     $theme = config('theme');
-    if (! $theme) {
+    if (!$theme) {
         $theme = 'default';
     }
     $theme_path = "themes/$theme/";
@@ -53,7 +53,7 @@ function show_page($path = null)
             break;
         }
     }
-    if (! file_exists($theme_file)) {
+    if (!file_exists($theme_file)) {
         die("cannot get any theme file");
     }
 

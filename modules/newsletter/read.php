@@ -15,7 +15,7 @@ require_once("includes/newsletter.php");
 require_once("inc/base.php");
 require_role(ROLE_CUSTOMER);
 
-if (! isset($_REQUEST['id'])) {
+if (!isset($_REQUEST['id'])) {
     system_failure("Keine ID!");
 }
 
