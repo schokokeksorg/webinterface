@@ -37,7 +37,7 @@ if (!defined("TOP_INCLUDED")) {
         //DEBUG($menu);
         // $menu["foo"]["file"] enthält den Link
         foreach (array_keys($menu) as $key) {
-            $menu[$key]["file"] = $prefix."go/".$module."/".$menu[$key]["file"];
+            $menu[$key]["file"] = $prefix . "go/" . $module . "/" . $menu[$key]["file"];
             $weight = $menu[$key]["weight"];
             if (isset($menu[$key]['submenu'])) {
                 if (isset($submenu[$menu[$key]['submenu']][$weight])) {
@@ -60,12 +60,12 @@ if (!defined("TOP_INCLUDED")) {
         $found = false;
         foreach ($weighted_menuitem as $weight => $data) {
             if (array_key_exists($key, $data)) {
-                DEBUG("found requested submenu ".$key);
+                DEBUG("found requested submenu " . $key);
                 $found = true;
             }
         }
         if (!$found) {
-            DEBUG("Submenu ".$key." requested but not present!");
+            DEBUG("Submenu " . $key . " requested but not present!");
             // Ein Submenü von einem nicht existierenden Hauptmenü wird angefordert
             // Menüpunkt muss als Hauptmenüpunkt geführt werden
             $weighted_menuitem = $weighted_menuitem + $content;
@@ -83,7 +83,7 @@ if (!defined("TOP_INCLUDED")) {
 
     // Verbiete das Laden in jeglichem Frameset
     header("X-FRAME-OPTIONS: DENY");
-    header("Content-Type: ".config('mime_type'));
+    header("Content-Type: " . config('mime_type'));
 
     if (!isset($html_header)) {
         $html_header = '';
@@ -112,9 +112,9 @@ if (!defined("TOP_INCLUDED")) {
     foreach ($weighted_menuitem as $key => $menuitem) {
         foreach ($menuitem as $key => $item) {
             if ($key == $section) {
-                $menu .= '<a href="'.$item['file'].'" class="menuitem active">'.$item['label'].'</a>'."\n";
+                $menu .= '<a href="' . $item['file'] . '" class="menuitem active">' . $item['label'] . '</a>' . "\n";
             } else {
-                $menu .= '<a href="'.$item['file'].'" class="menuitem">'.$item['label'].'</a>'."\n";
+                $menu .= '<a href="' . $item['file'] . '" class="menuitem">' . $item['label'] . '</a>' . "\n";
             }
             if (isset($submenu[$key])) {
                 if ($key == $section || (array_key_exists($key, $submenu) && array_key_exists_r($section, $submenu[$key]))) {
@@ -122,9 +122,9 @@ if (!defined("TOP_INCLUDED")) {
                     foreach ($submenu[$key] as $weight => $mysub) {
                         foreach ($mysub as $sec => $item) {
                             if ($sec == $section) {
-                                $menu .= '<a href="'.$item['file'].'" class="submenuitem menuitem active">'.$item['label'].'</a>'."\n";
+                                $menu .= '<a href="' . $item['file'] . '" class="submenuitem menuitem active">' . $item['label'] . '</a>' . "\n";
                             } else {
-                                $menu .= '<a href="'.$item['file'].'" class="submenuitem menuitem">'.$item['label'].'</a>'."\n";
+                                $menu .= '<a href="' . $item['file'] . '" class="submenuitem menuitem">' . $item['label'] . '</a>' . "\n";
                             }
                         }
                     }
@@ -140,29 +140,29 @@ if (!defined("TOP_INCLUDED")) {
     if ($role != ROLE_ANONYMOUS) {
         $userinfo .= '<p class="userinfo">Angemeldet als:<br />';
         if ($role & ROLE_SYSTEMUSER && isset($_SESSION['subuser'])) {
-            $userinfo .= '<strong>'.$_SESSION['subuser'].'</strong>';
-            $userinfo .= '<br />Mitbenutzer von '.$_SESSION['userinfo']['username'];
+            $userinfo .= '<strong>' . $_SESSION['subuser'] . '</strong>';
+            $userinfo .= '<br />Mitbenutzer von ' . $_SESSION['userinfo']['username'];
         } elseif ($role & ROLE_SYSTEMUSER) {
-            $userinfo .= '<strong>'.$_SESSION['userinfo']['username'].'</strong>';
-            $userinfo .= '<br />'.$_SESSION['userinfo']['name'];
-            $userinfo .= '<br />(UID '.$_SESSION['userinfo']['uid'].(($role & ROLE_CUSTOMER) ? ', Kunde '.$_SESSION['customerinfo']['customerno'] : '').')';
+            $userinfo .= '<strong>' . $_SESSION['userinfo']['username'] . '</strong>';
+            $userinfo .= '<br />' . $_SESSION['userinfo']['name'];
+            $userinfo .= '<br />(UID ' . $_SESSION['userinfo']['uid'] . (($role & ROLE_CUSTOMER) ? ', Kunde ' . $_SESSION['customerinfo']['customerno'] : '') . ')';
         } elseif ($role & ROLE_CUSTOMER) {
-            $userinfo .= '<strong>'.$_SESSION['customerinfo']['name'].'</strong>';
-            $userinfo .= '<br />(Kunde '.$_SESSION['customerinfo']['customerno'].')';
+            $userinfo .= '<strong>' . $_SESSION['customerinfo']['name'] . '</strong>';
+            $userinfo .= '<br />(Kunde ' . $_SESSION['customerinfo']['customerno'] . ')';
         } elseif ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
-            $userinfo .= '<strong>'.$_SESSION['mailaccount'].'</strong><br />(Postfach von Benutzer <em>'.$_SESSION['userinfo']['username'].'</em>)';
+            $userinfo .= '<strong>' . $_SESSION['mailaccount'] . '</strong><br />(Postfach von Benutzer <em>' . $_SESSION['userinfo']['username'] . '</em>)';
         }
         $userinfo .= '</p>';
     }
 
     if (isset($_SESSION['admin_user'])) {
         $userinfo .= '<p class="admininfo">';
-        $userinfo .= '<a href="'.$prefix.'go/su/back_to_admin">Zurück zu »'.$_SESSION['admin_user'].'«</a>';
+        $userinfo .= '<a href="' . $prefix . 'go/su/back_to_admin">Zurück zu »' . $_SESSION['admin_user'] . '«</a>';
         $userinfo .= '</p>';
     }
 
     $messages = get_messages();
 
     $BASE_PATH = $prefix;
-    $THEME_PATH = $prefix."themes/".config('theme')."/";
+    $THEME_PATH = $prefix . "themes/" . config('theme') . "/";
 }

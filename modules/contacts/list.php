@@ -59,11 +59,11 @@ foreach ($liste as $id) {
         $usage[] = 'Domain-Kontakt';
     }
     if ($usage) {
-        $usage = "Verwendet als ".join(', ', $usage);
+        $usage = "Verwendet als " . join(', ', $usage);
     } else {
         $usage = "Zur Zeit unbenutzt";
     }
-    output(internal_link('useas', display_contact($contact, "<p class=\"contact-usage\">$usage</p>", $cssclass), 'id='.$contact['id'], 'class="contacts-choose"'));
+    output(internal_link('useas', display_contact($contact, "<p class=\"contact-usage\">$usage</p>", $cssclass), 'id=' . $contact['id'], 'class="contacts-choose"'));
 }
 output("</div><br />");
 addnew('edit', 'Neue Adresse erstellen', 'id=new');

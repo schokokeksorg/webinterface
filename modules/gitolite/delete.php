@@ -25,7 +25,7 @@ if (isset($_GET['repo'])) {
 
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("repo={$_GET['repo']}", '<p>Soll das GIT-Repository »'.$_GET['repo'].'« wirklich gelöscht werden?</p>
+        are_you_sure("repo={$_GET['repo']}", '<p>Soll das GIT-Repository »' . $_GET['repo'] . '« wirklich gelöscht werden?</p>
     <p>Alle Inhalte die in diesem Repository gespeichert sind, werden gelöscht!</p>');
     } elseif ($sure === true) {
         delete_repo($_GET['repo']);
@@ -49,7 +49,7 @@ if (isset($_GET['handle'])) {
 
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("handle={$_GET['handle']}", '<p>Soll der SSH-Key »'.$_GET['handle'].'« wirklich gelöscht werden?</p>');
+        are_you_sure("handle={$_GET['handle']}", '<p>Soll der SSH-Key »' . $_GET['handle'] . '« wirklich gelöscht werden?</p>');
     } elseif ($sure === true) {
         delete_key($_GET['handle']);
         if (!$debugmode) {
@@ -72,7 +72,7 @@ if (isset($_GET['foreignhandle'])) {
 
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("foreignhandle={$_GET['foreignhandle']}", '<p>Soll der GIT-Benutzer »'.$_GET['foreignhandle'].'« wirklich aus Ihrer Konfiguration werden?</p>');
+        are_you_sure("foreignhandle={$_GET['foreignhandle']}", '<p>Soll der GIT-Benutzer »' . $_GET['foreignhandle'] . '« wirklich aus Ihrer Konfiguration werden?</p>');
     } elseif ($sure === true) {
         delete_foreign_user($_GET['foreignhandle']);
         if (!$debugmode) {

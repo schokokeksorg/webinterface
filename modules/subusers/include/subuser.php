@@ -68,7 +68,7 @@ function delete_subuser($id)
 function empty_subuser()
 {
     $subuser = ["id" => null,
-                   "username" => $_SESSION['userinfo']['username'].'_',
+                   "username" => $_SESSION['userinfo']['username'] . '_',
                    "modules" => ['index'], ];
     return $subuser;
 }
@@ -99,7 +99,7 @@ function new_subuser($username, $requested_modules, $password)
 
     $result = strong_password($password);
     if ($result !== true) {
-        system_failure("Unsicheres Passwort: ".$result);
+        system_failure("Unsicheres Passwort: " . $result);
     }
 
     $args = [":uid" => $_SESSION['userinfo']['uid'],
@@ -157,7 +157,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
     if ($password) {
         $result = strong_password($password);
         if ($result !== true) {
-            system_failure("Unsicheres Passwort: ".$result);
+            system_failure("Unsicheres Passwort: " . $result);
         }
         $args[':password'] = hash("sha256", $password);
         $pwchange = ", password=:password";

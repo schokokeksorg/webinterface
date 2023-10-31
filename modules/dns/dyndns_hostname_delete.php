@@ -35,16 +35,16 @@ if ($sure === null) {
     $domain = new Domain((int) $record['domain']);
     $fqdn = $domain->fqdn;
     if ($record['hostname']) {
-        $fqdn = $record['hostname'].'.'.$fqdn;
+        $fqdn = $record['hostname'] . '.' . $fqdn;
     }
-    are_you_sure("action=delete&id={$id}", "Möchten Sie den Hostname ".$fqdn." für den DynDNS-Account {$dyndns['handle']} wirklich löschen?");
+    are_you_sure("action=delete&id={$id}", "Möchten Sie den Hostname " . $fqdn . " für den DynDNS-Account {$dyndns['handle']} wirklich löschen?");
 } elseif ($sure === true) {
     delete_dns_record($id);
     if (!$debugmode) {
-        header("Location: dyndns_hostnames?id=".$dyndns['id']);
+        header("Location: dyndns_hostnames?id=" . $dyndns['id']);
     }
 } elseif ($sure === false) {
     if (!$debugmode) {
-        header("Location: dyndns_hostnames?id=".$dyndns['id']);
+        header("Location: dyndns_hostnames?id=" . $dyndns['id']);
     }
 }

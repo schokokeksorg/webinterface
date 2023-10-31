@@ -44,7 +44,7 @@ function store_webmail_password($username, $oldpw, $newpw)
 {
     $qual = strong_password($newpw);
     if ($qual !== true) {
-        system_failure('Fehler beim Webmail-Passwort: '.$qual);
+        system_failure('Fehler beim Webmail-Passwort: ' . $qual);
     }
     $secret = $newpw;
     if (strlen($oldpw) > strlen($newpw)) {
@@ -83,7 +83,7 @@ function decode_webmail_password($crypted, $webmailpw)
     for ($i = 0 ; $i != strlen($crypted) ; $i++) {
         $clear .= chr(ord($crypted[$i]) ^ ord($secret[$i]));
     }
-    DEBUG('decrypted: '.$clear);
+    DEBUG('decrypted: ' . $clear);
     return $clear;
 }
 
@@ -112,8 +112,8 @@ function generate_secret($username)
     $ga = new PHPGangsta_GoogleAuthenticator();
 
     $secret = $ga->createSecret();
-    DEBUG('GA-Secret: '.$secret);
-    DEBUG('QrCode: '.$ga->getQRCodeGoogleUrl('Blog', $secret));
+    DEBUG('GA-Secret: ' . $secret);
+    DEBUG('QrCode: ' . $ga->getQRCodeGoogleUrl('Blog', $secret));
     $args = [":secret" => $secret, ":username" => $username];
     db_query("UPDATE mail.webmail_totp SET totp_secret=:secret WHERE email=:username", $args);
     return $secret;
@@ -157,7 +157,7 @@ function check_totp($username, $code)
 
 function generate_qrcode_image($secret)
 {
-    $url = 'otpauth://totp/Webmail?secret='.$secret;
+    $url = 'otpauth://totp/Webmail?secret=' . $secret;
 
     $descriptorspec = [
     0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest

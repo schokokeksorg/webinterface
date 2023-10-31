@@ -50,8 +50,8 @@ foreach ($usedquota as $q) {
 $customer = get_customer_info($_SESSION['userinfo']['customerno']);
 $realname = $acc['name'] ? $acc['name'] : $customer['name'];
 $quotastring = implode('', $quota);
-output("<h5>Stammdaten</h5><div style=\"margin-left: 2em;\"><p>Benutzername: <strong>{$acc['username']}</strong></p><p>Name: ".filter_output_html($realname)."</p><p>Existiert seit {$acc['erstellungsdatum']}</p><p>Verwendete Shell: {$shell}</p>");
-output("<p>".internal_link('edit', other_icon('user_edit.png', 'Bearbeiten').' Daten bearbeiten').'</p>');
+output("<h5>Stammdaten</h5><div style=\"margin-left: 2em;\"><p>Benutzername: <strong>{$acc['username']}</strong></p><p>Name: " . filter_output_html($realname) . "</p><p>Existiert seit {$acc['erstellungsdatum']}</p><p>Verwendete Shell: {$shell}</p>");
+output("<p>" . internal_link('edit', other_icon('user_edit.png', 'Bearbeiten') . ' Daten bearbeiten') . '</p>');
 output("</div>\n");
 output("<h5>Speicherplatz</h5><div style=\"margin-left: 2em;\">{$quotastring}</div>");
 

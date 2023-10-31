@@ -17,7 +17,7 @@ if (!defined('__JAVASCRIPT_INCLUDED')) {
     define('__JAVASCRIPT_INCLUDED', '1');
     global $prefix;
     html_header('
-<script type="text/javascript" src="'.$prefix.'js/common.js" ></script>
+<script type="text/javascript" src="' . $prefix . 'js/common.js" ></script>
 ');
 }
 
@@ -26,17 +26,17 @@ function javascript($file = null, $module = null)
     global $go, $prefix;
     [$mod, $page] = explode('/', $go, 2);
     if (!$file) {
-        $file = $page.'.js';
+        $file = $page . '.js';
     }
     if (!$module) {
         $module = $mod;
     }
-    if (file_exists('modules/'.$module.'/'.$file)) {
+    if (file_exists('modules/' . $module . '/' . $file)) {
         html_header('
-<script type="text/javascript" src="'.$prefix.'modules/'.$module.'/'.$file.'"></script>
+<script type="text/javascript" src="' . $prefix . 'modules/' . $module . '/' . $file . '"></script>
 ');
     } else {
-        DEBUG('Missing JS file: '.'modules/'.$module.'/'.$file);
+        DEBUG('Missing JS file: ' . 'modules/' . $module . '/' . $file);
         warning('Interner Fehler: Dieses Modul wollte JavaScript laden, das hat aber nicht geklappt.');
     }
 }

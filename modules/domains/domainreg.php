@@ -34,7 +34,7 @@ if (isset($_REQUEST['domain'])) {
     verify_input_hostname_utf8($request);
     $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
     if (!check_domain($punycode)) {
-        warning("Ungültiger Domainname: ".filter_output_html($request));
+        warning("Ungültiger Domainname: " . filter_output_html($request));
         redirect('adddomain');
     }
     $dom = new Domain();
@@ -79,7 +79,7 @@ if ($tld != $dom->tld) {
 $pricedata = get_domain_offer($tld);
 if (!$pricedata) {
     // Hier kommen wir hin, wenn eine externe Domain umgezogen wird, deren Endung wir nicht automatisch anbieten
-    warning('Die Domain '.$dom->fqdn.' kann nicht über dieses Webinterface umgezogen werden weil bei dieser Endung Besonderheiten zu beachten sind. Bitte kontaktieren Sie den Support.');
+    warning('Die Domain ' . $dom->fqdn . ' kann nicht über dieses Webinterface umgezogen werden weil bei dieser Endung Besonderheiten zu beachten sind. Bitte kontaktieren Sie den Support.');
     redirect('domains');
 }
 $mode = null;
@@ -95,7 +95,7 @@ if ($avail['status'] == 'available') {
     title("Domain-Transfer vornehmen");
 }
 
-output("<p>Domainname: <strong>".$dom->fqdn."</strong></p>");
+output("<p>Domainname: <strong>" . $dom->fqdn . "</strong></p>");
 
 $section = 'domains_domains';
 
@@ -133,16 +133,16 @@ if ($_SESSION['domains_domainreg_owner']) {
     if ($_SESSION['domains_domainreg_admin_c'] == $_SESSION['domains_domainreg_owner']) {
         $function .= ' und Verwalter';
     }
-    output('<p><strong>'.$function.':</strong></p>'.display_contact($owner, ''));
+    output('<p><strong>' . $function . ':</strong></p>' . display_contact($owner, ''));
 } else {
     output('<p><strong>Inhaber und Verwalter:</strong></p><p><em>Bisher kein Inhaber ausgewählt</em>');
 }
 addnew('choose', 'Inhaber wählen', "type=owner&backto=domainreg");
 if ($_SESSION['domains_domainreg_admin_c'] != $_SESSION['domains_domainreg_owner']) {
     $admin_c = get_contact($_SESSION['domains_domainreg_admin_c']);
-    output('<p><strong>Verwalter:</strong></p>'.display_contact($admin_c, ''));
+    output('<p><strong>Verwalter:</strong></p>' . display_contact($admin_c, ''));
     addnew('choose', 'Anderen Verwalter wählen', "type=admin_c&backto=domainreg");
-    output('<p class="delete">'.internal_link('', 'Keinen separaten Verwalter festlegen', 'admin_c=none').'</p>');
+    output('<p class="delete">' . internal_link('', 'Keinen separaten Verwalter festlegen', 'admin_c=none') . '</p>');
 } else {
     addnew('choose', 'Einen separaten Verwalter wählen', "type=admin_c&detach=1&backto=domainreg");
 }
@@ -158,16 +158,16 @@ $form .= '<h4>Kosten</h4>';
 
 $form .= '<p>Für die Verwaltung der Domain fallen folgende Kosten an:</p>
 <table>
-<tr><td>Domainname:</td><td><strong>'.$dom->fqdn.'</strong></td></tr>
-<tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$pricedata['gebuehr'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+<tr><td>Domainname:</td><td><strong>' . $dom->fqdn . '</strong></td></tr>
+<tr><td>Jahresgebühr:</td><td style="text-align: right;">' . $pricedata['gebuehr'] . ' €' . footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen') . '</td></tr>';
 if ($pricedata['setup']) {
-    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$pricedata['setup'].' €'.footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen').'</td></tr>';
+    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">' . $pricedata['setup'] . ' €' . footnote('Preis für Deutschland, inkl. 19% USt. Preise für andere Länder entsprechend. Bitte beim Support anfragen') . '</td></tr>';
 }
 $form .= '</table>';
-$form .= '<p>Mit dieser Bestellung geben Sie eine verbindliche Willenserklärung ab, diese Domain registrieren zu wollen. Sie treten in ein Vertragsverhältnis zu '.config('company_name').' unter dem Vorbehalt, dass die Domain registriert werden kann. Die Hoheit über die Vergabe der Domains hat die jeweils zuständige Registrierungsstelle. Es gelten die Vergabe-Bedingungen der jeweils zuständigen Registrierungsstelle.</p>
-<p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils '.$pricedata['interval'].' Monate. Er verlängert sich stets automatisch um weitere '.$pricedata['interval'].' Monate, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
+$form .= '<p>Mit dieser Bestellung geben Sie eine verbindliche Willenserklärung ab, diese Domain registrieren zu wollen. Sie treten in ein Vertragsverhältnis zu ' . config('company_name') . ' unter dem Vorbehalt, dass die Domain registriert werden kann. Die Hoheit über die Vergabe der Domains hat die jeweils zuständige Registrierungsstelle. Es gelten die Vergabe-Bedingungen der jeweils zuständigen Registrierungsstelle.</p>
+<p>Der Domain-Vertrag beginnt mit Zuteilung der Domain durch die Regisrierungsstelle und läuft jeweils ' . $pricedata['interval'] . ' Monate. Er verlängert sich stets automatisch um weitere ' . $pricedata['interval'] . ' Monate, wenn nicht bis 14 Tage vor Ende der Laufzeit eine Kündigung vorliegt.</p>';
 
-$form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($dom->fqdn).'">
+$form .= '<p><input type="hidden" name="domain" value="' . filter_output_html($dom->fqdn) . '">
 <input type="submit" name="submit" value="Kostenpflichtigen Vertrag abschließen"></p>';
 output(html_form('domains_domainreg', 'domainreg_save', '', $form));
-output('<p>'.internal_link('domains', 'Zurück').'</p>');
+output('<p>' . internal_link('domains', 'Zurück') . '</p>');

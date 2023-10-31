@@ -82,19 +82,19 @@ function get_url_for_dir($docroot, $cutoff = '')
     if (substr($docroot, -1) == '/') {
         $docroot = substr($docroot, 0, -1);
     }
-    $result = db_query("SELECT `ssl`, IF(FIND_IN_SET('aliaswww', options), CONCAT('www.',fqdn), fqdn) AS fqdn FROM vhosts.v_vhost WHERE docroot IN (?, ?)", [$docroot, $docroot.'/']);
+    $result = db_query("SELECT `ssl`, IF(FIND_IN_SET('aliaswww', options), CONCAT('www.',fqdn), fqdn) AS fqdn FROM vhosts.v_vhost WHERE docroot IN (?, ?)", [$docroot, $docroot . '/']);
     if ($result->rowCount() < 1) {
         if (!strstr($docroot, '/')) {
             return null;
         }
-        return get_url_for_dir(substr($docroot, 0, strrpos($docroot, '/')), substr($docroot, strrpos($docroot, '/')).$cutoff);
+        return get_url_for_dir(substr($docroot, 0, strrpos($docroot, '/')), substr($docroot, strrpos($docroot, '/')) . $cutoff);
     }
     $tmp = $result->fetch();
     $prefix = 'http://';
     if ($tmp['ssl'] == 'forward' || $tmp['ssl'] == 'https') {
         $prefix = 'https://';
     }
-    return $prefix.$tmp['fqdn'].filter_output_html($cutoff);
+    return $prefix . $tmp['fqdn'] . filter_output_html($cutoff);
 }
 
 
@@ -107,7 +107,7 @@ function create_webapp_mysqldb($application, $sitename)
     $description = "Automatisch erzeugte Datenbank für {$application} ({$sitename})";
 
     // zuerst versuchen wir username_webappname. Wenn das nicht klappt, dann wird hochgezählt
-    $handle = $username.'_'.$application;
+    $handle = $username . '_' . $application;
 
     if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && !(has_mysql_user($handle) || has_mysql_database($handle))) {
         logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
@@ -120,7 +120,7 @@ function create_webapp_mysqldb($application, $sitename)
     }
 
     for ($i = 0; $i < 100 ; $i++) {
-        $handle = $username.'_'.$i;
+        $handle = $username . '_' . $i;
         if (validate_mysql_username($handle) && validate_mysql_dbname($handle) && !(has_mysql_user($handle) || has_mysql_database($handle))) {
             logger(LOG_INFO, "webapps/include/webapp-installer", "create", "creating db and user »{$handle}«");
             create_mysql_database($handle, $description);

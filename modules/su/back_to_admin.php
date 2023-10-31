@@ -14,7 +14,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/debug.php');
 if (!isset($_SESSION['admin_user'])) {
     session_destroy();
-    redirect($prefix.'go/su/su');
+    redirect($prefix . 'go/su/su');
     die();
 }
 
@@ -23,11 +23,11 @@ $role = find_role($admin_user, '', true);
 if ($role & ROLE_SYSADMIN) {
     setup_session($role, $admin_user);
     unset($_SESSION['admin_user']);
-    header('Location: '.$prefix.'go/su/su');
+    header('Location: ' . $prefix . 'go/su/su');
     die();
 } elseif ($role & ROLE_CUSTOMER) {
     setup_session($role, $admin_user);
     unset($_SESSION['admin_user']);
-    header('Location: '.$prefix.'go/su/su_customer');
+    header('Location: ' . $prefix . 'go/su/su_customer');
     die();
 }

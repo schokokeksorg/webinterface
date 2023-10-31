@@ -26,16 +26,16 @@ if (have_role(ROLE_SYSTEMUSER)) {
 $account = accountname($id);
 $sure = user_is_sure();
 if ($sure === null) {
-    $section = 'webmailtotp_'.$startpage;
+    $section = 'webmailtotp_' . $startpage;
     title("Zwei-Faktor-Anmeldung am Webmailer");
     are_you_sure("id={$id}", "Möchten Sie die Zwei-Faktor-Anmeldung für das Postfach »{$account}« wirklich entfernen?");
 } elseif ($sure === true) {
     delete_totp($id);
     if (!$debugmode) {
-        header("Location: ".$startpage);
+        header("Location: " . $startpage);
     }
 } elseif ($sure === false) {
     if (!$debugmode) {
-        header("Location: ".$startpage);
+        header("Location: " . $startpage);
     }
 }

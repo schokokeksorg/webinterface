@@ -23,7 +23,7 @@ function validate_data($post)
     $fields = ['adminuser', 'adminpassword', 'adminemail', 'wikiname'];
     foreach ($fields as $field) {
         if ((!isset($post[$field])) || $post[$field] == '') {
-            system_failure('Nicht alle Werte angegeben ('.$field.')');
+            system_failure('Nicht alle Werte angegeben (' . $field . ')');
         }
     }
 

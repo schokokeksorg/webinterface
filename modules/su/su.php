@@ -57,6 +57,6 @@ output(html_form('su_su', '', '', '<label for="query"><strong>Suchtext:</strong>
 if ($search) {
     $allentries = build_results($search);
     foreach ($allentries as $entry) {
-        output("  <p><a href=\"?do=".filter_output_html($entry['id'])."\">".filter_output_html($entry['value'])."</a></p>");
+        output("  <p><a href=\"?do=" . filter_output_html($entry['id']) . "\">" . filter_output_html($entry['value']) . "</a></p>");
     }
 }

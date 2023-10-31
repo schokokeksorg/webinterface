@@ -42,7 +42,7 @@ $form .= '<h4>Installationsort:</h4>
 <div style="margin-left: 2em;">
 <h5>Name</h5>
 ';
-$form .= "<div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" onkeyup=\"document.getElementById('radio_new').checked=true\" /><strong>.</strong>".domainselect('', 'onchange="document.getElementById(\'radio_new\').checked=true"');
+$form .= "<div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" onkeyup=\"document.getElementById('radio_new').checked=true\" /><strong>.</strong>" . domainselect('', 'onchange="document.getElementById(\'radio_new\').checked=true"');
 $form .= "<br /><input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" /> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label></div>";
 $form .= "
     <h5>SSL-Verschlüsselung</h5>
@@ -76,8 +76,8 @@ $form .= '
 <div style="margin-left: 2em;">
   <p><input type="radio" name="target" value="vhost" id="radio_vhost" />&#160;<label for="radio_vhost">Vorhandene Domain/Subdomain benutzen</label></p>
   <div style="margin-left: 2em;">
-  '.html_select('vhost', $options, '', 'onchange="document.getElementById(\'docroot\').firstChild.textContent=document.getElementById(\'vhost\').options.item(document.getElementById(\'vhost\').options.selectedIndex).value ; document.getElementById(\'radio_vhost\').checked=true"').'
-  <p>Datei-Verzeichnis: <strong id="docroot">'.$vhosts[0]['docroot'].'</strong></p>
+  ' . html_select('vhost', $options, '', 'onchange="document.getElementById(\'docroot\').firstChild.textContent=document.getElementById(\'vhost\').options.item(document.getElementById(\'vhost\').options.selectedIndex).value ; document.getElementById(\'radio_vhost\').checked=true"') . '
+  <p>Datei-Verzeichnis: <strong id="docroot">' . $vhosts[0]['docroot'] . '</strong></p>
   <p>Beachten Sie bitte: Die Installation wird nur funktionieren, wenn das Verzeichnis dieser Domain bzw. Subdomain leer oder nicht vorhanden ist. Sofern Sie dort bereits eigene Dateien hinterlegt haben oder eine andere Web-Anwendung installiert ist, wird die Installation nicht durchgeführt.</p>
   </div>
 </div>

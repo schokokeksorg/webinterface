@@ -13,9 +13,9 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 function encrypt_mail_password($newpass)
 {
-    DEBUG("unencrypted PW: »".$newpass."«");
+    DEBUG("unencrypted PW: »" . $newpass . "«");
     require_once('inc/base.php');
-    $newpass = crypt($newpass, '$6$'.random_string(8).'$');
-    DEBUG("encrypted PW: ".$newpass);
+    $newpass = crypt($newpass, '$6$' . random_string(8) . '$');
+    DEBUG("encrypted PW: " . $newpass);
     return chop($newpass);
 }

@@ -56,7 +56,7 @@ $prefix = "../";
 $count = 0;
 str_replace("/", "x", $go, $count);
 
-$prefix = $prefix.str_repeat("../", $count);
+$prefix = $prefix . str_repeat("../", $count);
 
 
 require_once('session/start.php');
@@ -65,13 +65,13 @@ $output = "";
 $html_header = "";
 require_once("inc/base.php");
 /* setup module include path */
-ini_set('include_path', ini_get('include_path').':./modules/'.$module.'/include:');
+ini_set('include_path', ini_get('include_path') . ':./modules/' . $module . '/include:');
 
 /* Look where we are (but let the module override) */
 $section = str_replace("/", "_", $go);
 
 /* Let the module work */
-include("modules/".$go.".php");
+include("modules/" . $go . ".php");
 
 if ($output) {
     if (!isset($title)) {

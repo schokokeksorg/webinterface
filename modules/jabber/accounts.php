@@ -30,7 +30,7 @@ output("<table>");
 foreach ($jabberaccounts as $acc) {
     $not_ready = '';
     if ($acc['create'] == 1) {
-        $not_ready = " ".icon_warning('Dieser Account wird in Kürze auf dem Server eingerichtet.');
+        $not_ready = " " . icon_warning('Dieser Account wird in Kürze auf dem Server eingerichtet.');
     }
     $lastactivity = $acc['lastactivity'];
     // Innerhalb der letzten Woche verwendet
@@ -46,7 +46,7 @@ foreach ($jabberaccounts as $acc) {
         $domain = new Domain();
         $domain->fqdn = config('masterdomain');
     }
-    output("<tr><td>{$local}@{$domain->fqdn}{$not_ready}<br /><span style=\"font-size: 80%; font-style: italic;\">Letzte Nutzung: {$lastactivity}</span></td><td>".internal_link('chpass', icon_pwchange('Passwort ändern'), 'account='.$acc['id'])."&#160;&#160;&#160;".internal_link('save', icon_delete("»{$local}@{$domain->fqdn}« löschen"), 'action=delete&account='.$acc['id']).'</td></tr>');
+    output("<tr><td>{$local}@{$domain->fqdn}{$not_ready}<br /><span style=\"font-size: 80%; font-style: italic;\">Letzte Nutzung: {$lastactivity}</span></td><td>" . internal_link('chpass', icon_pwchange('Passwort ändern'), 'account=' . $acc['id']) . "&#160;&#160;&#160;" . internal_link('save', icon_delete("»{$local}@{$domain->fqdn}« löschen"), 'action=delete&account=' . $acc['id']) . '</td></tr>');
 }
 
 output('</table>');
@@ -60,7 +60,7 @@ if (count($obsolete_domains) > 0) {
     output('<h4>Unbenutzte Jabber-Domains</h4>');
     output('<p>Folgende Domains sind für die Nutzung im Jabber-Server eingerichtet, werden aber momentan nicht genutzt (kein Jabber-Account vorhanden).</p><ul>');
     foreach ($obsolete_domains as $d) {
-        output('<li><strong>'.$d->fqdn.'</strong> '.internal_link('save', icon_delete('Domain aus dem Jabber-Server entfernen'), 'action=deldomain&domain='.$d->id).'</li>');
+        output('<li><strong>' . $d->fqdn . '</strong> ' . internal_link('save', icon_delete('Domain aus dem Jabber-Server entfernen'), 'action=deldomain&domain=' . $d->id) . '</li>');
     }
     output('</ul>');
 }

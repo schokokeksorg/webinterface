@@ -41,7 +41,7 @@ if (count($invoices_to_show) == 0) {
     if ($show_paid) {
     }
 
-    output('<p><em>'.$error.'</em></p>');
+    output('<p><em>' . $error . '</em></p>');
 } else {
     if ($show_paid) {
         output('<p>Hier können Sie Ihre bisherigen Rechnungen einsehen und herunterladen.</p>');
@@ -60,7 +60,7 @@ if (count($invoices_to_show) == 0) {
         } else {
             $l = get_lastschrift($invoice['id']);
             if ($l) {
-                $bezahlt = 'Wird abgebucht<br/>am '.$l['buchungsdatum'];
+                $bezahlt = 'Wird abgebucht<br/>am ' . $l['buchungsdatum'];
                 $class = 'paid';
                 if ($l['status'] == 'rejected') {
                     $bezahlt  = 'Abbuchung zurückgewiesen';
@@ -70,7 +70,7 @@ if (count($invoices_to_show) == 0) {
         }
         $odd = !$odd;
         $class .= ($odd ? " odd" : " even");
-        output("<tr class=\"{$class}\"><td class=\"number\">".internal_link("html", $invoice['id'], "id={$invoice['id']}")."</td><td>{$invoice['datum']}</td><td class=\"number\">{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>".internal_link("pdf", "<img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice['id']}")."</td></tr>\n");
+        output("<tr class=\"{$class}\"><td class=\"number\">" . internal_link("html", $invoice['id'], "id={$invoice['id']}") . "</td><td>{$invoice['datum']}</td><td class=\"number\">{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>" . internal_link("pdf", "<img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice['id']}") . "</td></tr>\n");
     }
 
     output('</table>');
@@ -79,7 +79,7 @@ if (count($invoices_to_show) == 0) {
 if (!$show_paid) {
     $number = count($invoices) - count($invoices_to_show);
     if ($number > 0) {
-        output('<p>'.internal_link('', other_icon('control_fastforward.png')." Zeige $number ältere Rechnungen", 'paid=1').'</p>');
+        output('<p>' . internal_link('', other_icon('control_fastforward.png') . " Zeige $number ältere Rechnungen", 'paid=1') . '</p>');
     }
 }
 
@@ -95,18 +95,18 @@ if ($mandate) {
 <tr><th>Mandatsreferenz</th><th>IBAN</th><th>Gültigkeit</th></tr
 ');
     foreach ($mandate as $m) {
-        $gueltig = 'ab '.$m['gueltig_ab'];
+        $gueltig = 'ab ' . $m['gueltig_ab'];
         if ($m['gueltig_ab'] < date('Y-m-d')) {
-            $gueltig = 'seit '.$m['gueltig_ab'];
+            $gueltig = 'seit ' . $m['gueltig_ab'];
         }
         if ($m['gueltig_bis']) {
-            $gueltig = $m['gueltig_ab'].' - '.$m['gueltig_bis'];
+            $gueltig = $m['gueltig_ab'] . ' - ' . $m['gueltig_bis'];
         }
         $aktiv = false;
         if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == null || $m['gueltig_bis'] >= date('Y-m-d'))) {
             $aktiv = true;
         }
-        output('<tr><td'.($aktiv ? ' style="font-weight: bold;"' : '').'>'.internal_link('sepamandat_detail', $m['mandatsreferenz'], 'ref='.$m['mandatsreferenz']).'</td><td>'.$m['iban'].'</td><td>'.$gueltig.'</td></tr>');
+        output('<tr><td' . ($aktiv ? ' style="font-weight: bold;"' : '') . '>' . internal_link('sepamandat_detail', $m['mandatsreferenz'], 'ref=' . $m['mandatsreferenz']) . '</td><td>' . $m['iban'] . '</td><td>' . $gueltig . '</td></tr>');
     }
     output('</table>');
 }
@@ -159,7 +159,7 @@ foreach ($items as $item) {
     $counter++;
     $desc = $item['startdatum'];
     if ($item['enddatum'] != null) {
-        $desc = $item['startdatum'].' - '.$item['enddatum'];
+        $desc = $item['startdatum'] . ' - ' . $item['enddatum'];
     }
     $epreis = $item['betrag'];
     if ($item['brutto'] == 0) {
@@ -185,5 +185,5 @@ if ($counter) {
 }
 
 if ($more) {
-    output('<p>'.internal_link('upcoming', other_icon('control_fastforward.png').' Alle zukünftigen Rechnungsposten anzeigen').'</p>');
+    output('<p>' . internal_link('upcoming', other_icon('control_fastforward.png') . ' Alle zukünftigen Rechnungsposten anzeigen') . '</p>');
 }

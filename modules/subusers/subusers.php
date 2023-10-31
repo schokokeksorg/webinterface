@@ -29,11 +29,11 @@ DEBUG($available_modules);
 if ($subusers) {
     output('<h4>Momentan vorhandene zusätzliche Admin-Zugänge</h4>');
     foreach ($subusers as $subuser) {
-        output('<div><p><strong>'.$subuser['username'].'</strong> '.internal_link('delete.php', icon_delete('Löschen'), 'subuser='.$subuser['id']).' '.internal_link('edit.php', icon_edit('Bearbeiten'), 'subuser='.$subuser['id']).'</p>');
+        output('<div><p><strong>' . $subuser['username'] . '</strong> ' . internal_link('delete.php', icon_delete('Löschen'), 'subuser=' . $subuser['id']) . ' ' . internal_link('edit.php', icon_edit('Bearbeiten'), 'subuser=' . $subuser['id']) . '</p>');
         output('<ul>');
         foreach ($subuser['modules'] as $mod) {
             if (isset($available_modules[$mod])) {
-                output('<li>'.$available_modules[$mod].'</li>');
+                output('<li>' . $available_modules[$mod] . '</li>');
             }
         }
         output('</ul></div>');

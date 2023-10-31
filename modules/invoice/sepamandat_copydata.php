@@ -22,5 +22,5 @@ $result = db_query("SELECT CONCAT(adresse, '\\\\n', plz, ' ', ort) AS adresse FR
 $r = $result->fetch();
 
 header("Content-Type: text/javascript");
-echo ' { "kundenname": "'.$kundenname.'", "adresse": "'.$r["adresse"].'" } ';
+echo ' { "kundenname": "' . $kundenname . '", "adresse": "' . $r["adresse"] . '" } ';
 die();

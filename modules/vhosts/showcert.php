@@ -47,7 +47,7 @@ if ($mode == 'csr') {
 {$key}
 </textarea>");
     } else {
-        output('<p>'.internal_link('', 'privaten Schlüssel auch anzeigen', "mode={$_REQUEST['mode']}&id={$_REQUEST['id']}&private=yes").'</p>');
+        output('<p>' . internal_link('', 'privaten Schlüssel auch anzeigen', "mode={$_REQUEST['mode']}&id={$_REQUEST['id']}&private=yes") . '</p>');
     }
 
 
@@ -75,6 +75,6 @@ if ($mode == 'csr') {
 {$key}
 </textarea>");
     } else {
-        output('<p>'.internal_link('', 'privaten Schlüssel auch anzeigen', "mode={$_REQUEST['mode']}&id={$_REQUEST['id']}&private=yes").'</p>');
+        output('<p>' . internal_link('', 'privaten Schlüssel auch anzeigen', "mode={$_REQUEST['mode']}&id={$_REQUEST['id']}&private=yes") . '</p>');
     }
 }

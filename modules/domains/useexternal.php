@@ -30,10 +30,10 @@ if (substr($request, 0, 4) == 'www.') {
 verify_input_hostname_utf8($request);
 $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
 if (!check_domain($punycode)) {
-    warning("Ungültiger Domainname: ".filter_output_html($request));
+    warning("Ungültiger Domainname: " . filter_output_html($request));
     redirect('');
 }
 
 $id = insert_domain_external($request, ($_REQUEST['dns'] === 'enable'), ($_REQUEST['email'] === 'enable'));
 
-redirect('detail?id='.$id);
+redirect('detail?id=' . $id);

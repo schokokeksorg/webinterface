@@ -39,7 +39,7 @@ if (isset($_REQUEST['domain'])) {
     verify_input_hostname_utf8($request);
     $punycode = idn_to_ascii($request, 0, INTL_IDNA_VARIANT_UTS46);
     if (!check_domain($punycode)) {
-        warning("Ungültiger Domainname: ".filter_output_html($request));
+        warning("Ungültiger Domainname: " . filter_output_html($request));
         redirect('');
     }
     $dom = new Domain();
@@ -53,7 +53,7 @@ if (isset($_REQUEST['domain'])) {
     }
     $avail = api_domain_available($request);
     if ($avail['status'] == 'available') {
-        output('<p class="domain-available">Die Domain '.filter_output_html($request).' ist verfügbar!</p>');
+        output('<p class="domain-available">Die Domain ' . filter_output_html($request) . ' ist verfügbar!</p>');
         # Neue Domain eintragen
         $data = get_domain_offer($avail['domainSuffix']);
         if ($data === false) {
@@ -61,22 +61,22 @@ if (isset($_REQUEST['domain'])) {
         } else {
             $form = '<p>Folgende Konditionen gelten bei Registrierung der Domain im nächsten Schritt:</p>
                 <table>
-                <tr><td>Domainname:</td><td><strong>'.filter_output_html($request).'</strong></td></tr>
-                <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
+                <tr><td>Domainname:</td><td><strong>' . filter_output_html($request) . '</strong></td></tr>
+                <tr><td>Jahresgebühr:</td><td style="text-align: right;">' . $data['gebuehr'] . ' €' . footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.') . '</td></tr>';
             if ($data['setup']) {
-                $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
+                $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">' . $data['setup'] . ' €' . footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.') . '</td></tr>';
             }
             $form .= '</table>';
 
-            $form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($request).'">
+            $form .= '<p><input type="hidden" name="domain" value="' . filter_output_html($request) . '">
                 <input type="submit" name="submit" value="Ich möchte diese Domain registrieren"></p>';
             output(html_form('domains_register', 'domainreg', '', $form));
-            output('<p>'.internal_link('domains', 'Zurück').'</p>');
+            output('<p>' . internal_link('domains', 'Zurück') . '</p>');
         }
     } elseif ($avail['status'] == 'registered' || $avail['status'] == 'alreadyRegistered') {
-        output('<p class="domain-unavailable">Die Domain '.filter_output_html($request).' ist bereits vergeben.</p>');
+        output('<p class="domain-unavailable">Die Domain ' . filter_output_html($request) . ' ist bereits vergeben.</p>');
 
-        output('<h3>Domain zu '.config('company_name').' umziehen</h3>');
+        output('<h3>Domain zu ' . config('company_name') . ' umziehen</h3>');
         if ($avail['status'] == 'registered' && $avail['transferMethod'] != 'authInfo') {
             output('<p>Diese Domainendung kann nicht automatisiert übertragen werden. Bitte wenden Sie sich an den Support.</p>');
         } else {
@@ -87,16 +87,16 @@ if (isset($_REQUEST['domain'])) {
             } else {
                 $form = '<p>Folgende Konditionen gelten beim Transfer der Domain im nächsten Schritt:</p>
                     <table>
-                    <tr><td>Domainname:</td><td><strong>'.filter_output_html($avail['domainNameUnicode']).'</strong></td></tr>
-                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
+                    <tr><td>Domainname:</td><td><strong>' . filter_output_html($avail['domainNameUnicode']) . '</strong></td></tr>
+                    <tr><td>Jahresgebühr:</td><td style="text-align: right;">' . $data['gebuehr'] . ' €' . footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.') . '</td></tr>';
                 if ($data['setup']) {
-                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €'.footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.').'</td></tr>';
+                    $form .= '<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">' . $data['setup'] . ' €' . footnote('Bruttobetrag inkl. 19% deutsche USt. Nettopreise für innergemeinschaftlichen Handel können vom Support eingetragen werden.') . '</td></tr>';
                 }
                 $form .= '</table>';
 
 
-                $form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($avail['domainNameUnicode']).'">
-                    <input type="submit" name="submit" value="Ich möchte diese Domain zu '.config('company_name').' umziehen"></p>';
+                $form .= '<p><input type="hidden" name="domain" value="' . filter_output_html($avail['domainNameUnicode']) . '">
+                    <input type="submit" name="submit" value="Ich möchte diese Domain zu ' . config('company_name') . ' umziehen"></p>';
 
                 output(html_form('domains_transferin', 'domainreg', '', $form));
             }
@@ -121,12 +121,12 @@ if (isset($_REQUEST['domain'])) {
             <label for="option-email-disable">Nicht für E-Mail nutzen</label>
             </span></p>';
 
-        $form .= '<p><input type="hidden" name="domain" value="'.filter_output_html($request).'">
-            <input type="submit" name="submit" value="Diese Domain bei '.config('company_name').' verwenden"></p>';
+        $form .= '<p><input type="hidden" name="domain" value="' . filter_output_html($request) . '">
+            <input type="submit" name="submit" value="Diese Domain bei ' . config('company_name') . ' verwenden"></p>';
 
         output(html_form('domains_external', 'useexternal', '', $form));
     } else {
-        output('<p class="domain-unavailable">Die Domain '.filter_output_html($request).' kann nicht registriert werden.</p>');
+        output('<p class="domain-unavailable">Die Domain ' . filter_output_html($request) . ' kann nicht registriert werden.</p>');
 
         switch ($avail['status']) {
             case 'nameContainsForbiddenCharacter':

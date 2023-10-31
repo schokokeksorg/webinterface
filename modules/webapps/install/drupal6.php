@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
 <h4>Basisdaten</h4>
 <div style="margin-left: 2em;">
   <h5>Ort der neuen Website</h5>
-  <p>Drupal wird im Verzeichnis <strong>'.$docroot.'</strong> installiert und wird später voraussichtlich unter <strong>'.$url.'</strong> abrufbar sein.</p>
+  <p>Drupal wird im Verzeichnis <strong>' . $docroot . '</strong> installiert und wird später voraussichtlich unter <strong>' . $url . '</strong> abrufbar sein.</p>
   <p>Beachten Sie bitte: Die Installation wird in Ihrem Home-Verzeichnis durchgeführt und es wird ein normaler Host im Webinterface dafür angelegt. Sie können diese Einstellungen also jederzeit verändern.</p>
   
   <h5>Name der Seite</h5>
@@ -62,15 +62,15 @@ if (isset($_POST['submit'])) {
   
   <h5>E-Mail-Adresse der Seite</h5>
   <p>Wenn die Website E-Mails versendet (z.B. für neue Benutzer, bei kommentaren auf einzelnen Seiten, ...) erscheint diese Adresse als Absender.
-  <p><label for="siteemail">E-Mail-Adresse:</label> <input type="text" id="siteemail" name="siteemail" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></p>
+  <p><label for="siteemail">E-Mail-Adresse:</label> <input type="text" id="siteemail" name="siteemail" value="' . $_SESSION['userinfo']['username'] . '@' . config('masterdomain') . '" /></p>
 </div>
 
 <h4>Drupal-Administrator</h4>
 <div style="margin-left: 2em;">
   <p>Der Administrator kann später auf der Website neue Benutzer anlegen, Seiten erzeugen und verändern und sonstige Verwaltungsaufgaben durchführen.</p>
-  <p><label for="adminuser">Benutzername:</label> <input type="text" id="adminuser" name="adminuser" value="'.$_SESSION['userinfo']['username'].'" /></p>
+  <p><label for="adminuser">Benutzername:</label> <input type="text" id="adminuser" name="adminuser" value="' . $_SESSION['userinfo']['username'] . '" /></p>
   <p><label for="adminpassword">Passwort:</label> <input type="password" id="adminpassword" name="adminpassword" /></p>
-  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></p>
+  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="' . $_SESSION['userinfo']['username'] . '@' . config('masterdomain') . '" /></p>
 </div>
 
 <p><input type="submit" name="submit" value="Drupal installieren!" /></p>

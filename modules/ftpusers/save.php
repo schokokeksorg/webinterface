@@ -20,7 +20,7 @@ if (isset($_GET['regular_ftp'])) {
     if ($_GET['regular_ftp'] == 'yes') {
         $sure = user_is_sure();
         if ($sure === null) {
-            are_you_sure("regular_ftp=yes&token=".$_REQUEST['token'], "Benötigen Sie wirklich klassischen FTP-Zugriff für Ihren Benutzeraccount? Lesen Sie die Hinweise in unserem Wiki falls Sie sich nicht sicher sind.");
+            are_you_sure("regular_ftp=yes&token=" . $_REQUEST['token'], "Benötigen Sie wirklich klassischen FTP-Zugriff für Ihren Benutzeraccount? Lesen Sie die Hinweise in unserem Wiki falls Sie sich nicht sicher sind.");
             return;
         } elseif ($sure === true) {
             enable_regular_ftp();

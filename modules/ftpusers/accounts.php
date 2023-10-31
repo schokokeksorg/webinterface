@@ -34,7 +34,7 @@ if (count($ftpusers) > 0) {
     foreach ($ftpusers as $f) {
         $sslwarning = ($f['forcessl'] == 0 ? icon_warning('Unverschlüsselte Verbindungen werden erlaubt') : '');
         $active = ($f['active'] == 1 ? icon_enabled('Ja') : '-');
-        output("<tr><td>".internal_link("edit?id={$f['id']}", $f['username'])."</td><td>{$f['homedir']}</td><td style=\"text-align: center;\">{$active} {$sslwarning}</td><td>".internal_link("save?delete={$f['id']}", icon_delete("{$f['username']} löschen"))."</td></tr>");
+        output("<tr><td>" . internal_link("edit?id={$f['id']}", $f['username']) . "</td><td>{$f['homedir']}</td><td style=\"text-align: center;\">{$active} {$sslwarning}</td><td>" . internal_link("save?delete={$f['id']}", icon_delete("{$f['username']} löschen")) . "</td></tr>");
     }
     output('</table>');
 } else {
@@ -52,7 +52,7 @@ output('<h3>Haupt-Account mittels FTP nutzen</h3>
 $token = generate_form_token('regular_ftp');
 
 if ($regular_ftp) {
-    output('<p>'.icon_enabled().' Momentan ist der Zugriff über FTP <strong>aktiviert</strong>. Wenn Sie diesen nicht benötigen sollten Sie ihn aus Sicherheitsgründen ausschalten.<br />'.internal_link('save', 'FTP-Zugriff für Haupt-Account sperren', 'regular_ftp=no&token='.$token).'</p>');
+    output('<p>' . icon_enabled() . ' Momentan ist der Zugriff über FTP <strong>aktiviert</strong>. Wenn Sie diesen nicht benötigen sollten Sie ihn aus Sicherheitsgründen ausschalten.<br />' . internal_link('save', 'FTP-Zugriff für Haupt-Account sperren', 'regular_ftp=no&token=' . $token) . '</p>');
 } else {
-    output('<p>Der Zugriff Ihres Haupt-Accounts über FTP ist momentan abgeschaltet. Aktivieren Sie diesen nur wenn Sie ihn auch nutzen möchten.<br />'.internal_link("save", 'FTP-Zugriff für Haupt-Account freischalten', 'regular_ftp=yes&token='.$token).'</p>');
+    output('<p>Der Zugriff Ihres Haupt-Accounts über FTP ist momentan abgeschaltet. Aktivieren Sie diesen nur wenn Sie ihn auch nutzen möchten.<br />' . internal_link("save", 'FTP-Zugriff für Haupt-Account freischalten', 'regular_ftp=yes&token=' . $token) . '</p>');
 }

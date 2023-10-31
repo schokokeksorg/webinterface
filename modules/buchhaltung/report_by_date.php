@@ -8,7 +8,7 @@ $title = 'Report';
 $year = date("Y") - 1;
 
 $typeresult = db_query("SELECT id, description FROM buchhaltung.types");
-$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", [":from" => $year."-01-01", ":to" => $year."-12-31"]);
+$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", [":from" => $year . "-01-01", ":to" => $year . "-12-31"]);
 
 $types = [];
 $data = [];
@@ -39,7 +39,7 @@ foreach ($data as $line) {
     $ust = str_replace('.', ',', sprintf('%.2f €', $ust));
     $gross = str_replace('.', ',', sprintf('%.2f €', $gross));
     $typetext = $types[$line['type']];
-    output("<tr><td>".$line['date']."</td><td>".$typetext."</td><td>".$line['description']."</td><td style=\"text-align: right;\">".$net."</td><td style=\"text-align: right;\">".$ust."</td><td style=\"text-align: right;\">".$gross."</td></tr>\n");
+    output("<tr><td>" . $line['date'] . "</td><td>" . $typetext . "</td><td>" . $line['description'] . "</td><td style=\"text-align: right;\">" . $net . "</td><td style=\"text-align: right;\">" . $ust . "</td><td style=\"text-align: right;\">" . $gross . "</td></tr>\n");
 }
 
 output('</table>');

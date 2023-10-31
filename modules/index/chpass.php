@@ -69,7 +69,7 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER && !($_SESSION['role'] & ROLE_SUBUSER)) 
 }
 
 output('<p>Hier können Sie Ihr Passwort ändern.</p>
-'.html_form('index_chpass', 'chpass', '', '<table>
+' . html_form('index_chpass', 'chpass', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
   </tr>

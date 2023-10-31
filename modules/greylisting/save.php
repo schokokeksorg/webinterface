@@ -35,7 +35,7 @@ if ($_GET['action'] == 'delete') {
 } elseif ($_GET['action'] == 'add') {
     check_form_token('greylisting_add');
     if (!filter_var($_POST['address'], FILTER_VALIDATE_EMAIL)
-        && !filter_var("x@".$_POST['address'], FILTER_VALIDATE_EMAIL)) {
+        && !filter_var("x@" . $_POST['address'], FILTER_VALIDATE_EMAIL)) {
         system_failure("Sie haben eine ungültige Mailadresse eingegeben.");
     }
     $local = false;

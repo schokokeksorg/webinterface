@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
 <h4>Basisdaten</h4>
 <div style="margin-left: 2em;">
   <h5>Ort des neuen Wikis</h5>
-  <p>Das Wiki wird im Verzeichnis <strong>'.$docroot.'</strong> installiert und wird später voraussichtlich unter <strong>'.$url.'</strong> abrufbar sein.</p>
+  <p>Das Wiki wird im Verzeichnis <strong>' . $docroot . '</strong> installiert und wird später voraussichtlich unter <strong>' . $url . '</strong> abrufbar sein.</p>
   <p>Beachten Sie bitte: Die Installation wird in Ihrem Home-Verzeichnis durchgeführt und es wird ein normaler Host im Webinterface dafür angelegt. Sie können diese Einstellungen also jederzeit verändern.</p>
   
   <h5>Name des Wikis</h5>
@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
   <p>Der Wiki-Administrator kann später im Wiki neue Benutzer anlegen, Seiten sperren oder sonstige Verwaltungsaufgaben durchführen.</p>
   <p><label for="adminuser">Benutzername:</label> <input type="text" id="adminuser" name="adminuser" value="WikiSysop" /></p>
   <p><label for="adminpassword">Passwort:</label> <input type="password" id="adminpassword" name="adminpassword" /></p>
-  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="'.$_SESSION['userinfo']['username'].'@'.config('masterdomain').'" /></p>
+  <p><label for="adminemail">E-Mail-Adresse:</label> <input type="text" id="adminemail" name="adminemail" value="' . $_SESSION['userinfo']['username'] . '@' . config('masterdomain') . '" /></p>
 </div>
 
 <p><input type="submit" name="submit" value="Wiki installieren!" /></p>

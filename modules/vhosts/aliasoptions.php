@@ -38,13 +38,13 @@ if (isset($_GET['aliaswww'])) {
     DEBUG($old_options);
     DEBUG($new_options);
     $alias['options'] = implode(',', $new_options);
-    DEBUG('New options: '.$alias['options']);
+    DEBUG('New options: ' . $alias['options']);
 
     $alias['domainid'] = $alias['domain_id'];
     save_alias($alias);
 
     if (!$debugmode) {
-        header('Location: aliases?vhost='.$alias['vhost']);
+        header('Location: aliases?vhost=' . $alias['vhost']);
     }
 }
 if (isset($_GET['forward'])) {
@@ -66,12 +66,12 @@ if (isset($_GET['forward'])) {
     DEBUG($old_options);
     DEBUG($new_options);
     $alias['options'] = implode(',', $new_options);
-    DEBUG('New options: '.$alias['options']);
+    DEBUG('New options: ' . $alias['options']);
 
     $alias['domainid'] = $alias['domain_id'];
     save_alias($alias);
 
     if (!$debugmode) {
-        header('Location: aliases?vhost='.$alias['vhost']);
+        header('Location: aliases?vhost=' . $alias['vhost']);
     }
 }

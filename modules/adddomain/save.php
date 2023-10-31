@@ -28,6 +28,6 @@ check_form_token('adddomain_add');
 
 register_domain($_REQUEST['domain'], $_REQUEST['uid']);
 
-success_msg('Domain »'.filter_output_html($_REQUEST['domain']).'« wurde eingetragen!');
+success_msg('Domain »' . filter_output_html($_REQUEST['domain']) . '« wurde eingetragen!');
 
 redirect('search');

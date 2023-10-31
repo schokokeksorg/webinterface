@@ -52,8 +52,8 @@ $form = '';
 $form .= '
 <h5>Name (E-Mail-Absender, ...)</h5>
 <div style="margin-left: 2em;"> 
-  <p><input type="radio" name="defaultname" id="defaultname" value="1" '.$defaultname.'/> <label for="defaultname">Kundenname: <strong>'.$customer['name'].'</strong></label></p>
-  <p><input type="radio" name="defaultname" id="nondefaultname" value="0" '.$nondefaultname.'/> <label for="nondefaultname">Abweichend:</label> <input type="text" name="fullname" id="fullname" value="'.$account['name'].'" /></p>
+  <p><input type="radio" name="defaultname" id="defaultname" value="1" ' . $defaultname . '/> <label for="defaultname">Kundenname: <strong>' . $customer['name'] . '</strong></label></p>
+  <p><input type="radio" name="defaultname" id="nondefaultname" value="0" ' . $nondefaultname . '/> <label for="nondefaultname">Abweichend:</label> <input type="text" name="fullname" id="fullname" value="' . $account['name'] . '" /></p>
 </div>
 ';
 
@@ -68,8 +68,8 @@ if ($account['passwordlogin'] == 0) {
 $form .= '
 <h5>Passwort-Login</h5>
 <div style="margin-left: 2em;"> 
-  <p><input type="radio" name="passwordlogin" id="passwordlogin_ja" value="1" '.$defaultpwlogin.'/> <label for="passwordlogin_ja">SSH-Login mit Passwort erlauben</label></p>
-  <p><input type="radio" name="passwordlogin" id="passwordlogin_nein" value="0" '.$defaultnopwlogin.'/> <label for="passwordlogin_nein">SSH-Login nur mit SSH-Key ermöglichen</label></p>
+  <p><input type="radio" name="passwordlogin" id="passwordlogin_ja" value="1" ' . $defaultpwlogin . '/> <label for="passwordlogin_ja">SSH-Login mit Passwort erlauben</label></p>
+  <p><input type="radio" name="passwordlogin" id="passwordlogin_nein" value="0" ' . $defaultnopwlogin . '/> <label for="passwordlogin_nein">SSH-Login nur mit SSH-Key ermöglichen</label></p>
 </div>
 ';
 
@@ -77,8 +77,8 @@ if ($role & ROLE_CUSTOMER) {
     $form .= '
 <h5>Speicherplatz</h5>
 <div style="margin-left: 2em;">
-  <p>Wenn Sie mehrere Benutzeraccounts haben, können Sie den verfügbaren Speicherplatz selbst auf diese Accounts verteilen, bis diese zusammen das Limit erreichen, das für Ihr Kundenkonto vereinbart wurde (aktuell insgesamt '.$customerquota['max'].' MB).</p>
-  <p><label for="quota">Speicherplatz für »<strong>'.$account['username'].'</strong>«:</label> <input style="text-align: right; width: 5em;" type="text" name="quota" id="quota" value="'.$account['quota'].'" /> MB (Maximal '.$maxquota.' MB möglich.)</p>
+  <p>Wenn Sie mehrere Benutzeraccounts haben, können Sie den verfügbaren Speicherplatz selbst auf diese Accounts verteilen, bis diese zusammen das Limit erreichen, das für Ihr Kundenkonto vereinbart wurde (aktuell insgesamt ' . $customerquota['max'] . ' MB).</p>
+  <p><label for="quota">Speicherplatz für »<strong>' . $account['username'] . '</strong>«:</label> <input style="text-align: right; width: 5em;" type="text" name="quota" id="quota" value="' . $account['quota'] . '" /> MB (Maximal ' . $maxquota . ' MB möglich.)</p>
 </div>
 ';
 }
@@ -87,7 +87,7 @@ $form .= '
 <h5>Shell</h5>
 <div style="margin-left: 2em;">
   <p>Hier können Sie eine andere Kommandozeile einstellen. Tun Sie das bitte nur, wenn Sie wissen was Sie tun. Möchten Sie gerne eine Shell benutzen, die hier nicht aufgeführt ist, wenden Sie sich bitte an den Support.</p>
-  <p>'.html_select('shell', $shells, $account['shell']).'</p>
+  <p>' . html_select('shell', $shells, $account['shell']) . '</p>
 </div>
 
 <p>
@@ -95,4 +95,4 @@ $form .= '
 </p>
 ';
 
-output(html_form('systemuser_edit', 'save', 'action=edit&uid='.$account['uid'], $form));
+output(html_form('systemuser_edit', 'save', 'action=edit&uid=' . $account['uid'], $form));

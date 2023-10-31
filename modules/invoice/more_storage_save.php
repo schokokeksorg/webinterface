@@ -97,8 +97,8 @@ unset($_SESSION['more_storage_items']);
 unset($_SESSION['more_storage_count']);
 
 if (isset($_SESSION['more_storage_section'])) {
-    DEBUG('Weiterleitung zu: '.$prefix.'go/'.str_replace('_', '/', $_SESSION['more_storage_section']));
-    redirect($prefix.'go/'.str_replace('_', '/', $_SESSION['more_storage_section']));
+    DEBUG('Weiterleitung zu: ' . $prefix . 'go/' . str_replace('_', '/', $_SESSION['more_storage_section']));
+    redirect($prefix . 'go/' . str_replace('_', '/', $_SESSION['more_storage_section']));
 } else {
-    redirect($prefix.'go/invoice/current');
+    redirect($prefix . 'go/invoice/current');
 }

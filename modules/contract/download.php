@@ -20,7 +20,7 @@ if (!$pdfdata) {
 } else {
     $filename = 'av_vertrag.pdf';
     header('Content-type: application/pdf');
-    header('Content-disposition: attachment; filename='.$filename);
+    header('Content-disposition: attachment; filename=' . $filename);
     echo $pdfdata;
     die();
 }

@@ -46,29 +46,29 @@ if ($m['medium'] == 'legacy') {
             $medium = 'per Post';
             break;
     }
-    output('<p>Wir haben das nachstehende Mandat am '.$m['erteilt'].' '.$medium.' entgegen genommen.</p>');
+    output('<p>Wir haben das nachstehende Mandat am ' . $m['erteilt'] . ' ' . $medium . ' entgegen genommen.</p>');
 }
 output('<h3>Stammdaten</h3>
 <dl>
-<dt>Mandatsreferenz</dt><dd>'.$m['mandatsreferenz'].'</dd>
-<dt>Unsere Gläubiger-ID<dt><dd>'.$m['glaeubiger_id'].'</dd>
+<dt>Mandatsreferenz</dt><dd>' . $m['mandatsreferenz'] . '</dd>
+<dt>Unsere Gläubiger-ID<dt><dd>' . $m['glaeubiger_id'] . '</dd>
 </dl>');
 
 output('<h3>Gültigkeit</h3>');
 
-$gueltigkeit = 'ab '.$m['gueltig_ab'];
+$gueltigkeit = 'ab ' . $m['gueltig_ab'];
 if ($m['gueltig_ab'] < date('Y-m-d')) {
-    $gueltigkeit = 'seit '.$m['gueltig_ab'];
+    $gueltigkeit = 'seit ' . $m['gueltig_ab'];
 }
 if ($m['gueltig_bis']) {
-    $gueltigkeit = 'von '.$m['gueltig_ab'].' bis '.$m['gueltig_bis'];
+    $gueltigkeit = 'von ' . $m['gueltig_ab'] . ' bis ' . $m['gueltig_bis'];
 }
 if ($m['gueltig_ab'] <= date('Y-m-d') && ($m['gueltig_bis'] == null || $m['gueltig_bis'] >= date('Y-m-d'))) {
-    output('<p>Das Mandat ist momentan gültig ('.$gueltigkeit.').</p>');
+    output('<p>Das Mandat ist momentan gültig (' . $gueltigkeit . ').</p>');
 } elseif ($m['gueltig_ab'] > date('Y-m-d')) {
-    output('<p>Das Mandat ist noch nicht gültig ('.$gueltigkeit.').</p>');
+    output('<p>Das Mandat ist noch nicht gültig (' . $gueltigkeit . ').</p>');
 } else {
-    output('<p>Das Mandat ist erloschen ('.$gueltigkeit.').</p>');
+    output('<p>Das Mandat ist erloschen (' . $gueltigkeit . ').</p>');
 }
 
 $lastschriften = get_lastschriften($m['mandatsreferenz']);
@@ -86,7 +86,7 @@ if (!$lastschriften) {
         if ($l['status'] == 'rejected') {
             $status = '<span style="color: red; font-weight: bold;">Zurückgewiesen:</span> ';
         }
-        output('<li>'.$status.'Rechnung #'.$l['rechnungsnummer'].' vom '.$l['rechnungsdatum'].' über <strong>'.str_replace('.', ',', sprintf('%.2f', $l['betrag'])).' €</strong>, Buchungsdatum '.$l['buchungsdatum'].'</li>');
+        output('<li>' . $status . 'Rechnung #' . $l['rechnungsnummer'] . ' vom ' . $l['rechnungsdatum'] . ' über <strong>' . str_replace('.', ',', sprintf('%.2f', $l['betrag'])) . ' €</strong>, Buchungsdatum ' . $l['buchungsdatum'] . '</li>');
     }
     output('</ul>');
 }
@@ -94,12 +94,12 @@ if (!$lastschriften) {
 
 output('<h3>Kontodaten</h3>
 <dl>
-<dt>Kontoinhaber</dt><dd>'.$m['kontoinhaber'].'</dd>
-<dt>Adresse des Kontoinhabers</dt><dd>'.nl2br($m['adresse']).'</dd>
-<dt>IBAN</dt><dd>'.$m['iban'].'</dd>
-<dt>Name der Bank</dt><dd>'.$m['bankname'].'</dd>
-<dt>BIC</dt><dd>'.$m['bic'].'</dd>
+<dt>Kontoinhaber</dt><dd>' . $m['kontoinhaber'] . '</dd>
+<dt>Adresse des Kontoinhabers</dt><dd>' . nl2br($m['adresse']) . '</dd>
+<dt>IBAN</dt><dd>' . $m['iban'] . '</dd>
+<dt>Name der Bank</dt><dd>' . $m['bankname'] . '</dd>
+<dt>BIC</dt><dd>' . $m['bic'] . '</dd>
 </dl>');
 
 
-output('<p>'.internal_link('current', 'Zurück').'</p>');
+output('<p>' . internal_link('current', 'Zurück') . '</p>');

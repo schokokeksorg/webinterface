@@ -52,7 +52,7 @@ BIC: GENODES1VBK<br>
 
 
 
-$html = '<html><head><title>Rechnung Nr. '.$invoice_id.'</title>
+$html = '<html><head><title>Rechnung Nr. ' . $invoice_id . '</title>
 <style type="text/css">
 
 @media (min-width: 22cm) {
@@ -215,14 +215,14 @@ $address = invoice_address($invoice['kunde']);
 // Address Field
 $html .= '<div id="addressfield">
 <div id="addressfieldheader">schokokeks.org · Köchersberg 32 · 71540 Murrhardt</div>
-<p>'.($address['company'] != null ? $address['company'].'<br>' : '').$address['name'].'<br>
-'.$address['address'].'<br>
-'.($address['country'] != 'DE' ? $address['country'].'-' : '').$address['zip'].' '.$address['city'].'
+<p>' . ($address['company'] != null ? $address['company'] . '<br>' : '') . $address['name'] . '<br>
+' . $address['address'] . '<br>
+' . ($address['country'] != 'DE' ? $address['country'] . '-' : '') . $address['zip'] . ' ' . $address['city'] . '
 </p>
 </div>';
 // Right col
 $html .= '<div id="rightcolumn">
-<img src="'.($outformat == 'pdf' ? '.' : '../..').'/themes/default/images/schokokeks.png">
+<img src="' . ($outformat == 'pdf' ? '.' : '../..') . '/themes/default/images/schokokeks.png">
 <p style="margin-bottom: 0.2cm;"><strong>schokokeks.org GbR</strong><br>
 Bernd Wurst / Johannes Böck<br>
 Köchersberg 32<br>
@@ -237,9 +237,9 @@ $html .= '
 <tr><td style="width: 11cm; font-size: 11pt; font-weight: bold;">Rechnung</td><td>
   <table>
   <tr><td colspan="2"><strong>Bei Fragen bitte immer angeben:</strong></td></tr>
-  <tr><td>Rechnungsdatum:</td><td align="right">'.date("d. m. Y", strtotime($invoice['datum'])).'</td></tr>
-  <tr><td>Rechnungsnummer:</td><td align="right">'.$invoice_id.'</td></tr>
-  <tr><td>Kundennummer:</td><td align="right">'.$invoice['kunde'].'</td></tr>
+  <tr><td>Rechnungsdatum:</td><td align="right">' . date("d. m. Y", strtotime($invoice['datum'])) . '</td></tr>
+  <tr><td>Rechnungsnummer:</td><td align="right">' . $invoice_id . '</td></tr>
+  <tr><td>Kundennummer:</td><td align="right">' . $invoice['kunde'] . '</td></tr>
   </table>
   </td></tr>
 </table>';
@@ -251,14 +251,14 @@ $nachname = array_pop($parts);
 
 if ($address['name']) {
     if ($address['salutation'] == 'Herr') {
-        $anrede = 'Sehr geehrter Herr '.$nachname;
+        $anrede = 'Sehr geehrter Herr ' . $nachname;
     } elseif ($address['salutation'] == 'Frau') {
-        $anrede = 'Sehr geehrte Frau '.$nachname;
+        $anrede = 'Sehr geehrte Frau ' . $nachname;
     }
 }
 
 // Salutation
-$html .= '<p>'.$anrede.',<br>
+$html .= '<p>' . $anrede . ',<br>
 hiermit stellen wir die nachfolgend genannten Posten in Rechnung.</p>';
 
 
@@ -292,9 +292,9 @@ foreach ($items as $item) {
     }
     $desc = $item['beschreibung'];
     if ($item['enddatum'] == null) {
-        $desc .= '<br />(Leistungsdatum: '.$item['datum'].')';
+        $desc .= '<br />(Leistungsdatum: ' . $item['datum'] . ')';
     } else {
-        $desc .= '<br />(Leistungszeitraum: '.$item['datum'].' - '.$item['enddatum'].')';
+        $desc .= '<br />(Leistungszeitraum: ' . $item['datum'] . ' - ' . $item['enddatum'] . ')';
     }
     $epreis = $item['betrag'];
     if ($item['brutto'] == 0) {
@@ -315,21 +315,21 @@ foreach ($items as $item) {
     }
     $summe += $gesamt;
 
-    $html .= "<tr class='".($odd ? 'odd' : 'even')."'><td style='text-align: right;'>{$anzahl}</td><td>{$einheit}</td>";
+    $html .= "<tr class='" . ($odd ? 'odd' : 'even') . "'><td style='text-align: right;'>{$anzahl}</td><td>{$einheit}</td>";
     $html .= "<td>{$desc}</td>";
-    $html .= "<td style='text-align: right;'>".number_format($epreis, 2, ',', '.')." €</td><td style='text-align: right;'>".number_format($gesamt, 2, ',', '.')." €</td></tr>\n";
+    $html .= "<td style='text-align: right;'>" . number_format($epreis, 2, ',', '.') . " €</td><td style='text-align: right;'>" . number_format($gesamt, 2, ',', '.') . " €</td></tr>\n";
     $odd = !$odd;
 }
 $html .= '<tr><td>&nbsp;</td></tr>';
 
 foreach ($einzelsummen as $percent => $sums) {
-    $html .= '<tr><td colspan="4" style="text-align: right;">Nettobetrag ('.number_format($percent, 1, ',', '.').'% MwSt):</td><td style="text-align: right;">'.number_format($sums['net'], 2, ',', '.').' €</td></tr>
-              <tr><td colspan="4" style="text-align: right;">MwSt-Betrag '.number_format($percent, 1, ',', '.').'%:</td><td style="text-align: right;">'.number_format($sums['vat'], 2, ',', '.').' €</td></tr>';
+    $html .= '<tr><td colspan="4" style="text-align: right;">Nettobetrag (' . number_format($percent, 1, ',', '.') . '% MwSt):</td><td style="text-align: right;">' . number_format($sums['net'], 2, ',', '.') . ' €</td></tr>
+              <tr><td colspan="4" style="text-align: right;">MwSt-Betrag ' . number_format($percent, 1, ',', '.') . '%:</td><td style="text-align: right;">' . number_format($sums['vat'], 2, ',', '.') . ' €</td></tr>';
     if (count($einzelsummen) > 1) {
-        $html .= '<tr><td colspan="4" style="text-align: right;">Brutto-Teilbetrag '.number_format($percent, 1, ',', '.').'% MwSt:</td><td style="text-align: right;">'.number_format($sums['gross'], 2, ',', '.').' €</td></tr>';
+        $html .= '<tr><td colspan="4" style="text-align: right;">Brutto-Teilbetrag ' . number_format($percent, 1, ',', '.') . '% MwSt:</td><td style="text-align: right;">' . number_format($sums['gross'], 2, ',', '.') . ' €</td></tr>';
     }
 }
-$html .= '<tr style="font-weight: bold;"><td colspan="4" style="text-align: right;">Rechnungsbetrag:</td><td style="text-align: right;">'.number_format($summe, 2, ',', '.').' €</td></tr>
+$html .= '<tr style="font-weight: bold;"><td colspan="4" style="text-align: right;">Rechnungsbetrag:</td><td style="text-align: right;">' . number_format($summe, 2, ',', '.') . ' €</td></tr>
 </table>';
 
 // Disclaimer
@@ -341,12 +341,12 @@ if ($invoice['abbuchung'] == 1) {
         $display_iban = substr($display_iban, 0, $i) . ' ' . substr($display_iban, $i);
     }
     $html .= '<p><strong>Bitte nicht überweisen!</strong> Der fällige Betrag wird gemäß dem von Ihnen erteilten 
-    Lastschrift-Mandat in wenigen Tagen vom Konto mit der IBAN '.$display_iban.' bei der '.$sepamandat['bankname'].' 
-    (BIC: '.$sepamandat['bic'].') abgebucht. Diese Kontodaten beruhen auf dem Mandat Nr. '.$sepamandat['mandatsreferenz'].' 
-    vom '.$sepamandat['erteilt'].'. Unsere Gläubiger-ID lautet '.$sepamandat['glaeubiger_id'].'.</p>';
+    Lastschrift-Mandat in wenigen Tagen vom Konto mit der IBAN ' . $display_iban . ' bei der ' . $sepamandat['bankname'] . ' 
+    (BIC: ' . $sepamandat['bic'] . ') abgebucht. Diese Kontodaten beruhen auf dem Mandat Nr. ' . $sepamandat['mandatsreferenz'] . ' 
+    vom ' . $sepamandat['erteilt'] . '. Unsere Gläubiger-ID lautet ' . $sepamandat['glaeubiger_id'] . '.</p>';
 } else {
     $html .= '<p>Bitte begleichen Sie diese Rechnung umgehend nach Erhalt ohne Abzüge auf das unten angegebene Konto. Geben Sie
-im Verwendungszweck Ihrer Überweisung bitte die Rechnungsnummer '.$invoice_id.' an, damit Ihre Buchung korrekt
+im Verwendungszweck Ihrer Überweisung bitte die Rechnungsnummer ' . $invoice_id . ' an, damit Ihre Buchung korrekt
 zugeordnet werden kann.</p>';
 }
 

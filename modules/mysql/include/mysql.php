@@ -105,7 +105,7 @@ function get_mysql_access($db, $account)
 function set_mysql_access($db, $account, $status)
 {
     $uid = $_SESSION['userinfo']['uid'];
-    DEBUG("User »{$account}« soll ".($status ? "" : "NICHT ")."auf die Datenbank »{$db}« zugreifen");
+    DEBUG("User »{$account}« soll " . ($status ? "" : "NICHT ") . "auf die Datenbank »{$db}« zugreifen");
     $query = '';
     if ($status) {
         if (get_mysql_access($db, $account)) {

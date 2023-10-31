@@ -50,9 +50,9 @@ foreach ($dyndns as $entry) {
         $address = "<em>keine IPv4-Adresse</em>";
     }
     if ($entry['ipv6']) {
-        $address .= " / ".$entry['ipv6'];
+        $address .= " / " . $entry['ipv6'];
     }
-    output("<tr><td>".internal_link('dyndns_edit', $handle, "id={$entry['id']}")."</td><td>{$method}</td><td>{$address}</td><td>{$entry['lastchange']}</td><td>".internal_link('save', icon_delete("Account löschen"), "id={$entry['id']}&type=dyndns&action=delete").' '.internal_link('dyndns_hostnames', other_icon("world_link.png", "Hostnames verwalten"), "id={$entry['id']}")."</td></tr>\n");
+    output("<tr><td>" . internal_link('dyndns_edit', $handle, "id={$entry['id']}") . "</td><td>{$method}</td><td>{$address}</td><td>{$entry['lastchange']}</td><td>" . internal_link('save', icon_delete("Account löschen"), "id={$entry['id']}&type=dyndns&action=delete") . ' ' . internal_link('dyndns_hostnames', other_icon("world_link.png", "Hostnames verwalten"), "id={$entry['id']}") . "</td></tr>\n");
 }
 output('</table>');
 

@@ -51,33 +51,33 @@ if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
 $odd = false;
 $html = '<table>';
 $buttons = '<span class="buttonset" id="buttonset-salutation">
-         <input type="radio" name="salutation" id="salutation-firma" value="Firma" '.($c['salutation'] === null ? 'checked="checked"' : '').'/>
+         <input type="radio" name="salutation" id="salutation-firma" value="Firma" ' . ($c['salutation'] === null ? 'checked="checked"' : '') . '/>
          <label for="salutation-firma">Neutral</label>
-         <input type="radio" name="salutation" id="salutation-herr" value="Herr" '.($c['salutation'] === 'Herr' ? 'checked="checked"' : '').'/>
+         <input type="radio" name="salutation" id="salutation-herr" value="Herr" ' . ($c['salutation'] === 'Herr' ? 'checked="checked"' : '') . '/>
          <label for="salutation-herr">Herr</label>
-         <input type="radio" name="salutation" id="salutation-frau" value="Frau" '.($c['salutation'] === 'Frau' ? 'checked="checked"' : '').'/>
+         <input type="radio" name="salutation" id="salutation-frau" value="Frau" ' . ($c['salutation'] === 'Frau' ? 'checked="checked"' : '') . '/>
          <label for="salutation-frau">Frau</label>';
-$html .= '    <tr class="'.($odd == true ? 'odd' : 'even').'"><td>Bevorzugte Anrede:</td><td>'.$buttons.'</td></tr>';
-$html .= '    <tr class="'.($odd == true ? 'odd' : 'even').'"><td>Firmenname:</td><td><input type="text" name="firma" id="firma" value="'.filter_output_html($c['company']).'" '.$readonly.' /></td></tr>';
+$html .= '    <tr class="' . ($odd == true ? 'odd' : 'even') . '"><td>Bevorzugte Anrede:</td><td>' . $buttons . '</td></tr>';
+$html .= '    <tr class="' . ($odd == true ? 'odd' : 'even') . '"><td>Firmenname:</td><td><input type="text" name="firma" id="firma" value="' . filter_output_html($c['company']) . '" ' . $readonly . ' /></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td>'.($c['company'] ? 'Ansprechpartner' : 'Name').':</td><td><input type="text" name="name" id="name" value="'.filter_output_html($c['name']).'" '.$readonly.' /></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td>' . ($c['company'] ? 'Ansprechpartner' : 'Name') . ':</td><td><input type="text" name="name" id="name" value="' . filter_output_html($c['name']) . '" ' . $readonly . ' /></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="adresse">Adresse:</label></td><td><textarea rows="3" name="adresse" id="adresse">'.filter_output_html($c['address']).'</textarea></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="adresse">Adresse:</label></td><td><textarea rows="3" name="adresse" id="adresse">' . filter_output_html($c['address']) . '</textarea></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="plz">Land / PLZ:</label></td><td><input size="2" type="text" name="land" id="land" value="'.filter_output_html($c['country']).'" '.$readonly.' />-</strong><input type="text" name="plz" id="plz" value="'.filter_output_html($c['zip']).'"></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="plz">Land / PLZ:</label></td><td><input size="2" type="text" name="land" id="land" value="' . filter_output_html($c['country']) . '" ' . $readonly . ' />-</strong><input type="text" name="plz" id="plz" value="' . filter_output_html($c['zip']) . '"></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="ort">Ort:</label></td><td><input type="text" name="ort" id="ort" value="'.filter_output_html($c['city']).'"></td></tr>';
-$odd = !$odd;
-
-
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="email">E-Mail-Adresse:</label></td><td><input type="text" name="email" id="email" value="'.filter_output_html($c['email']).'"></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="ort">Ort:</label></td><td><input type="text" name="ort" id="ort" value="' . filter_output_html($c['city']) . '"></td></tr>';
 $odd = !$odd;
 
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefonnummer:</label></td><td><input type="text" name="telefon" id="telefon" value="'.filter_output_html($c['phone']).'"><span id="telefon_feedback"></span></td></tr>';
+
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="email">E-Mail-Adresse:</label></td><td><input type="text" name="email" id="email" value="' . filter_output_html($c['email']) . '"></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Mobil:</label></td><td><input type="text" name="mobile" id="mobile" value="'.filter_output_html($c['mobile']).'"><span id="mobile_feedback"></span></td></tr>';
+
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="telefon">Telefonnummer:</label></td><td><input type="text" name="telefon" id="telefon" value="' . filter_output_html($c['phone']) . '"><span id="telefon_feedback"></span></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="'.filter_output_html($c['fax']).'"><span id="telefax_feedback"></span></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="telefon">Mobil:</label></td><td><input type="text" name="mobile" id="mobile" value="' . filter_output_html($c['mobile']) . '"><span id="mobile_feedback"></span></td></tr>';
+$odd = !$odd;
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="telefon">Telefax:</label></td><td><input type="text" name="telefax" id="telefax" value="' . filter_output_html($c['fax']) . '"><span id="telefax_feedback"></span></td></tr>';
 $odd = !$odd;
 
 if ($domains) {
@@ -85,14 +85,14 @@ if ($domains) {
 }
 
 $buttons = '<span class="buttonset" id="buttonset-usepgp">
-         <input type="radio" name="usepgp" id="usepgp-yes" value="yes" '.($c['pgp_id'] ? 'checked="checked"' : '').'/>
+         <input type="radio" name="usepgp" id="usepgp-yes" value="yes" ' . ($c['pgp_id'] ? 'checked="checked"' : '') . '/>
          <label for="usepgp-yes">PGP verwenden</label>
-         <input type="radio" name="usepgp" id="usepgp-no" value="no" '.($c['pgp_id'] ? '' : 'checked="checked"').'/>
+         <input type="radio" name="usepgp" id="usepgp-no" value="no" ' . ($c['pgp_id'] ? '' : 'checked="checked"') . '/>
          <label for="usepgp-no">kein PGP</label>';
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="buttonset-usepgp">PGP-Verschlüsselung:</label></td><td>'.$buttons.'</td></tr>';
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpid">PGP-Key-ID:</label></td><td><input type="text" name="pgpid" id="pgpid" value="'.filter_output_html($c['pgp_id']).'" size="40"><button id="searchpgp" type="button">Auf Keyserver suchen</button><span id="pgpid_feedback"></span></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="buttonset-usepgp">PGP-Verschlüsselung:</label></td><td>' . $buttons . '</td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="pgpid">PGP-Key-ID:</label></td><td><input type="text" name="pgpid" id="pgpid" value="' . filter_output_html($c['pgp_id']) . '" size="40"><button id="searchpgp" type="button">Auf Keyserver suchen</button><span id="pgpid_feedback"></span></td></tr>';
 $odd = !$odd;
-$html .= '<tr class="'.($odd == true ? 'odd' : 'even').'"><td><label for="pgpkey">PGP-Key (ASCII-Armored):</label></td><td><textarea name="pgpkey" id="pgpkey">'.filter_output_html($c['pgp_key']).'</textarea></td></tr>';
+$html .= '<tr class="' . ($odd == true ? 'odd' : 'even') . '"><td><label for="pgpkey">PGP-Key (ASCII-Armored):</label></td><td><textarea name="pgpkey" id="pgpkey">' . filter_output_html($c['pgp_key']) . '</textarea></td></tr>';
 $odd = !$odd;
 
 $html .= '<tr class="even"><td>&nbsp;</td><td><input type="submit" value="Speichern" /></td></tr>';
@@ -109,13 +109,13 @@ if (isset($_REQUEST['domainholder']) && $_REQUEST['domainholder'] == 1) {
     $domainholder = '&domainholder=1';
 }
 
-output(html_form('contacts_edit', 'save', 'id='.$_REQUEST['id']."&back=".urlencode($back).$domainholder, $html));
+output(html_form('contacts_edit', 'save', 'id=' . $_REQUEST['id'] . "&back=" . urlencode($back) . $domainholder, $html));
 
 if ($domains) {
     output('<p>Folgende Domains sind von dieser Änderung betroffen:</p>
             <ul>');
     foreach ($domains as $dom) {
-        output('<li>'.filter_output_html($dom->fqdn).'</li>');
+        output('<li>' . filter_output_html($dom->fqdn) . '</li>');
     }
     output('</ul>');
 }

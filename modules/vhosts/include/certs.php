@@ -94,7 +94,7 @@ function csr_details($id)
 function get_available_CAs()
 {
     $path = '/etc/apache2/certs/cabundle/';
-    $ret = glob($path.'*.pem');
+    $ret = glob($path . '*.pem');
     if (!$ret) {
         system_failure("Konnte die CA-Zertifikate nicht laden");
     }
@@ -116,7 +116,7 @@ function get_chain($cert)
     if ($result->rowCount() > 0) {
         $c = $result->fetch();
         //$chainfile = '/etc/apache2/certs/chains/'.$c['id'].'.pem';
-        DEBUG("identified fitting certificate chain #".$c['id']);
+        DEBUG("identified fitting certificate chain #" . $c['id']);
         return $c['id'];
     }
 }
@@ -165,7 +165,7 @@ function validate_certificate($cert, $key)
 
     // Prüfe ob Key und Zertifikat zusammen passen
     if (openssl_x509_check_private_key($cert, $key) !== true) {
-        DEBUG("Zertifikat und Key passen nicht zusammen: ".openssl_x509_check_private_key($cert, $key));
+        DEBUG("Zertifikat und Key passen nicht zusammen: " . openssl_x509_check_private_key($cert, $key));
         return CERT_INVALID;
     }
 
@@ -214,12 +214,12 @@ function parse_cert_details($cert)
         $issuer = $certdata['issuer']['O'];
     }
     if (isset($certdata['extensions']['subjectAltName'])) {
-        DEBUG("SAN: ".$certdata['extensions']['subjectAltName']);
+        DEBUG("SAN: " . $certdata['extensions']['subjectAltName']);
         $san = [];
         $raw_san = explode(', ', $certdata['extensions']['subjectAltName']);
         foreach ($raw_san as $name) {
             if (!substr($name, 0, 4) == 'DNS:') {
-                warning('Unparsable SAN: '.$name);
+                warning('Unparsable SAN: ' . $name);
                 continue;
             }
             $san[] = str_replace('DNS:', '', $name);
@@ -228,8 +228,8 @@ function parse_cert_details($cert)
     } else {
         $san = "\n";
     }
-    DEBUG("SAN: <pre>".$san."</pre>");
-    return ['subject' => $certdata['subject']['CN'].' / '.$issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN'], 'san' => $san];
+    DEBUG("SAN: <pre>" . $san . "</pre>");
+    return ['subject' => $certdata['subject']['CN'] . ' / ' . $issuer, 'cn' => $certdata['subject']['CN'], 'valid_from' => date('Y-m-d', $certdata['validFrom_time_t']), 'valid_until' => date('Y-m-d', $certdata['validTo_time_t']), 'issuer' => $certdata['issuer']['CN'], 'san' => $san];
 }
 
 
@@ -311,9 +311,9 @@ function create_csr($cn, $bits)
     $domains = split_cn($cn);
     $tmp = [];
     foreach ($domains as $dom) {
-        $tmp[] = 'DNS:'.$dom;
+        $tmp[] = 'DNS:' . $dom;
     }
-    $SAN = "[ v3_req ]\nsubjectAltName = ".implode(', ', $tmp);
+    $SAN = "[ v3_req ]\nsubjectAltName = " . implode(', ', $tmp);
     DEBUG($SAN);
     $cn = $domains[0];
     $bits = (int) $bits;
@@ -325,7 +325,7 @@ function create_csr($cn, $bits)
     $csrfile = tempnam(ini_get('upload_tmp_dir'), 'csr');
     $config = tempnam(ini_get('upload_tmp_dir'), 'config');
 
-    DEBUG("key: ".$keyfile." / csr: ".$csrfile." / config: ".$config);
+    DEBUG("key: " . $keyfile . " / csr: " . $csrfile . " / config: " . $config);
 
     $c = fopen($config, "w");
     fwrite($c, "[req]
@@ -358,7 +358,7 @@ commonName_default = {$cn}
     DEBUG($output);
     DEBUG($retval);
     if ($retval != 0) {
-        system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: ".print_r($output, true));
+        system_failure("Die Erzeugung des CSR ist fehlgeschlagen. Ausgabe des OpenSSL-Befehls: " . print_r($output, true));
     }
 
     $csr = file_get_contents($csrfile);

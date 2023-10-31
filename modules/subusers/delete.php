@@ -22,7 +22,7 @@ if (isset($_GET['subuser'])) {
     if ($sure === null) {
         $subuser = load_subuser($_GET['subuser']);
         are_you_sure("subuser={$subuser['id']}", '
-    <p>Soll der zusätzliche Admin-Zugang »'.$subuser['username'].'« wirklich gelöscht werden?</p>');
+    <p>Soll der zusätzliche Admin-Zugang »' . $subuser['username'] . '« wirklich gelöscht werden?</p>');
     } elseif ($sure === true) {
         delete_subuser($_GET['subuser']);
         if (!$debugmode) {

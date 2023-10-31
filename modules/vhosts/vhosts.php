@@ -48,7 +48,7 @@ foreach ($vhosts as $vh) {
 }
 // Filter-Funktion
 if (count($vhosts) > 10 || $filter) {
-    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="'.filter_output_html($filter).'"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
+    $form = '<p><label for="filter">Filter für die Anzeige:</label> <input type="text" name="filter" id="filter" value="' . filter_output_html($filter) . '"><button type="button" id="clear" title="Filter leeren">&times;</button><input type="submit" value="Filtern!"></p>';
     output(html_form('vhosts_filter', 'vhosts', '', $form));
 }
 
@@ -79,19 +79,19 @@ if (count($vhosts) > 0) {
         }
         $linkuri = $vhost['fqdn'];
         if (strstr($vhost['options'], 'aliaswww')) {
-            $linkuri = "www.".$vhost['fqdn'];
+            $linkuri = "www." . $vhost['fqdn'];
         }
-        output("<tr class=\"{$class}\"><td>".internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"')."</td><td><a href=\"{$proto}://{$linkuri}\">".other_icon('world_link.png', 'Website aufrufen')."</a> ".internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost='.$vhost['id'])."</td><td>");
+        output("<tr class=\"{$class}\"><td>" . internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"') . "</td><td><a href=\"{$proto}://{$linkuri}\">" . other_icon('world_link.png', 'Website aufrufen') . "</a> " . internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost=' . $vhost['id']) . "</td><td>");
         $aliases = get_all_aliases($vhost);
         $tmp = '';
         if (count($aliases) > 0) {
             foreach ($aliases as $alias) {
-                $tmp .= $alias['fqdn'].'<br />';
+                $tmp .= $alias['fqdn'] . '<br />';
             }
         } else {
             $tmp = '<em>- keine -</em>';
         }
-        output(internal_link('aliases', $tmp, 'vhost='.$vhost['id'], 'title="Aliase verwalten"'));
+        output(internal_link('aliases', $tmp, 'vhost=' . $vhost['id'], 'title="Aliase verwalten"'));
         output('</td>');
         $logfiles = 'Kein Log';
         if ($vhost['logtype'] == 'default') {
@@ -110,30 +110,30 @@ if (count($vhosts) > 0) {
 
 
         if ($vhost['ssl'] == 'http') {
-            output("<td>".icon_disabled('HTTPS ausgeschaltet')."</td>");
+            output("<td>" . icon_disabled('HTTPS ausgeschaltet') . "</td>");
         } elseif (strstr($vhost['options'], "letsencrypt") && $vhost['cert']) {
             $forward = '';
             if ($vhost['ssl'] == 'forward') {
-                $forward = " ".other_icon("refresh.png", 'Auf HTTPS umleiten');
+                $forward = " " . other_icon("refresh.png", 'Auf HTTPS umleiten');
             } else {
-                $forward = " ".other_icon("warning.png", 'Ungeschützter Aufruf weiterhin möglich');
+                $forward = " " . other_icon("warning.png", 'Ungeschützter Aufruf weiterhin möglich');
             }
-            output("<td>".other_icon("letsencrypt.png", "Automatische Zertifikatsverwaltung mit Let's Encrypt").$forward."</td>");
+            output("<td>" . other_icon("letsencrypt.png", "Automatische Zertifikatsverwaltung mit Let's Encrypt") . $forward . "</td>");
         } elseif ($vhost['cert']) {
-            output("<td>".other_icon("key.png", "HTTPS mit eigenem Zertifikat")."</td>");
+            output("<td>" . other_icon("key.png", "HTTPS mit eigenem Zertifikat") . "</td>");
         } elseif (strstr($vhost['options'], "letsencrypt")) {
             // Letsencrypt gewählt aber noch nicht aktiv
             $message = "Let's Encrypt-Zertifikat ist noch nicht bereit";
-            output("<td>".other_icon("letsencrypt.png", $message).icon_warning($message)."</td>");
+            output("<td>" . other_icon("letsencrypt.png", $message) . icon_warning($message) . "</td>");
         } else {
-            output("<td>".icon_enabled('HTTPS eingeschaltet')."</td>");
+            output("<td>" . icon_enabled('HTTPS eingeschaltet') . "</td>");
         }
 
         $traffic = traffic_month($vhost['id']);
         $traffic_sum += (int) $traffic;
-        $traffic_string = $traffic.' MB';
+        $traffic_string = $traffic . ' MB';
         if ($traffic > 1024) {
-            $traffic_string = round($traffic / 1024, 2).' GB';
+            $traffic_string = round($traffic / 1024, 2) . ' GB';
         }
         if ($traffic === null) {
             $traffic_string = '--';
@@ -153,20 +153,20 @@ if (count($vhosts) > 0) {
                 $php_default_version = null;
                 foreach ($phpinfo as $v) {
                     if ($v['default'] == true) {
-                        $php_default_version = $v['major'].'.'.$v['minor'];
+                        $php_default_version = $v['major'] . '.' . $v['minor'];
                     }
                 }
-                $php = icon_enabled('PHP in der empfohlenen Version eingeschaltet ('.$php_default_version.')');
+                $php = icon_enabled('PHP in der empfohlenen Version eingeschaltet (' . $php_default_version . ')');
             } elseif (array_key_exists($php, $phpinfo)) {
                 $phpinfo = $phpinfo[$php];
                 /* To create new PHP icon:
                    convert ok.png -gravity center -draw "text 0,0 '7.2'" ok-php72.png
                 */
-                $php = icon_enabled_phpxx('PHP in Version '.$phpinfo['major'].'.'.$phpinfo['minor'].' eingeschaltet', $phpinfo['major'], $phpinfo['minor']);
+                $php = icon_enabled_phpxx('PHP in Version ' . $phpinfo['major'] . '.' . $phpinfo['minor'] . ' eingeschaltet', $phpinfo['major'], $phpinfo['minor']);
                 if ($phpinfo['status'] == 'deprecated') {
-                    $php .= ' '.icon_warning('Diese PHP-Version ist veraltet!');
+                    $php .= ' ' . icon_warning('Diese PHP-Version ist veraltet!');
                 } elseif ($phpinfo['status'] == 'used') {
-                    $php .= ' '.icon_warning('Diese PHP-Version hat für Sie aktuell nur noch Bestandsschutz');
+                    $php .= ' ' . icon_warning('Diese PHP-Version hat für Sie aktuell nur noch Bestandsschutz');
                 }
             } else {
                 $php = icon_disabled('PHP ausgeschaltet');
@@ -182,11 +182,11 @@ if (count($vhosts) > 0) {
     }
     output('</table>');
     if ($traffic_sum > 0) {
-        $traffic_string = $traffic_sum.' MB';
+        $traffic_string = $traffic_sum . ' MB';
         if ($traffic_sum > 1024) {
-            $traffic_string = round($traffic_sum / 1024, 2).' GB';
+            $traffic_string = round($traffic_sum / 1024, 2) . ' GB';
         }
-        output('<p><strong>Traffic insgesamt: '.$traffic_string.'</strong> in den letzten 30 Tagen</p>');
+        output('<p><strong>Traffic insgesamt: ' . $traffic_string . '</strong> in den letzten 30 Tagen</p>');
     }
     output('<p style="font-size: 90%;"><sup>*</sup>)&#160;Dieser Wert stellt den Datenverkehr dieser Website für die letzten 30 Tage dar.</p>');
     output('<p style="font-size: 90%;"><sup>**</sup>)&#160;schwach geschriebene Pfadangaben bezeichnen die Standardeinstellung. Ist ein Pfad fett dargestellt, so haben Sie einen davon abweichenden Wert eingegeben.</p>');

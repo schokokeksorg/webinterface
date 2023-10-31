@@ -31,18 +31,18 @@ foreach ($dbs as $db) {
     $dbnames[] = $db['name'];
 }
 
-$suggestion = $username.'_1';
+$suggestion = $username . '_1';
 $count = 2;
 while (in_array($suggestion, $dbnames)) {
-    $suggestion = $username.'_'.$count;
+    $suggestion = $username . '_' . $count;
     $count++;
 }
 
-$hint = 'Der Datenbankname muss mit <strong>'.$username.'_</strong> beginnen.';
+$hint = 'Der Datenbankname muss mit <strong>' . $username . '_</strong> beginnen.';
 
 $form = '<h4>Name der neuen Datenbank</h4>
-<input type="text" name="newdb" value="'.$suggestion.'" />
-<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. '.$hint.'</p>
+<input type="text" name="newdb" value="' . $suggestion . '" />
+<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. ' . $hint . '</p>
 <p><label for="description">Optionale Beschreibung dieser Datenbank:</label> <input type="text" name="description" id="description" /></p>
 ';
 if (count(additional_servers()) > 0) {
@@ -66,7 +66,7 @@ if (count($users) > 0) {
     $form .= '<h4>Berechtigungen</h4>';
     $form .= '<p>Welche der bisher vorhandenen Datenbank-Benutzer dürfen auf diese Datenbank zugreifen?</p>';
     foreach ($users as $user) {
-        $form .= '<p><input type="checkbox" id="access_'.$user['username'].'" name="access[]" value="'.$user['username'].'" /> <label for="access_'.$user['username'].'">'.$user['username'].'</label></p>';
+        $form .= '<p><input type="checkbox" id="access_' . $user['username'] . '" name="access[]" value="' . $user['username'] . '" /> <label for="access_' . $user['username'] . '">' . $user['username'] . '</label></p>';
     }
 }
 

@@ -58,19 +58,19 @@ foreach ($users as $user) {
 $suggestion = $username;
 $count = 1;
 while (in_array($suggestion, $usernames)) {
-    $suggestion = $username.'_'.$count;
+    $suggestion = $username . '_' . $count;
     $count++;
 }
 
-$hint = 'Der MySQL-Benutzername muss entweder <strong>'.$username.'</strong> lauten oder mit <strong>'.$username.'_</strong> beginnen.';
+$hint = 'Der MySQL-Benutzername muss entweder <strong>' . $username . '</strong> lauten oder mit <strong>' . $username . '_</strong> beginnen.';
 if (in_array($username, $usernames)) {
-    $hint = 'Der MySQL-Benutzername muss mit <strong>'.$username.'_</strong> beginnen.';
+    $hint = 'Der MySQL-Benutzername muss mit <strong>' . $username . '_</strong> beginnen.';
 }
 
 
 $form = '<h4>Benutzername</h4>
-<input type="text" name="newuser" value="'.$suggestion.'" maxlength="16" />
-<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. '.$hint.'</p>
+<input type="text" name="newuser" value="' . $suggestion . '" maxlength="16" />
+<p>Bitte nur Kleinbuchstaben, Zahlen und Unterstrich verwenden. ' . $hint . '</p>
 <p>Aufgrund einer Einschränkung des MySQL-Servers dürfen Benutzernamen nur maximal 16 Zeichen lang sein.</p>
 <p><label for="description">Optionale Beschreibung dieses Benutzers:</label> <input type="text" name="description" id="description" /></p>
 <h4>Passwort</h4>
@@ -82,9 +82,9 @@ if (count($dbs) > 0) {
     foreach ($dbs as $db) {
         $desc = '';
         if ($db['description']) {
-            $desc = ' - <em>'.$db['description'].'</em>';
+            $desc = ' - <em>' . $db['description'] . '</em>';
         }
-        $form .= '<p><input type="checkbox" id="access_'.$db['name'].'" name="access[]" value="'.$db['name'].'" /> <label for="access_'.$db['name'].'">'.$db['name'].$desc.'</label></p>';
+        $form .= '<p><input type="checkbox" id="access_' . $db['name'] . '" name="access[]" value="' . $db['name'] . '" /> <label for="access_' . $db['name'] . '">' . $db['name'] . $desc . '</label></p>';
     }
 } else {
     $form .= '<p><em>Bisher gibt es noch keine Datenbanken.</em></p>';

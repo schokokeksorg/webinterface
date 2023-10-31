@@ -24,12 +24,12 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'manual') {
     $type = 'manual';
 }
 
-output("<p>Sie können bei ".config('company_name')." Ihre E-Mails wahlweise direkt im Browser mit einem Web-Mail-System lesen oder mit einem E-Mail-Programm auf Ihrem Rechner per POP3 oder IMAP abrufen. Im folgenden möchten wir Ihnen erklären, wie Sie diese Möglichkeiten nutzen können.</p>");
+output("<p>Sie können bei " . config('company_name') . " Ihre E-Mails wahlweise direkt im Browser mit einem Web-Mail-System lesen oder mit einem E-Mail-Programm auf Ihrem Rechner per POP3 oder IMAP abrufen. Im folgenden möchten wir Ihnen erklären, wie Sie diese Möglichkeiten nutzen können.</p>");
 
 $webmail_host = str_replace('https://', '', config('webmail_url'));
 output('<h3>Lesen per Web-Mail</h3>
 <p>Die Anmeldung zu unseren Web-Mail-Systemen erfolgt unter</p>
-<p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="'.config('webmail_url').'">'.$webmail_host.'</a></p>');
+<p style="margin-left: 2em; font-size: 130%; font-weight: bold;"><a href="' . config('webmail_url') . '">' . $webmail_host . '</a></p>');
 if ($type == 'manual') {
     output('<p>Dort geben Sie bitte im Feld für die E-Mail-Adresse Ihren Account-Namen ein.</p>');
 } else {
@@ -38,7 +38,7 @@ if ($type == 'manual') {
 
 output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <p>Ihre E-Mails befinden auf dem Server</p>
-<p style="margin-left: 2em; font-size: 130%; font-weight: bold;">'.$servername.'.</p>
+<p style="margin-left: 2em; font-size: 130%; font-weight: bold;">' . $servername . '.</p>
 <p>Wenn Sie ein E-Mail-Programm auf Ihrem Computer (wie z.B. Mozilla Thunderbird) zum Abruf benutzen möchten, haben Sie die Wahl zwischen POP3 und IMAP. Ihre Zugangsdaten lassen sich mit beiden Technologien benutzen.</p>
 
 <div style="width: 20%; margin-right: 2em; float: left;">
@@ -47,10 +47,10 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <p>Die Einstellungen für IMAP:</p>
 <dl>
 <dt>Protokoll</dt><dd>IMAP</dd>
-<dt>Servername</dt><dd>'.$servername.'</dd>
+<dt>Servername</dt><dd>' . $servername . '</dd>
 <dt>Port</dt><dd>993</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
-<dt>Benutzername</dt><dd><em>'.($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
+<dt>Benutzername</dt><dd><em>' . ($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse') . '</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
@@ -60,10 +60,10 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <p>Die Einstellungen für POP3:</p>
 <dl>
 <dt>Protokoll</dt><dd>POP3</dd>
-<dt>Servername</dt><dd>'.$servername.'</dd>
+<dt>Servername</dt><dd>' . $servername . '</dd>
 <dt>Port</dt><dd>995</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
-<dt>Benutzername</dt><dd><em>'.($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
+<dt>Benutzername</dt><dd><em>' . ($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse') . '</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
@@ -71,10 +71,10 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <h3>SMTP</h3>
 <p>Zum Verschicken von E-Mails muss sich Ihr E-Mail-Programm auch per SMTP anmelden. Benutzen Sie dafür bitte die folgenden Daten:</p>
 <dt>Protokoll</dt><dd>SMTP</dd>
-<dt>Servername</dt><dd>'.$servername.'</dd>
+<dt>Servername</dt><dd>' . $servername . '</dd>
 <dt>Port</dt><dd>465</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
-<dt>Benutzername</dt><dd><em>'.($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse').'</em></dd>
+<dt>Benutzername</dt><dd><em>' . ($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse') . '</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 <br />
 

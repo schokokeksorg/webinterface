@@ -45,4 +45,4 @@ $replace = '';
 if ($csr['replace']) {
     $replace = "&replace={$csr['replace']}";
 }
-output(html_form('vhosts_certs_new', 'savecert', 'action=new&csr='.$csr['id'].$replace, $form));
+output(html_form('vhosts_certs_new', 'savecert', 'action=new&csr=' . $csr['id'] . $replace, $form));

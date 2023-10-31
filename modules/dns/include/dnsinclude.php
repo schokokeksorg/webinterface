@@ -69,11 +69,11 @@ function create_dyndns_account($handle, $password_http, $sshkey)
 
     $pwhash = null;
     if ($password_http) {
-        $pwhash = "{SHA}".base64_encode(sha1($password_http, true));
+        $pwhash = "{SHA}" . base64_encode(sha1($password_http, true));
     }
 
     db_query(
-        "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES ".
+        "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES " .
            "(:uid, :handle, :pwhash, :sshkey)",
         [":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey]
     );
@@ -100,7 +100,7 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
     $args = [":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id];
     $pwhash = null;
     if ($password_http && $password_http != '************') {
-        $args[":pwhash"] = "{SHA}".base64_encode(sha1($password_http, true));
+        $args[":pwhash"] = "{SHA}" . base64_encode(sha1($password_http, true));
         db_query("UPDATE dns.dyndns SET handle=:handle, password=:pwhash, sshkey=:sshkey WHERE id=:id", $args);
     } else {
         db_query("UPDATE dns.dyndns SET handle=:handle, sshkey=:sshkey WHERE id=:id", $args);
@@ -128,7 +128,7 @@ function get_dyndns_records($id)
         if ($dom->fqdn != config('masterdomain') && $dom->fqdn != config('user_vhosts_domain')) {
             $dom->ensure_userdomain();
         }
-        $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
+        $entry['fqdn'] = $entry['hostname'] . '.' . $dom->fqdn;
         if (!$entry['hostname']) {
             $entry['fqdn'] = $dom->fqdn;
         }
@@ -145,7 +145,7 @@ function blank_dns_record($type)
 {
     global $valid_record_types;
     if (!in_array(strtolower($type), $valid_record_types)) {
-        system_failure('invalid type: '.$type);
+        system_failure('invalid type: ' . $type);
     }
     $rec = ['hostname' => null,
                'domain' => 0,
@@ -185,7 +185,7 @@ function get_domain_records($dom)
     while ($entry = $result->fetch()) {
         $dom = new Domain((int) $entry['domain']);
         $dom->ensure_userdomain();
-        $entry['fqdn'] = $entry['hostname'].'.'.$dom->fqdn;
+        $entry['fqdn'] = $entry['hostname'] . '.' . $dom->fqdn;
         if (!$entry['hostname']) {
             $entry['fqdn'] = $dom->fqdn;
         }
@@ -231,10 +231,10 @@ function save_dns_record($id, $record)
     global $implemented_record_types;
     $record['type'] = strtolower($record['type']);
     if (!in_array($record['type'], $valid_record_types)) {
-        system_failure('invalid type: '.$record['type']);
+        system_failure('invalid type: ' . $record['type']);
     }
     if (!in_array($record['type'], $implemented_record_types)) {
-        system_failure('record type '.$record['type'].' not implemented at the moment.');
+        system_failure('record type ' . $record['type'] . ' not implemented at the moment.');
     }
     $dom = new Domain((int) $record['domain']);
     $dom->ensure_userdomain();
@@ -460,16 +460,16 @@ $tld_ns = [];
 function check_dns($domainname, $tld)
 {
     global $tld_ns;
-    $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+    $domain = idn_to_ascii($domainname . "." . $tld, 0, INTL_IDNA_VARIANT_UTS46);
 
     if (!isset($tld_ns[$tld])) {
-        $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
+        $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns ' . $tld . '.');
         $line = explode("\n", $resp, 2)[0];
         $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
         $tld_ns[$tld] = $NS;
     }
 
-    $resp = shell_exec('dig @'.$tld_ns[$tld].' +noall +authority -t ns '.$domain.'.');
+    $resp = shell_exec('dig @' . $tld_ns[$tld] . ' +noall +authority -t ns ' . $domain . '.');
     $line = explode("\n", $resp, 2)[0];
     if (preg_match('/^.*\\sIN\\s+NS\\s+/', $line) === 0) {
         return "NXDOMAIN";

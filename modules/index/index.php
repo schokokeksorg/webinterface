@@ -50,13 +50,13 @@ switch ($_SESSION['role']) {
         $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde, Benutzer und Administrator";
         break;
     default:
-        system_failure('Interner Fehler (»Unbekannte Rolle: '.$_SESSION['role'].'«)');
+        system_failure('Interner Fehler (»Unbekannte Rolle: ' . $_SESSION['role'] . '«)');
 }
 
 
 title('Übersicht');
 headline('Administration');
-output('<p>Herzlich willkommen, '.$role.".</p>\n");
+output('<p>Herzlich willkommen, ' . $role . ".</p>\n");
 
 output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>");
 if (is_locked()) {
@@ -68,12 +68,12 @@ $modules = get_modules_info();
 
 $my_shortcuts = [];
 foreach ($modules as $modname => $info) {
-    if (file_exists('modules/'.$modname.'/shortcuts.php')) {
+    if (file_exists('modules/' . $modname . '/shortcuts.php')) {
         $shortcuts = [];
-        include('modules/'.$modname.'/shortcuts.php');
+        include('modules/' . $modname . '/shortcuts.php');
         foreach ($shortcuts as $shortcut) {
             $shortcut['module'] = $modname;
-            $my_shortcuts[$shortcut['weight'].$modname] = $shortcut;
+            $my_shortcuts[$shortcut['weight'] . $modname] = $shortcut;
         }
     }
 }
@@ -84,24 +84,24 @@ DEBUG($my_shortcuts);
 output("<div class=\"overview\">");
 foreach ($my_shortcuts as $shortcut) {
     $icon = "images/default.png";
-    if (file_exists("images/".$shortcut['icon'])) {
-        $icon = "images/".$shortcut['icon'];
+    if (file_exists("images/" . $shortcut['icon'])) {
+        $icon = "images/" . $shortcut['icon'];
     }
     $alert = '';
     if (isset($shortcut['alert']) && $shortcut['alert']) {
-        $alert = '<br /><span style="color: red;">('.$shortcut['alert'].')</span>';
+        $alert = '<br /><span style="color: red;">(' . $shortcut['alert'] . ')</span>';
     }
-    output("<div class=\"block\">".internal_link($prefix.'go/'.$shortcut['module'].'/'.$shortcut['file'], "<img src=\"{$prefix}{$icon}\" alt=\"\" /> {$shortcut['title']} {$alert}")."</div>");
+    output("<div class=\"block\">" . internal_link($prefix . 'go/' . $shortcut['module'] . '/' . $shortcut['file'], "<img src=\"{$prefix}{$icon}\" alt=\"\" /> {$shortcut['title']} {$alert}") . "</div>");
 }
 output('</div>');
 
 if (have_module('systemuser') && $_SESSION['role'] & ROLE_SYSTEMUSER) {
-    ini_set('include_path', ini_get('include_path').':modules/systemuser/include');
+    ini_set('include_path', ini_get('include_path') . ':modules/systemuser/include');
     include('modules/systemuser/overview.php');
 }
 
 
 if (have_module('email') && $_SESSION['role'] & ROLE_VMAIL_ACCOUNT) {
     include('modules/email/vmailoverview.php');
-    output("<div class=\"vmailoverview\">".$content."</div>");
+    output("<div class=\"vmailoverview\">" . $content . "</div>");
 }

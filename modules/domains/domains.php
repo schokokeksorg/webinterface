@@ -47,7 +47,7 @@ foreach ($user_domains as $domain) {
     $mailserver_lock = '';
     if ($domain->mail != 'none' && $domain->mailserver_lock == 1) {
         $locked = 'locked';
-        $mailserver_lock = '<br><strong>Mail-Verarbeitung eingeschränkt!</strong>'.footnote('Diese Domain ist extern registriert und wurde noch nicht bestätigt. Momentan ist daher der Mail-Empfang auf dieser Domain nicht möglich.');
+        $mailserver_lock = '<br><strong>Mail-Verarbeitung eingeschränkt!</strong>' . footnote('Diese Domain ist extern registriert und wurde noch nicht bestätigt. Momentan ist daher der Mail-Empfang auf dieser Domain nicht möglich.');
     }
     $regdate = $domain->reg_date;
     if ($domain->status == 'prereg') {
@@ -67,14 +67,14 @@ foreach ($user_domains as $domain) {
         $regdate = '<em>Umzug bevorstehend</em>';
     } else {
         $status = 'regular';
-        $regdate = 'Registriert seit '.$regdate;
+        $regdate = 'Registriert seit ' . $regdate;
     }
     if ($domain->cancel_date) {
         $status = 'cancel-scheduled';
         if ($domain->status == 'transferout') {
-            $regdate .= '<br />Umgezogen am '.$domain->cancel_date;
+            $regdate .= '<br />Umgezogen am ' . $domain->cancel_date;
         } else {
-            $regdate .= '<br />Gekündigt zum '.$domain->cancel_date;
+            $regdate .= '<br />Gekündigt zum ' . $domain->cancel_date;
         }
     }
     if ($domain->cancel_date && $domain->cancel_date < date('Y-m-d')) {
@@ -82,7 +82,7 @@ foreach ($user_domains as $domain) {
     }
     if (isset($_SESSION['customerinfo']['customerno']) && $domain->kunde != $_SESSION['customerinfo']['customerno']) {
         $status = 'foreign';
-        $regdate = '<em>Zuständige Kundennummer: '.$domain->kunde.'</em>';
+        $regdate = '<em>Zuständige Kundennummer: ' . $domain->kunde . '</em>';
     }
 
     $features = [];
@@ -118,7 +118,7 @@ foreach ($user_domains as $domain) {
         $punycode = '';
     }
     $domainname = "{$domain->fqdn}{$punycode}";
-    $domainname = internal_link('detail', $domainname, 'id='.$domain->id);
+    $domainname = internal_link('detail', $domainname, 'id=' . $domain->id);
     output("  <div class=\"domain-item {$status} {$locked}\"><p class=\"domainname\">{$domainname}</p><p class=\"regdate\">{$regdate}</p><p class=\"domain-usage\">Verwendung: {$features}{$mailserver_lock}</p></div>\n");
 }
 output('</div>');

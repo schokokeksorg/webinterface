@@ -31,7 +31,7 @@ if ($_REQUEST['action'] == 'delete') {
         delete_domain($dom->id);
         redirect('domains');
     } elseif ($sure === false) {
-        redirect('detail?id='.$dom->id);
+        redirect('detail?id=' . $dom->id);
     }
 } elseif ($_REQUEST['action'] == 'cancel') {
     $info = api_download_domain($dom->id);
@@ -40,14 +40,14 @@ if ($_REQUEST['action'] == 'delete') {
         are_you_sure("action=cancel&domain={$dom->id}", "Möchten Sie die Domain »{$dom->fqdn}« wirklich kündigen?<br>Wichtig: Bei einem Umzug ist keine separate Kündigung nötig. Bitte kündigen Sie nur, wenn Sie die Domain löschen und freigeben möchten.<br>Das Kündigungsdatum wäre dann {$info['currentContractPeriodEnd']}");
     } elseif ($sure === true) {
         api_cancel_domain($dom->fqdn);
-        redirect('detail?id='.$dom->id);
+        redirect('detail?id=' . $dom->id);
     } elseif ($sure === false) {
-        redirect('detail?id='.$dom->id);
+        redirect('detail?id=' . $dom->id);
     }
 } elseif ($_REQUEST['action'] == 'transfer') {
     check_form_token('domains_transfer');
     api_unlock_domain($dom->fqdn);
-    redirect('detail?id='.$dom->id);
+    redirect('detail?id=' . $dom->id);
 } elseif ($_REQUEST['action'] == 'nomailman') {
     if (have_module('mailman')) {
         use_module('mailman');
@@ -60,9 +60,9 @@ if ($_REQUEST['action'] == 'delete') {
             are_you_sure("action=nomailman&domain={$dom->id}", "Möchten Sie die Domain »{$dom->fqdn}« wirklich aus der Mailinglisten-Konfiguration entfernen?");
         } elseif ($sure === true) {
             delete_mailman_domain($dom->id);
-            redirect('detail?id='.$dom->id);
+            redirect('detail?id=' . $dom->id);
         } elseif ($sure === false) {
-            redirect('detail?id='.$dom->id);
+            redirect('detail?id=' . $dom->id);
         }
     } else {
         system_failure('Das Mailman-Modul ist nicht verfügbar');
@@ -70,5 +70,5 @@ if ($_REQUEST['action'] == 'delete') {
 } elseif ($_REQUEST['action'] == 'convertexternal') {
     check_form_token('domains_convertexternal');
     convert_domain_to_external($dom->id);
-    redirect('detail?id='.$dom->id);
+    redirect('detail?id=' . $dom->id);
 }

@@ -17,7 +17,7 @@ function customer_has_email($customerno, $email)
 {
     $customerno = (int) $customerno;
     $email = db_escape_string($email);
-    $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=".$customerno." AND (email='".$email."' OR email_extern='{$email}' OR email_rechnung='{$email}');");
+    $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=" . $customerno . " AND (email='" . $email . "' OR email_extern='{$email}' OR email_rechnung='{$email}');");
     return ($result->rowCount() > 0);
 }
 

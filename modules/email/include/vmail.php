@@ -22,7 +22,7 @@ require_once('common.php');
 function forward_type($target)
 {
     [$l, $d] = explode('@', strtolower($target), 2);
-    DEBUG('Weiterleitung an '.$l.' @ '.$d);
+    DEBUG('Weiterleitung an ' . $l . ' @ ' . $d);
     $result = db_query("SELECT id FROM kundendaten.domains WHERE CONCAT_WS('.', domainname, tld) = ?", [$d]);
     if ($result->rowCount() > 0) {
         // Lokale Domain
@@ -82,7 +82,7 @@ function get_account_details($id, $checkuid = true)
 {
     $id = (int) $id;
     $uid_check = '';
-    DEBUG("checkuid: ".$checkuid);
+    DEBUG("checkuid: " . $checkuid);
     $args = [":id" => $id];
     if ($checkuid) {
         $uid = (int) $_SESSION['userinfo']['uid'];
@@ -182,7 +182,7 @@ function domainselect($selected = null, $selectattribute = '')
     $domainlist = get_vmail_domains();
     $selected = (int) $selected;
 
-    $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
+    $ret = '<select id="domain" name="domain" size="1" ' . $selectattribute . ' >';
     foreach ($domainlist as $dom) {
         $s = ($selected == $dom['id']) ? ' selected="selected" ' : '';
         $ret .= "<option value=\"{$dom['id']}\"{$s}>{$dom['domainname']}</option>\n";
@@ -201,7 +201,7 @@ function get_max_mailboxquota($server, $oldquota)
     if (!$item) {
         return $oldquota - config('vmail_basequota');
     }
-    DEBUG("Free space: ".$item['free']." / Really: ".($item['free'] + ($oldquota - config('vmail_basequota'))));
+    DEBUG("Free space: " . $item['free'] . " / Really: " . ($item['free'] + ($oldquota - config('vmail_basequota'))));
     return max(0, $item['free'] + ($oldquota - config('vmail_basequota')));
 }
 
@@ -261,7 +261,7 @@ function save_vmail_account($account)
             system_failure('Bitte wählen Sie eine Ihrer Domains aus!');
             return false;
         }
-        if ($id == null && get_vmail_id_by_emailaddr($account['local'].'@'.$domainname)) {
+        if ($id == null && get_vmail_id_by_emailaddr($account['local'] . '@' . $domainname)) {
             system_failure('Diese E-Mail-Adresse gibt es bereits.');
             return false;
         }
@@ -271,7 +271,7 @@ function save_vmail_account($account)
     if (count($account['forwards']) > 0) {
         for ($i = 0 ; $i < count($account['forwards']) ; $i++) {
             if (!check_emailaddr($account['forwards'][$i]['destination'])) {
-                system_failure('Das Weiterleitungs-Ziel »'.filter_output_html($account['forwards'][$i]['destination']).'« ist keine E-Mail-Adresse!');
+                system_failure('Das Weiterleitungs-Ziel »' . filter_output_html($account['forwards'][$i]['destination']) . '« ist keine E-Mail-Adresse!');
             }
         }
     }
@@ -285,7 +285,7 @@ function save_vmail_account($account)
             $account['password'] = stripslashes($account['password']);
             $crack = strong_password($account['password']);
             if ($crack !== true) {
-                system_failure('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!'."\nDie Fehlermeldung lautet: »{$crack}«");
+                system_failure('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!' . "\nDie Fehlermeldung lautet: »{$crack}«");
                 return false;
             }
             $password = encrypt_mail_password($account['password']);
@@ -369,7 +369,7 @@ function save_vmail_account($account)
             input_error("Die Absenderadresse sieht ungültig aus. Es wird Ihre E-Mail-Adresse benutzt!");
             $ar['fromaddr'] = null;
         }
-        $query = "REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) ".
+        $query = "REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) " .
              "VALUES (:id, :valid_from, :valid_until, :fromname, :fromaddr, :subject, :message, :quote)";
         $args = [":id" => $id,
                   ":valid_from" => $ar['valid_from'],
@@ -399,11 +399,11 @@ function save_vmail_account($account)
     }
     if ($newaccount && $password) {
         $servername = get_server_by_id($server);
-        $emailaddr = 'vmail-'.$account['local'].'%'.$domainname.'@'.$servername;
-        $username = $account['local'].'@'.$domainname;
+        $emailaddr = 'vmail-' . $account['local'] . '%' . $domainname . '@' . $servername;
+        $username = $account['local'] . '@' . $domainname;
         $webmailurl = config('webmail_url');
         $servername = get_server_by_id($server);
-        $message = 'Ihr neues E-Mail-Postfach '.$username.' ist einsatzbereit!
+        $message = 'Ihr neues E-Mail-Postfach ' . $username . ' ist einsatzbereit!
 
 Wenn Sie diese Nachricht sehen, haben Sie das Postfach erfolgreich 
 abgerufen. Sie können diese Nachricht nach Kenntnisnahme löschen.
@@ -411,18 +411,18 @@ abgerufen. Sie können diese Nachricht nach Kenntnisnahme löschen.
 Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
 
 - Für unterwegs: Webmail
-  Rufen Sie dazu einfach die Seite '.$webmailurl.' auf und 
+  Rufen Sie dazu einfach die Seite ' . $webmailurl . ' auf und 
   geben Sie Ihre E-Mail-Adresse und das Passwort ein.
 
 - Mit Ihrem Computer oder Smartphone: IMAP oder POP3
   Tragen Sie bitte folgende Zugangsdaten in Ihrem Programm ein:
-    Server-Name: '.$servername.'
-    Benutzername: '.$username.'
+    Server-Name: ' . $servername . '
+    Benutzername: ' . $username . '
   (Achten Sie bitte darauf, dass die Verschlüsselung mit SSL oder TLS 
   aktiviert ist.)
 ';
         # send welcome message
-        mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "X-schokokeks-org-message: welcome\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
+        mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "X-schokokeks-org-message: welcome\nFrom: " . config('company_name') . ' <' . config('adminmail') . ">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
         # notify the vmail subsystem of this new account
         #mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
     }

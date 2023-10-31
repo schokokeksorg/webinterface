@@ -23,7 +23,7 @@ function mailaccounts($uid)
 {
     $uid = (int) $uid;
     $result = db_query("SELECT m.id,concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),:masterdomain,`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.uid=:uid ORDER BY if(isnull(`m`.`domain`),:masterdomain,`d`.`domainname`), local", [":masterdomain" => config("masterdomain"), ":uid" => $uid]);
-    DEBUG("Found ".@$result->rowCount()." rows!");
+    DEBUG("Found " . @$result->rowCount() . " rows!");
     $accounts = [];
     if (@$result->rowCount() > 0) {
         while ($acc = @$result->fetch(PDO::FETCH_OBJ)) {
@@ -38,7 +38,7 @@ function get_mailaccount($id)
     $id = (int) $id;
     $uid = (int) $_SESSION['userinfo']['uid'];
     $result = db_query("SELECT concat_ws('@',`m`.`local`,if(isnull(`m`.`domain`),:masterdomain,`d`.`domainname`)) AS `account`, `m`.`password` AS `cryptpass`,`m`.`maildir` AS `maildir`,aktiv from (`mail`.`mailaccounts` `m` left join `mail`.`v_domains` `d` on((`d`.`id` = `m`.`domain`))) WHERE m.id=:mid AND m.uid=:uid", [":masterdomain" => config("masterdomain"), ":uid" => $uid, ":mid" => $id]);
-    DEBUG("Found ".$result->rowCount()." rows!");
+    DEBUG("Found " . $result->rowCount() . " rows!");
     if ($result->rowCount() != 1) {
         system_failure('Dieser Mailaccount existiert nicht oder gehört Ihnen nicht');
     }
@@ -84,7 +84,7 @@ function change_mailaccount($id, $arr)
     if (isset($arr['password'])) {
         $result = strong_password($arr['password']);
         if ($result !== true) {
-            system_failure("Unsicheres Passwort: ".$result);
+            system_failure("Unsicheres Passwort: " . $result);
         }
         $encpw = encrypt_mail_password($arr['password']);
         array_push($conditions, "`password`=:password");
@@ -97,7 +97,7 @@ function change_mailaccount($id, $arr)
     }
 
 
-    db_query("UPDATE mail.mailaccounts SET ".implode(",", $conditions)." WHERE id=:id AND uid=:uid", $values);
+    db_query("UPDATE mail.mailaccounts SET " . implode(",", $conditions) . " WHERE id=:id AND uid=:uid", $values);
     logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "updated account »{$id}«");
 }
 
@@ -138,7 +138,7 @@ function create_mailaccount($arr)
     if (isset($arr['password'])) {
         $result = strong_password($arr['password']);
         if ($result !== true) {
-            system_failure("Unsicheres Passwort: ".$result);
+            system_failure("Unsicheres Passwort: " . $result);
         }
         $values[':password'] = encrypt_mail_password($arr['password']);
     }
@@ -151,7 +151,7 @@ function create_mailaccount($arr)
     $fields = array_map(function ($k) {
         return substr($k, 1);
     }, array_keys($values));
-    db_query("INSERT INTO mail.mailaccounts (".implode(',', $fields).") VALUES (".implode(",", array_keys($values)).")", $values);
+    db_query("INSERT INTO mail.mailaccounts (" . implode(',', $fields) . ") VALUES (" . implode(",", array_keys($values)) . ")", $values);
     logger(LOG_INFO, "modules/imap/include/mailaccounts", "imap", "created account »{$arr['account']}«");
 }
 
@@ -187,11 +187,11 @@ function delete_mailaccount($id)
 function check_valid($acc)
 {
     $user = $_SESSION['userinfo'];
-    DEBUG("Account-data: ".print_r($acc, true));
-    DEBUG("User-data: ".print_r($user, true));
+    DEBUG("Account-data: " . print_r($acc, true));
+    DEBUG("User-data: " . print_r($user, true));
     if ($acc['mailbox'] != '') {
-        if (substr($acc['mailbox'], 0, strlen($user['homedir']) + 1) != $user['homedir'].'/') {
-            return "Die Mailbox muss innerhalb des Home-Verzeichnisses liegen. Sie haben »".$acc['mailbox']."« als Mailbox angegeben, Ihr Home-Verzeichnis ist »".$user['homedir']."/«.";
+        if (substr($acc['mailbox'], 0, strlen($user['homedir']) + 1) != $user['homedir'] . '/') {
+            return "Die Mailbox muss innerhalb des Home-Verzeichnisses liegen. Sie haben »" . $acc['mailbox'] . "« als Mailbox angegeben, Ihr Home-Verzeichnis ist »" . $user['homedir'] . "/«.";
         }
         if (!check_path($acc['mailbox'])) {
             return "Sie verwenden ungültige Zeichen in Ihrem Mailbox-Pfad.";
@@ -202,7 +202,7 @@ function check_valid($acc)
         return "Es wurde kein Benutzername angegeben!";
     }
     if (strpos($acc['account'], '@') === false) {
-        return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen müssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie »@".config('masterdomain')."«.";
+        return "Es wurde kein Domain-Teil im Account-Name angegeben. Account-Namen müssen einen Domain-Teil enthalten. Im Zweifel versuchen Sie »@" . config('masterdomain') . "«.";
     }
 
     [$local, $domain] = explode('@', $acc['account'], 2);
@@ -216,10 +216,10 @@ function check_valid($acc)
     if (array_search($domain, $domains) === false) {
         if ($domain == config('masterdomain')) {
             if (substr($local, 0, strlen($user['username'])) != $user['username'] || ($acc['account'][strlen($user['username'])] != '-' && $acc['account'][strlen($user['username'])] != '@')) {
-                return "Sie haben »@".config('masterdomain')."« als Domain-Teil angegeben, aber der Benutzer-Teil beginnt nicht mit Ihrem Benutzername!";
+                return "Sie haben »@" . config('masterdomain') . "« als Domain-Teil angegeben, aber der Benutzer-Teil beginnt nicht mit Ihrem Benutzername!";
             }
         } else {
-            return "Der angegebene Domain-Teil (»".htmlentities($domain, ENT_QUOTES, "UTF-8")."«) ist nicht für Ihren Account eingetragen. Sollte dies ein Fehler sein, wenden sie sich bitte an einen Administrator!";
+            return "Der angegebene Domain-Teil (»" . htmlentities($domain, ENT_QUOTES, "UTF-8") . "«) ist nicht für Ihren Account eingetragen. Sollte dies ein Fehler sein, wenden sie sich bitte an einen Administrator!";
         }
     }
 

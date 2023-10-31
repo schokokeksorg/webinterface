@@ -45,36 +45,36 @@ if (isset($_REQUEST['useas'])) {
     if ($_REQUEST['useas'] == 'extern') {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             set_kundenkontakt('extern', null);
-            redirect('useas?id='.$id);
+            redirect('useas?id=' . $id);
         } else {
             set_kundenkontakt('extern', $id);
-            redirect('useas?id='.$id);
+            redirect('useas?id=' . $id);
         }
     }
     if ($_REQUEST['useas'] == 'rechnung') {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             set_kundenkontakt('rechnung', null);
-            redirect('useas?id='.$id);
+            redirect('useas?id=' . $id);
         } else {
             set_kundenkontakt('rechnung', $id);
-            redirect('useas?id='.$id);
+            redirect('useas?id=' . $id);
         }
     }
     if ($_REQUEST['useas'] == 'dataprotection') {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             set_kundenkontakt('dataprotection', null);
-            redirect('useas?id='.$id);
+            redirect('useas?id=' . $id);
         } else {
             set_kundenkontakt('dataprotection', $id);
-            redirect('useas?id='.$id);
+            redirect('useas?id=' . $id);
         }
     }
 } else {
     output(display_contact($contact));
-    output('<p>'.internal_link('edit', icon_edit('Adresse bearbeiten')." Adresse bearbeiten", 'id='.$id).'</p>');
+    output('<p>' . internal_link('edit', icon_edit('Adresse bearbeiten') . " Adresse bearbeiten", 'id=' . $id) . '</p>');
     if ($id != $kundenkontakte['kunde'] && !is_domainholder($id)) {
         // Die Stamm-Adresse kann man nicht löschen und verwendete Domain-Kontakte auch nicht
-        output('<p class="delete">'.internal_link('save', "Diese Adresse löschen", 'action=delete&id='.$id).'</p>');
+        output('<p class="delete">' . internal_link('save', "Diese Adresse löschen", 'action=delete&id=' . $id) . '</p>');
     }
 
     output('<h4>Verwendung als Kundenkontakt</h4>');
@@ -82,22 +82,22 @@ if (isset($_REQUEST['useas'])) {
         output("<p>Diese Adresse ist die Stamm-Adresse!</p>");
     } else {
         if (possible_kundenkontakt($contact)) {
-            addnew('useas', 'Diese Adresse als Haupt-Adresse des Kontoinhabers festlegen.', 'id='.$_REQUEST['id'].'&useas=kunde');
+            addnew('useas', 'Diese Adresse als Haupt-Adresse des Kontoinhabers festlegen.', 'id=' . $_REQUEST['id'] . '&useas=kunde');
         }
         if ($id == $kundenkontakte['extern']) {
-            output("<p>Diese Adresse ist die Ersatz-Adresse bei Störungen. ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=extern&action=delete')."</p>");
+            output("<p>Diese Adresse ist die Ersatz-Adresse bei Störungen. " . icon_delete() . internal_link('useas', "Zuordnung löschen", 'id=' . $_REQUEST['id'] . '&useas=extern&action=delete') . "</p>");
         } else {
-            addnew('useas', 'Diese Adresse als Ersatz-Adresse des Kontoinhabers für Störungen festlegen.', 'id='.$_REQUEST['id'].'&useas=extern');
+            addnew('useas', 'Diese Adresse als Ersatz-Adresse des Kontoinhabers für Störungen festlegen.', 'id=' . $_REQUEST['id'] . '&useas=extern');
         }
         if ($id == $kundenkontakte['rechnung']) {
-            output("<p>Diese Adresse ist die Rechnungs-Adresse. ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=rechnung&action=delete')."</p>");
+            output("<p>Diese Adresse ist die Rechnungs-Adresse. " . icon_delete() . internal_link('useas', "Zuordnung löschen", 'id=' . $_REQUEST['id'] . '&useas=rechnung&action=delete') . "</p>");
         } else {
-            addnew('useas', 'Diese Adresse als Rechnungs-Adresse festlegen.', 'id='.$_REQUEST['id'].'&useas=rechnung');
+            addnew('useas', 'Diese Adresse als Rechnungs-Adresse festlegen.', 'id=' . $_REQUEST['id'] . '&useas=rechnung');
         }
         if ($id == $kundenkontakte['dataprotection']) {
-            output("<p>Diese Adresse ist die Adresse des betrieblichen Datenschutzbeauftragten. ".icon_delete().internal_link('useas', "Zuordnung löschen", 'id='.$_REQUEST['id'].'&useas=dataprotection&action=delete')."</p>");
+            output("<p>Diese Adresse ist die Adresse des betrieblichen Datenschutzbeauftragten. " . icon_delete() . internal_link('useas', "Zuordnung löschen", 'id=' . $_REQUEST['id'] . '&useas=dataprotection&action=delete') . "</p>");
         } else {
-            addnew('useas', 'Diese Adresse als betrieblichen Datenschutzbeauftragten benennen.', 'id='.$_REQUEST['id'].'&useas=dataprotection');
+            addnew('useas', 'Diese Adresse als betrieblichen Datenschutzbeauftragten benennen.', 'id=' . $_REQUEST['id'] . '&useas=dataprotection');
         }
     }
 
@@ -115,7 +115,7 @@ if (isset($_REQUEST['useas'])) {
             }
             $funktion = implode(' und ', $funktion);
 
-            output('<p>Ist <strong>'.$funktion.'</strong> bei der Domain <strong>'.$d->fqdn.'</strong>. '.internal_link('../domains/detail', icon_edit()." Inhaber dieser Domain ändern", 'id='.$d->id).'</p>');
+            output('<p>Ist <strong>' . $funktion . '</strong> bei der Domain <strong>' . $d->fqdn . '</strong>. ' . internal_link('../domains/detail', icon_edit() . " Inhaber dieser Domain ändern", 'id=' . $d->id) . '</p>');
         }
     } else {
         output("<p>Zur Verwendung als Domaininhaber müssen Name, vollständige Adresse, E-Mail-Adresse sowie Telefonnummer angegeben sein.</p>");

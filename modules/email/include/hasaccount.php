@@ -17,7 +17,7 @@ function user_has_accounts()
 {
     $uid = (int) $_SESSION['userinfo']['uid'];
     $result = db_query("SELECT id from `mail`.`mailaccounts` WHERE uid=?", [$uid]);
-    DEBUG($result->rowCount()." accounts");
+    DEBUG($result->rowCount() . " accounts");
     return ($result->rowCount() > 0);
 }
 

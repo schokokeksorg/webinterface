@@ -19,7 +19,7 @@ global $prefix;
 $prefix = '../';
 
 // Das Parent-Verzeichnis in den Include-Pfad, da wir uns jetzt in einem anderen Verzeichnis befinden.
-ini_set('include_path', ini_get('include_path').':../');
+ini_set('include_path', ini_get('include_path') . ':../');
 
 require_once('session/start.php');
 require_once('inc/base.php');
@@ -39,34 +39,34 @@ if (!isset($_SERVER['SSL_CLIENT_CERT']) && isset($_SERVER['REDIRECT_SSL_CLIENT_C
 
 if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($_REQUEST['backto']) && check_path($_REQUEST['backto'])) {
     DEBUG('recording client-cert');
-    if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) && isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) &&
-      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']) &&
-      isset($_SERVER[$redirect.'SSL_CLIENT_V_START']) && isset($_SERVER[$redirect.'SSL_CLIENT_V_END'])
+    if (isset($_SERVER[$redirect . 'SSL_CLIENT_CERT']) && isset($_SERVER[$redirect . 'SSL_CLIENT_S_DN']) &&
+      isset($_SERVER[$redirect . 'SSL_CLIENT_I_DN']) && isset($_SERVER[$redirect . 'SSL_CLIENT_M_SERIAL']) &&
+      isset($_SERVER[$redirect . 'SSL_CLIENT_V_START']) && isset($_SERVER[$redirect . 'SSL_CLIENT_V_END'])
     ) {
-        $_SESSION['clientcert_cert'] = $_SERVER[$redirect.'SSL_CLIENT_CERT'];
-        $_SESSION['clientcert_dn'] = $_SERVER[$redirect.'SSL_CLIENT_S_DN'];
-        $_SESSION['clientcert_issuer'] = $_SERVER[$redirect.'SSL_CLIENT_I_DN'];
-        $_SESSION['clientcert_serial'] = $_SERVER[$redirect.'SSL_CLIENT_M_SERIAL'];
-        $vstart = new DateTime($_SERVER[$redirect.'SSL_CLIENT_V_START']);
+        $_SESSION['clientcert_cert'] = $_SERVER[$redirect . 'SSL_CLIENT_CERT'];
+        $_SESSION['clientcert_dn'] = $_SERVER[$redirect . 'SSL_CLIENT_S_DN'];
+        $_SESSION['clientcert_issuer'] = $_SERVER[$redirect . 'SSL_CLIENT_I_DN'];
+        $_SESSION['clientcert_serial'] = $_SERVER[$redirect . 'SSL_CLIENT_M_SERIAL'];
+        $vstart = new DateTime($_SERVER[$redirect . 'SSL_CLIENT_V_START']);
         $_SESSION['clientcert_valid_from'] = date_format($vstart, 'Y-m-d');
-        $vend = new DateTime($_SERVER[$redirect.'SSL_CLIENT_V_END']);
+        $vend = new DateTime($_SERVER[$redirect . 'SSL_CLIENT_V_END']);
         $_SESSION['clientcert_valid_until'] = date_format($vend, 'Y-m-d');
-        header('Location: '.$prefix.$_REQUEST['backto'].encode_querystring(''));
+        header('Location: ' . $prefix . $_REQUEST['backto'] . encode_querystring(''));
         die();
     } else {
         warning('Ihr Browser hat kein Client-Zertifikat gesendet');
-        header('Location: '.$prefix.$_REQUEST['backto'].encode_querystring(''));
+        header('Location: ' . $prefix . $_REQUEST['backto'] . encode_querystring(''));
         die();
     }
 } elseif (isset($_REQUEST['type']) && isset($_REQUEST['username'])) {
-    if (!isset($_SERVER[$redirect.'SSL_CLIENT_CERT'])) {
+    if (!isset($_SERVER[$redirect . 'SSL_CLIENT_CERT'])) {
         system_failure('Ihr Browser hat kein Client-Zertifikat gesendet');
     }
 
-    $ret = get_logins_by_cert($_SERVER[$redirect.'SSL_CLIENT_CERT']);
+    $ret = get_logins_by_cert($_SERVER[$redirect . 'SSL_CLIENT_CERT']);
     DEBUG($ret);
     foreach ($ret as $account) {
-        DEBUG('/'.$account['type'].'/'.$_REQUEST['type'].'/    /'.$account['username'].'/'.$_REQUEST['username'].'/    =>');
+        DEBUG('/' . $account['type'] . '/' . $_REQUEST['type'] . '/    /' . $account['username'] . '/' . $_REQUEST['username'] . '/    =>');
         if (($account['type'] == urldecode($_REQUEST['type'])) && ($account['username'] == urldecode($_REQUEST['username']))) {
             $uid = $account['username'];
             $role = find_role($uid, '', true);
@@ -78,20 +78,20 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
             if (isset($_REQUEST['destination']) && check_path($_REQUEST['destination'])) {
                 $destination = $_REQUEST['destination'];
             }
-            header('Location: ../'.ltrim($destination, '/'));
+            header('Location: ../' . ltrim($destination, '/'));
             die();
         }
     }
     system_failure('Der angegebene Account kann mit diesem Client-Zertifikat nicht eingeloggt werden.');
 } elseif ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['destination']) && $_REQUEST['destination'] != '') {
     # User hat sich grade eingeloggt
-    header('Location: ../'.ltrim($destination, '/'));
+    header('Location: ../' . ltrim($destination, '/'));
 } else {
-    if (isset($_SERVER[$redirect.'SSL_CLIENT_CERT']) &&
-      isset($_SERVER[$redirect.'SSL_CLIENT_S_DN']) && $_SERVER[$redirect.'SSL_CLIENT_S_DN'] != '' &&
-      isset($_SERVER[$redirect.'SSL_CLIENT_I_DN']) && $_SERVER[$redirect.'SSL_CLIENT_I_DN'] != '' &&
-      isset($_SERVER[$redirect.'SSL_CLIENT_M_SERIAL']) && $_SERVER[$redirect.'SSL_CLIENT_M_SERIAL'] != '') {
-        $ret = get_logins_by_cert($_SERVER[$redirect.'SSL_CLIENT_CERT']);
+    if (isset($_SERVER[$redirect . 'SSL_CLIENT_CERT']) &&
+      isset($_SERVER[$redirect . 'SSL_CLIENT_S_DN']) && $_SERVER[$redirect . 'SSL_CLIENT_S_DN'] != '' &&
+      isset($_SERVER[$redirect . 'SSL_CLIENT_I_DN']) && $_SERVER[$redirect . 'SSL_CLIENT_I_DN'] != '' &&
+      isset($_SERVER[$redirect . 'SSL_CLIENT_M_SERIAL']) && $_SERVER[$redirect . 'SSL_CLIENT_M_SERIAL'] != '') {
+        $ret = get_logins_by_cert($_SERVER[$redirect . 'SSL_CLIENT_CERT']);
         if ($ret === null) {
             login_screen('Ihr Browser hat ein Client-Zertifikat gesendet, dieses ist aber noch nicht für den Zugang hinterlegt. Melden Sie sich bitte per Benutzername und Passwort an.');
         }
@@ -108,7 +108,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
             if (isset($_REQUEST['destination']) && check_path($_REQUEST['destination'])) {
                 $destination = $_REQUEST['destination'];
             }
-            header('Location: ../'.ltrim($destination, '/'));
+            header('Location: ../' . ltrim($destination, '/'));
             die();
         }
         output('<p>Ihr Browser hat ein gültiges SSL-Client-Zertifikat gesendet, mit dem Sie sich auf dieser Seite einloggen können. Allerdings haben Sie dieses Client-Zertifikat für mehrere Zugänge hinterlegt. Wählen Sie bitte den Zugang aus, mit dem Sie sich anmelden möchten.</p>
@@ -126,7 +126,7 @@ if ($_SESSION['role'] != ROLE_ANONYMOUS && isset($_REQUEST['record']) && isset($
             if ($account['startpage'] && check_path($account['startpage'])) {
                 $destination = $account['startpage'];
             }
-            output('<li>'.internal_link('', $type.': <strong>'.$account['username'].'</strong>', 'type='.$account['type'].'&username='.urlencode($account['username']).'&destination='.urlencode($destination)).'</li>');
+            output('<li>' . internal_link('', $type . ': <strong>' . $account['username'] . '</strong>', 'type=' . $account['type'] . '&username=' . urlencode($account['username']) . '&destination=' . urlencode($destination)) . '</li>');
         }
         output('</ul>');
     } else {

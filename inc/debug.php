@@ -19,9 +19,9 @@ function DEBUG($str)
 {
     global $debugmode;
     if ($debugmode) {
-        echo "<pre>".htmlspecialchars(print_r($str, true))."</pre>\n";
+        echo "<pre>" . htmlspecialchars(print_r($str, true)) . "</pre>\n";
     }
 }
 
 
-DEBUG("GET: ".htmlentities(print_r($_GET, true))." / POST: ".htmlentities(print_r($_POST, true)));
+DEBUG("GET: " . htmlentities(print_r($_GET, true)) . " / POST: " . htmlentities(print_r($_POST, true)));

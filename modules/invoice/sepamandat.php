@@ -32,12 +32,12 @@ Insbesondere fallen bei Zurückweisung einer gerechtfertigten Abbuchung i.d.R. G
 $name = $_SESSION['customerinfo']['name'];
 if ($_SESSION['customerinfo']['company']) {
     if ($_SESSION['customerinfo']['name']) {
-        $name = $_SESSION['customerinfo']['company'] .' / '. $_SESSION['customerinfo']['name'];
+        $name = $_SESSION['customerinfo']['company'] . ' / ' . $_SESSION['customerinfo']['name'];
     } else {
         $name = $_SESSION['customerinfo']['company'];
     }
 }
-output('<p>Dieses Mandat gilt für Forderungen bzgl. der Kundennummer <strong>'.$_SESSION['customerinfo']['customerno'].'</strong> ('.$name.'). Sämtliche Forderungen werden mindestens 2 Tage vor Fälligkeit angekündigt. Diese Ankündigung erfolgt in der Regel im Rahmen der Zusendung einer Rechnung per E-Mail.</p>');
+output('<p>Dieses Mandat gilt für Forderungen bzgl. der Kundennummer <strong>' . $_SESSION['customerinfo']['customerno'] . '</strong> (' . $name . '). Sämtliche Forderungen werden mindestens 2 Tage vor Fälligkeit angekündigt. Diese Ankündigung erfolgt in der Regel im Rahmen der Zusendung einer Rechnung per E-Mail.</p>');
 
 
 
@@ -55,10 +55,10 @@ $html = '<h4>Gültigkeit des Mandats</h4>
 $checked = false;
 if ($first_date != date('Y-m-d')) {
     $checked = true;
-    $html .= '<p><input type="radio" id="gueltig_ab_'.$first_date.'" name="gueltig_ab" value="'.$first_date.'" checked="checked" /><label for="gueltig_ab_'.$first_date.'">Dieses Mandat gilt <strong>ab '.$first_date.'</strong> (Alle bisher offenen Forderungen werden ebenfalls abgebucht)</label></p>';
+    $html .= '<p><input type="radio" id="gueltig_ab_' . $first_date . '" name="gueltig_ab" value="' . $first_date . '" checked="checked" /><label for="gueltig_ab_' . $first_date . '">Dieses Mandat gilt <strong>ab ' . $first_date . '</strong> (Alle bisher offenen Forderungen werden ebenfalls abgebucht)</label></p>';
 }
-$html .= '<p><input type="radio" id="gueltig_ab_heute" name="gueltig_ab" value="'.date('Y-m-d').'" '.($checked ? '' : 'checked="checked"').' /><label for="gueltig_ab_heute">Dieses Mandat gilt <strong>ab heute</strong> ('.date('Y-m-d').')</label></p>';
-$html .= '<p><input type="radio" id="gueltig_ab_auswahl" name="gueltig_ab" value="datum" /><label for="gueltig_ab_datum">Dieses Mandat gilt <strong>erst ab</strong></label> <input type="date" id="gueltig_ab_datum" name="gueltig_ab_datum" value="'.date('Y-m-d').'">';
+$html .= '<p><input type="radio" id="gueltig_ab_heute" name="gueltig_ab" value="' . date('Y-m-d') . '" ' . ($checked ? '' : 'checked="checked"') . ' /><label for="gueltig_ab_heute">Dieses Mandat gilt <strong>ab heute</strong> (' . date('Y-m-d') . ')</label></p>';
+$html .= '<p><input type="radio" id="gueltig_ab_auswahl" name="gueltig_ab" value="datum" /><label for="gueltig_ab_datum">Dieses Mandat gilt <strong>erst ab</strong></label> <input type="date" id="gueltig_ab_datum" name="gueltig_ab_datum" value="' . date('Y-m-d') . '">';
 
 
 $html .= '<h4>Ihre Bankverbindung</h4>';

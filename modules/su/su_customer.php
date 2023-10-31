@@ -67,8 +67,8 @@ foreach ($users as $u) {
     }
     $realname = $u['name'];
     if ($realname) {
-        $realname = ' - '.$realname;
+        $realname = ' - ' . $realname;
     }
-    output("<li>".internal_link('', "{$u['username']}{$realname}", "uid={$u['uid']}&token={$token}")."</li>");
+    output("<li>" . internal_link('', "{$u['username']}{$realname}", "uid={$u['uid']}&token={$token}") . "</li>");
 }
 output('</ul>');

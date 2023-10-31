@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
 <h4>Basisdaten</h4>
 <div style="margin-left: 2em;">
   <h5>Speicherort</h5>
-  <p>Die Cloud wird im Verzeichnis <strong>'.$docroot.'</strong> installiert und wird später voraussichtlich unter <strong>'.$url.'</strong> abrufbar sein.</p>
+  <p>Die Cloud wird im Verzeichnis <strong>' . $docroot . '</strong> installiert und wird später voraussichtlich unter <strong>' . $url . '</strong> abrufbar sein.</p>
   <p>Beachten Sie bitte: Die Installation wird in Ihrem Home-Verzeichnis durchgeführt und es wird ein normaler Host im Webinterface dafür angelegt. Sie können diese Einstellungen also jederzeit verändern.</p>
   
   <h4>Administrator-Konto</h4>

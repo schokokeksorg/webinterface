@@ -29,7 +29,7 @@ function strong_password($password, $user = [])
         curl_setopt($req, CURLOPT_TIMEOUT, 5);
         curl_setopt($req, CURLOPT_FOLLOWLOCATION, 0);
         curl_setopt($req, CURLOPT_POST, 1);
-        curl_setopt($req, CURLOPT_POSTFIELDS, "password=".urlencode($password));
+        curl_setopt($req, CURLOPT_POSTFIELDS, "password=" . urlencode($password));
         $result = chop(curl_exec($req));
         DEBUG($result);
     }
@@ -46,7 +46,7 @@ function strong_password($password, $user = [])
     } else {
         $strength = $passwordchecker->passwordStrength($password);
     }
-    DEBUG('password strength: '.$strength['score']);
+    DEBUG('password strength: ' . $strength['score']);
     if ($strength['score'] < 2) {
         return "Das Passwort ist zu einfach!";
     }
@@ -97,7 +97,7 @@ function verify_input_ascii($data)
     $data = (string) $data;
     $filtered = filter_var($data, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
     if ($filtered != $data) {
-        logger(LOG_WARNING, 'inc/security', 'verify_input_ascii', 'Ungültige Daten: '.$data);
+        logger(LOG_WARNING, 'inc/security', 'verify_input_ascii', 'Ungültige Daten: ' . $data);
         system_failure("Ihre Eingabe enthielt ungültige Zeichen");
     }
     return $filtered;
@@ -112,7 +112,7 @@ function verify_input_identifier($data)
     }
     $filtered = preg_replace("/[^[:alnum:]\_\.\-]/", "", $data);
     if ($filtered !== $data) {
-        logger(LOG_WARNING, 'inc/security', 'verify_input_identifier', 'Ungültige Daten: '.$data);
+        logger(LOG_WARNING, 'inc/security', 'verify_input_identifier', 'Ungültige Daten: ' . $data);
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
     }
     return $filtered;
@@ -131,7 +131,7 @@ function filter_input_username($input)
 function verify_input_username($input)
 {
     if (filter_input_username($input) != $input) {
-        logger(LOG_WARNING, 'inc/security', 'verify_input_username', 'Ungültige Daten: '.$input);
+        logger(LOG_WARNING, 'inc/security', 'verify_input_username', 'Ungültige Daten: ' . $input);
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
     }
 }
@@ -140,7 +140,7 @@ function verify_input_username($input)
 
 function filter_input_hostname($input, $wildcard = false)
 {
-    DEBUG('filter_input_hostname("'.$input.'", $wildcard='.$wildcard.')');
+    DEBUG('filter_input_hostname("' . $input . '", $wildcard=' . $wildcard . ')');
     $input = strtolower($input);
     $input = trim($input, "\t\n\r\x00 .");
     if (preg_replace("/[^.]_/", "", $input) != $input) {
@@ -164,7 +164,7 @@ function filter_input_hostname($input, $wildcard = false)
 function verify_input_hostname($input, $wildcard = false)
 {
     if (filter_input_hostname($input, $wildcard) != $input) {
-        logger(LOG_WARNING, 'inc/security', 'verify_input_hostname', 'Ungültige Daten: '.$input);
+        logger(LOG_WARNING, 'inc/security', 'verify_input_hostname', 'Ungültige Daten: ' . $input);
         system_failure("Ihre Daten enthielten ungültige Zeichen!");
     }
 }
@@ -174,11 +174,11 @@ function verify_input_hostname_utf8($input)
 {
     $puny = idn_to_ascii($input, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
     if ($puny === false) {
-        system_failure("Ungültiger Hostname! idn ".$input);
+        system_failure("Ungültiger Hostname! idn " . $input);
     }
     $filter = filter_var($puny, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
     if ($filter !== $puny) {
-        system_failure("Ungültiger Hostname! filter ".$input);
+        system_failure("Ungültiger Hostname! filter " . $input);
     }
 }
 
@@ -247,9 +247,9 @@ function filter_ssh_key($key)
     }
 
     if (count($keyparts) === 2) {
-        return $keyparts[0]." ".$keyparts[1];
+        return $keyparts[0] . " " . $keyparts[1];
     } else {
-        return $keyparts[0]." ".$keyparts[1]." ".$keyparts[2];
+        return $keyparts[0] . " " . $keyparts[1] . " " . $keyparts[2];
     }
 }
 
@@ -258,14 +258,14 @@ function check_path($input)
 {
     DEBUG("checking {$input} for valid path name");
     if ($input != filter_output_html($input)) {
-        logger(LOG_WARNING, 'inc/security', 'check_path', 'HTML-Krams im Pfad: '.$input);
+        logger(LOG_WARNING, 'inc/security', 'check_path', 'HTML-Krams im Pfad: ' . $input);
         DEBUG("HTML-Krams im Pfad");
         return false;
     }
     $components = explode("/", $input);
     foreach ($components as $item) {
         if ($item == '..') {
-            logger(LOG_WARNING, 'inc/security', 'check_path', '»..« im Pfad: '.$input);
+            logger(LOG_WARNING, 'inc/security', 'check_path', '»..« im Pfad: ' . $input);
             DEBUG("»..« im Pfad");
             return false;
         }

@@ -45,18 +45,18 @@ if ($id == 0) {
 
 $defaultdocroot = $vhost['domain'];
 if (!$vhost['domain']) {
-    $defaultdocroot = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
+    $defaultdocroot = $_SESSION['userinfo']['username'] . '.' . config('masterdomain');
 }
 if ($vhost['domain_id'] == -1) {
-    $defaultdocroot = $_SESSION['userinfo']['username'].'.'.config('user_vhosts_domain');
+    $defaultdocroot = $_SESSION['userinfo']['username'] . '.' . config('user_vhosts_domain');
 }
 if ($vhost['hostname']) {
-    $defaultdocroot = $vhost['hostname'].'.'.$defaultdocroot;
+    $defaultdocroot = $vhost['hostname'] . '.' . $defaultdocroot;
 }
 
-$defaultdocroot = $defaultdocroot.'/htdocs';
+$defaultdocroot = $defaultdocroot . '/htdocs';
 
-$is_default_docroot = ($vhost['docroot'] == null) || ($vhost['homedir'].'/websites/'.$defaultdocroot == $vhost['docroot']);
+$is_default_docroot = ($vhost['docroot'] == null) || ($vhost['homedir'] . '/websites/' . $defaultdocroot == $vhost['docroot']);
 
 if ($vhost['docroot'] != '' && !strstr($vhost['docroot'], '/websites/')) {
     warning("Sie verwenden einen Speicherplatz außerhalb von »~/websites/«. Diese Einstellung ist momentan nicht mehr gestattet. Ihre Einstellung wurde daher auf die Standardeinstellung zurückgesetzt. Prüfen Sie dies bitte und verschieben Sie ggf. ihre Dateien.");
@@ -67,7 +67,7 @@ $docroot = '';
 if ($is_default_docroot) {
     $docroot = $defaultdocroot;
 } else {
-    $docroot = substr($vhost['docroot'], strlen($vhost['homedir'].'/websites/'));
+    $docroot = substr($vhost['docroot'], strlen($vhost['homedir'] . '/websites/'));
 }
 
 $s = (strstr($vhost['options'], 'aliaswww') ? ' checked="checked" ' : '');
@@ -104,18 +104,18 @@ if (strstr($vhost['options'], 'aliaswww')) {
 
 $form = "
 <h4 style=\"margin-top: 2em;\">Adresse der Website</h4>
-    <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" /><strong>.</strong>".domainselect($vhost['domain_id']);
+    <div style=\"margin-left: 2em;\"><input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"{$vhost['hostname']}\" /><strong>.</strong>" . domainselect($vhost['domain_id']);
 $form .= "<br />
     <input type=\"checkbox\" name=\"aliaswww\" id=\"aliaswww\" value=\"aliaswww\" {$s}/> <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label><br/>
-    <span id=\"aliaswww_option\"><label for=\"forwardwww\">Umleitungs-Option </label>".html_select('forwardwww', $aliaswww_options, $aliaswww_option)."</span><br />
+    <span id=\"aliaswww_option\"><label for=\"forwardwww\">Umleitungs-Option </label>" . html_select('forwardwww', $aliaswww_options, $aliaswww_option) . "</span><br />
 </div>
 <div class=\"vhostsidebyside\">
-<div class=\"vhostoptions\" id=\"options_docroot\" ".($vhost_type == 'regular' || $vhost_type == 'dav' ? '' : 'style="display: none;"').">
+<div class=\"vhostoptions\" id=\"options_docroot\" " . ($vhost_type == 'regular' || $vhost_type == 'dav' ? '' : 'style="display: none;"') . ">
   <h4>Optionen</h4>
   <h5>Speicherort für Dateien (»Document Root«)</h5>
   <div style=\"margin-left: 2em;\">
-    <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" ".($is_default_docroot ? 'checked="checked" ' : '')."/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
-    <strong>".$vhost['homedir']."/websites/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"".$docroot."\"/>
+    <input type=\"checkbox\" id=\"use_default_docroot\" name=\"use_default_docroot\" value=\"1\" " . ($is_default_docroot ? 'checked="checked" ' : '') . "/>&#160;<label for=\"use_default_docroot\">Standardeinstellung benutzen</label><br />
+    <strong>" . $vhost['homedir'] . "/websites/</strong>&#160;<input type=\"text\" id=\"docroot\" name=\"docroot\" size=\"30\" value=\"" . $docroot . "\"/>
   </div>
 </div>
 ";
@@ -128,12 +128,12 @@ $phpinfo = valid_php_versions();
 $php_default_version = null;
 foreach ($phpinfo as $v) {
     if ($v['default'] == true) {
-        $php_default_version = $v['major'].'.'.$v['minor'];
+        $php_default_version = $v['major'] . '.' . $v['minor'];
         break;
     }
 }
 foreach ($phpinfo as $tag => $info) {
-    $options[$tag] = 'PHP '.$info['major'].'.'.$info['minor'];
+    $options[$tag] = 'PHP ' . $info['major'] . '.' . $info['minor'];
     if ($info['status'] == 'deprecated') {
         $options[$tag] .= ' (veraltet)';
     } elseif ($info['status'] == 'beta') {
@@ -145,15 +145,15 @@ foreach ($phpinfo as $tag => $info) {
 $phpoptions = "
 <h5>PHP</h5>
 <div style=\"margin-left: 2em;\">
-    ".html_select("php", $options, $vhost['php'])."<br>
+    " . html_select("php", $options, $vhost['php']) . "<br>
     <p>Aktuell empfohlene Version: $php_default_version.<br>Bei der Einstellung \"empfohlene Version\" wird Ihre Website immer mit einer von uns ausgesuchten PHP-Version betrieben. Meist ist dies die zweit-neueste Version.</p>
 </div>";
 
 $safemode = ($vhost['cgi'] == 1 ? '' : ' checked="checked" ');
 
 $form .= "
-<div class=\"vhostoptions\" id=\"options_scriptlang\" ".($vhost_type == 'regular' ? '' : 'style="display: none;"').">
-  ".$phpoptions."
+<div class=\"vhostoptions\" id=\"options_scriptlang\" " . ($vhost_type == 'regular' ? '' : 'style="display: none;"') . ">
+  " . $phpoptions . "
   <h5>Abgesicherter Modus</h5>
   <div style=\"margin-left: 2em;\">
     <input type=\"checkbox\" name=\"safemode\" id=\"safemode\" value=\"yes\" {$safemode}/>&#160;<label for=\"safemode\">Abgesicherter Modus</label><br /><em>(Deaktiviert CGI, mod_rewrite und einige weitere Funktionen mit denen die Website auf andere Orte des Home-Verzeichnisses zugreifen könnte.)</em>
@@ -162,7 +162,7 @@ $form .= "
 ";
 
 $form .= "
-<div class=\"vhostoptions\" id=\"options_webapp\" ".($vhost_type == 'webapp' ? '' : 'style="display: none;"').">
+<div class=\"vhostoptions\" id=\"options_webapp\" " . ($vhost_type == 'webapp' ? '' : 'style="display: none;"') . ">
   <h4>Optionen</h4>
   <h5>Anwendung</h5>
   <select name=\"webapp\" id=\"webapp\" size=\"1\">
@@ -175,13 +175,13 @@ $form .= "
 $form .= "
 <h4>Verwendung</h4>
         <div style=\"margin-left: 2em;\">
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" ".(($vhost_type == 'regular') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_regular\" value=\"regular\" " . (($vhost_type == 'regular') ? 'checked="checked" ' : '') . "/><label for=\"vhost_type_regular\">&#160;Normal (selbst Dateien hinterlegen)</label><br />
 ";
 if ($vhost_type == 'webapp') {
     // Wird nur noch angezeigt wenn der Vhost schon auf webapp konfiguriert ist, ansonsten nicht.
     // Die User sollen den Webapp-Installer benutzen.
     $form .= "
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" ".(($vhost_type == 'webapp') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_webapp\" value=\"webapp\" " . (($vhost_type == 'webapp') ? 'checked="checked" ' : '') . "/><label for=\"vhost_type_webapp\">&#160;Eine vorgefertigte Applikation nutzen</label><br />
 ";
 }
 $hsts_value = $vhost['hsts'];
@@ -191,8 +191,8 @@ if (isset($hsts_preset_values[$hsts_value])) {
     $hsts_preset_value = $hsts_value;
 }
 $form .= "
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" ".(($vhost_type == 'dav') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
-	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" ".(($vhost_type == 'svn') ? 'checked="checked" ' : '')."/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_dav\" value=\"dav\" " . (($vhost_type == 'dav') ? 'checked="checked" ' : '') . "/><label for=\"vhost_type_dav\">&#160;WebDAV</label><br />
+	  <input class=\"usageoption\" type=\"radio\" name=\"vhost_type\" id=\"vhost_type_svn\" value=\"svn\" " . (($vhost_type == 'svn') ? 'checked="checked" ' : '') . "/><label for=\"vhost_type_svn\">&#160;Subversion-Server</label>
 	</div>
 <br />
 <br />
@@ -204,13 +204,13 @@ $form .= "
     <h5>Sichere Verbindung erzwingen</h5>
     <div style=\"margin-left: 2em;\">
     <select name=\"ssl\" id=\"ssl\">
-      <option value=\"none\" ".($vhost['ssl'] == null ? 'selected="selected"' : '')." >Nein</option>
-      ".($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein HTTPS anbieten</option>" : '')."
-      ".($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">Konfiguration nur für HTTPS verwenden</option>" : '')."
-      <option value=\"forward\" ".($vhost['ssl'] == 'forward' ? 'selected="selected"' : '')." >Ja, immer auf HTTPS umleiten</option>
-    </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"https://de.wikipedia.org/wiki/HTTP_Strict_Transport_Security\">HSTS</a>:</label> <span id=\"hsts_select\" style=\"display: none\">".html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value)."</span> <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span><br />
-    <span id=\"hsts_preload_options\"><input type=\"checkbox\" id=\"hsts_subdomains\" name=\"hsts_subdomains\" value=\"1\" ".(strstr($vhost['options'], 'hsts_subdomains') ? 'checked="checked"' : '')."/> <label for=\"hsts_subdomains\">Einschließlich aller Subdomains</label><br />
-    <input type=\"checkbox\" id=\"hsts_preload\" name=\"hsts_preload\" value=\"1\" ".(strstr($vhost['options'], 'hsts_preload') ? 'checked="checked"' : '')."/> <label for=\"hsts_preload\">Diese Domain soll in die Preload-Liste aufgenommen werden (diese Option setzt den <em>preload</em>-Parameter)</label></span>
+      <option value=\"none\" " . ($vhost['ssl'] == null ? 'selected="selected"' : '') . " >Nein</option>
+      " . ($vhost['ssl'] == 'http' ? "<option value=\"http\" selected=\"selected\">kein HTTPS anbieten</option>" : '') . "
+      " . ($vhost['ssl'] == 'https' ? "<option value=\"https\" selected=\"selected\">Konfiguration nur für HTTPS verwenden</option>" : '') . "
+      <option value=\"forward\" " . ($vhost['ssl'] == 'forward' ? 'selected="selected"' : '') . " >Ja, immer auf HTTPS umleiten</option>
+    </select>  <span id=\"hsts_block\" style=\"padding-top: 0.2em;\"> <label for=\"hsts\"><a title=\"Mit HSTS können Sie festlegen, dass eine bestimmte Website niemals ohne Verschlüsselung aufgerufen werden soll. Zudem werden Zertifikate strenger geprüft.\" href=\"https://de.wikipedia.org/wiki/HTTP_Strict_Transport_Security\">HSTS</a>:</label> <span id=\"hsts_select\" style=\"display: none\">" . html_select('hsts_preset', $hsts_preset_values, $hsts_preset_value) . "</span> <span id=\"hsts_seconds\"><input type=\"text\" name=\"hsts\" id=\"hsts\" size=\"10\" style=\"text-align: right;\" value=\"{$hsts_value}\" /> Sekunden</span><br />
+    <span id=\"hsts_preload_options\"><input type=\"checkbox\" id=\"hsts_subdomains\" name=\"hsts_subdomains\" value=\"1\" " . (strstr($vhost['options'], 'hsts_subdomains') ? 'checked="checked"' : '') . "/> <label for=\"hsts_subdomains\">Einschließlich aller Subdomains</label><br />
+    <input type=\"checkbox\" id=\"hsts_preload\" name=\"hsts_preload\" value=\"1\" " . (strstr($vhost['options'], 'hsts_preload') ? 'checked="checked"' : '') . "/> <label for=\"hsts_preload\">Diese Domain soll in die Preload-Liste aufgenommen werden (diese Option setzt den <em>preload</em>-Parameter)</label></span>
     </span>
     </div>";
 
@@ -233,7 +233,7 @@ if (count($certselect) > 1) {
     $form .= "
         <h5>Verwendetes Zertifikat</h5>
         <div style=\"margin-left: 2em;\">
-        ".html_select('cert', $certselect, $vhost['certid'])."
+        " . html_select('cert', $certselect, $vhost['certid']) . "
         </div>
         <p class=\"warning\"><b>Datenschutz-Hinweis:</b><br>
         Alle erstellten HTTPS-Zertifikate werden
@@ -248,13 +248,13 @@ $form .= "
 <h5>Logfiles</h5>
     <div style=\"margin-left: 2em;\">
       <select name=\"logtype\" id=\"logtype\">
-        <option value=\"none\" ".($vhost['logtype'] == null ? 'selected="selected"' : '')." >keine Logfiles</option>
-        <option value=\"anonymous\" ".($vhost['logtype'] == 'anonymous' ? 'selected="selected"' : '')." >anonymisiert</option>
-        <option value=\"default\" ".($vhost['logtype'] == 'default' ? 'selected="selected"' : '')." >vollständige Logfile</option>
+        <option value=\"none\" " . ($vhost['logtype'] == null ? 'selected="selected"' : '') . " >keine Logfiles</option>
+        <option value=\"anonymous\" " . ($vhost['logtype'] == 'anonymous' ? 'selected="selected"' : '') . " >anonymisiert</option>
+        <option value=\"default\" " . ($vhost['logtype'] == 'default' ? 'selected="selected"' : '') . " >vollständige Logfile</option>
       </select><br />
-      <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" ".($vhost['errorlog'] == 1 ? ' checked="checked" ' : '')." />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label><br />
+      <input type=\"checkbox\" id=\"errorlog\" name=\"errorlog\" value=\"1\" " . ($vhost['errorlog'] == 1 ? ' checked="checked" ' : '') . " />&#160;<label for=\"errorlog\">Fehlerprotokoll (error_log) einschalten</label><br />
     </div>
-    <p>Logfiles werden unter <b>/var/log/apache2/".$_SESSION['userinfo']['username']."</b> abgelegt.</p>
+    <p>Logfiles werden unter <b>/var/log/apache2/" . $_SESSION['userinfo']['username'] . "</b> abgelegt.</p>
     ";
 
 $ipaddrs = user_ipaddrs();
@@ -282,7 +282,7 @@ if (count($ipaddrs)) {
     $form .= "
       <h5>IP-Adresse</h5>
       <div style=\"margin-left: 2em;\">
-      ".html_select('ipv4', $ipselect, $vhost['ipv4'])."
+      " . html_select('ipv4', $ipselect, $vhost['ipv4']) . "
       </div>";
 }
 if (count($available_users)) {
@@ -293,34 +293,34 @@ if (count($available_users)) {
     $form .= "
       <h5>SuExec-Benutzeraccount</h5>
       <div style=\"margin-left: 2em;\">
-      ".html_select('suexec_user', $userselect, $vhost['suexec_user'])."
+      " . html_select('suexec_user', $userselect, $vhost['suexec_user']) . "
       </div>";
 }
 if (count($available_servers) > 1) {
     $form .= "
       <h5>Einrichten auf Server</h5>
       <div style=\"margin-left: 2em;\">
-      ".html_select('server', $selectable_servers, $vhost['server'])."
+      " . html_select('server', $selectable_servers, $vhost['server']) . "
       </div>";
 }
 if ($have_v6) {
     $ipv6_address = '';
     if ($vhost['id'] && ($vhost['autoipv6'] > 0)) {
-        $ipv6_address = '<strong>IPv6-Adresse dieser Website:</strong> '.autoipv6_address($vhost['id'], $vhost['autoipv6']);
+        $ipv6_address = '<strong>IPv6-Adresse dieser Website:</strong> ' . autoipv6_address($vhost['id'], $vhost['autoipv6']);
     }
     $checked = ($vhost['autoipv6'] > 0) ? ' checked="checked"' : '';
     $checked2 = ($vhost['autoipv6'] == 2) ? ' checked="checked"' : '';
     $form .= '<h5>IPv6</h5>
 <div style="margin-left: 2em;">
-<input type="checkbox" name="ipv6" id="ipv6" value="yes" '.$checked.'/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label><br />
-<input type="checkbox" name="ipv6_separate" id="ipv6_separate" value="yes" '.$checked2.'/>&#160;<label for="ipv6_separate">Für diese Website eine eigene IPv6-Adresse reservieren</label><br />
-'.$ipv6_address.'
+<input type="checkbox" name="ipv6" id="ipv6" value="yes" ' . $checked . '/>&#160;<label for="ipv6">Auch über IPv6 erreichbar machen</label><br />
+<input type="checkbox" name="ipv6_separate" id="ipv6_separate" value="yes" ' . $checked2 . '/>&#160;<label for="ipv6_separate">Für diese Website eine eigene IPv6-Adresse reservieren</label><br />
+' . $ipv6_address . '
 </div>';
 }
 
 
 
 $form .= '
-  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link('vhosts', 'Abbrechen').'</p>
+  <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;' . internal_link('vhosts', 'Abbrechen') . '</p>
 ';
-output(html_form('vhosts_edit_vhost', 'save', 'action=edit&vhost='.$vhost['id'], $form));
+output(html_form('vhosts_edit_vhost', 'save', 'action=edit&vhost=' . $vhost['id'], $form));

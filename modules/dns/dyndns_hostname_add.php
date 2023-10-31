@@ -44,5 +44,5 @@ $record['ttl'] = 120;
 save_dns_record(null, $record);
 
 if (!$debugmode) {
-    header('Location: dyndns_hostnames?id='.$dyndns['id']);
+    header('Location: dyndns_hostnames?id=' . $dyndns['id']);
 }

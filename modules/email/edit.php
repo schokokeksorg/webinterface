@@ -76,9 +76,9 @@ if (!$accountlogin) {
             $domain = (int) $_GET['domain'];
         }
         $form .= "
-    <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"".filter_output_html($account['local'])."\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>".domainselect($domain)."</p>";
+    <p><strong>E-Mail-Adresse:</strong>&#160;<input type=\"text\" name=\"local\" id=\"local\" size=\"10\" value=\"" . filter_output_html($account['local']) . "\" /><strong style=\"font-size: 1.5em;\">&#160;@&#160;</strong>" . domainselect($domain) . "</p>";
     }
-    $form .= '<p><input type="checkbox" id="enableextensions" name="enableextensions" value="yes" '.($has_extensions ? 'checked="checked" ' : '').'/><label for=enableextensions">&#160;Ermögliche die Nutzung von Erweiterungsadressen (<a href="https://wiki.schokokeks.org/E-Mail/Erweiterungsadressen">Hilfe</a>)';
+    $form .= '<p><input type="checkbox" id="enableextensions" name="enableextensions" value="yes" ' . ($has_extensions ? 'checked="checked" ' : '') . '/><label for=enableextensions">&#160;Ermögliche die Nutzung von Erweiterungsadressen (<a href="https://wiki.schokokeks.org/E-Mail/Erweiterungsadressen">Hilfe</a>)';
     $password_message = '';
     $password_value = '';
     if ($is_mailbox and ($account['password'] != '')) {
@@ -87,7 +87,7 @@ if (!$accountlogin) {
     }
 
     $form .= "
-    <p><input class=\"option_group\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" ".($is_mailbox ? 'checked="checked" ' : '')." /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
+    <p><input class=\"option_group\" type=\"checkbox\" id=\"mailbox\" name=\"mailbox\" value=\"yes\" " . ($is_mailbox ? 'checked="checked" ' : '') . " /><label for=\"mailbox\">&#160;<strong>In Mailbox speichern</strong></label></p>
     <div style=\"margin-left: 2em;\" id=\"mailbox_config\" class=\"option_group\">
     <p>Passwort für Abruf:&#160;<input style=\"color: #aaa;\" type=\"password\" id=\"password\" name=\"password\" value=\"{$password_value}\" />{$password_message}</p>";
 
@@ -95,7 +95,7 @@ if (!$accountlogin) {
     if ($is_mailbox and $account['quota']) {
         $quota = $account['quota'];
     }
-    $form .= "<p class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von ".config('vmail_basequota')." MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
+    $form .= "<p class=\"quota_options\">Größe des Postfachs: <input type=\"text\" id=\"quota\" name=\"quota\" value=\"{$quota}\" /> MB<br /><span style=\"font-size: 80%\"><em>Hinweis: Die Differenz zwischen dem hier gesetzten Wert und dem Sockelbetrag von " . config('vmail_basequota') . " MB wird vom Speicherplatz Ihres Benutzer-Kontos abgezogen.</em></span></p>";
 
     $quota_notify = ($account['quota_threshold'] >= 0) ? ' checked="checked" ' : '';
     $quota_threshold = ($account['quota_threshold'] >= 0) ? $account['quota_threshold'] : '';
@@ -106,7 +106,7 @@ if (!$accountlogin) {
 
 
 
-$form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"autoresponder\" name=\"autoresponder\" value=\"yes\" ".($is_autoresponder ? 'checked="checked" ' : '')." /><label for=\"autoresponder\">&#160;<strong>Automatische Antwort versenden</strong></label></p>";
+$form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"autoresponder\" name=\"autoresponder\" value=\"yes\" " . ($is_autoresponder ? 'checked="checked" ' : '') . " /><label for=\"autoresponder\">&#160;<strong>Automatische Antwort versenden</strong></label></p>";
 
 $form .= "<div style=\"margin-left: 2em;\" id=\"autoresponder_config\" class=\"option_group\">";
 
@@ -126,9 +126,9 @@ $startdate = $ar['valid_from'];
 if (!$startdate || $startdate <= date('Y-m-d')) {
     $startdate = date('Y-m-d', time() + 1 * 24 * 60 * 60);
 }
-$form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />".
-  "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_date\">Erst ab dem </label>".
-  "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"".date('Y-m-d')."\" max=\"".date('Y-m-d', time() + 60 * 24 * 60 * 60)."\" /></p>";
+$form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked} /> <label for=\"ar_valid_from_now\">Ab sofort</label><br />" .
+  "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked} /> <label for=\"ar_valid_from_date\">Erst ab dem </label>" .
+  "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"" . date('Y-m-d') . "\" max=\"" . date('Y-m-d', time() + 60 * 24 * 60 * 60) . "\" /></p>";
 
 $enddate = $ar['valid_until'];
 if (!$enddate) {
@@ -141,8 +141,8 @@ if ($ar['valid_from'] > date('Y-m-d')) {
     $max_end = $max_end->format('Y-m-d');
 }
 $form .= "<h4>Deaktivierung</h4>";
-$form .= "<p><label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>".
-  "<input type=\"date\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" min=\"".date('Y-m-d')."\" max=\"".$max_end."\" /><br/>";
+$form .= "<p><label for=\"ar_valid_until_date\">Keine Antworten mehr versenden ab dem </label>" .
+  "<input type=\"date\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" min=\"" . date('Y-m-d') . "\" max=\"" . $max_end . "\" /><br/>";
 if (!$accountlogin && ($id != 0)) {
     $form .= "<small>(Automatische Antworten sind nur befristet erlaubt. Wenn Sie diese Adresse dauerhaft stilllegen möchten, können Sie dies am Ende dieser Seite tun.)</small></p>";
 }
@@ -150,32 +150,32 @@ if (!$accountlogin && ($id != 0)) {
 $subject = filter_output_html($ar['subject']);
 $ar_subject_default_checked = ($subject == null) ? ' checked="checked"' : '';
 $ar_subject_custom_checked = ($subject) ? ' checked="checked"' : '';
-$form .= "<h4>Betreffzeile der automatischen Antwort</h4>".
-  "<p><input type=\"radio\" name=\"ar_subject\" value=\"default\" id=\"ar_subject_default\"{$ar_subject_default_checked} /> ".
-  "<label for=\"ar_subject_default\">Automatisch (Re: <em>&lt;Betreff der Originalnachricht&gt;</em>)</label><br />".
-  "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked} /> ".
+$form .= "<h4>Betreffzeile der automatischen Antwort</h4>" .
+  "<p><input type=\"radio\" name=\"ar_subject\" value=\"default\" id=\"ar_subject_default\"{$ar_subject_default_checked} /> " .
+  "<label for=\"ar_subject_default\">Automatisch (Re: <em>&lt;Betreff der Originalnachricht&gt;</em>)</label><br />" .
+  "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked} /> " .
   "<label for=\"ar_subject_custom\">Anderer Betreff:</label> <input type=\"text\" name=\"ar_subject_value\" id=\"ar_subject_value\" value=\"{$subject}\"/></p>";
 
 $message = filter_output_html($ar['message']);
-$form .= "<h4>Inhalt der automatischen Antwort</h4>".
+$form .= "<h4>Inhalt der automatischen Antwort</h4>" .
   "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">{$message}</textarea></p>";
 $quote = $ar['quote'];
 if (!$quote) {
     $quote = 'none';
 }
-$form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>".
+$form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>" .
   html_select('ar_quote', ["none" => 'nicht in Antwort einschließen',
                                 "teaser" => 'anreißen (erste 10 Zeilen)',
-                                "inline" => 'zitieren (max. 50 Zeilen)', ], $quote)."</p>";
+                                "inline" => 'zitieren (max. 50 Zeilen)', ], $quote) . "</p>";
 //"attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
 
 
 $ar_from_default_checked = ($ar['fromname'] == null) ? ' checked="checked"' : '';
 $ar_from_custom_checked = ($ar['fromname'] != null) ? ' checked="checked"' : '';
 $fromname = filter_output_html($ar['fromname']);
-$form .= "<h4>Absender der automatischen Antwort</h4>".
-  "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked} /> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br />".
-  "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked} /> <label for=\"ar_from_custom\">Mit Name: </label> ".
+$form .= "<h4>Absender der automatischen Antwort</h4>" .
+  "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked} /> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br />" .
+  "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked} /> <label for=\"ar_from_custom\">Mit Name: </label> " .
   "<input type=\"text\" name=\"ar_fromname\" id=\"ar_fromname\" value=\"{$fromname}\"/></p>";
 
 
@@ -187,7 +187,7 @@ $form .= '</div>';
 
 
 
-$form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" ".($is_forward ? 'checked="checked" ' : '')." /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";
+$form .= "<p><input class=\"option_group\" type=\"checkbox\" id=\"forward\" name=\"forward\" value=\"yes\" " . ($is_forward ? 'checked="checked" ' : '') . " /><label for=\"forward\">&#160;<strong>Weiterleitung an andere E-Mail-Adressen</strong></label></p>";
 
 
 $form .= "<div style=\"margin-left: 2em;\" id=\"forward_config\" class=\"option_group\">";
@@ -204,23 +204,23 @@ while (count($account['forwards']) < 10) {
 for ($i = 0 ; $i < max($numforwards, 10) ; $i++) {
     $num = $i + 1;
     $form .= "<div class=\"vmail-forward\" id=\"vmail_forward_{$num}\">
-  <div style=\"float: right;\" class=\"delete_forward\">".icon_delete("Diese Weiterleitung entfernen")."</div>
-  <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"".filter_output_html($account['forwards'][$i]['destination'])."\" /></p>
+  <div style=\"float: right;\" class=\"delete_forward\">" . icon_delete("Diese Weiterleitung entfernen") . "</div>
+  <p>Weiterleiten an <input type=\"text\" id=\"forward_to_{$num}\" name=\"forward_to_{$num}\" value=\"" . filter_output_html($account['forwards'][$i]['destination']) . "\" /></p>
   </div>\n";
 }
 $form .= '</div>';
 
-$form .= '<p><a href="#" id="more_forwards">'.icon_add().' Weiteren Empfänger hinzufügen</a></p>
+$form .= '<p><a href="#" id="more_forwards">' . icon_add() . ' Weiteren Empfänger hinzufügen</a></p>
 </div>';
 
 $target = 'vmail';
 if ($accountlogin) {
     $target = '../index/index';
 }
-$form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;'.internal_link($target, 'Abbrechen').'</p>';
+$form .= '<p><input id="submit" type="submit" value="Speichern" />&#160;&#160;&#160;&#160;' . internal_link($target, 'Abbrechen') . '</p>';
 
-output(html_form('vmail_edit_mailbox', 'save', 'action=edit'.($id != 0 ? '&id='.$id : ''), $form));
+output(html_form('vmail_edit_mailbox', 'save', 'action=edit' . ($id != 0 ? '&id=' . $id : ''), $form));
 
 if (!$accountlogin && ($id != 0)) {
-    output("<p>".internal_link('suspend', 'Diese Adresse stilllegen (mit individuellem Fehlertext)', "account=".$id)."</p>");
+    output("<p>" . internal_link('suspend', 'Diese Adresse stilllegen (mit individuellem Fehlertext)', "account=" . $id) . "</p>");
 }

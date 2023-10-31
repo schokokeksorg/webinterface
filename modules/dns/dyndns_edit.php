@@ -41,7 +41,7 @@ if (isset($dyndns['password'])) {
 
 
 $html_header .= '<script type="text/javascript">
-var username = "'.$_SESSION['userinfo']['username'].'";
+var username = "' . $_SESSION['userinfo']['username'] . '";
 var handle;
 var http_username;
 
@@ -63,27 +63,27 @@ title('DynDNS-Account');
 
 if (!$new) {
     $output .= '<div style="padding: 0.5em; border: 1px solid black;"><strong>aktuelle Daten:</strong><br />
-  letztes Update: '.$dyndns['lastchange'].'<br />
-  aktuelle Adresse: '.$dyndns['address'].'
+  letztes Update: ' . $dyndns['lastchange'] . '<br />
+  aktuelle Adresse: ' . $dyndns['address'] . '
   </div>';
 }
 
-$form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" name="handle" id="handle" value="'.($dyndns['handle'] ?? '').'" onkeyup="updateUsernameHTTP()" /></p>
+$form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" name="handle" id="handle" value="' . ($dyndns['handle'] ?? '') . '" onkeyup="updateUsernameHTTP()" /></p>
 
 <h4>Update per HTTPs</h4>
-<p style="margin-left: 2em;">Geben Sie hier ein Passwort ein um das Update per HTTPs zu aktivieren.'.$http_update_info.'</p>
-<p style="margin-left: 2em;">Benutzername:&#160;<strong><span id="username_http">'.$username_http.'</span></strong></p>
-<p style="margin-left: 2em;"><label for="password_http">Passwort:</label>&#160;<input type="password" id="password_http" name="password_http" value="'.(isset($dyndns['password']) ? '************' : '').'" /></p>
+<p style="margin-left: 2em;">Geben Sie hier ein Passwort ein um das Update per HTTPs zu aktivieren.' . $http_update_info . '</p>
+<p style="margin-left: 2em;">Benutzername:&#160;<strong><span id="username_http">' . $username_http . '</span></strong></p>
+<p style="margin-left: 2em;"><label for="password_http">Passwort:</label>&#160;<input type="password" id="password_http" name="password_http" value="' . (isset($dyndns['password']) ? '************' : '') . '" /></p>
 
 <h4>Update per SSH</h4>
 <p style="margin-left: 2em;">Kopieren Sie Ihren SSH-public-Key im OpenSSH-Format in dieses Eingabefeld um das Update per SSH zu aktivieren.</p>
-<p style="margin-left: 2em; vertical-align: middle;"><label for="sshkey">SSH Public-Key:</label><br /><textarea style="height: 10em; width: 80%;" id="sshkey" name="sshkey">'.($dyndns['sshkey'] ?? '').'</textarea></p>
+<p style="margin-left: 2em; vertical-align: middle;"><label for="sshkey">SSH Public-Key:</label><br /><textarea style="height: 10em; width: 80%;" id="sshkey" name="sshkey">' . ($dyndns['sshkey'] ?? '') . '</textarea></p>
 
 <p style="margin-left: 2em;"><input type="submit" value="Speichern" /></p>
 ';
 
 
-$output .= html_form('dyndns_edit', 'save', 'type=dyndns&action=edit&'.(isset($_REQUEST['id']) ? 'id='.$_REQUEST['id'] : ''), $form);
+$output .= html_form('dyndns_edit', 'save', 'type=dyndns&action=edit&' . (isset($_REQUEST['id']) ? 'id=' . $_REQUEST['id'] : ''), $form);
 
 
 if (!$new) {
@@ -94,9 +94,9 @@ if (!$new) {
   <ul>';
 
     foreach ($records as $record) {
-        $output .= '<li>'.$record['fqdn'].' (Typ: '.strtoupper($record['type']).' / TTL: '.$record['ttl'].' Sek.)</li>';
+        $output .= '<li>' . $record['fqdn'] . ' (Typ: ' . strtoupper($record['type']) . ' / TTL: ' . $record['ttl'] . ' Sek.)</li>';
     }
 
     $output .= '</ul>';
-    output("<p>".internal_link('dyndns_hostnames', "Liste ändern...", "id={$_REQUEST['id']}")."</p>");
+    output("<p>" . internal_link('dyndns_hostnames', "Liste ändern...", "id={$_REQUEST['id']}") . "</p>");
 }

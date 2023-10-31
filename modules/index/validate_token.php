@@ -42,7 +42,7 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token'])) {
                 $_SESSION['role'] = ROLE_CUSTOMER;
                 $_SESSION['customerinfo'] = get_customer_info($customerno);
                 title("Passwort gesetzt");
-                output('<p>Ihr neues Passwort wurde gesetzt, Sie können jetzt '.internal_link("index", "die Web-Oberfläche sofort benutzen").'.</p>');
+                output('<p>Ihr neues Passwort wurde gesetzt, Sie können jetzt ' . internal_link("index", "die Web-Oberfläche sofort benutzen") . '.</p>');
                 $show = null;
             }
         }
@@ -54,8 +54,8 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token'])) {
 if ($show == 'password') {
     output('<p>Bitte legen Sie jetzt Ihr neues Kunden-Passwort fest.</p>
   <form method="post">
-  <p style="display: none"><input type="hidden" name="customerno" value="'.$customerno.'" />
-  <input type="hidden" name="token" value="'.$token.'" /></p>
+  <p style="display: none"><input type="hidden" name="customerno" value="' . $customerno . '" />
+  <input type="hidden" name="token" value="' . $token . '" /></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
   <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" /></p>
   <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort setzen" /></p>

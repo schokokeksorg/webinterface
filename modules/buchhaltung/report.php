@@ -11,7 +11,7 @@ if (isset($_GET['year'])) {
 }
 
 $typeresult = db_query("SELECT id, description, investment FROM buchhaltung.types");
-$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", [":from" => $year."-01-01", ":to" => $year."-12-31"]);
+$dataresult = db_query("SELECT id, date, description, invoice_id, direction, type, amount, tax_rate, gross FROM buchhaltung.transactions WHERE date BETWEEN :from and :to ORDER BY date", [":from" => $year . "-01-01", ":to" => $year . "-12-31"]);
 
 $types = [];
 $data_by_type = [];
@@ -81,7 +81,7 @@ foreach ($types as $id => $t) {
         $net = str_replace('.', ',', sprintf('%.2f €', $net));
         $ust = str_replace('.', ',', sprintf('%.2f €', $ust));
         $gross = str_replace('.', ',', sprintf('%.2f €', $gross));
-        output("<tr><td>".$line['date']."</td><td>".$line['description']."</td><td style=\"text-align: right;\">".$net."</td><td style=\"text-align: right;\">".$line['tax_rate']."%</td><td style=\"text-align: right;\">".$ust."</td><td style=\"text-align: right;\">".$gross."</td></tr>\n");
+        output("<tr><td>" . $line['date'] . "</td><td>" . $line['description'] . "</td><td style=\"text-align: right;\">" . $net . "</td><td style=\"text-align: right;\">" . $line['tax_rate'] . "%</td><td style=\"text-align: right;\">" . $ust . "</td><td style=\"text-align: right;\">" . $gross . "</td></tr>\n");
     }
     if ($id == 0) {
         $net_by_type[0][-1] = $umsatzandereproz;
@@ -100,24 +100,24 @@ output("<h3>Summen</h3>");
 
 output('<table>');
 $einnahmensumme = 0.0;
-output("<tr><td>Einnahmen 19% USt netto</td><td style=\"text-align: right;\">".number_format($net_by_type[0][19], 2, ',', '.')." €</td></tr>");
+output("<tr><td>Einnahmen 19% USt netto</td><td style=\"text-align: right;\">" . number_format($net_by_type[0][19], 2, ',', '.') . " €</td></tr>");
 $einnahmensumme += $net_by_type[0][19];
-output("<tr><td>Einnahme Umsatzsteuer 19%</td><td style=\"text-align: right;\">".number_format($ustbetraege[19], 2, ',', '.')." €</td></tr>");
+output("<tr><td>Einnahme Umsatzsteuer 19%</td><td style=\"text-align: right;\">" . number_format($ustbetraege[19], 2, ',', '.') . " €</td></tr>");
 $einnahmensumme += $ustbetraege[19];
-output("<tr><td>Einnahmen innergem. Lieferung (steuerfrei §4/1b UStG)</td><td style=\"text-align: right;\">".number_format($net_by_type[0][0], 2, ',', '.')." €</td></tr>");
+output("<tr><td>Einnahmen innergem. Lieferung (steuerfrei §4/1b UStG)</td><td style=\"text-align: right;\">" . number_format($net_by_type[0][0], 2, ',', '.') . " €</td></tr>");
 $einnahmensumme += $net_by_type[0][0];
-output("<tr><td>Einnahmen andere Steuersätze</td><td style=\"text-align: right;\">".number_format($net_by_type[0][-1], 2, ',', '.')." €</td></tr>");
+output("<tr><td>Einnahmen andere Steuersätze</td><td style=\"text-align: right;\">" . number_format($net_by_type[0][-1], 2, ',', '.') . " €</td></tr>");
 $einnahmensumme += $net_by_type[0][-1];
 $einzelust = '';
 foreach ($ustbetraege as $satz => $ust) {
     if ($satz == 0 || $satz == 19) {
         continue;
     }
-    output("<tr><td>- Umsatzsteuer $satz%</td><td style=\"text-align: right;\">".number_format($ust, 2, ',', '.')." €</td></tr>");
+    output("<tr><td>- Umsatzsteuer $satz%</td><td style=\"text-align: right;\">" . number_format($ust, 2, ',', '.') . " €</td></tr>");
     $einnahmensumme += $ust;
 }
 
-output("<tr><td><b>Summe Einnahmen:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme, 2, ',', '.')." €</td></tr>");
+output("<tr><td><b>Summe Einnahmen:</b></td><td style=\"text-align: right;\"><b>" . number_format($einnahmensumme, 2, ',', '.') . " €</td></tr>");
 output("<tr><td colspan=\"2\"></td></tr>");
 $ausgabensumme = 0.0;
 foreach ($types as $id => $t) {
@@ -128,19 +128,19 @@ foreach ($types as $id => $t) {
         continue;
     }
     $ausgabensumme -= round($net_by_type[$id], 2);
-    output("<tr><td>".$t."</td><td style=\"text-align: right;\">".number_format(-$net_by_type[$id], 2, ',', '.')." €</td></tr>");
+    output("<tr><td>" . $t . "</td><td style=\"text-align: right;\">" . number_format(-$net_by_type[$id], 2, ',', '.') . " €</td></tr>");
 }
 
-output("<tr><td>Vorsteuer</td><td style=\"text-align: right;\">".number_format(-$vorsteuer, 2, ',', '.')." €</td></tr>");
+output("<tr><td>Vorsteuer</td><td style=\"text-align: right;\">" . number_format(-$vorsteuer, 2, ',', '.') . " €</td></tr>");
 $ausgabensumme -= $vorsteuer;
-output("<tr><td><b>Summe Ausgaben:</b></td><td style=\"text-align: right;\"><b>".number_format($ausgabensumme, 2, ',', '.')." €</td></tr>");
+output("<tr><td><b>Summe Ausgaben:</b></td><td style=\"text-align: right;\"><b>" . number_format($ausgabensumme, 2, ',', '.') . " €</td></tr>");
 output("<tr><td colspan=\"2\"></td></tr>");
 
-output("<tr><td><b>Überschuss aus laufendem Betrieb:</b></td><td style=\"text-align: right;\"><b>".number_format($einnahmensumme - $ausgabensumme, 2, ',', '.')." €</td></tr>");
+output("<tr><td><b>Überschuss aus laufendem Betrieb:</b></td><td style=\"text-align: right;\"><b>" . number_format($einnahmensumme - $ausgabensumme, 2, ',', '.') . " €</td></tr>");
 output('</table>');
 
 foreach ($investment_types as $id => $type) {
     if (isset($net_by_type[$id])) {
-        output('<p>Neue Anlagegüter <strong>'.$type['description'].'</strong>: '.number_format(-$net_by_type[$id], 2, ',', '.')." €</p>");
+        output('<p>Neue Anlagegüter <strong>' . $type['description'] . '</strong>: ' . number_format(-$net_by_type[$id], 2, ',', '.') . " €</p>");
     }
 }

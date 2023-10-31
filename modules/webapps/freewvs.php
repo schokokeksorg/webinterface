@@ -36,9 +36,9 @@ $freq = $result['freq'];
 
 headline('Überprüfung Ihrer Web-Anwendungen auf Sicherheitslücken');
 
-output('<p>Bei '.config('company_name').' werden die von Ihnen installierten Web-Anwendungen (z.B. Blog-Software, Content-Management-Systeme, ...) regelmäßig automatisch auf bekannte Sicherheitsprobleme untersucht. Sie erhalten jeweils umgehend eine Nachricht, wenn wir gefährdete Anwendungen finden. Zudem werden wir Sie regelmäßig an bestehende Sicherheitslücken erinnern.</p>
+output('<p>Bei ' . config('company_name') . ' werden die von Ihnen installierten Web-Anwendungen (z.B. Blog-Software, Content-Management-Systeme, ...) regelmäßig automatisch auf bekannte Sicherheitsprobleme untersucht. Sie erhalten jeweils umgehend eine Nachricht, wenn wir gefährdete Anwendungen finden. Zudem werden wir Sie regelmäßig an bestehende Sicherheitslücken erinnern.</p>
 <p><strong>Wie häufig möchten Sie an bestehende Sicherheitsprobleme erinnert werden?</strong></p>
-'.html_form('freewvs_freq', 'freewvs', '', '<p>'.html_select('freq', ['day' => 'täglich', 'week' => 'einmal pro Woche', 'month' => 'einmal pro Monat'], $freq).' &#160; <input type="submit" value="speichern" /></p>'));
+' . html_form('freewvs_freq', 'freewvs', '', '<p>' . html_select('freq', ['day' => 'täglich', 'week' => 'einmal pro Woche', 'month' => 'einmal pro Monat'], $freq) . ' &#160; <input type="submit" value="speichern" /></p>'));
 
 $results = load_results();
 
@@ -50,17 +50,17 @@ foreach ($results as $app) {
     if ($app['state'] == 'ok') {
         output("<img src='{$prefix}images/ok.png' />\n");
         output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-        output("<p>Gefunden in ".filter_output_html($app['directory'])." (<a href=\"{$url}\">{$url}</a>)</p>\n");
+        output("<p>Gefunden in " . filter_output_html($app['directory']) . " (<a href=\"{$url}\">{$url}</a>)</p>\n");
         output("<p>Diese Anwendung hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
     } else {
         $vulnlink = $app['vulninfo'];
         $doclink = get_upgradeinstructions($app['appname']);
         if (substr($vulnlink, 0, 3) == 'CVE') {
-            $vulnlink = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name='.$vulnlink;
+            $vulnlink = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=' . $vulnlink;
         }
         output("<img src='{$prefix}images/error.png' />\n");
         output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
-        output("<p>Gefunden in ".filter_output_html($app['directory'])." (<a href=\"{$url}\">{$url}</a>)</p>\n");
+        output("<p>Gefunden in " . filter_output_html($app['directory']) . " (<a href=\"{$url}\">{$url}</a>)</p>\n");
         if ($app['safeversion'] != '') {
             output("<p>Diese Anwendung ist von Sicherheits-Problemen betroffen. Ein <strong>Update auf Version {$app['safeversion']}</strong> wird dringend empfohlen. Prüfen Sie anhand der unten genannten Referenz welche Gefahren von dieser Anwendung momentan ausgehen.</p>\n");
         } else {
@@ -68,14 +68,14 @@ foreach ($results as $app) {
         }
         output("<p><strong>Referenz zu diesem Sicherheitsproblem: <a href='{$vulnlink}'>{$app['vulninfo']}</a></strong></p>");
         if ($doclink != null) {
-            output('<p><strong>Hinweis:</strong> Um Ihnen das Upgrade leichter zu machen, möchten wir Sie auf eine <a href="'.$doclink.'">deutschsprachige Upgrade-Anleitung</a> aufmerksam machen.</p>'."\n");
+            output('<p><strong>Hinweis:</strong> Um Ihnen das Upgrade leichter zu machen, möchten wir Sie auf eine <a href="' . $doclink . '">deutschsprachige Upgrade-Anleitung</a> aufmerksam machen.</p>' . "\n");
         }
         $up = upgradeable($app['appname'], $app['version']);
         if ($up) {
             if (directory_in_use($app['directory'])) {
                 output('<p><em>Automatische Update-Aktion heute nicht mehr möglich</em></p>');
             } else {
-                output('<p>'.internal_link('requestupdate', 'Update automatisch durchführen', "dir={$app['directory']}&app={$up}")."</p>\n");
+                output('<p>' . internal_link('requestupdate', 'Update automatisch durchführen', "dir={$app['directory']}&app={$up}") . "</p>\n");
             }
         }
     }

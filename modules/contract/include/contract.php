@@ -34,26 +34,26 @@ function contract_html()
 
     $kundenkontakte = get_kundenkontakte();
     $kunde = get_contact($kundenkontakte['kunde']);
-    $adresse = nl2br("\n".filter_output_html($kunde['address']."\n".$kunde['country'].'-'.$kunde['zip'].' '.$kunde['city']));
+    $adresse = nl2br("\n" . filter_output_html($kunde['address'] . "\n" . $kunde['country'] . '-' . $kunde['zip'] . ' ' . $kunde['city']));
     $name = filter_output_html($kunde['name']);
     if ($kunde['company']) {
-        $name = filter_output_html($kunde['company'])."<br />".filter_output_html($kunde['name']);
+        $name = filter_output_html($kunde['company']) . "<br />" . filter_output_html($kunde['name']);
     }
     $email = filter_output_html($kunde['email']);
     $address = "<strong>$name</strong>$adresse</p><p>E-Mail-Adresse: $email";
 
     $date = date('d.m.Y');
 
-    $DIR = realpath(dirname(__FILE__).'/..');
+    $DIR = realpath(dirname(__FILE__) . '/..');
 
-    $vertrag = file_get_contents($DIR.'/vertrag.html');
+    $vertrag = file_get_contents($DIR . '/vertrag.html');
     $vertrag = str_replace('((ADRESSE))', $address, $vertrag);
     $vertrag = str_replace('((DATUM))', $date, $vertrag);
 
     $vertrag = str_replace('</body>', '', $vertrag);
     $vertrag = str_replace('</html>', '', $vertrag);
 
-    return $vertrag."<br><br><pagebreak>\n".file_get_contents($DIR.'/anlage1.html')."<br><br><pagebreak>\n".file_get_contents($DIR.'/anlage2.html')."</body></html>";
+    return $vertrag . "<br><br><pagebreak>\n" . file_get_contents($DIR . '/anlage1.html') . "<br><br><pagebreak>\n" . file_get_contents($DIR . '/anlage2.html') . "</body></html>";
 }
 
 

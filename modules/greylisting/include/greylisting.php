@@ -49,7 +49,7 @@ function valid_entry($local, $domain)
 {
     if ($domain == 'schokokeks.org') {
         if (($local != $_SESSION['userinfo']['username']) &&
-            (strpos($local, $_SESSION['userinfo']['username'].'-') !== 0)) {
+            (strpos($local, $_SESSION['userinfo']['username'] . '-') !== 0)) {
             system_failure('Diese E-Mail-Adresse gehört Ihnen nicht!');
         }
         return true;
@@ -78,6 +78,6 @@ function new_whitelist_entry($local, $domain, $minutes)
         $args[':minutes'] = $minutes;
         $expire = "NOW() + INTERVAL :minutes MINUTE";
     }
-    db_query("INSERT INTO mail.greylisting_manual_whitelist (local,domain,date,expire,uid) VALUES ".
+    db_query("INSERT INTO mail.greylisting_manual_whitelist (local,domain,date,expire,uid) VALUES " .
              "(:local, :domain, NOW(), {$expire}, :uid)", $args);
 }

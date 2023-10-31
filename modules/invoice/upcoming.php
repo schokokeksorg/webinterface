@@ -48,7 +48,7 @@ foreach ($items as $item) {
     $counter++;
     $desc = $item['startdatum'];
     if ($item['enddatum'] != null) {
-        $desc = $item['startdatum'].' - '.$item['enddatum'];
+        $desc = $item['startdatum'] . ' - ' . $item['enddatum'];
     }
     $epreis = $item['betrag'];
     if ($item['brutto'] == 0) {

@@ -35,16 +35,16 @@ if (count($repos) == 0) {
 }
 
 foreach ($repos as $repo => $settings) {
-    $description = $settings['description'] ? '<br /><em>"'.filter_output_html($settings['description']).'"</em>' : '';
+    $description = $settings['description'] ? '<br /><em>"' . filter_output_html($settings['description']) . '"</em>' : '';
     $url = get_git_url($repo);
     $public = isset($settings['users']['gitweb']) && $settings['users']['gitweb'] == 'R';
     $public_string = '';
     if ($public) {
-        $public_viewer = 'https://'.config('gitserver').'/'.$repo.'.git';
-        $public_clone = 'https://'.config('gitserver').'/git/'.$repo.'.git';
-        $public_string = '<br />(Öffentlich einsehbar über <a href="'.$public_viewer.'">'.$public_viewer.'</a>, öffentliche clone-URL <input id="public_'.$repo.'_url" type="text" readonly="readonly" value="'.$public_clone.'"><button class="copyurl" id="public_'.$repo.'">Copy!</button>)';
+        $public_viewer = 'https://' . config('gitserver') . '/' . $repo . '.git';
+        $public_clone = 'https://' . config('gitserver') . '/git/' . $repo . '.git';
+        $public_string = '<br />(Öffentlich einsehbar über <a href="' . $public_viewer . '">' . $public_viewer . '</a>, öffentliche clone-URL <input id="public_' . $repo . '_url" type="text" readonly="readonly" value="' . $public_clone . '"><button class="copyurl" id="public_' . $repo . '">Copy!</button>)';
     }
-    output("<div><p><strong>{$repo}</strong> ".internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo='.$repo)." ".internal_link('delete', icon_delete('Repository löschen'), 'repo='.$repo)."{$description}<br />SSH-Clone/Push-URL: <input type=\"text\" id=\"private_{$repo}_url\" readonly=\"readonly\" value=\"{$url}\"><button class=\"copyurl\" id=\"private_{$repo}\">Copy!</button> {$public_string}</p><ul>");
+    output("<div><p><strong>{$repo}</strong> " . internal_link('edit', icon_edit('Zugriffsrechte bearbeiten'), 'repo=' . $repo) . " " . internal_link('delete', icon_delete('Repository löschen'), 'repo=' . $repo) . "{$description}<br />SSH-Clone/Push-URL: <input type=\"text\" id=\"private_{$repo}_url\" readonly=\"readonly\" value=\"{$url}\"><button class=\"copyurl\" id=\"private_{$repo}\">Copy!</button> {$public_string}</p><ul>");
     foreach ($settings['users'] as $user => $rights) {
         if ($user == 'gitweb' || $user == 'daemon') {
             continue;
@@ -78,7 +78,7 @@ if (count($users) == 0) {
 }
 
 foreach ($users as $handle) {
-    output('<p><strong>'.$handle.'</strong> '.internal_link('newkey', icon_edit('Hinterlegten SSH-Key ändern'), 'handle='.$handle)." ".internal_link('delete', icon_delete('SSH-Key löschen'), 'handle='.$handle)."</p>");
+    output('<p><strong>' . $handle . '</strong> ' . internal_link('newkey', icon_edit('Hinterlegten SSH-Key ändern'), 'handle=' . $handle) . " " . internal_link('delete', icon_delete('SSH-Key löschen'), 'handle=' . $handle) . "</p>");
 }
 
 addnew('newkey', 'Neuen SSH-Key eintragen');
@@ -91,10 +91,10 @@ if (count($foreign_users) == 0) {
 }
 
 foreach ($foreign_users as $handle) {
-    output('<p><strong>'.$handle.'</strong> '.internal_link('delete', icon_delete('Benutzer aus diesem Kundenaccount entfernen'), 'foreignhandle='.$handle)."</p>");
+    output('<p><strong>' . $handle . '</strong> ' . internal_link('delete', icon_delete('Benutzer aus diesem Kundenaccount entfernen'), 'foreignhandle=' . $handle) . "</p>");
 }
 
 addnew('newforeignuser', 'GIT-Benutzer anderer Kunden freischalten');
 
 
-output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: Die hier gezeigten Berechtigungen können unter Umständen nicht aktuell sein. Bei Fehlfunktionen sollten Sie '.internal_link('refresh', 'die Berechtigungen neu einlesen lassen').'</p>');
+output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: Die hier gezeigten Berechtigungen können unter Umständen nicht aktuell sein. Bei Fehlfunktionen sollten Sie ' . internal_link('refresh', 'die Berechtigungen neu einlesen lassen') . '</p>');

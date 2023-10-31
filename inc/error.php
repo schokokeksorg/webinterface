@@ -40,7 +40,7 @@ function warning($msg)
     }
     array_push($_SESSION['warning'], $msg);
     $backtrace = debug_backtrace();
-    DEBUG('WARNING:<br>'.$backtrace[0]['file'].':'.$backtrace[0]['line'].': '.$msg);
+    DEBUG('WARNING:<br>' . $backtrace[0]['file'] . ':' . $backtrace[0]['line'] . ': ' . $msg);
 }
 
 function success_msg($msg)
@@ -75,7 +75,7 @@ function get_messages()
     <ul>
     ';
         foreach ($input_error as $error) {
-            $messages .= '<li>'.nl2br(filter_output_html($error))."</li>\n";
+            $messages .= '<li>' . nl2br(filter_output_html($error)) . "</li>\n";
         }
         $messages .= '</ul>
     </div>';
@@ -85,7 +85,7 @@ function get_messages()
     <ul>
     ';
         foreach ($_SESSION['warning'] as $msg) {
-            $messages .= '<li>'.nl2br(filter_output_html($msg))."</li>\n";
+            $messages .= '<li>' . nl2br(filter_output_html($msg)) . "</li>\n";
         }
         $messages .= '</ul>
     </div>';
@@ -96,7 +96,7 @@ function get_messages()
     <ul>
     ';
         foreach ($_SESSION['success_msg'] as $msg) {
-            $messages .= '<li>'.nl2br(filter_output_html($msg))."</li>\n";
+            $messages .= '<li>' . nl2br(filter_output_html($msg)) . "</li>\n";
         }
         $messages .= '</ul>
     </div>';
@@ -126,7 +126,7 @@ function require_role($roles)
             login_screen();
         } else {
             $backtrace = debug_backtrace();
-            DEBUG($backtrace[0]['file'].':'.$backtrace[0]['line'].': Current user does not have any of the required roles: '.implode(",", $roles));
+            DEBUG($backtrace[0]['file'] . ':' . $backtrace[0]['line'] . ': Current user does not have any of the required roles: ' . implode(",", $roles));
             login_screen("Diese Seite können Sie mit Ihren aktuellen Zugriffsrechten nicht benutzen, bitte melden Sie sich mit den benötigten Zugriffsrechten an!");
         }
     }
@@ -143,7 +143,7 @@ function login_screen($why = null)
     }
     if (!$why) {
         if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
-            redirect("/certlogin/index.php?destination=".urlencode($_SERVER['REQUEST_URI']));
+            redirect("/certlogin/index.php?destination=" . urlencode($_SERVER['REQUEST_URI']));
         }
     }
     require_once('inc/theme.php');

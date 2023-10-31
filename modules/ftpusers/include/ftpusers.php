@@ -57,7 +57,7 @@ function save_ftpuser($data)
     if (substr($homedir, 0, 1) == '/') {
         $homedir = substr($homedir, 1);
     }
-    $homedir = $_SESSION['userinfo']['homedir'].'/'.$homedir;
+    $homedir = $_SESSION['userinfo']['homedir'] . '/' . $homedir;
     if (!in_homedir($homedir)) {
         system_failure('Pfad scheint nicht in Ihrem Home zu sein oder enthielt ungültige Zeichen.');
     }
@@ -74,15 +74,15 @@ function save_ftpuser($data)
     if ($data['password'] != '') {
         $result = strong_password($data['password']);
         if ($result !== true) {
-            system_failure("Unsicheres Passwort: ".$result);
+            system_failure("Unsicheres Passwort: " . $result);
         }
-        $password_hash = crypt($data['password'], '$6$'.random_string(8).'$');
+        $password_hash = crypt($data['password'], '$6$' . random_string(8) . '$');
         $set_password = true;
     } elseif (!$data['id']) {
         system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
     }
 
-    $args = [":username" => $_SESSION['userinfo']['username'].'-'.$data['username'],
+    $args = [":username" => $_SESSION['userinfo']['username'] . '-' . $data['username'],
                 ":homedir" => $homedir,
                 ":active" => ($data['active'] == 1 ? 1 : 0),
                 ":forcessl" => ($data['forcessl'] == 0 ? 0 : 1),

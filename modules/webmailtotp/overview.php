@@ -16,7 +16,7 @@ require_role(ROLE_SYSTEMUSER);
 
 title("Zwei-Faktor-Anmeldung am Webmailer");
 
-output('<p>Sie können bei '.config('company_name').' den Zugang zum Webmailer mit einem Zwei-Faktor-Prozess mit abweichendem Passwort schützen.</p>
+output('<p>Sie können bei ' . config('company_name') . ' den Zugang zum Webmailer mit einem Zwei-Faktor-Prozess mit abweichendem Passwort schützen.</p>
 <p>Dieses System schützt Sie vor mitgelesenen Tastatureingaben in nicht vertrauenswürdiger Umgebung z.B. in einem Internet-Café.</p>
 <p>Beim Zwei-Faktor-Prozess müssen Sie zum Login ein festes Webmail-Passwort und zusätzlich ein variabler Code, den beispielsweise Ihr Smartphone erzeugen kann, eingeben. Da sich dieser Code alle 30 Sekunden ändert, kann ein Angreifer sich nicht später mit einem abgehörten Passwort noch einmal anmelden. Zum Erzeugen des Einmal-Codes benötigen Sie ein Gerät, das <strong>TOTP-Einmalcodes nach RFC 6238</strong> erzeugt. Beispiele dafür sind Google-Authenticator oder <a href="https://f-droid.org/en/packages/org.cry.otp/">mOTP</a>. Meist ist dies ein Smartphone mit einer entsprechenden App.</p>
 <p><strong>Beachten Sie:</strong> Die Zwei-Faktor-Anmeldung funktioniert nur für Webmail, beim Login via IMAP wird weiterhin nur das Passwort Ihres Postfachs benötigt. Damit dieses Passwort von einem Angreifer nicht mitgelesen werden kann, müssen Sie zur Zwei-Faktor-Anmeldung unbedingt ein separates Passwort festlegen.</p>
@@ -52,17 +52,17 @@ if (!(user_has_accounts() || count(get_vmail_accounts()) > 0)) {
     if (count($sorted_by_domains) > 0) {
         foreach ($sorted_by_domains as $accounts_on_domain) {
             if (count($sorted_by_domains) > 2) {
-                output('<h4>'.$accounts_on_domain[0]['domainname'].'</h4>');
+                output('<h4>' . $accounts_on_domain[0]['domainname'] . '</h4>');
             }
 
             foreach ($accounts_on_domain as $this_account) {
-                $username = $this_account['local'].'@'.$this_account['domainname'];
-                output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$username.'</strong></p>');
+                $username = $this_account['local'] . '@' . $this_account['domainname'];
+                output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>' . $username . '</strong></p>');
                 $id = account_has_totp($username);
                 if ($id) {
-                    output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+                    output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id=' . $id, 'style="background-image: url(' . $prefix . 'images/delete.png); color: red;"'));
                 } else {
-                    output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
+                    output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username=' . urlencode($username)));
                 }
                 output('</div>');
             }
@@ -83,13 +83,13 @@ if (!(user_has_accounts() || count(get_vmail_accounts()) > 0)) {
 
         foreach ($accounts as $acc) {
             if ($acc['mailbox']) {
-                output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>'.$acc['account'].'</strong></p>');
+                output('<div style="margin-left: 2em;"><p style="margin-left: -2em;"><strong>' . $acc['account'] . '</strong></p>');
                 $username = $acc['account'];
                 $id = account_has_totp($username);
                 if ($id) {
-                    output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id='.$id, 'style="background-image: url('.$prefix.'images/delete.png); color: red;"'));
+                    output(addnew('delete', 'Zwei-Faktor-Anmeldung für dieses Postfach abschalten', 'id=' . $id, 'style="background-image: url(' . $prefix . 'images/delete.png); color: red;"'));
                 } else {
-                    output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username='.urlencode($username)));
+                    output(addnew('setup', 'Zwei-Faktor-Anmeldung für dieses Postfach aktivieren', 'username=' . urlencode($username)));
                 }
                 output('</div>');
             }

@@ -45,10 +45,10 @@ if ($dom->status == 'pretransfer') {
 
 $customerno = (int) $_SESSION['customerinfo']['customerno'];
 $customer = get_customer_info($customerno);
-$msg = 'Sie haben in Ihrem Kundenkonto bei '.config('company_name').' eine Domainregistrierung 
+$msg = 'Sie haben in Ihrem Kundenkonto bei ' . config('company_name') . ' eine Domainregistrierung 
 in Auftrag gegeben.
 
-Domainname: '.$dom->fqdn.'
+Domainname: ' . $dom->fqdn . '
 
 Die Registrierung wird umgehend ausgeführt. Bis die Domain vollständig nutzbar ist, 
 können abhängig von der Domainendung und damit der zuständigen Registrierungsstelle 
@@ -56,12 +56,12 @@ ein paar Stunden vergehen. Sollten bei der Registrierung Fehler auftreten, werde
 die Administratoren direkt darüber informiert und werden sich umgehend darum kümmern.
 
 Mit freundlichen Grüßen,
-Ihre Admins von '.config('company_name');
+Ihre Admins von ' . config('company_name');
 if ($dom->status == 'pretransfer') {
-    $msg = 'Sie haben in Ihrem Kundenkonto bei '.config('company_name').' einen Domaintransfer
+    $msg = 'Sie haben in Ihrem Kundenkonto bei ' . config('company_name') . ' einen Domaintransfer
 in Auftrag gegeben.
 
-Domainname: '.$dom->fqdn.'
+Domainname: ' . $dom->fqdn . '
 
 Der Transfer wird umgehend ausgeführt. Bis die Domain vollständig umgezogen ist, 
 können abhängig von der Domainendung und damit der zuständigen Registrierungsstelle 
@@ -69,16 +69,16 @@ ein paar Stunden vergehen. Sollten beim Domainumzug Fehler auftreten, werden die
 Administratoren direkt darüber informiert und werden sich umgehend darum kümmern.
 
 Mit freundlichen Grüßen,
-Ihre Admins von '.config('company_name');
+Ihre Admins von ' . config('company_name');
 }
 
-$msg .= "\n\nDiese Bestellung haben wir am ".date("r")." von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
+$msg .= "\n\nDiese Bestellung haben wir am " . date("r") . " von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
 
 $recipient = $customer['email'];
 if ($debugmode) {
     $recipient = config('adminmail');
 }
-send_mail($customer['email'], 'Domainregistrierung '.$dom->fqdn, $msg);
+send_mail($customer['email'], 'Domainregistrierung ' . $dom->fqdn, $msg);
 
 api_register_domain($dom->fqdn, $authinfo);
 

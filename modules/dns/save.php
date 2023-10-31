@@ -60,7 +60,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'dyndns') {
                 header('Location: dyndns');
             } else {
                 // Neu angelegt
-                header('Location: dyndns_hostnames?id='.$newid);
+                header('Location: dyndns_hostnames?id=' . $newid);
             }
         }
     }

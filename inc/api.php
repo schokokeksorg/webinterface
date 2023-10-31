@@ -15,7 +15,7 @@ require_once('inc/debug.php');
 
 function api_request($method, $input_data)
 {
-    $url = config('http.net-apiurl').'domain/v1/json/'.$method;
+    $url = config('http.net-apiurl') . 'domain/v1/json/' . $method;
     $input_data['authToken'] = config('http.net-apikey');
     DEBUG('======= API REQUEST ==========');
     DEBUG($url);

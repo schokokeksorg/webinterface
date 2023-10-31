@@ -33,7 +33,7 @@ if (isset($_REQUEST['replace'])) {
 $section = 'vhosts_certs';
 
 
-output($hint.'
+output($hint . '
 <h4>CSR automatisch erzeugen</h4>
 <p>Mit unserem CSR-Generator können Sie einen Certificate-signing-request (CSR) automatisch erzeugen lassen. Nutzen Sie diese Möglichkeit bitte nur, wenn Sie ein so genanntes "Domain validated"-Zertifikat beantragen werden, das keine persönlichen Daten bzw. Firmendaten enthält.</p>');
 
@@ -66,7 +66,7 @@ $form .= '<p><textarea name="key" rows="10" cols="70"></textarea></p>
 
 ';
 
-output(html_form('vhosts_certs_new', 'savecert', 'action=new&replace='.$oldcert, $form));
+output(html_form('vhosts_certs_new', 'savecert', 'action=new&replace=' . $oldcert, $form));
 
 output('<p>Es ist ein <strong>Zertifikat</strong> und ein dazu passender <strong>privater Schlüssel</strong> (ohne Passwort!) nötig. Alle Daten müssen im <strong>PEM-Format</strong> vorliegen, also in etwa die Form</p>
 <pre>-----BEGIN CERTIFICATE-----

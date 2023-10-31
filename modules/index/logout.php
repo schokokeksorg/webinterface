@@ -31,6 +31,6 @@ output('
 
 <p>Sie wurden vom System abgemeldet.</p>
 
-<p>Um sich neu anzumelden, klicken Sie bitte hier: '.internal_link("index", "Anmeldung").'.</p>
+<p>Um sich neu anzumelden, klicken Sie bitte hier: ' . internal_link("index", "Anmeldung") . '.</p>
 
 ');

@@ -33,15 +33,15 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=delete&id={$contact['id']}&back=".urlencode($back), "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
+        are_you_sure("action=delete&id={$contact['id']}&back=" . urlencode($back), "Möchten Sie diese Adresse wirklich löschen? {$contact_string}");
     } elseif ($sure === true) {
         delete_contact($contact['id']);
         if (!$debugmode) {
-            header("Location: ".$back);
+            header("Location: " . $back);
         }
     } elseif ($sure === false) {
         if (!$debugmode) {
-            header("Location: ".$back);
+            header("Location: " . $back);
         }
     }
 } else {
@@ -141,7 +141,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
 
     if (isset($_REQUEST['usepgp']) && $_REQUEST['usepgp'] == 'yes' && isset($_REQUEST['pgpid'])) {
         $pgpid = preg_replace('/[^0-9a-fA-F]/', '', $_REQUEST['pgpid']);
-        DEBUG('PGP-ID: '.$pgpid);
+        DEBUG('PGP-ID: ' . $pgpid);
         if (isset($_REQUEST['pgpkey']) && $_REQUEST['pgpkey']) {
             DEBUG('Key angegeben, wird importiert');
             $c['pgp_id'] = $pgpid;
@@ -167,7 +167,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
             DEBUG("Kein möglicher Domaininhaber:");
             DEBUG($c);
             warning('Zur Verwendung als Domaininhaber fehlen noch Angaben.');
-            redirect('edit?id='.$_REQUEST['id'].'&back='.$_REQUEST['back'].'&domainholder=1');
+            redirect('edit?id=' . $_REQUEST['id'] . '&back=' . $_REQUEST['back'] . '&domainholder=1');
         }
         if (isset($_REQUEST['email']) && !have_mailaddress($_REQUEST['email'])) {
             warning("Die neu angelegte Adresse kann erst dann als Domaininhaber genutzt werden, wenn die E-Mail-Adresse bestätigt wurde.");

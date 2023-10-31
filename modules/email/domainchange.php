@@ -30,7 +30,7 @@ foreach ($_POST as $key => $value) {
         } elseif ($value == 'off') {
             $type = 'none';
         }
-        DEBUG('MAILCONFIG change request for id #'.$id.' to '.$value);
+        DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $value);
         change_domain($id, $type);
     }
     if (strpos($key, "dkim-") === 0) {
@@ -41,7 +41,7 @@ foreach ($_POST as $key => $value) {
         } elseif ($value == 'dmarc') {
             $type = 'dmarc';
         }
-        DEBUG('DKIM change request for id #'.$id.' to '.$value);
+        DEBUG('DKIM change request for id #' . $id . ' to ' . $value);
         change_domain_dkim($id, $type);
     }
 }

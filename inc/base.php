@@ -71,9 +71,9 @@ function have_role($role)
 {
     $have = $_SESSION['role'] & $role;
     if ($have) {
-        DEBUG("Current user has role ".$role);
+        DEBUG("Current user has role " . $role);
     } else {
-        DEBUG("Current user does not have role ".$role);
+        DEBUG("Current user does not have role " . $role);
     }
     return $have;
 }
@@ -97,10 +97,10 @@ function redirect($target)
         header("Location: {$target}");
     } else {
         if (strpos($target, '?') === false) {
-            print 'REDIRECT: '.internal_link($target, $target);
+            print 'REDIRECT: ' . internal_link($target, $target);
         } else {
             [$file, $qs] = explode('?', $target, 2);
-            print 'REDIRECT: '.internal_link($file, $target, $qs);
+            print 'REDIRECT: ' . internal_link($file, $target, $qs);
         }
     }
     die();
@@ -194,7 +194,7 @@ function count_failed_logins()
     }
     $result = db_query("SELECT count(*) AS num FROM misc.scriptlog WHERE user IS NULL AND scriptname='session/start' AND scope='login' AND message LIKE 'wrong user data%' AND remote=:remote AND `timestamp` > NOW() - INTERVAL 10 MINUTE", [":remote" => $_SERVER['REMOTE_ADDR']]);
     $data = $result->fetch();
-    DEBUG('seen '.$data['num'].' failed logins from this address within 10 minutes');
+    DEBUG('seen ' . $data['num'] . ' failed logins from this address within 10 minutes');
     return $data['num'];
 }
 
@@ -295,7 +295,7 @@ function generate_form_token($form_id)
     if (!isset($_SESSION['session_token'])) {
         $_SESSION['session_token'] = random_string(10);
     }
-    return hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
+    return hash('sha256', $sessid . $form_id . $_SESSION['session_token']);
 }
 
 
@@ -313,7 +313,7 @@ function check_form_token($form_id, $formtoken = null)
     if (!isset($_SESSION['session_token'])) {
         $_SESSION['session_token'] = random_string(10);
     }
-    $correct_formtoken = hash('sha256', $sessid.$form_id.$_SESSION['session_token']);
+    $correct_formtoken = hash('sha256', $sessid . $form_id . $_SESSION['session_token']);
 
     if (!($formtoken == $correct_formtoken)) {
         system_failure("Possible cross-site-request-forgery!");
@@ -341,10 +341,10 @@ function use_module($modname)
         system_failure("Soll nicht verfügbares Modul laden!");
     }
     /* setup module include path */
-    ini_set('include_path', ini_get('include_path').':./modules/'.$modname.'/include:');
-    $style = 'modules/'.$modname.'/style.css';
+    ini_set('include_path', ini_get('include_path') . ':./modules/' . $modname . '/include:');
+    $style = 'modules/' . $modname . '/style.css';
     if (file_exists($style)) {
-        html_header('<link rel="stylesheet" href="'.$prefix.$style.'" type="text/css" />'."\n");
+        html_header('<link rel="stylesheet" href="' . $prefix . $style . '" type="text/css" />' . "\n");
     }
 }
 
@@ -353,7 +353,7 @@ function encode_querystring($querystring)
 {
     global $debugmode;
     if ($debugmode) {
-        $querystring = 'debug&'.$querystring;
+        $querystring = 'debug&' . $querystring;
     }
     $query = explode('&', $querystring);
     $new_query = [];
@@ -363,13 +363,13 @@ function encode_querystring($querystring)
             if (count($split) == 1) {
                 $new_query[] = $split[0];
             } else {
-                $new_query[] = $split[0].'='.urlencode($split[1]);
+                $new_query[] = $split[0] . '=' . urlencode($split[1]);
             }
         }
     }
     $querystring = implode('&amp;', $new_query);
     if ($querystring) {
-        $querystring = '?'.$querystring;
+        $querystring = '?' . $querystring;
     }
     return $querystring;
 }
@@ -383,7 +383,7 @@ function beta_notice()
 
 function addnew($file, $label, $querystring = '', $attribs = '')
 {
-    output('<p class="addnew">'.internal_link($file, $label, $querystring, $attribs).'</p>');
+    output('<p class="addnew">' . internal_link($file, $label, $querystring, $attribs) . '</p>');
 }
 
 
@@ -391,7 +391,7 @@ function internal_link($file, $label, $querystring = '', $attribs = '')
 {
     global $prefix;
     if (strpos($file, '/') === 0) {
-        $file = $prefix.substr($file, 1);
+        $file = $prefix . substr($file, 1);
     }
     $querystring = encode_querystring($querystring);
     return "<a href=\"{$file}{$querystring}\" {$attribs} >{$label}</a>";
@@ -402,8 +402,8 @@ function html_form($form_id, $scriptname, $querystring, $content)
 {
     $querystring = encode_querystring($querystring);
     $ret = '';
-    $ret .= '<form id="'.$form_id.'" action="'.$scriptname.$querystring.'" method="post">'."\n";
-    $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="'.generate_form_token($form_id).'" /></p>'."\n";
+    $ret .= '<form id="' . $form_id . '" action="' . $scriptname . $querystring . '" method="post">' . "\n";
+    $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="' . generate_form_token($form_id) . '" /></p>' . "\n";
     $ret .= $content;
     $ret .= '</form>';
     return $ret;
@@ -434,8 +434,8 @@ function get_modules_info()
     $modconfig = [];
     foreach ($modules as $name) {
         $modconfig[$name] = null;
-        if (file_exists('modules/'.$name.'/module.info')) {
-            $modconfig[$name] = parse_ini_file('modules/'.$name.'/module.info');
+        if (file_exists('modules/' . $name . '/module.info')) {
+            $modconfig[$name] = parse_ini_file('modules/' . $name . '/module.info');
         }
     }
     return $modconfig;
@@ -447,7 +447,7 @@ function send_mail($address, $subject, $body)
     if (strstr($subject, "\n") !== false) {
         die("Zeilenumbruch im subject!");
     }
-    $header = "From: ".config('company_name')." Web Administration <".config('adminmail').">\r\nCc: ".config('adminmail')."\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\nX-schokokeks-org-message: webinterface";
+    $header = "From: " . config('company_name') . " Web Administration <" . config('adminmail') . ">\r\nCc: " . config('adminmail') . "\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\nX-schokokeks-org-message: webinterface";
     $subject = mb_encode_mimeheader($subject, "utf-8", "Q");
     $body = quoted_printable_encode($body);
     mail($address, $subject, $body, $header);
@@ -456,13 +456,13 @@ function send_mail($address, $subject, $body)
 function handle_exception($e)
 {
     if (config('enable_debug')) {
-        print_r($e->getMessage()."<br>");
+        print_r($e->getMessage() . "<br>");
         debug_print_backtrace();
         echo("<br>");
-        print_r(serialize($_POST)."<br>");
+        print_r(serialize($_POST) . "<br>");
         print_r(serialize($_SERVER));
     } else {
-        $msg = "Exception caught:\n".$e->getMessage()."\n".serialize($_POST)."\n".serialize($_SERVER);
+        $msg = "Exception caught:\n" . $e->getMessage() . "\n" . serialize($_POST) . "\n" . serialize($_SERVER);
         mail(config("adminmail"), "Exception on configinterface", $msg);
     }
 }

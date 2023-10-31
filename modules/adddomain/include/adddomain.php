@@ -27,9 +27,9 @@ function get_domain_offer($domainname)
     $domainname = preg_replace('/^www\./', '', $domainname);
 
     $basename = preg_replace('/([^\.]+)\..*$/', '\1', $domainname);
-    DEBUG('Found Basename: '.$basename);
+    DEBUG('Found Basename: ' . $basename);
     $tld = preg_replace('/^[^\.]*\./', '', $domainname);
-    DEBUG('Found TLD: '.$tld);
+    DEBUG('Found TLD: ' . $tld);
 
     $cid = (int) $_SESSION['customerinfo']['customerno'];
 
@@ -46,7 +46,7 @@ function get_domain_offer($domainname)
         $result = db_query("SELECT tld, gebuehr, setup FROM misc.domainpreise WHERE tld=:tld AND ruecksprache='N'", [":tld" => $tld]);
     }
     if ($result->rowCount() != 1) {
-        warning('Die Endung »'.$tld.'« steht zur automatischen Eintragung nicht zur Verfügung.');
+        warning('Die Endung »' . $tld . '« steht zur automatischen Eintragung nicht zur Verfügung.');
         return;
     }
     $temp = $result->fetch();
@@ -55,7 +55,7 @@ function get_domain_offer($domainname)
 
     $available = api_domain_available($domainname);
     if (!$available) {
-        warning('Die Domain »'.$domainname.'« ist leider nicht verfügbar.');
+        warning('Die Domain »' . $domainname . '« ist leider nicht verfügbar.');
         return;
     }
     return $data;
@@ -90,7 +90,7 @@ function register_domain($domainname, $uid)
                 ":useraccount" => $useraccount,
                 ":basename" => $data['basename'],
                 ":tld" => $data['tld'], ];
-    db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail) VALUES ".
+    db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail) VALUES " .
            "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto') ", $args);
     $domid = db_insert_id();
     /*if ($data['setup']) {

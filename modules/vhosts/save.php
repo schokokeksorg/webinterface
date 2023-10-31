@@ -49,11 +49,11 @@ if ($_GET['action'] == 'edit') {
         $domain = new Domain((int) $userdomain['id']);
         $domain_id = $domain->id;
         $domainname = $domain->fqdn;
-        $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
+        $hostname = $hostname . '.' . $_SESSION['userinfo']['username'];
         $hostname = trim($hostname, " .-");
     } elseif ($domain_id == -2) {
         # use system masterdomain
-        $domainname = $_SESSION['userinfo']['username'].".".config('masterdomain');
+        $domainname = $_SESSION['userinfo']['username'] . "." . config('masterdomain');
     }
 
     $aliaswww = (isset($_POST['aliaswww']) && $_POST['aliaswww'] == 'aliaswww');
@@ -66,28 +66,28 @@ if ($_GET['action'] == 'edit') {
         }
     }
 
-    $fqdn = ($hostname !== "" ? $hostname."." : "").$domainname;
+    $fqdn = ($hostname !== "" ? $hostname . "." : "") . $domainname;
     verify_input_hostname_utf8($fqdn);
     if ($aliaswww) {
-        verify_input_hostname_utf8("www.".$fqdn);
+        verify_input_hostname_utf8("www." . $fqdn);
     }
 
     $docroot = '';
     if ($_POST['vhost_type'] == 'regular' || $_POST['vhost_type'] == 'dav') {
-        $defaultdocroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domainname).'/htdocs';
+        $defaultdocroot = $vhost['homedir'] . '/websites/' . ((strlen($hostname) > 0) ? $hostname . '.' : '') . ($domainname) . '/htdocs';
 
         $docroot = '';
         if (isset($_POST['docroot'])) {
             if (!check_path($_POST['docroot'])) {
                 system_failure("Eingegebener Pfad enthält ungültige Angaben");
             }
-            $docroot = $vhost['homedir'].'/websites/'.$_POST['docroot'];
+            $docroot = $vhost['homedir'] . '/websites/' . $_POST['docroot'];
         }
         if ((isset($_POST['use_default_docroot']) && $_POST['use_default_docroot'] == '1') || ($docroot == $defaultdocroot)) {
             $docroot = null;
         }
 
-        DEBUG("Document-Root: ".$docroot);
+        DEBUG("Document-Root: " . $docroot);
     }
     $php = null;
     if ($_POST['vhost_type'] == 'regular' && isset($_POST['php'])) {
@@ -245,7 +245,7 @@ if ($_GET['action'] == 'edit') {
     DEBUG($old_options);
     DEBUG($new_options);
     $options = implode(',', $new_options);
-    DEBUG('New options: '.$options);
+    DEBUG('New options: ' . $options);
 
     $vhost['hostname'] = $hostname;
     $vhost['domain_id'] = $domain_id;
@@ -291,11 +291,11 @@ if ($_GET['action'] == 'edit') {
         $domain = new Domain((int) $userdomain['id']);
         $domain_id = $domain->id;
         $domainname = $domain->fqdn;
-        $hostname = $hostname.'.'.$_SESSION['userinfo']['username'];
+        $hostname = $hostname . '.' . $_SESSION['userinfo']['username'];
         $hostname = trim($hostname, " .-");
     } elseif ($domain_id == -2) {
         # use system masterdomain
-        $domainname = $_SESSION['userinfo']['username'].".".config('masterdomain');
+        $domainname = $_SESSION['userinfo']['username'] . "." . config('masterdomain');
     }
 
     if (!is_array($_POST['options'])) {
@@ -304,10 +304,10 @@ if ($_GET['action'] == 'edit') {
     $aliaswww = in_array('aliaswww', $_POST['options']);
     $forward = in_array('forward', $_POST['options']);
 
-    $fqdn = ($hostname !== "" ? $hostname."." : "").$domainname;
+    $fqdn = ($hostname !== "" ? $hostname . "." : "") . $domainname;
     verify_input_hostname_utf8($fqdn);
     if ($aliaswww) {
-        verify_input_hostname_utf8("www.".$fqdn);
+        verify_input_hostname_utf8("www." . $fqdn);
     }
 
     $new_options = [];
@@ -319,7 +319,7 @@ if ($_GET['action'] == 'edit') {
     }
     DEBUG($new_options);
     $options = implode(',', $new_options);
-    DEBUG('New options: '.$options);
+    DEBUG('New options: ' . $options);
 
     $alias['hostname'] = $hostname;
     $alias['domain_id'] = $domain_id;
@@ -329,7 +329,7 @@ if ($_GET['action'] == 'edit') {
     save_alias($alias);
 
     if (!$debugmode) {
-        header('Location: aliases?vhost='.$vhost['id']);
+        header('Location: aliases?vhost=' . $vhost['id']);
     }
 } elseif ($_GET['action'] == 'deletealias') {
     $title = "Website-Alias löschen";
@@ -349,11 +349,11 @@ if ($_GET['action'] == 'edit') {
     } elseif ($sure === true) {
         delete_alias($alias['id']);
         if (!$debugmode) {
-            header('Location: aliases?vhost='.$vhost['id']);
+            header('Location: aliases?vhost=' . $vhost['id']);
         }
     } elseif ($sure === false) {
         if (!$debugmode) {
-            header('Location: aliases?vhost='.$vhost['id']);
+            header('Location: aliases?vhost=' . $vhost['id']);
         }
     }
 } elseif ($_GET['action'] == 'delete') {

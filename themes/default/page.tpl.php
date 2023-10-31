@@ -64,7 +64,7 @@ if ($messages) {
 <?php if ($footnotes) {
     echo '<div class="footnotes">';
     foreach ($footnotes as $num => $explaination) {
-        echo '<p>'.str_repeat('*', $num + 1).': '.$explaination.'</p>';
+        echo '<p>' . str_repeat('*', $num + 1) . ': ' . $explaination . '</p>';
     }
     echo '</div>';
 } ?>

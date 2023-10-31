@@ -108,7 +108,7 @@ function generate_qrcode_image_invoice($id)
 {
     $invoice = invoice_details($id);
     $customerno = $invoice['kunde'];
-    $amount = 'EUR'.sprintf('%.2f', $invoice['betrag']);
+    $amount = 'EUR' . sprintf('%.2f', $invoice['betrag']);
     $datum = $invoice['datum'];
     $data = 'BCD
 001
@@ -117,10 +117,10 @@ SCT
 GENODES1VBK
 schokokeks.org GbR
 DE91602911200041512006
-'.$amount.'
+' . $amount . '
 
 
-RE '.$id.' KD '.$customerno.' vom '.$datum;
+RE ' . $id . ' KD ' . $customerno . ' vom ' . $datum;
 
     $descriptorspec = [
     0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
@@ -238,7 +238,7 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
         $counter++;
         $referenz = sprintf('K%04d-M%03d', $cid, $counter);
     }
-    DEBUG('Nächste freie Mandatsreferenz: '. $referenz);
+    DEBUG('Nächste freie Mandatsreferenz: ' . $referenz);
 
     $glaeubiger_id = config('glaeubiger_id');
 
@@ -262,18 +262,18 @@ function get_bank_info($iban)
     if (strlen($iban) != 22 || substr($iban, 0, 2) != 'DE') {
         // Geht nur bei deutschen IBANs
         echo 'Fehler!';
-        echo '$iban = '.$iban;
-        echo 'strlen($iban): '.strlen($iban);
-        echo 'substr($iban, 0, 2): '.substr($iban, 0, 2);
+        echo '$iban = ' . $iban;
+        echo 'strlen($iban): ' . strlen($iban);
+        echo 'substr($iban, 0, 2): ' . substr($iban, 0, 2);
         return null;
     }
     $blz = substr($iban, 4, 8);
     // FIXME: Liste der BLZs muss vorhanden sein!
-    $bankinfofile = dirname(__FILE__).'/bankinfo.txt';
+    $bankinfofile = dirname(__FILE__) . '/bankinfo.txt';
     $f = file($bankinfofile);
     $match = '';
     foreach ($f as $line) {
-        if (substr($line, 0, 9) == $blz.'1') {
+        if (substr($line, 0, 9) == $blz . '1') {
             $match = $line;
             break;
         }
@@ -341,10 +341,10 @@ function save_more_storage($items, $storage)
 
         $param = [];
         foreach ($data as $k => $v) {
-            $param[':'.$k] = $v;
+            $param[':' . $k] = $v;
         }
 
-        $queries[] = ["INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES ".
+        $queries[] = ["INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES " .
                        "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param, ];
     }
 
@@ -361,6 +361,6 @@ function save_more_storage($items, $storage)
     }
     $allstorage = $oldcustomerquota + $storage;
     $emailaddr = $_SESSION['customerinfo']['email'];
-    $message = "Hallo,\n\nsoeben wurde im Webinterface von ".config('company_name')." eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.\n\nIhre Kundennummer: {$_SESSION['customerinfo']['customerno']} ({$name})\n";
+    $message = "Hallo,\n\nsoeben wurde im Webinterface von " . config('company_name') . " eine Bestellung über zusätzlichen Speicherplatz ausgeführt.\nSollten Sie diese Bestellung nicht getätigt haben, antworten Sie bitte auf diese E-Mail um unseren Support zu erreichen.\n\nBei dieser Bestellung wurden {$storage} MB zusätzlicher Speicherplatz bestellt. Ihnen stehen ab sofort insgesamt {$allstorage} MB zur Verfügung.\n\nIhre Kundennummer: {$_SESSION['customerinfo']['customerno']} ({$name})\n";
     send_mail($emailaddr, 'Auftragsbestätigung: Mehr Speicherplatz bei schokokeks.org', $message);
 }

@@ -36,18 +36,18 @@ if (!$data) {
 $users = list_useraccounts();
 $userselect = [];
 foreach ($users as $u) {
-    $userselect[$u['uid']] = $u['username'].' / '.$u['name'];
+    $userselect[$u['uid']] = $u['username'] . ' / ' . $u['name'];
 }
 
 $form = '<table>
-<tr><td>Domainname:</td><td><strong>'.$data['domainname'].'</strong></td></tr>
-<tr><td>Jahresgebühr:</td><td style="text-align: right;">'.$data['gebuehr'].' €</td></tr>
-<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">'.$data['setup'].' €</td></tr>
-<tr><td>Benutzeraccount:</td><td>'.html_select('uid', $userselect).'</td></tr>
+<tr><td>Domainname:</td><td><strong>' . $data['domainname'] . '</strong></td></tr>
+<tr><td>Jahresgebühr:</td><td style="text-align: right;">' . $data['gebuehr'] . ' €</td></tr>
+<tr><td>Setup-Gebühr (einmalig):</td><td style="text-align: right;">' . $data['setup'] . ' €</td></tr>
+<tr><td>Benutzeraccount:</td><td>' . html_select('uid', $userselect) . '</td></tr>
 </table>
 
 <input type="submit" value="Domain eintragen" />';
 
-output(html_form('adddomain_add', 'save', 'domain='.$data['domainname'], $form));
+output(html_form('adddomain_add', 'save', 'domain=' . $data['domainname'], $form));
 
 output("<p><strong>Hinweis:</strong> Die hier angegebenen Beträge wurden automatisch aus unserer Preisliste ermittelt und werden zur Abrechnung verwendet. Sollten diese nicht der Vereinbarung entsprechen, teilen Sie uns dies bitte umgehend mit, damit wir dies korrigieren können.</p>");

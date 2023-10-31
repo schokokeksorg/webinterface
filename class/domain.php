@@ -131,7 +131,7 @@ class Domain
                 $this->data[$key] = $data[$key];
             }
         }
-        $this->data['fqdn'] = $data['domainname'].'.'.$data['tld'];
+        $this->data['fqdn'] = $data['domainname'] . '.' . $data['tld'];
         $this->data['punycode'] = idn_to_ascii($this->data['fqdn'], 0, INTL_IDNA_VARIANT_UTS46);
         $this->data['is_idn'] = ($this->data['fqdn'] != $this->data['punycode']);
         $this->data['reg_date'] = $data['registrierungsdatum'];
@@ -162,7 +162,7 @@ function get_domain_list($customerno = null, $uid = null)
     $query .= " ORDER BY domainname,tld";
     $result = db_query($query, []); // FIXME Übergebe leeren array um die Warnung zu unterdrücken
     $domains = [];
-    DEBUG('Result set is '.$result->rowCount()." rows.<br />\n");
+    DEBUG('Result set is ' . $result->rowCount() . " rows.<br />\n");
     if ($result->rowCount() > 0) {
         while ($domain = $result->fetch(PDO::FETCH_OBJ)) {
             array_push($domains, new Domain((int) $domain->id));

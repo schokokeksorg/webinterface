@@ -32,16 +32,16 @@ foreach ($jabberdomains as $dom) {
         $need_warning = true;
         continue;
     }
-    $options .= '<option value="'.$dom->id.'">'.$dom->fqdn.'</option>'."\n";
+    $options .= '<option value="' . $dom->id . '">' . $dom->fqdn . '</option>' . "\n";
 }
 
 
 output('<p>Erstellen Sie hier ein neues Jabber-Konto. Ihre Änderungen werden nach ca. 10 Minuten automatisch in das System übertragen. Accounts funktionieren also nicht unmittelbar nach dem Anlegen.</p>
 
-'.html_form('jabber_new_account', 'save', 'action=new', '
+' . html_form('jabber_new_account', 'save', 'action=new', '
 <table>
 <tr><td>Account-Name:</td><td><input type="text" name="local" value="" />&#160;@&#160;<select name="domain" size="1">
-'.$options.'
+' . $options . '
 </select></td></tr>
 <tr><td>Passwort:</td><td><input type="password" name="password" value="" /></td></tr>
 </table>
@@ -56,7 +56,7 @@ if ($need_warning) {
 <ul>');
     foreach ($jabberdomains as $dom) {
         if ($dom->jabber == 2) {
-            output('<li>'.$dom->fqdn.'</li>');
+            output('<li>' . $dom->fqdn . '</li>');
         }
     }
     output('</ul>');

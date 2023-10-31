@@ -31,10 +31,10 @@ output("<p>Da wir bei schokokeks.org Hosting immer auf volle Transparenz und Kun
 <p><strong>Wichtig:</strong> Um uns gegenüber Spassanmeldungen abzusichern, benötigt dieses automatisierte Verfahren Ihre Handynummer. Haben Sie kein Handy oder möchten Sie uns Ihre Handynummer nicht geben, können Sie auch über unseren E-Mail-Support einen gleichwertigen Test-Zugang anfordern.</p>");
 
 
-$form = '<p>'.label('mobile', 'Handynummer:').' '.textinput('mobile').'</p>
-<p>'.checkbox('terms', 'yes', false, 'Ich habe die <a href="https://schokokeks.org/agb">AGB</a> gelesen und erkläre hiermit meine Absicht, einen Zugang bei schokokeks.org unverbindlich zum Test des Angebots anzufordern.').'</p>
+$form = '<p>' . label('mobile', 'Handynummer:') . ' ' . textinput('mobile') . '</p>
+<p>' . checkbox('terms', 'yes', false, 'Ich habe die <a href="https://schokokeks.org/agb">AGB</a> gelesen und erkläre hiermit meine Absicht, einen Zugang bei schokokeks.org unverbindlich zum Test des Angebots anzufordern.') . '</p>
 <p>Sie erhalten nach dem Anfordern des Zugangs eine SMS auf Ihre angegebene Handynummer. Diese SMS enthält einen Code, den Sie auf der folgenden Seite eingeben müssen. Nach Eingabe des Codes wird Ihr Zugang umgehend freigeschaltet.</p>
-<p>'.submit('Testzugang anfordern').'</p>';
+<p>' . submit('Testzugang anfordern') . '</p>';
 
 
 output(html_form('register_step1', 'step1_save', '', $form));

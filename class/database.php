@@ -20,12 +20,12 @@ class DB extends PDO
 {
     public function __construct()
     {
-        $dsn = "mysql:host=".config('db_host', true);
+        $dsn = "mysql:host=" . config('db_host', true);
         if (config('db_port', true)) {
-            $dsn .= ';port='.config('db_port', true);
+            $dsn .= ';port=' . config('db_port', true);
         }
         if (config('db_socket', true)) {
-            $dsn = "mysql:unix_socket=".config('db_socket', true);
+            $dsn = "mysql:unix_socket=" . config('db_socket', true);
         }
         $username = config('db_user', true);
         $password = config('db_pass', true);
@@ -109,7 +109,7 @@ function __ensure_connected()
         } catch (PDOException $e) {
             global $debugmode;
             if ($debugmode) {
-                die("MySQL-Fehler: ".$e->getMessage());
+                die("MySQL-Fehler: " . $e->getMessage());
             } else {
                 die("Fehler bei der Datenbankverbindung!");
             }
@@ -123,17 +123,17 @@ function db_query($stmt, $params = null, $allowempty = false)
     global $_db;
     __ensure_connected();
     $backtrace = debug_backtrace();
-    DEBUG($backtrace[0]['file'].':'.$backtrace[0]['line'].': '.htmlspecialchars($stmt));
+    DEBUG($backtrace[0]['file'] . ':' . $backtrace[0]['line'] . ': ' . htmlspecialchars($stmt));
     if ($params) {
         DEBUG($params);
     }
     try {
         $result = $_db->myquery($stmt, $params, $allowempty);
-        DEBUG('=> '.$result->rowCount().' rows');
+        DEBUG('=> ' . $result->rowCount() . ' rows');
     } catch (PDOException $e) {
         global $debugmode;
         if ($debugmode) {
-            system_failure("MySQL-Fehler: ".$e->getMessage()."\nQuery:\n".$stmt."\nParameters:\n".print_r($params, true));
+            system_failure("MySQL-Fehler: " . $e->getMessage() . "\nQuery:\n" . $stmt . "\nParameters:\n" . print_r($params, true));
         } else {
             system_failure("Datenbankfehler");
         }

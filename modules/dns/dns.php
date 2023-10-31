@@ -41,9 +41,9 @@ foreach ($domains as $dom) {
     $style = "";
     if ($dom->dns == 0) {
         if (strstr($dom->domainname, '.')) {
-            $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>Subdomain ohne eigene DNS-Zone</td></tr>';
+            $output .= '<tr style="color: #999;"><td>' . $dom->fqdn . '</td><td>---</td><td>---</td><td>Subdomain ohne eigene DNS-Zone</td></tr>';
         } else {
-            $output .= '<tr style="color: #999;"><td>'.$dom->fqdn.'</td><td>---</td><td>---</td><td>'.icon_disabled('DNS-Server ausgeschaltet').' Es wird ein externer DNS-Server benutzt<br />'.internal_link('save', icon_add().' Lokalen DNS-Server aktivieren', "dom={$dom->id}&dns=1").'</td></tr>';
+            $output .= '<tr style="color: #999;"><td>' . $dom->fqdn . '</td><td>---</td><td>---</td><td>' . icon_disabled('DNS-Server ausgeschaltet') . ' Es wird ein externer DNS-Server benutzt<br />' . internal_link('save', icon_add() . ' Lokalen DNS-Server aktivieren', "dom={$dom->id}&dns=1") . '</td></tr>';
         }
         continue;
     }
@@ -53,21 +53,21 @@ foreach ($domains as $dom) {
     if ($dom->provider != 'terions' || $dom->billing != 'regular' || $dom->registrierungsdatum == null || $dom->kuendigungsdatum != null) {
         $state = check_dns($dom->domainname, $dom->tld);
         if ($state !== true) {
-            $current = 'Momentaner DNS-Server (u.A.): '.$state;
+            $current = 'Momentaner DNS-Server (u.A.): ' . $state;
             if ($state == 'NXDOMAIN') {
                 $current = 'Diese Domain ist aktuell nicht registriert.';
             }
             if (substr_compare($state, config('masterdomain'), -strlen(config('masterdomain')), strlen(config('masterdomain'))) === 0) {
-                $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').'<br />'.icon_warning().'Es werden veraltete DNS-Server benutzt<br />'.$current.'</td></tr>';
+                $output .= '<tr><td>' . internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}") . '</td><td>' . count($records) . '</td><td>' . $autorec . '</td><td>' . icon_enabled('DNS-Server aktiv') . '<br />' . icon_warning() . 'Es werden veraltete DNS-Server benutzt<br />' . $current . '</td></tr>';
                 continue;
             } else {
-                $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').'<br />'.icon_warning().' Lokaler DNS-Server eingeschaltet aber nicht genutzt<br />'.$current.'<br />'.internal_link('save', icon_delete().' Lokalen DNS-Server abschalten', "dom={$dom->id}&dns=0").'</td></tr>';
+                $output .= '<tr><td>' . internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}") . '</td><td>' . count($records) . '</td><td>' . $autorec . '</td><td>' . icon_enabled('DNS-Server aktiv') . '<br />' . icon_warning() . ' Lokaler DNS-Server eingeschaltet aber nicht genutzt<br />' . $current . '<br />' . internal_link('save', icon_delete() . ' Lokalen DNS-Server abschalten', "dom={$dom->id}&dns=0") . '</td></tr>';
                 $unused_dns = true;
                 continue;
             }
         }
     }
-    $output .= '<tr><td>'.internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}").'</td><td>'.count($records).'</td><td>'.$autorec.'</td><td>'.icon_enabled('DNS-Server aktiv').'</td></tr>';
+    $output .= '<tr><td>' . internal_link('dns_domain', $dom->fqdn, "dom={$dom->id}") . '</td><td>' . count($records) . '</td><td>' . $autorec . '</td><td>' . icon_enabled('DNS-Server aktiv') . '</td></tr>';
 
     /*  if ($records)
       {
@@ -95,7 +95,7 @@ if ($external_domains) {
 <p>Wenn Sie Ihre Domains bei einem anderen Provider registrieren und dennoch unsere DNS-Server nutzen möchten, dann stellen Sie bitte sicher, dass der DNS-Server oben eingeschaltet ist und stellen Sie dann folgende DNS-Server ein:<p>
 <ul>';
     foreach ($own_ns as $ns) {
-        $output .= '<li>'.$ns.'</li>';
+        $output .= '<li>' . $ns . '</li>';
     }
     $output .= '</ul>';
 }

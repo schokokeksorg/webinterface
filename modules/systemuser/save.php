@@ -95,7 +95,7 @@ if ($_GET['action'] == 'new') {
         if ($_SESSION['role'] & ROLE_CUSTOMER) {
             $location = 'account';
         }
-        header('Location: '.$location);
+        header('Location: ' . $location);
     }
 } elseif ($_GET['action'] == 'delete') {
     system_failure("Benutzeraccounts zu löschen ist momentan nicht über diese Oberfläche möglich. Bitte wenden Sie sich an einen Administrator.");

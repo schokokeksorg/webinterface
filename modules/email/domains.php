@@ -27,7 +27,7 @@ $subdomains = $settings['subdomains'];
 DEBUG($settings);
 
 title("E-Mail-Verwaltung");
-output('<p>Sie können bei '.config('company_name').' die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
+output('<p>Sie können bei ' . config('company_name') . ' die E-Mails Ihrer Domains auf zwei unterschiedliche Arten empfangen.</p>
 <ol><li>Sie können einfache E-Mail-Konten erstellen, die ankommende E-Mails speichern oder weiterleiten.</li>
 <li>Sie können die manuelle Verwaltung wählen, bei der Sie passende .courier-Dateien für den Empfang und
 manuelle POP3/IMAP-Konten für den Abruf erstellen können.</li></ol>
@@ -57,7 +57,7 @@ foreach ($domains as $id => $dom) {
     }
     if (domain_has_vmail_accounts($id)) {
         $edit_disabled = true;
-        $notice = 'Keine Änderung möglich, solange noch '.internal_link("vmail", "E-Mail-Konten").' für diese Domain eingerichtet sind.';
+        $notice = 'Keine Änderung möglich, solange noch ' . internal_link("vmail", "E-Mail-Konten") . ' für diese Domain eingerichtet sind.';
     }
     if ($dom['mailserver_lock']) {
         $trextra .= ' style="background-color: #faa;"';
@@ -67,13 +67,13 @@ foreach ($domains as $id => $dom) {
     $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
     $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
 
-    $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled' : '').'" id="buttonset-'.$id.'">
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
-         <label for="option-'.$id.'-webinterface">Webinterface</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
-         <label for="option-'.$id.'-manual">Manuell</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.$check_off.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
-         <label for="option-'.$id.'-off">Ausgeschaltet</label>
+    $buttons = '<span class="buttonset' . ($edit_disabled ? ' disabled' : '') . '" id="buttonset-' . $id . '">
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <label for="option-' . $id . '-webinterface">Webinterface</label>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <label for="option-' . $id . '-manual">Manuell</label>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . $check_off . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <label for="option-' . $id . '-off">Ausgeschaltet</label>
          <input type="submit" value="Speichern" />
       </span>';
 
@@ -81,17 +81,17 @@ foreach ($domains as $id => $dom) {
         $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
         $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
         $check_dkimoff = ($dom['dkim'] == 'none' ? ' checked="checked"' : '');
-        $buttons .= '&nbsp;<select name="dkim-'.$id.'" id="dkim-select-'.$id.'" class="autosubmit">
-            <option value="dmarc" '.($dom['dkim'] == 'dmarc' ? 'selected' : '').'>DKIM + DMARC</option>
-            <option value="dkim" '.($dom['dkim'] == 'dkim' ? 'selected' : '').'>Nur DKIM</option>
-            <option value="none" '.($dom['dkim'] == 'none' ? 'selected' : '').'>DKIM ausgeschaltet</option>
+        $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
+            <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM + DMARC</option>
+            <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>Nur DKIM</option>
+            <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
         </select>
          <input class="hidden" type="submit" value="Speichern" />
       ';
     } else {
         //$buttons .= 'Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.';
     }
-    output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">".html_form('vmail_domainchange', 'domainchange', '', $buttons)."</td><td>{$notice}</td></tr>\n");
+    output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons) . "</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
         foreach ($subdomains[$id] as $subdom) {
             $odd = !$odd;
@@ -99,14 +99,14 @@ foreach ($domains as $id => $dom) {
             $edit_disabled = true;
             $check_webinterface = ($subdom['type'] == 'virtual' ? ' checked="checked"' : '');
             $check_manual = ($subdom['type'] == 'auto' || $subdom['type'] == 'manual' ? ' checked="checked"' : '');
-            $id = $id.'-'.$subdom['name'];
-            $buttons = '<span class="buttonset'.($edit_disabled ? ' disabled' : '').'" id="buttonset-'.$id.'">
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-webinterface" value="webinterface"'.$check_webinterface.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
-         <label for="option-'.$id.'-webinterface">Webinterface</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-manual" value="manual"'.$check_manual.' '.($edit_disabled ? ' disabled="disabled"' : '').'/>
-         <label for="option-'.$id.'-manual">Manuell</label>
-         <input type="radio" name="option-'.$id.'" id="option-'.$id.'-off" value="off"'.($edit_disabled ? ' disabled="disabled"' : '').'/>
-         <label for="option-'.$id.'-off">Ausgeschaltet</label>
+            $id = $id . '-' . $subdom['name'];
+            $buttons = '<span class="buttonset' . ($edit_disabled ? ' disabled' : '') . '" id="buttonset-' . $id . '">
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <label for="option-' . $id . '-webinterface">Webinterface</label>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <label for="option-' . $id . '-manual">Manuell</label>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <label for="option-' . $id . '-off">Ausgeschaltet</label>
       </span>';
             output("<tr{$trextra}><td>{$subdom['name']}.{$dom['name']}</td><td>{$buttons}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");
         }

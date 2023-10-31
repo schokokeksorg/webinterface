@@ -56,19 +56,19 @@ $checked = '';
 if ($count == 1024) {
     $checked = 'checked="checked" ';
 }
-$form = '<span class="buttonset"><input '.$checked.'type="radio" name="count" value="1024" id="count-1" /><label for="count-1">Zusätzlich <strong>1 GB</strong>, insgesamt also '.($customerquota + 1024).' MB</label> ';
+$form = '<span class="buttonset"><input ' . $checked . 'type="radio" name="count" value="1024" id="count-1" /><label for="count-1">Zusätzlich <strong>1 GB</strong>, insgesamt also ' . ($customerquota + 1024) . ' MB</label> ';
 if ($count == 2048) {
     $checked = 'checked="checked" ';
 } else {
     $checked = '';
 }
-$form .= '<input '.$checked.'type="radio" name="count" value="2048" id="count-2" /><label for="count-2">Zusätzlich <strong>2 GB</strong>, insgesamt also '.($customerquota + 2048).' MB</label> ';
+$form .= '<input ' . $checked . 'type="radio" name="count" value="2048" id="count-2" /><label for="count-2">Zusätzlich <strong>2 GB</strong>, insgesamt also ' . ($customerquota + 2048) . ' MB</label> ';
 if ($count == 5120) {
     $checked = 'checked="checked" ';
 } else {
     $checked = '';
 }
-$form .= '<input '.$checked.'type="radio" name="count" value="5120" id="count-5" /><label for="count-5">Zusätzlich <strong>5 GB</strong>, insgesamt also '.($customerquota + 5120).' MB</label>';
+$form .= '<input ' . $checked . 'type="radio" name="count" value="5120" id="count-5" /><label for="count-5">Zusätzlich <strong>5 GB</strong>, insgesamt also ' . ($customerquota + 5120) . ' MB</label>';
 
 $form .= '<input type="submit" value="Wählen" /></span>';
 output(html_form("more_storage_selection", "more_storage", "", $form));
@@ -77,16 +77,16 @@ $new_item = $hosting;
 unset($new_item['quelle']);
 unset($new_item['id']);
 $gb = $count / 1024;
-$new_item['beschreibung'] = 'Erweiterung Speicherplatz um '.$gb.' GB (Auftrag vom '.date('d.m.Y').')';
+$new_item['beschreibung'] = 'Erweiterung Speicherplatz um ' . $gb . ' GB (Auftrag vom ' . date('d.m.Y') . ')';
 $new_item['betrag'] = $gb;
 
 $startdate = $new_item['startdatum'];
 $diff = date_diff(date_create("now"), date_create($startdate), true);
-DEBUG('date_diff(now, '.$startdate.') => '.$diff->format('%y Year %m Month %d Day'));
+DEBUG('date_diff(now, ' . $startdate . ') => ' . $diff->format('%y Year %m Month %d Day'));
 $months = $diff->format("%m");
 
 $stub_startdate = date_create($startdate);
-date_sub($stub_startdate, date_interval_create_from_date_string($months.' months'));
+date_sub($stub_startdate, date_interval_create_from_date_string($months . ' months'));
 $stub_enddate = date_create($startdate);
 date_sub($stub_enddate, date_interval_create_from_date_string('1 day'));
 
@@ -115,7 +115,7 @@ foreach ($items as $item) {
     }
     $desc = $item['startdatum'];
     if ($item['enddatum'] != null) {
-        $desc = $item['startdatum'].' - '.$item['enddatum'];
+        $desc = $item['startdatum'] . ' - ' . $item['enddatum'];
     }
     $epreis = $item['betrag'];
     if ($item['brutto'] == 0) {
@@ -145,18 +145,18 @@ if (have_module('systemuser')) {
     $useraccounts = list_useraccounts();
 
     if (count($useraccounts) == 1) {
-        $form .= '<input type="hidden" name="more_storage_user" value="'.$useraccounts[0]['uid'].'" />';
+        $form .= '<input type="hidden" name="more_storage_user" value="' . $useraccounts[0]['uid'] . '" />';
     } else {
         $choices = ['' => 'Nicht zuweisen'];
         foreach ($useraccounts as $u) {
             $choices[$u['uid']] = "Benutzer ${u['username']} vergrößern";
         }
-        $form .= '<p>Wie soll der zusätzliche Speicherplatz verwendet werden?</p><p>'.html_select('more_storage_user', $choices, $_SESSION['userinfo']['uid']).'</p>';
+        $form .= '<p>Wie soll der zusätzliche Speicherplatz verwendet werden?</p><p>' . html_select('more_storage_user', $choices, $_SESSION['userinfo']['uid']) . '</p>';
     }
 }
 
 $form .= '<p>
-<input type="hidden" name="more_storage_handle" value="'.$handle.'" />
+<input type="hidden" name="more_storage_handle" value="' . $handle . '" />
 <input type="submit" value="Jetzt zahlungspflichtig bestellen" /><p>';
 
 

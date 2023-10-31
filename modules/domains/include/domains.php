@@ -162,13 +162,13 @@ function create_domain_secret($dom)
 
 function get_auth_dns($domainname, $tld)
 {
-    $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+    $domain = idn_to_ascii($domainname . "." . $tld, 0, INTL_IDNA_VARIANT_UTS46);
 
-    $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns '.$tld.'.');
+    $resp = shell_exec('dig @a.root-servers.net. +noall +authority -t ns ' . $tld . '.');
     $line = explode("\n", $resp, 2)[0];
     $NS = preg_replace("/^.*\\sIN\\s+NS\\s+(\\S+)$/", '\1', $line);
 
-    $resp = shell_exec('dig @'.$NS.' -t ns '.$domain.'.');
+    $resp = shell_exec('dig @' . $NS . ' -t ns ' . $domain . '.');
     $lines = explode("\n", $resp);
 
     $NS = null;
@@ -222,7 +222,7 @@ function has_own_ns($domainname, $tld)
 
 function get_txt_record($hostname, $domainname, $tld)
 {
-    $domain = idn_to_ascii($domainname.".".$tld, 0, INTL_IDNA_VARIANT_UTS46);
+    $domain = idn_to_ascii($domainname . "." . $tld, 0, INTL_IDNA_VARIANT_UTS46);
     $nsdata = get_auth_dns($domainname, $tld);
     $NS = null;
     foreach ($nsdata as $host => $ip) {
@@ -231,8 +231,8 @@ function get_txt_record($hostname, $domainname, $tld)
             $NS = $ip;
         }
     }
-    DEBUG('dig @'.$NS.' +short -t txt '.$hostname.'.'.$domain.'.');
-    $resp = shell_exec('dig @'.$NS.' +short -t txt '.$hostname.'.'.$domain.'.');
+    DEBUG('dig @' . $NS . ' +short -t txt ' . $hostname . '.' . $domain . '.');
+    $resp = shell_exec('dig @' . $NS . ' +short -t txt ' . $hostname . '.' . $domain . '.');
     $TXT = trim($resp, "\n \"");
     DEBUG($TXT);
     return $TXT;
@@ -329,7 +329,7 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     }
     $tld = $info['domainSuffix'];
     $domainname = str_replace(".$tld", "", $info['domainNameUnicode']);
-    logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain '.$info['domainNameUnicode']." DNS:{$dns} / Mail:{$mail}");
+    logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain ' . $info['domainNameUnicode'] . " DNS:{$dns} / Mail:{$mail}");
 
     db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
         ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", [$cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')]);
@@ -356,6 +356,6 @@ function convert_domain_to_external($domain)
 function delete_domain($id)
 {
     $cid = (int) $_SESSION['customerinfo']['customerno'];
-    logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Deleting domain '.$id);
+    logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Deleting domain ' . $id);
     db_query("DELETE FROM kundendaten.domains WHERE id=? AND kunde=?", [$id, $cid]);
 }

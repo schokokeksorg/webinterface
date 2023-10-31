@@ -55,7 +55,7 @@ if (isset($_POST['password1']) && $_POST['password1'] != '') {
 
 
 output('<p>Hier können Sie Ihr Passwort ändern.</p>
-'.html_form('email_chpass', 'chpass', '', '<table>
+' . html_form('email_chpass', 'chpass', '', '<table>
   <tr>
     <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
   </tr>

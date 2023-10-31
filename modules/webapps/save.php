@@ -33,7 +33,7 @@ if ($_POST['target'] == 'new') {
         $domainid = $domain->id;
         $domainname = $domain->fqdn;
     }
-    DEBUG('Domain: '.$domainid.' / '.$domainname);
+    DEBUG('Domain: ' . $domainid . ' / ' . $domainname);
 
     if (!isset($_POST['options']) || !is_array($_POST['options'])) {
         $_POST['options'] = [];
@@ -90,7 +90,7 @@ if ($_POST['target'] == 'new') {
     DEBUG($old_options);
     DEBUG($new_options);
     $options = implode(',', $new_options);
-    DEBUG('New options: '.$options);
+    DEBUG('New options: ' . $options);
 
     $vhost['hostname'] = $hostname;
     $vhost['domain_id'] = $domainid;
@@ -104,11 +104,11 @@ if ($_POST['target'] == 'new') {
 
     $domain = $domainname;
     if ($domainid == -1) {
-        $domain = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
+        $domain = $_SESSION['userinfo']['username'] . '.' . config('masterdomain');
     }
 
-    $url = ($ssl == 'forward' || $ssl == 'https' ? 'https://' : 'http://').($aliaswww ? 'www.' : '').((strlen($hostname) > 0) ? $hostname.'.' : '').$domain;
-    $docroot = $vhost['homedir'].'/websites/'.((strlen($hostname) > 0) ? $hostname.'.' : '').($domain).'/htdocs';
+    $url = ($ssl == 'forward' || $ssl == 'https' ? 'https://' : 'http://') . ($aliaswww ? 'www.' : '') . ((strlen($hostname) > 0) ? $hostname . '.' : '') . $domain;
+    $docroot = $vhost['homedir'] . '/websites/' . ((strlen($hostname) > 0) ? $hostname . '.' : '') . ($domain) . '/htdocs';
     DEBUG($vhost);
     DEBUG("New Vhost: {$url} / {$docroot}");
     save_vhost($vhost);
@@ -120,13 +120,13 @@ if ($_POST['target'] == 'new') {
         if ($docroot == $vhost['docroot']) {
             $url = $vhost['fqdn'];
             if (strstr($vhost['options'], 'aliaswww')) {
-                $url = 'www.'.$url;
+                $url = 'www.' . $url;
             }
 
             if ($vhost['ssl'] == 'forward' || $vhost['ssl'] == 'https') {
-                $url = 'https://'.$url;
+                $url = 'https://' . $url;
             } else {
-                $url = 'http://'.$url;
+                $url = 'http://' . $url;
             }
         }
     }
@@ -148,7 +148,7 @@ if ($docroot && $url) {
         system_failure('HTML-Krams im Namen der Anwendung');
     }
 
-    if (!file_exists(dirname(__FILE__).'/install/'.$application.'.php')) {
+    if (!file_exists(dirname(__FILE__) . '/install/' . $application . '.php')) {
         system_failure('Unbekannte Web-Anwendung.');
     }
 
@@ -156,6 +156,6 @@ if ($docroot && $url) {
     $_SESSION['webapp_url'] = $url;
 
     if (!$debugmode) {
-        header('Location: install/'.$application);
+        header('Location: install/' . $application);
     }
 }

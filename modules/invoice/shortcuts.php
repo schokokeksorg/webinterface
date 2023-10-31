@@ -25,7 +25,7 @@ if ($_SESSION['role'] & ROLE_CUSTOMER) {
         }
     }
     if ($unpayed_invoices > 0) {
-        $alert = $unpayed_invoices.' unbezahlt';
+        $alert = $unpayed_invoices . ' unbezahlt';
     }
 
     $shortcuts[] = [ 'section' => 'administration',

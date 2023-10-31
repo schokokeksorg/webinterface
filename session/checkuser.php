@@ -99,7 +99,7 @@ function find_role($login, $password, $i_am_admin = false)
     // Mail-Account
     $account = $login;
     if (!strstr($account, '@')) {
-        $account .= '@'.config('masterdomain');
+        $account .= '@' . config('masterdomain');
     }
     if (!$i_am_admin && have_module('webmailtotp')) {
         require_once('modules/webmailtotp/include/totp.php');
@@ -172,11 +172,11 @@ function get_customer_info($customer)
     $ret = [];
     $customerno = (int) $customer;
     if ($customerno != 0) {
-        DEBUG('Looking up customerinfo for customer no. '.$customerno);
+        DEBUG('Looking up customerinfo for customer no. ' . $customerno);
         $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden WHERE id=?", [$customerno]);
     } else {
         $username = $customer;
-        DEBUG('looking up customer info for username '.$username);
+        DEBUG('looking up customer info for username ' . $username);
         $result = db_query("SELECT id, anrede, firma, CONCAT_WS(' ', vorname, nachname) AS name, COALESCE(email,email_rechnung,email_extern) AS email FROM kundendaten.kunden AS k JOIN system.v_useraccounts AS u ON (u.kunde=k.id) WHERE u.username=?", [$username]);
     }
     if (@$result->rowCount() == 0) {
@@ -261,7 +261,7 @@ function set_systemuser_password($uid, $newpass)
 {
     $uid = (int) $uid;
     require_once('inc/base.php');
-    $newpass = crypt($newpass, '$6$'.random_string(8).'$');
+    $newpass = crypt($newpass, '$6$' . random_string(8) . '$');
     db_query("UPDATE system.passwoerter SET passwort=:newpass WHERE uid=:uid", [":newpass" => $newpass, ":uid" => $uid]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
 }
@@ -327,7 +327,7 @@ function setup_session($role, $useridentity)
     if ($role & ROLE_MAILACCOUNT) {
         $id = $useridentity;
         if (!strstr($id, '@')) {
-            $id .= '@'.config('masterdomain');
+            $id .= '@' . config('masterdomain');
         }
         $uid = user_for_mailaccount($id);
         $_SESSION['mailaccount'] = $id;

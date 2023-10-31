@@ -40,17 +40,17 @@ if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
         $domain = new Domain((int) $record['domain']);
         $fqdn = $domain->fqdn;
         if ($record['hostname']) {
-            $fqdn = $record['hostname'].'.'.$fqdn;
+            $fqdn = $record['hostname'] . '.' . $fqdn;
         }
-        are_you_sure("action=delete&id={$id}", "Möchten Sie den ".strtoupper($record['type'])."-Record für ".$fqdn." wirklich löschen?");
+        are_you_sure("action=delete&id={$id}", "Möchten Sie den " . strtoupper($record['type']) . "-Record für " . $fqdn . " wirklich löschen?");
     } elseif ($sure === true) {
         delete_dns_record($id);
         if (!$debugmode) {
-            header("Location: dns_domain?dom=".$record['domain']);
+            header("Location: dns_domain?dom=" . $record['domain']);
         }
     } elseif ($sure === false) {
         if (!$debugmode) {
-            header("Location: dns_domain?dom=".$record['domain']);
+            header("Location: dns_domain?dom=" . $record['domain']);
         }
     }
 } else {
@@ -67,6 +67,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
     save_dns_record($id, $record);
 
     if (!$debugmode) {
-        header('Location: dns_domain?dom='.$record['domain']);
+        header('Location: dns_domain?dom=' . $record['domain']);
     }
 }

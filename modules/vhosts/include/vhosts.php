@@ -117,7 +117,7 @@ function ipv6_possible($server)
     $args = [":server" => $server];
     $result = db_query("SELECT v6_prefix FROM system.servers WHERE id=:server OR hostname=:server", $args);
     $line = $result->fetch();
-    DEBUG("Server {$server} is v6-capable: ". ($line['v6_prefix'] != null));
+    DEBUG("Server {$server} is v6-capable: " . ($line['v6_prefix'] != null));
     return ($line['v6_prefix'] != null);
 }
 
@@ -160,7 +160,7 @@ function empty_alias()
     $alias['hostname'] = null;
 
     $alias['domain_id'] = -1;
-    $alias['domain'] = $_SESSION['userinfo']['username'].'.'.config('masterdomain');
+    $alias['domain'] = $_SESSION['userinfo']['username'] . '.' . config('masterdomain');
 
     $alias['options'] = null;
     return $alias;
@@ -189,7 +189,7 @@ function domainselect($selected = null, $selectattribute = '')
     }
     $selected = (int) $selected;
 
-    $ret = '<select id="domain" name="domain" size="1" '.$selectattribute.' >';
+    $ret = '<select id="domain" name="domain" size="1" ' . $selectattribute . ' >';
     $found = false;
     foreach ($domainlist as $dom) {
         $s = '';
@@ -203,11 +203,11 @@ function domainselect($selected = null, $selectattribute = '')
     $ret .= ' <option value="" disabled="disabled">--------------------------------</option>';
     if ($userdomain) {
         $s = ($selected == -1 ? ' selected="selected"' : '');
-        $ret .= ' <option value="-1"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.$userdomain['name'].'</option>';
+        $ret .= ' <option value="-1"' . $s . '>' . $_SESSION['userinfo']['username'] . '.' . $userdomain['name'] . '</option>';
     }
     if ($selected == -2) {
         $s = ($selected == -2 ? ' selected="selected"' : '');
-        $ret .= ' <option value="-2"'.$s.'>'.$_SESSION['userinfo']['username'].'.'.config('masterdomain').' (Bitte nicht mehr benutzen!)</option>';
+        $ret .= ' <option value="-2"' . $s . '>' . $_SESSION['userinfo']['username'] . '.' . config('masterdomain') . ' (Bitte nicht mehr benutzen!)</option>';
         if ($selected > 0 and !$found) {
             system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
         }
@@ -247,7 +247,7 @@ function get_vhost_details($id)
         }
     }
     if ($ret['hsts'] === null) {
-        DEBUG('HSTS: '.$ret['hsts']);
+        DEBUG('HSTS: ' . $ret['hsts']);
         $ret['hsts'] = -1;
     }
     $ret['server'] = $ret['server_id'];
@@ -274,12 +274,12 @@ function get_all_aliases($vhost)
     $aliases = get_aliases($vhost['id']);
     $ret = [];
     if (strstr($vhost['options'], 'aliaswww')) {
-        array_push($ret, ['id' => 'www', 'fqdn' => 'www.'.$vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : null)]);
+        array_push($ret, ['id' => 'www', 'fqdn' => 'www.' . $vhost['fqdn'], 'options' => (strstr($vhost['options'], 'forwardwww') ? 'forward' : null)]);
     }
     foreach ($aliases as $item) {
         array_push($ret, $item);
         if (strstr($item['options'], 'aliaswww')) {
-            array_push($ret, ['id' => 'www_'.$item['id'], 'fqdn' => 'www.'.$item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : null)]);
+            array_push($ret, ['id' => 'www_' . $item['id'], 'fqdn' => 'www.' . $item['fqdn'], 'options' => (strstr($item['options'], 'forward') ? 'forward' : null)]);
         }
     }
     return $ret;
@@ -304,7 +304,7 @@ function delete_vhost($id)
         system_failure("id == 0");
     }
     $vhost = get_vhost_details($id);
-    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Removing vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Removing vhost #' . $id . ' (' . $vhost['hostname'] . '.' . $vhost['domain'] . ')');
     db_query("DELETE FROM vhosts.vhost WHERE id=?", [$vhost['id']]);
 }
 
@@ -316,7 +316,7 @@ function make_svn_vhost($id)
     if ($id == 0) {
         system_failure("id == 0");
     }
-    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to SVN');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #' . $id . ' to SVN');
     db_query("REPLACE INTO vhosts.dav (vhost, type) VALUES (?, 'svn')", [$id]);
     db_query("DELETE FROM vhosts.webapps WHERE vhost=?", [$id]);
 }
@@ -327,7 +327,7 @@ function make_dav_vhost($id)
     if ($id == 0) {
         system_failure("id == 0");
     }
-    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to WebDAV');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #' . $id . ' to WebDAV');
     db_query("REPLACE INTO vhosts.dav (vhost, type, options) VALUES (?, 'dav', 'nouserfile')", [$id]);
     db_query("DELETE FROM vhosts.webapps WHERE vhost=?", [$id]);
 }
@@ -338,7 +338,7 @@ function make_regular_vhost($id)
     if ($id == 0) {
         system_failure("id == 0");
     }
-    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #'.$id.' to regular');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Converting vhost #' . $id . ' to regular');
     db_query("DELETE FROM vhosts.dav WHERE vhost=?", [$id]);
     db_query("DELETE FROM vhosts.webapps WHERE vhost=?", [$id]);
 }
@@ -356,7 +356,7 @@ function make_webapp_vhost($id, $webapp)
         system_failure("webapp-id invalid");
     }
     $webapp_name = $result->fetch(PDO::FETCH_OBJ)->displayname;
-    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp '.$webapp_name.' on vhost #'.$id);
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp ' . $webapp_name . ' on vhost #' . $id);
     db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES (?, ?)", [$id, $webapp]);
     mail('webapps-setup@schokokeks.org', 'setup', 'setup');
 }
@@ -371,7 +371,7 @@ function check_hostname_collision($hostname, $domain, $id = null)
     if ($domain == -1) {
         $userdomain = userdomain();
         if ($hostname) {
-            $hostname .= ".".$_SESSION['userinfo']['username'];
+            $hostname .= "." . $_SESSION['userinfo']['username'];
         }
         $args[":domain"] = $userdomain['id'];
     }
@@ -389,7 +389,7 @@ function check_hostname_collision($hostname, $domain, $id = null)
         $idcheck = ' AND id != :id';
         $args[':id'] = (int) $id;
     }
-    $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck} AND user=:uid ".$idcheck, $args);
+    $result = db_query("SELECT id FROM vhosts.vhost WHERE {$hostnamecheck} AND {$domaincheck} AND user=:uid " . $idcheck, $args);
     if ($result->rowCount() > 0) {
         system_failure('Eine Konfiguration mit diesem Namen gibt es bereits.');
     }
@@ -402,7 +402,7 @@ function check_hostname_collision($hostname, $domain, $id = null)
     if ($result->rowCount() > 0) {
         $data = $result->fetch();
         $vh = get_vhost_details($data['vhost']);
-        system_failure('Dieser Hostname ist bereits als Alias für »'.$vh['fqdn'].'« eingerichtet');
+        system_failure('Dieser Hostname ist bereits als Alias für »' . $vh['fqdn'] . '« eingerichtet');
     }
 }
 
@@ -496,13 +496,13 @@ function save_vhost($vhost)
                 ":options" => $vhost['options'],
                 ":id" => $id, ];
     if ($id != 0) {
-        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #'.$id.' ('.$vhost['hostname'].'.'.$vhost['domain'].')');
+        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #' . $id . ' (' . $vhost['hostname'] . '.' . $vhost['domain'] . ')');
         db_query("UPDATE vhosts.vhost SET hostname=:hostname, domain=:domain, docroot=:docroot, php=:php, cgi=:cgi, `ssl`=:ssl, hsts=:hsts, `suexec_user`=:suexec_user, `server`=:server, logtype=:logtype, errorlog=:errorlog, certid=:cert, ipv4=:ipv4, autoipv6=:autoipv6, options=:options WHERE id=:id", $args);
     } else {
         $args[":user"] = $_SESSION['userinfo']['uid'];
         unset($args[":id"]);
-        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost '.$vhost['hostname'].'.'.$vhost['domain'].'');
-        $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options) VALUES ".
+        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost ' . $vhost['hostname'] . '.' . $vhost['domain'] . '');
+        $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options) VALUES " .
                        "(:user, :hostname, :domain, :docroot, :php, :cgi, :ssl, :hsts, :suexec_user, :server, :logtype, :errorlog, :cert, :ipv4, :autoipv6, :options)", $args, true);
         $id = db_insert_id();
     }
@@ -551,7 +551,7 @@ function delete_alias($id)
     $id = (int) $id;
     $alias = get_alias_details($id);
 
-    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Removing alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
+    logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Removing alias #' . $id . ' (' . $alias['hostname'] . '.' . $alias['domain'] . ')');
     db_query("DELETE FROM vhosts.alias WHERE id=?", [$id]);
 }
 
@@ -579,11 +579,11 @@ function save_alias($alias)
                 ":id" => $id, ];
     if ($id == 0) {
         unset($args[":id"]);
-        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias '.$alias['hostname'].'.'.$alias['domain'].' for VHost '.$vhost['id']);
+        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias ' . $alias['hostname'] . '.' . $alias['domain'] . ' for VHost ' . $vhost['id']);
         db_query("INSERT INTO vhosts.alias (hostname, domain, vhost, options) VALUES (:hostname, :domain, :vhost, :options)", $args, true);
     } else {
         unset($args[":vhost"]);
-        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Updating alias #'.$id.' ('.$alias['hostname'].'.'.$alias['domain'].')');
+        logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Updating alias #' . $id . ' (' . $alias['hostname'] . '.' . $alias['domain'] . ')');
         db_query("UPDATE vhosts.alias SET hostname=:hostname, domain=:domain, options=:options WHERE id=:id", $args, true);
     }
 }

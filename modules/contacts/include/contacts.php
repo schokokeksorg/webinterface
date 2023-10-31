@@ -55,7 +55,7 @@ function get_contact($id, $customer = null)
         "id" => (int) $id, ];
     $result = db_query("SELECT id, state, lastchange, nic_id, nic_handle, salutation, company, name, address, zip, city, country, phone, mobile, fax, email, pgp_id, pgp_key FROM kundendaten.contacts WHERE id=:id AND customer=:cid", $args);
     if ($result->rowCount() == 0) {
-        DEBUG("Soll Kontakt #".$id." laden, MySQL lieferte aber keine Daten");
+        DEBUG("Soll Kontakt #" . $id . " laden, MySQL lieferte aber keine Daten");
         system_failure("Kontakt nicht gefunden oder gehört nicht diesem Kunden");
     }
     $contact = $result->fetch();
@@ -147,7 +147,7 @@ function set_kundenkontakt($typ, $id)
     } else {
         system_failure("Falscher Typ!");
     }
-    db_query("UPDATE kundendaten.kunden SET ".$field."=:contact WHERE id=:kunde", $args);
+    db_query("UPDATE kundendaten.kunden SET " . $field . "=:contact WHERE id=:kunde", $args);
     sync_legacy_contactdata();
 }
 
@@ -271,12 +271,12 @@ function send_emailchange_token($id, $email)
         "token" => random_string(20), ];
 
     db_query("INSERT INTO kundendaten.mailaddress_token (token, expire, contact, email) VALUES (:token, NOW() + INTERVAL 1 DAY, :id, :email)", $args);
-    DEBUG('Token erzeugt: '.print_r($args, true));
+    DEBUG('Token erzeugt: ' . print_r($args, true));
     $message = 'Diese E-Mail-Adresse wurde angegeben als möglicher Domaininhaber oder Kundenkontakt bei schokokeks.org Hosting.
 
 Bitte bestätigen Sie mit einem Klick auf den nachfolgenden Link, dass diese E-Mail-Adresse funktioniert und verwendet werden soll:
 
-    '.config('webinterface_url').'/verify'.$args['token'].'
+    ' . config('webinterface_url') . '/verify' . $args['token'] . '
 
 Wenn Sie diesen Link nicht innerhalb von 24 Stunden abrufen, wird Ihre Adresse gelöscht und nicht verwendet.
 Sollten Sie mit der Verwendung Ihrer E-Mail-Adresse nicht einverstanden sein, so ignorieren Sie daher bitte diese Nachricht oder teilen Sie uns dies mit.
@@ -288,7 +288,7 @@ Köchersberg 32, 71540 Murrhardt
 https://schokokeks.org
 ';
     # send welcome message
-    mail($email, '=?UTF-8?Q?Best=C3=A4tigung_Ihrer_E-Mail-Adresse?=', $message, "X-schokokeks-org-message: verify\nFrom: ".config('company_name').' <'.config('adminmail').">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
+    mail($email, '=?UTF-8?Q?Best=C3=A4tigung_Ihrer_E-Mail-Adresse?=', $message, "X-schokokeks-org-message: verify\nFrom: " . config('company_name') . ' <' . config('adminmail') . ">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
 }
 
 function update_pending($contactid)
@@ -333,7 +333,7 @@ function search_pgp_key($search)
         return null;
     }
     $output = [];
-    $command = 'LC_ALL=C /usr/bin/timeout 10 /usr/bin/gpg --batch --with-colons --keyserver hkps://hkps.pool.sks-keyservers.net --search-key '.escapeshellarg($search);
+    $command = 'LC_ALL=C /usr/bin/timeout 10 /usr/bin/gpg --batch --with-colons --keyserver hkps://hkps.pool.sks-keyservers.net --search-key ' . escapeshellarg($search);
     DEBUG($command);
     exec($command, $output);
     DEBUG($output);
@@ -367,13 +367,13 @@ function fetch_pgp_key($pgp_id)
     }
     $output = [];
     $ret = null;
-    $command = '/usr/bin/timeout 10 /usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key '.escapeshellarg($pgp_id);
+    $command = '/usr/bin/timeout 10 /usr/bin/gpg --batch --keyserver hkps://hkps.pool.sks-keyservers.net --no-auto-check-trustdb --trust-model=always --recv-key ' . escapeshellarg($pgp_id);
     DEBUG($command);
     exec($command, $output, $ret);
     DEBUG($output);
     DEBUG($ret);
     if ($ret == 0) {
-        $command = '/usr/bin/gpg --batch --with-colons --list-keys '.escapeshellarg($pgp_id);
+        $command = '/usr/bin/gpg --batch --with-colons --list-keys ' . escapeshellarg($pgp_id);
         DEBUG($command);
         exec($command, $output);
         DEBUG($output);
@@ -395,17 +395,17 @@ function import_pgp_key($pgp_key)
     $proc = popen($command, 'w');
     fwrite($proc, $pgp_key);
     $ret = pclose($proc);
-    DEBUG('Import des PGP-Keys: '.$ret);
+    DEBUG('Import des PGP-Keys: ' . $ret);
     return $ret === 0;
 }
 
 function test_pgp_key($pgp_id)
 {
-    $command = 'LC_ALL=C /usr/bin/gpg --batch --trust-model=always --encrypt --recipient '.escapeshellarg($pgp_id);
+    $command = 'LC_ALL=C /usr/bin/gpg --batch --trust-model=always --encrypt --recipient ' . escapeshellarg($pgp_id);
     DEBUG($command);
     $proc = popen($command, 'w');
     $ret = pclose($proc);
-    DEBUG('Test des PGP-Key: '.$ret);
+    DEBUG('Test des PGP-Key: ' . $ret);
     return $ret === 0;
 }
 
@@ -423,27 +423,27 @@ function domainlist_by_contact($c)
 
 function contact_as_string($contact)
 {
-    $adresse = nl2br(filter_output_html("\n".$contact['address']."\n".$contact['country'].'-'.$contact['zip'].' '.$contact['city']));
+    $adresse = nl2br(filter_output_html("\n" . $contact['address'] . "\n" . $contact['country'] . '-' . $contact['zip'] . ' ' . $contact['city']));
     if (!$contact['city']) {
         $adresse = '';
     }
     $name = filter_output_html($contact['name']);
     if ($contact['company']) {
-        $name = filter_output_html($contact['company'])."<br />".filter_output_html($contact['name']);
+        $name = filter_output_html($contact['company']) . "<br />" . filter_output_html($contact['name']);
     }
     $email = filter_output_html($contact['email']);
     $new_email = update_pending($contact['id']);
     if ($new_email) {
-        $email = "<strike>$email</strike><br/>".filter_output_html($new_email).footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
+        $email = "<strike>$email</strike><br/>" . filter_output_html($new_email) . footnote('Die E-Mail-Adresse wurde noch nicht bestätigt');
     }
     $email = implode("<br>\n", array_filter([$email, filter_output_html($contact['phone']), filter_output_html($contact['fax']), filter_output_html($contact['mobile'])]));
     $pgp = '';
     if ($contact['pgp_id']) {
         $pgpid = $contact['pgp_id'];
         if (strlen($pgpid) > 20) {
-            $pgpid = substr($pgpid, 0, 20).' '.substr($pgpid, 20);
+            $pgpid = substr($pgpid, 0, 20) . ' ' . substr($pgpid, 20);
         }
-        $pgp = '<p class="contact-pgp">'.other_icon('key.png').' PGP ID:<br>'.filter_output_html($pgpid).'</p>';
+        $pgp = '<p class="contact-pgp">' . other_icon('key.png') . ' PGP ID:<br>' . filter_output_html($pgpid) . '</p>';
     }
 
     $contact_string = "<p class=\"contact-id\">#{$contact['id']}</p><p class=\"contact-address\"><strong>$name</strong>$adresse</p><p class=\"contact-contact\">$email</p>$pgp";

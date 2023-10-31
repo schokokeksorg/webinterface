@@ -33,7 +33,7 @@ $content .= "<div><div style=\"margin: 2px 0; padding: 0; width: 200px; border: 
 $content .= '<h3>Einstellungen</h3>
 <p>Eingehende E-Mails für Ihre Adresse werden wie folgt verarbeitet:</p>';
 
-$content .= '<p>'.other_icon('go.png')." Ablegen in Ihrer Mailbox</p>";
+$content .= '<p>' . other_icon('go.png') . " Ablegen in Ihrer Mailbox</p>";
 
 
 if ($acc['autoresponder']) {
@@ -46,20 +46,20 @@ if ($acc['autoresponder']) {
         // Autoresponder abgeschaltet
         //$content .= '<p>'.other_icon('go.png')." Es wird keine automatische Antwort versendet</p>";
     } elseif ($valid_from > $now) {
-        $content .= '<p>'.other_icon('go.png')." Es wird ab dem {$valid_from_string} eine automatische Antwort versendet</p>";
+        $content .= '<p>' . other_icon('go.png') . " Es wird ab dem {$valid_from_string} eine automatische Antwort versendet</p>";
     } elseif ($valid_until == null) {
-        $content .= '<p>'.other_icon('go.png')." Es wird eine automatische Antwort versendet</p>";
+        $content .= '<p>' . other_icon('go.png') . " Es wird eine automatische Antwort versendet</p>";
     } elseif ($valid_until > $now) {
-        $content .= '<p>'.other_icon('go.png')." Es wird eine automatische Antwort versendet, jedoch nicht mehr ab dem {$valid_until_string}</p>";
+        $content .= '<p>' . other_icon('go.png') . " Es wird eine automatische Antwort versendet, jedoch nicht mehr ab dem {$valid_until_string}</p>";
     } elseif ($valid_until < $now) {
-        $content .= '<p>'.other_icon('go.png')." Es wird seit dem {$valid_until_string} keine automatische Antwort mehr versendet</p>";
+        $content .= '<p>' . other_icon('go.png') . " Es wird seit dem {$valid_until_string} keine automatische Antwort mehr versendet</p>";
     }
 }
 
 foreach ($acc['forwards'] as $fwd) {
-    $content .= '<p>'.other_icon('go.png')." Weiterleitung an <strong>".filter_output_html($fwd['destination'])."</strong></p>";
+    $content .= '<p>' . other_icon('go.png') . " Weiterleitung an <strong>" . filter_output_html($fwd['destination']) . "</strong></p>";
 }
 
 
 $content .= '<h3>Nachrichten-Abruf</h3>
-<p>'.internal_link('/go/email/logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server='.get_server_by_id($acc['server']).'&type=vmail').'</p>';
+<p>' . internal_link('/go/email/logindata', 'Zugangsdaten für E-Mail-Abruf anzeigen', 'server=' . get_server_by_id($acc['server']) . '&type=vmail') . '</p>';

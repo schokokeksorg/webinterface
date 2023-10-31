@@ -23,7 +23,7 @@ output('<p>Detailansicht Ihrer Rechnung. Beachten Sie bitte, dass diese Informat
 
 $invoice_id = (int) $_GET['id'];
 
-output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe ".internal_link("pdf", "als PDF-Datei <img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice_id}").".</p>
+output("<p>Für eine druckbare Version benutzen Sie bitte die Ausgabe " . internal_link("pdf", "als PDF-Datei <img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice_id}") . ".</p>
 <p>&#160;</p>");
 
 
@@ -32,9 +32,9 @@ $summe = 0;
 
 $invoice = invoice_details($invoice_id);
 
-output('<p style="border: 1px solid black; margin: 1em; padding: 0.5em;">Rechnungsnummer: '.$invoice_id.'<br />
-Kundennummer: '.$invoice['kunde'].'<br />
-Rechnungsdatum: '.$invoice['datum'].'
+output('<p style="border: 1px solid black; margin: 1em; padding: 0.5em;">Rechnungsnummer: ' . $invoice_id . '<br />
+Kundennummer: ' . $invoice['kunde'] . '<br />
+Rechnungsdatum: ' . $invoice['datum'] . '
 </p>
 
 ');
@@ -49,9 +49,9 @@ foreach ($items as $item) {
     }
     $desc = $item['beschreibung'];
     if ($item['enddatum'] == null) {
-        $desc .= '<br />(Leistungsdatum: '.$item['datum'].')';
+        $desc .= '<br />(Leistungsdatum: ' . $item['datum'] . ')';
     } else {
-        $desc .= '<br />(Leistungszeitraum: '.$item['datum'].' - '.$item['enddatum'].')';
+        $desc .= '<br />(Leistungszeitraum: ' . $item['datum'] . ' - ' . $item['enddatum'] . ')';
     }
     $epreis = $item['betrag'];
     if ($item['brutto'] == 0) {
@@ -75,11 +75,11 @@ $l = get_lastschrift($invoice_id);
 if ($invoice['bezahlt'] == 1) {
     output('<p>Diese Rechnung ist bereits bezahlt.</p>');
 } elseif ($l && $l['status'] == 'pending') {
-    output('<p>Diese Rechnung wird am '.$l['buchungsdatum'].' per Lastschrift eingezogen.</p>');
+    output('<p>Diese Rechnung wird am ' . $l['buchungsdatum'] . ' per Lastschrift eingezogen.</p>');
 } elseif ($l && $l['status'] == 'done') {
-    output('<p>Diese Rechnung wurde am '.$l['buchungsdatum'].' per Lastschrift eingezogen.</p>');
+    output('<p>Diese Rechnung wurde am ' . $l['buchungsdatum'] . ' per Lastschrift eingezogen.</p>');
 } else {
     $qrcode_image = generate_qrcode_image_invoice($invoice_id);
 
-    output('<h4>GiroCode für Mobile Banking (SEPA Credit Transfer)</h4><p><img src="data:image/png;base64,'.base64_encode($qrcode_image).'" /></p>');
+    output('<h4>GiroCode für Mobile Banking (SEPA Credit Transfer)</h4><p><img src="data:image/png;base64,' . base64_encode($qrcode_image) . '" /></p>');
 }

@@ -22,7 +22,7 @@ require_once('dnsinclude.php');
 $section = 'dns_dyndns';
 $dyndns = get_dyndns_account($_REQUEST['id']);
 
-title("Hostnames für DynDNS-Account ".filter_output_html($dyndns['handle']));
+title("Hostnames für DynDNS-Account " . filter_output_html($dyndns['handle']));
 
 $available_domains = [];
 
@@ -41,8 +41,8 @@ if ($records) {
 <ul>
 ';
     foreach ($records as $record) {
-        $type = strtoupper($record['type']).' / '.($record['type'] == 'a' ? 'IPv4' : 'IPv6');
-        $output .= '  <li>'.$record['fqdn'].' ('.$type.') '.internal_link('dyndns_hostname_delete', icon_delete(), 'id='.$record['id']).'</li>';
+        $type = strtoupper($record['type']) . ' / ' . ($record['type'] == 'a' ? 'IPv4' : 'IPv6');
+        $output .= '  <li>' . $record['fqdn'] . ' (' . $type . ') ' . internal_link('dyndns_hostname_delete', icon_delete(), 'id=' . $record['id']) . '</li>';
     }
     $output .= '</ul>';
 }
@@ -50,11 +50,11 @@ if ($records) {
 
 output('<h4>Neuen Hostname festlegen</h4>');
 
-$form = '<p><label for="hostname">Neuer Hostname: </label> <input type="text" name="hostname" id="hostname" value="'.filter_output_html($dyndns['handle']).'" />&#160;.&#160;'.html_select('domain', $available_domains).' </p>
+$form = '<p><label for="hostname">Neuer Hostname: </label> <input type="text" name="hostname" id="hostname" value="' . filter_output_html($dyndns['handle']) . '" />&#160;.&#160;' . html_select('domain', $available_domains) . ' </p>
 <p>Typ: <select name="type"><option value="a" selected="selected">A / IPv4</option><option value="aaaa">AAAA / IPv6</option></select></p>
 <p><input type="submit" value="Speichern"/></p>';
 
 
-output(html_form('dyndns_hostname_add', 'dyndns_hostname_add', 'id='.$dyndns['id'], $form));
+output(html_form('dyndns_hostname_add', 'dyndns_hostname_add', 'id=' . $dyndns['id'], $form));
 
-output('<p>'.internal_link('dyndns', 'Zurück zur Übersicht')."</p>");
+output('<p>' . internal_link('dyndns', 'Zurück zur Übersicht') . "</p>");

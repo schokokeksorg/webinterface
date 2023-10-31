@@ -30,12 +30,12 @@ if (customer_useraccount($account['uid'])) {
     system_failure('Zum Ändern des Passwortes für den Hauptbenutzer verwenden Sie bitte die entsprechende Funktion im Hauptmenü!');
 }
 
-output(html_form('systemuser_pwchange', 'save', 'action=pwchange&uid='.$account['uid'], '
+output(html_form('systemuser_pwchange', 'save', 'action=pwchange&uid=' . $account['uid'], '
 
 <h5>Neues Passwort</h5>
 <div style="margin-left: 2em;"> 
   <p>Geben Sie bitte Ihr neues Passwort zweimal ein. Bitte verzichten Sie auf Anführungszeichen!</p>
-  <p><label for="newpass1">Neues Passwort für »<strong>'.$account['username'].'</strong>«:</label> <input type="password" name="newpass1" id="newpass1" /></p>
+  <p><label for="newpass1">Neues Passwort für »<strong>' . $account['username'] . '</strong>«:</label> <input type="password" name="newpass1" id="newpass1" /></p>
   <p><label for="newpass2">Wiederholung des Passworts:</label> <input type="password" name="newpass2" id="newpass2" /></p>
 </div>
 

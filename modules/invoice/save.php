@@ -31,19 +31,19 @@ if ($_GET['action'] == 'new') {
     if (!check_date($gueltig_ab)) {
         system_failure('Konnte das Datum nicht auslesen');
     }
-    DEBUG('Gültig ab: '.$gueltig_ab);
+    DEBUG('Gültig ab: ' . $gueltig_ab);
 
     if (empty($_REQUEST['kontoinhaber'])) {
         system_failure('Bitte geben Sie den Kontoinhaber so an, wie dies bei Ihrer Bank hinterlegt ist.');
     }
     $name = $_REQUEST['kontoinhaber'];
-    DEBUG('Kontoinhaber:'.$name);
+    DEBUG('Kontoinhaber:' . $name);
 
     if (empty($_REQUEST['adresse'])) {
         system_failure('Bitte geben Sie die Adresse des Kontoinhabers an.');
     }
     $adresse = $_REQUEST['adresse'];
-    DEBUG('Adresse: '.$adresse);
+    DEBUG('Adresse: ' . $adresse);
 
     if (empty($_REQUEST['iban'])) {
         system_failure('Es wurde keine IBAN angegeben.');
@@ -52,13 +52,13 @@ if ($_GET['action'] == 'new') {
     if (!verify_iban($iban)) {
         system_failure("Die IBAN scheint nicht korrekt zu sein!");
     }
-    DEBUG('IBAN: '.$iban);
+    DEBUG('IBAN: ' . $iban);
 
     $bankname = $_REQUEST['bankname'];
     if (empty($_REQUEST['bankname'])) {
         system_failure('Bitte geben Sie den Namen der Bank an.');
     }
-    DEBUG('Bank: '.$bankname);
+    DEBUG('Bank: ' . $bankname);
 
     $bic = null;
     if (empty($_REQUEST['bic'])) {
@@ -70,10 +70,10 @@ if ($_GET['action'] == 'new') {
     } else {
         $bic = $_REQUEST['bic'];
     }
-    DEBUG('BIC: '.$bic);
+    DEBUG('BIC: ' . $bic);
 
 
     sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab);
 
-    redirect($prefix.'go/invoice/current');
+    redirect($prefix . 'go/invoice/current');
 }

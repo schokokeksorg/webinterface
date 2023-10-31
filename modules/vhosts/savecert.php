@@ -69,7 +69,7 @@ if ($_GET['action'] == 'new') {
             } else {
                 save_cert($certinfo, $cert, $key);
             }
-            output('<p>'.internal_link('certs', 'Zurück zur Übersicht').'</p>');
+            output('<p>' . internal_link('certs', 'Zurück zur Übersicht') . '</p>');
             if (isset($_REQUEST['csr'])) {
                 delete_csr($_REQUEST['csr']);
             }
@@ -109,14 +109,14 @@ if ($_GET['action'] == 'new') {
             }
 
             refresh_cert($id, $certinfo, $cert);
-            output('<p>'.internal_link('certs', 'Zurück zur Übersicht').'</p>');
+            output('<p>' . internal_link('certs', 'Zurück zur Übersicht') . '</p>');
             break;
     }
 } elseif ($_GET['action'] == 'delete') {
     $cert = cert_details($_GET['id']);
     $sure = user_is_sure();
     if ($sure === null) {
-        are_you_sure("action=delete&id={$cert['id']}", "Soll das Zertifikat für »".filter_output_html($cert['subject'])."« (gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich entfernt werden?");
+        are_you_sure("action=delete&id={$cert['id']}", "Soll das Zertifikat für »" . filter_output_html($cert['subject']) . "« (gültig von {$cert['valid_from']} bis {$cert['valid_until']}) wirklich entfernt werden?");
     } elseif ($sure === false) {
         header('Location: certs');
         die();

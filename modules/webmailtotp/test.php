@@ -27,7 +27,7 @@ if (isset($_REQUEST['username'])) {
 
     if (!strstr($username, '@')) {
         // Default-Domainname
-        $username = $username.'@'.config('masterdomain');
+        $username = $username . '@' . config('masterdomain');
     }
 
     $success = true;
@@ -47,9 +47,9 @@ if (isset($_REQUEST['username'])) {
 
 
     if ($success) {
-        output('<p>'.icon_ok().' Der Test war erfolgreich!');
+        output('<p>' . icon_ok() . ' Der Test war erfolgreich!');
     } else {
-        output('<p>'.icon_error().' Der Test war leider nicht erfolgreich.');
+        output('<p>' . icon_error() . ' Der Test war leider nicht erfolgreich.');
     }
 
 
@@ -59,7 +59,7 @@ if (isset($_REQUEST['username'])) {
     output('<p>Geben Sie hier die Login-Daten ein um Ihren Zugang zu testen.</p>');
 }
 
-$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="'.filter_output_html($username).'" /></p>
+$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="' . filter_output_html($username) . '" /></p>
 <p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass" /></p>
 <p>Der aktuellste Einmal-Code: <input type="text" name="totp_code" /></p>
 <p><input type="submit" value="Prüfen!" /></p>';

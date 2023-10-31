@@ -29,7 +29,7 @@ DEBUG($vhost);
 $aliases = get_aliases($id);
 DEBUG($aliases);
 
-$mainalias = (strstr($vhost['options'], 'aliaswww') ? '<br /><strong>www.'.$vhost['fqdn'].'</strong>' : '');
+$mainalias = (strstr($vhost['options'], 'aliaswww') ? '<br /><strong>www.' . $vhost['fqdn'] . '</strong>' : '');
 
 $form = "
   <table>
@@ -43,8 +43,8 @@ foreach ($aliases as $alias) {
         $aliastype = 'Umleitung auf Haupt-Adresse';
     }
     $formtoken = generate_form_token('aliases_toggle');
-    $havewww = '<br />www.'.$alias['fqdn'].' &#160; ('.internal_link('aliasoptions', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}").')';
-    $nowww = '<br />'.internal_link('aliasoptions', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
+    $havewww = '<br />www.' . $alias['fqdn'] . ' &#160; (' . internal_link('aliasoptions', 'WWW-Alias entfernen', "alias={$alias['id']}&aliaswww=0&formtoken={$formtoken}") . ')';
+    $nowww = '<br />' . internal_link('aliasoptions', 'Auch mit WWW', "alias={$alias['id']}&aliaswww=1&formtoken={$formtoken}");
     $wwwalias = (strstr($alias['options'], 'aliaswww') ? $havewww : $nowww);
 
     $to_forward = internal_link('aliasoptions', 'In Umleitung umwandeln', "alias={$alias['id']}&forward=1&formtoken={$formtoken}");
@@ -55,7 +55,7 @@ foreach ($aliases as $alias) {
     $form .= "<tr>
     <td>{$alias['fqdn']}{$wwwalias}</td>
     <td>{$aliastype}<br />{$typetoggle}</td>
-    <td>".internal_link('save', 'Aliasname löschen', "action=deletealias&alias={$alias['id']}")."</td></tr>
+    <td>" . internal_link('save', 'Aliasname löschen', "action=deletealias&alias={$alias['id']}") . "</td></tr>
   ";
 }
 
@@ -64,7 +64,7 @@ $form .= "
   <td>
     <strong>Neuen Aliasnamen hinzufügen</strong><br />
     <input type=\"text\" name=\"hostname\" id=\"hostname\" size=\"10\" value=\"\" />
-      <strong>.</strong>".domainselect()."<br />
+      <strong>.</strong>" . domainselect() . "<br />
     <input type=\"checkbox\" name=\"options[]\" id=\"aliaswww\" value=\"aliaswww\" />
       <label for=\"aliaswww\">Auch mit <strong>www</strong> davor.</label>
   </td>
@@ -80,8 +80,8 @@ $form .= "
 </tr>
 </table>";
 
-output(html_form('vhosts_add_alias', 'save', 'action=addalias&vhost='.$vhost['id'], $form));
+output(html_form('vhosts_add_alias', 'save', 'action=addalias&vhost=' . $vhost['id'], $form));
 
 output("<p>
-  ".internal_link("vhosts", "Zurück zur Übersicht")."
+  " . internal_link("vhosts", "Zurück zur Übersicht") . "
 </p>");

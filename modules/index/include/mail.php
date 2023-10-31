@@ -20,16 +20,16 @@ function send_user_token($username)
     $token = get_user_token($username);
     $email = emailaddress_for_user($username);
 
-    $tokenurl = config('webinterface_url').'/init'.$token.'?agb=1';
+    $tokenurl = config('webinterface_url') . '/init' . $token . '?agb=1';
 
-    $msg = 'Sie haben für Ihren Zugang bei '.config('company_name').' ein neues Passwort angefordert.
+    $msg = 'Sie haben für Ihren Zugang bei ' . config('company_name') . ' ein neues Passwort angefordert.
 Bitte besuchen Sie folgende Adresse um Ihr Passwort neu zu setzen:
-  '.$tokenurl.'
+  ' . $tokenurl . '
 
 Mit freundlichen Grüßen,
-Ihre Admins von '.config('company_name');
+Ihre Admins von ' . config('company_name');
 
-    $msg .= "\n\nDiese Anforderung haben wir am ".date("r")." von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
+    $msg .= "\n\nDiese Anforderung haben wir am " . date("r") . " von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
 
     send_mail($email, "Passwortanforderung fuer schokokeks.org", $msg);
 }
@@ -56,11 +56,11 @@ Diese automatische Nachricht dient der Überprüfung Ihrer Identität.
 
 Um sich ein neues Passwort setzen zu können, rufen Sie bitte den
 folgenden Link auf:
- ".config('webinterface_url')."/go/index/validate_token.php?customerno={$customer['customerno']}&token={$token}
+ " . config('webinterface_url') . "/go/index/validate_token.php?customerno={$customer['customerno']}&token={$token}
 
 Sollte Ihr E-Mail-Programm diesen Link nicht korrekt an den Browser
 übertragen, rufen Sie bitte die Seite
- ".config('webinterface_url')."/go/index/validate_token.php
+ " . config('webinterface_url') . "/go/index/validate_token.php
 auf und geben Sie die folgenden Daten ein:
  Kundennummer: {$customer['customerno']}
  Token:        {$token}

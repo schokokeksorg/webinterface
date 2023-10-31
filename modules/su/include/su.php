@@ -52,15 +52,15 @@ function customer_details($id)
 
 function find_customers($string)
 {
-    $args = [":string" => '%'.chop($string).'%', ":number" => $string];
+    $args = [":string" => '%' . chop($string) . '%', ":number" => $string];
     $return = [];
-    $result = db_query("SELECT k.id FROM kundendaten.kunden AS k LEFT JOIN system.useraccounts AS u ON (k.id=u.kunde) WHERE ".
-                     "firma LIKE :string OR firma2 LIKE :string OR ".
-                     "nachname LIKE :string OR vorname LIKE :string OR ".
-                     "adresse LIKE :string OR adresse2 LIKE :string OR ".
-                     "ort LIKE :string OR pgp_id LIKE :string OR ".
-                     "notizen LIKE :string OR email_rechnung LIKE :string OR ".
-                     "email LIKE :string OR email_extern LIKE :string OR u.name LIKE :string OR ".
+    $result = db_query("SELECT k.id FROM kundendaten.kunden AS k LEFT JOIN system.useraccounts AS u ON (k.id=u.kunde) WHERE " .
+                     "firma LIKE :string OR firma2 LIKE :string OR " .
+                     "nachname LIKE :string OR vorname LIKE :string OR " .
+                     "adresse LIKE :string OR adresse2 LIKE :string OR " .
+                     "ort LIKE :string OR pgp_id LIKE :string OR " .
+                     "notizen LIKE :string OR email_rechnung LIKE :string OR " .
+                     "email LIKE :string OR email_extern LIKE :string OR u.name LIKE :string OR " .
                      "u.username LIKE :string OR k.id=:number OR u.uid=:number", $args);
     while ($entry = $result->fetch()) {
         $return[] = $entry['id'];
@@ -83,7 +83,7 @@ function find_users_for_customer($id)
 {
     $id = (int) $id;
     $return = [];
-    $result = db_query("SELECT uid, username, name FROM system.useraccounts WHERE ".
+    $result = db_query("SELECT uid, username, name FROM system.useraccounts WHERE " .
                      "kunde=?", [$id]);
     while ($entry = $result->fetch()) {
         $return[] = $entry;
