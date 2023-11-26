@@ -63,7 +63,7 @@ if (count($invoices_to_show) == 0) {
                 $bezahlt = 'Wird abgebucht<br/>am ' . $l['buchungsdatum'];
                 $class = 'paid';
                 if ($l['status'] == 'rejected') {
-                    $bezahlt  = 'Abbuchung zurückgewiesen';
+                    $bezahlt = 'Abbuchung zurückgewiesen';
                     $class = 'unpaid';
                 }
             }

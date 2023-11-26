@@ -80,7 +80,7 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $start
     if (!$type || !$username) {
         system_failure('cannot get type or username of login');
     }
-    if ($startpage &&  !check_path($startpage)) {
+    if ($startpage && !check_path($startpage)) {
         system_failure('Startseite kaputt');
     }
 

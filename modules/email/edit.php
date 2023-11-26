@@ -54,7 +54,7 @@ if ($id == 0) {
 $has_extensions = $account['enableextensions'];
 $is_autoresponder = is_array($account['autoresponder']) && $account['autoresponder']['valid_from'] != null && ($account['autoresponder']['valid_until'] > date('Y-m-d') || $account['autoresponder']['valid_until'] == null);
 $is_forward = (count($account['forwards']) > 0);
-$is_mailbox = ($account['password'] != null  ||  $id == 0);
+$is_mailbox = ($account['password'] != null || $id == 0);
 $numforwards = max(count($account['forwards']), 1);
 
 $form = '';

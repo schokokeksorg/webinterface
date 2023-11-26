@@ -470,7 +470,7 @@ function save_vhost($vhost)
     }
 
     $autoipv6 = 1;
-    if ($vhost['autoipv6'] == 0 ||  $vhost['autoipv6'] == 2) {
+    if ($vhost['autoipv6'] == 0 || $vhost['autoipv6'] == 2) {
         $autoipv6 = $vhost['autoipv6'];
     }
 

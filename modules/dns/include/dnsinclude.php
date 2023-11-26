@@ -246,7 +246,7 @@ function save_dns_record($id, $record)
     }
     verify_input_hostname($record['hostname'], true);
     verify_input_recorddata($record['data']);
-    if ($record['ttl'] &&  (int) $record['ttl'] < 1) {
+    if ($record['ttl'] && (int) $record['ttl'] < 1) {
         system_failure('Fehler bei TTL');
     }
     warn_autorecord_collission($record['hostname'], $dom->fqdn, $record['type'], $record['data']);

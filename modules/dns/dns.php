@@ -28,7 +28,7 @@ output('<p>Hier sehen Sie eine Übersicht über die angelegten DNS-records zu Ih
 //$output .= '<table><tr><th>Hostname</th><th>Typ</th><th>IP-Adresse/Inhalt</th><th>TTL</th><th>&#160;</th></tr>
 //';
 
-$output .=  '<table><tr><th>Domainname</th><th>Manuelle records</th><th>Automatische records</th><th>Status</th></tr>';
+$output .= '<table><tr><th>Domainname</th><th>Manuelle records</th><th>Automatische records</th><th>Status</th></tr>';
 
 DEBUG($domains);
 
