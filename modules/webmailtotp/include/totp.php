@@ -51,7 +51,7 @@ function store_webmail_password($username, $oldpw, $newpw)
         $secret = str_pad($newpw, strlen($oldpw), $newpw);
     }
     if (strlen($oldpw) < strlen($newpw)) {
-        $newpw = substr($newpw, 0, strlen($oldpw));
+        $secret = substr($newpw, 0, strlen($oldpw));
     }
     if (strlen($oldpw) != strlen($secret)) {
         system_failure('Interner Fehler: Passwörter sind nicht gleich lang');
