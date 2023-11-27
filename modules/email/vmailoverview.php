@@ -39,9 +39,15 @@ $content .= '<p>' . other_icon('go.png') . " Ablegen in Ihrer Mailbox</p>";
 if ($acc['autoresponder']) {
     $now = date('Y-m-d H:i:s');
     $valid_from = $acc['autoresponder']['valid_from'];
-    $valid_from_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_from']));
+    $valid_from_string = '';
+    if ($valid_from) {
+        $valid_from_string = date('d.m.Y', strtotime($valid_from));
+    }
     $valid_until = $acc['autoresponder']['valid_until'];
-    $valid_until_string = date('d.m.Y', strtotime($acc['autoresponder']['valid_until']));
+    $valid_until_string = '';
+    if ($valid_until) {
+        $valid_until_string = date('d.m.Y', strtotime($valid_until));
+    }
     if ($valid_from == null) {
         // Autoresponder abgeschaltet
         //$content .= '<p>'.other_icon('go.png')." Es wird keine automatische Antwort versendet</p>";

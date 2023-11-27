@@ -10,12 +10,11 @@ This code is published under a 0BSD license.
 
 Nevertheless, in case you use a significant part of this code, we ask (but not require, see the license) that you keep the authors' names in place and return your changes to the public. We would be especially happy if you tell us what you're going to do with this code.
 */
-?><?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
+?><!DOCTYPE html>
+<html lang="de">
 <head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <?php
 if ($title) {
@@ -32,13 +31,16 @@ if ($title) {
 <body onload="javascript:document.getElementById('code').focus();">
 <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
 
+<a href="javascript:void(0);" class="menuicon" id="showmenu" onclick="showMenu()"><img src="<?php echo $THEME_PATH; ?>images/bars.svg" alt=""><span id="showmenutext">Menü</span></a>
+<a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
+<div class="sidebar" id="sidebar">
+
 <div class="menu">
-<a href="<?php echo $BASE_PATH; ?>"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
-
 <?php echo $menu; ?>
-
+</div>
+<div class="userinfo">
 <?php echo $userinfo; ?>
-
+</div>
 </div>
 
 <div class="content">
