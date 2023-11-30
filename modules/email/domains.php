@@ -37,7 +37,8 @@ beachtet. Subdomains können grundsätzlich nur durch Administratoren eingericht
 
 <p><strong>DKIM:</strong> Für jede Domain können Sie zudem einstellen, ob die ausgehenden Mails eine DKIM-Signatur bekommen 
 sollen bzw. ob zusätzlich eine DMARC-Policy veröffentlicht werden soll.</p>
-<p><a href="https://wiki.schokokeks.org/E-Mail/DKIM">Mehr Informationen zu DKIM / DMARC</a></p>
+
+<p class="warning"><strong>BITTE BEACHTEN:</strong> Vor der Aktivierung von DMARC beachten Sie bitte die <a href="https://wiki.schokokeks.org/E-Mail/DKIM">Informationen zu DKIM / DMARC</a>, insbesondere den Abschnitt "Mails von PHP-Applikationen und anderen serverseitigen Anwendungen".</p>
 
 <h4>Ihre Domains sind momentan wie folgt konfiguriert:</h4>
 
