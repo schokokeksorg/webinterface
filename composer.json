@@ -3,6 +3,7 @@
     "description": "Webinterface running at config.schokokeks.org",
     "license": "0BSD",
     "require": {
+        "lbuchs/webauthn": "^2.1.0",
         "bjeavons/zxcvbn-php": "^1.2",
         "giggsey/libphonenumber-for-php": "^8.8",
         "globalcitizen/php-iban": "^2.7.1",

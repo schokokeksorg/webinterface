@@ -1,0 +1,4 @@
+name = totp
+description = 2-Faktor-Authentifizierung für Login
+permission = Verwalten der 2-Faktor-Authentifizierung
+

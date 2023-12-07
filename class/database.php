@@ -111,6 +111,10 @@ function __ensure_connected()
             if ($debugmode) {
                 die("MySQL-Fehler: " . $e->getMessage());
             } else {
+                // log errors
+                $f = fopen("../dberror.log", "a");
+                fwrite($f, date('Y-m-d H:i:s') . ' ' . $_SERVER['PHP_SELF'] . ' DB exception: ' . $e->getMessage() . "\n");
+                fclose($f);
                 die("Fehler bei der Datenbankverbindung!");
             }
         }
@@ -135,6 +139,10 @@ function db_query($stmt, $params = null, $allowempty = false)
         if ($debugmode) {
             system_failure("MySQL-Fehler: " . $e->getMessage() . "\nQuery:\n" . $stmt . "\nParameters:\n" . print_r($params, true));
         } else {
+            // log errors
+            $f = fopen("../dberror.log", "a");
+            fwrite($f, date('Y-m-d H:i:s') . ' ' . $_SERVER['PHP_SELF'] . ' DB exception: ' . $e->getMessage() . "\n");
+            fclose($f);
             system_failure("Datenbankfehler");
         }
     }

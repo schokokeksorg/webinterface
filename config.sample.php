@@ -25,7 +25,7 @@ $config['db_user'] = 'username';
 $config['db_pass'] = 'password';
 
 
-$config['modules'] = ["index", "domains", "imap", "mysql", "jabber", "vhosts", "register", "systemuser", "su"];
+$config['modules'] = ["index", "domains", "imap", "mysql", "jabber", "vhosts", "register", "systemuser", "su", "loginsecurity"];
 
 $config['enable_debug'] = true;
 $config['logging'] = LOG_ERR;

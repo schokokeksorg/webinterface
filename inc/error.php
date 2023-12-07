@@ -150,6 +150,11 @@ function login_screen($why = null)
     if ($why) {
         warning($why);
     }
+    if (have_module('loginsecurity')) {
+        require_once('inc/javascript.php');
+        javascript('passkey_ajax.js', 'loginsecurity');
+        javascript('passkey_loginpage.js', 'loginsecurity');
+    }
     show_page('login');
     die();
 }

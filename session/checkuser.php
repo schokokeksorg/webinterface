@@ -14,7 +14,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
-
+require_once('modules/loginsecurity/include/totp.php');
 
 define('ROLE_ANONYMOUS', 0);
 define('ROLE_MAILACCOUNT', 1);
@@ -43,7 +43,7 @@ function find_role($login, $password, $i_am_admin = false)
     if ($uid == 0) {
         $uid = null;
     }
-    $result = db_query("SELECT username, passwort AS password, kundenaccount AS `primary`, status, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid=:uid OR username=:login LIMIT 1;", [":uid" => $uid, ":login" => $login]);
+    $result = db_query("SELECT uid, username, passwort AS password, kundenaccount AS `primary`, status, ((SELECT acc.uid FROM system.v_useraccounts AS acc LEFT JOIN system.gruppenzugehoerigkeit USING (uid) LEFT JOIN system.gruppen AS g ON (g.gid=gruppenzugehoerigkeit.gid) WHERE g.name='admin' AND acc.uid=u.uid) IS NOT NULL) AS admin FROM system.v_useraccounts AS u LEFT JOIN system.passwoerter USING(uid) WHERE u.uid=:uid OR username=:login LIMIT 1;", [":uid" => $uid, ":login" => $login]);
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         if (strcasecmp($entry->username, $login) == 0 && $entry->username != $login) {
@@ -107,7 +107,7 @@ function find_role($login, $password, $i_am_admin = false)
             if (check_webmail_password($account, $password)) {
                 $_SESSION['totp_username'] = $account;
                 $_SESSION['totp'] = true;
-                show_page('webmailtotp-login');
+                show_page('totp-login');
                 die();
             } else {
                 return null;
