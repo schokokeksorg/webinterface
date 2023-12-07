@@ -21,7 +21,7 @@ $req = filter_input(INPUT_POST, 'req');
 // Relying Party == Hostname
 $rpId = $_SERVER['HTTP_HOST'];
 
-$WebAuthn = new lbuchs\WebAuthn\WebAuthn(config('company_name').' Webinterface', $rpId);
+$WebAuthn = new lbuchs\WebAuthn\WebAuthn(config('company_name').' Webinterface', $rpId, ["none"]);
 
 if ($req == 'getCreateArgs') {
     require_role(ROLE_SYSTEMUSER);
