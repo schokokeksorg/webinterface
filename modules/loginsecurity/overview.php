@@ -23,11 +23,11 @@ output('<p>Sie können die Anmeldung bei ' . config('company_name') . ' passwort
 
 output('<h3>Anmeldung mit Passkeys / FIDO2</h3>');
 
-output('<p>Mit der Passkeys-Technologie (technisch identisch zu FIDO2 / WebAuthn) können Sie die Anmeldung mit einem Hardware-Security-Modul oder mit Ihrem Mobilgerät als Schlüssel verwenden (Die Möglichkeiten variieren je nach Betriebssystem bzw. Browser). Wir nutzen in diesem Webinterface den Begriff <em>Passkeys</em>, damit ist jedoch stets auch die Verwendung unterschiedlicher FIDO2-Geräte gemeint.</p>
-<p>Bei der Anmeldung mit einem Passkey müssen Sie weder Benutzername noch Passwort eingeben sondern werden (nach Bestätigung Ihres Sicherheitsgeräts) direkt im Webinterface eingeloggt.</p>
-<p><strong>Bitte beachten Sie:</strong> Wenn Sie hier einen Schlüssel hinterlegen, funktioniert diese Anmeldemethode nur hier im Webinterface. Für die Anmeldung per SSH müssen Sie für eine vergleichbare Sicherheit und Komfort einen SSH-Schlüssel in Ihrem Benutzeraccount hinterlegen. Je nach Ihrem Client-System kann auch der SSH-Key dann über das Sicherheitsmodul oder via Passkeys verwaltet werden.</p>');
+output('<p>Mit der Passkeys-Technologie können Sie die Anmeldung mit einem Hardware-Security-Modul oder mit Ihrem Mobilgerät als Schlüssel verwenden.</p>
+<p>Bei der Anmeldung mit einem Passkey müssen Sie weder Benutzername noch Passwort eingeben, sondern werden direkt im Webinterface eingeloggt.</p>
+<p><strong>Bitte beachten Sie:</strong> Passkeys funktionieren nur im Webinterface. Für die Anmeldung per SSH müssen Sie für eine vergleichbare Sicherheit und Komfort einen SSH-Schlüssel in Ihrem Benutzeraccount hinterlegen.</p>');
 
-output('<p>Zur Absicherung Ihres Zugangs empfehlen wir folgendes Vorgehen: Richten Sie den SSH-Zugang über einen SSH-Key und den Zugang zu diesem Webinterface über einen Passkey ein. Setzen Sie dann ein komplexes, neues Passwort zur Wiederherstellung im Fehlerfall und heben Sie dieses Passwort an einem sicheren Ort auf (z.B. ausgedruckt im Tresor). Schalten Sie dann den SSH-Login über Passwort ab. So steht Ihnen das Passwort als Sicherheit zur Wiederherstellung Ihres Zugangs in diesem Webinterface zu Verfügug, es wird aber im Alltag nicht gebraucht.</p>');
+output('<p>Zur Absicherung Ihres Zugangs empfehlen wir Folgendes: Richten Sie den SSH-Zugang über einen SSH-Key und den Zugang zu diesem Webinterface über einen Passkey ein. Setzen Sie ein komplexes, neues Passwort zur Wiederherstellung im Fehlerfall und heben Sie dieses Passwort an einem sicheren Ort auf (z. B. ausgedruckt im Tresor). Schalten Sie dann den SSH-Login über Passwort ab. So steht Ihnen das Passwort als Sicherheit zur Wiederherstellung Ihres Zugangs in diesem Webinterface zur Verfügung.</p>');
 
 $passkeys = list_passkeys();
 if (count($passkeys) > 0) {
