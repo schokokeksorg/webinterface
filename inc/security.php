@@ -12,8 +12,28 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/error.php');
+require_once('inc/base.php');
 require_once('vendor/autoload.php');
 
+function gen_pw_hash($password)
+{
+    $pwhash = crypt($password, '$6$' . random_string(6));
+    if (strlen($pwhash) < 13) {
+        /* returns a string shorter than 13 chars on failure */
+        system_failure("Failed to calculate password hash!");
+    }
+    return $pwhash;
+}
+
+function check_pw_hash($password, $pwhash)
+{
+    $checkhash = crypt($password, $pwhash);
+    if (strlen($checkhash) < 13) {
+        /* returns a string shorter than 13 chars on failure */
+        system_failure("Invalid password hash!");
+    }
+    return hash_equals($checkhash, $pwhash);
+}
 
 function strong_password($password, $user = [])
 {

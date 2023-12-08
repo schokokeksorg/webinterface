@@ -12,6 +12,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
+require_once('inc/security.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
 
@@ -52,8 +53,7 @@ function find_role($login, $password, $i_am_admin = false)
             return null;
         }
         $db_password = $entry->password;
-        $hash = crypt($password, $db_password);
-        if (($entry->status == 0 && $hash == $db_password) || $i_am_admin) {
+        if (($entry->status == 0 && check_pw_hash($password, $db_password)) || $i_am_admin) {
             $role = ROLE_SYSTEMUSER;
             if ($entry->primary) {
                 $role = $role | ROLE_CUSTOMER;
@@ -117,8 +117,7 @@ function find_role($login, $password, $i_am_admin = false)
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         $db_password = $entry->cryptpass;
-        $hash = crypt($password, $db_password);
-        if ($hash == $db_password || $i_am_admin) {
+        if (check_pw_hash($password, $db_password) || $i_am_admin) {
             logger(LOG_INFO, "session/checkuser", "login", "logged in e-mail-account »{$account}«.");
             return ROLE_MAILACCOUNT;
         }
@@ -131,8 +130,7 @@ function find_role($login, $password, $i_am_admin = false)
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         $db_password = $entry->cryptpass;
-        $hash = crypt($password, $db_password);
-        if ($hash == $db_password || $i_am_admin) {
+        if (check_pw_hash($password, $db_password) || $i_am_admin) {
             logger(LOG_INFO, "session/checkuser", "login", "logged in virtual e-mail-account »{$account}«.");
             return ROLE_VMAIL_ACCOUNT;
         }
@@ -260,7 +258,7 @@ function set_systemuser_password($uid, $newpass)
 {
     $uid = (int) $uid;
     require_once('inc/base.php');
-    $newpass = crypt($newpass, '$6$' . random_string(8) . '$');
+    $newpass = gen_pw_hash($newpass);
     db_query("UPDATE system.passwoerter SET passwort=:newpass WHERE uid=:uid", [":newpass" => $newpass, ":uid" => $uid]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
 }
