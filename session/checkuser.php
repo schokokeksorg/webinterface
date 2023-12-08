@@ -14,7 +14,6 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('inc/base.php');
 require_once('inc/debug.php');
 require_once('inc/error.php');
-require_once('modules/loginsecurity/include/totp.php');
 
 define('ROLE_ANONYMOUS', 0);
 define('ROLE_MAILACCOUNT', 1);

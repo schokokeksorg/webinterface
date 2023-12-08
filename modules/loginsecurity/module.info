@@ -1,4 +1,4 @@
-name = totp
-description = 2-Faktor-Authentifizierung für Login
-permission = Verwalten der 2-Faktor-Authentifizierung
+name = loginsecurity
+description = Passkey-Verwaltung
+permission = Verwalten des Passkeys zum Login
 

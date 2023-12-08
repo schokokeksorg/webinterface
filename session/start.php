@@ -33,7 +33,7 @@ if (have_module('webmailtotp') && isset($_POST['webinterface_totpcode']) && isse
         $_SESSION['role'] = ROLE_ANONYMOUS;
         logger(LOG_WARNING, "session/start", "login", "wrong totp code (username: »{$_SESSION['totp_username']}«)");
         warning('Ihre Anmeldung konnte nicht durchgeführt werden. Geben Sie bitte einen neuen Code ein.');
-        show_page('webmailtotp-login');
+        show_page('totp-login');
         die();
     } else {
         setup_session($role, $_SESSION['totp_username']);
