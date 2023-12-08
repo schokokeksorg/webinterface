@@ -10,3 +10,8 @@ button#clear {
     background-color: #fff;
     border: 0;
 }
+
+span.buttonset input[type="radio"]:checked + label.nomail {
+    background-color: #a00;
+    border-color: #800;
+}

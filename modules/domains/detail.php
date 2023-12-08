@@ -92,8 +92,8 @@ if ($is_current_user) {
         output("<div class=\"tile usage " . ($used ? "used" : "unused") . "\"><p><strong>" . internal_link('../dns/dns_domain', "DNS-Server", 'dom=' . $dom->id) . "</strong></p><p>" . ($used ? "Manuelle DNS-Records vorhanden." : "DNS-Records möglich") . "</p></div>");
         $everused = true;
     }
-    if (have_module('email') && ($dom->mail != 'none')) {
-        if ($dom->provider != 'terions') {
+    if (have_module('email')) {
+        if (($dom->mail == 'auto' || $dom->mail == 'manual') && $dom->provider != 'terions') {
             $mxresult = dns_get_record($dom->fqdn, DNS_MX);
             $found = false;
             foreach ($mxresult as $mx) {
@@ -107,18 +107,27 @@ if ($is_current_user) {
                 warning('Bei dieser Domain ist der Mail-Empfang aktiviert, jedoch verweist das DNS-System scheinbar nicht auf unsere Anlagen. Wenn Sie keine E-Mails empfangen möchten, schalten Sie die Mail-Verarbeitung für diese Domain aus.');
             }
         }
-        $used = mail_in_use($dom->id);
-        $vmail = count_vmail($dom->id);
-        if ($used) {
+        $mailsetting = mail_setting($dom->id);
+
+        if ($mailsetting == 'none') {
+            output("<div class=\"tile usage unused\"><p><strong>" . internal_link('email', "E-Mail", "dom=" . $dom->id) . "</strong></p><p>E-Mail-Verarbeitung ausgeschaltet</p></div>");
+        } elseif ($mailsetting == 'nomail') {
+            output("<div class=\"tile usage unused\"><p><strong>" . internal_link('email', "E-Mail", "dom=" . $dom->id) . "</strong></p><p>E-Mail-Verarbeitung ausgeschaltet und <strong>unterbunden</strong></p></div>");
+        } elseif ($mailsetting == 'manual') {
+            $used = mail_in_use($dom->id);
+            if ($used) {
+                $everused = true;
+            }
+            output("<div class=\"tile usage " . ($used ? "used" : "unused") . "\"><p><strong>" . internal_link('email', "E-Mail", "dom=" . $dom->id) . "</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p><p>" . internal_link('../email/imap', "Accounts verwalten") . "</p></div>");
+        } elseif ($mailsetting == 'vmail') {
+            $vmail = count_vmail($dom->id);
             if ($vmail > 0) {
+                $everused = true;
                 output("<div class=\"tile usage used\"><p><strong>" . internal_link('email', "E-Mail", 'dom=' . $dom->id) . "</strong></p><p>E-Mail-Postfächer unter dieser Domain: <strong>{$vmail}</strong></p><p>" . internal_link('../email/vmail', "Postfächer verwalten", 'filter=' . $dom->fqdn) . "</p></div>");
             } else {
-                output("<div class=\"tile usage unused\"><p><strong>" . internal_link('email', "E-Mail", "dom=" . $dom->id) . "</strong></p><p>Manuelle Mail-Konfiguration ist aktiv</p><p>" . internal_link('../email/imap', "Accounts verwalten") . "</p></div>");
+                output("<div class=\"tile usage unused\"><p><strong>" . internal_link('email', "E-Mail", 'dom=' . $dom->id) . "</strong></p><p>Bisher keine E-Mail-Postfächer unter dieser Domain.</p><p>" . internal_link('../email/vmail', "Postfächer verwalten", "filter=" . $dom->fqdn) . "</p></div>");
             }
-        } else {
-            output("<div class=\"tile usage unused\"><p><strong>" . internal_link('email', "E-Mail", 'dom=' . $dom->id) . "</strong></p><p>Bisher keine E-Mail-Postfächer unter dieser Domain.</p><p>" . internal_link('../email/vmail', "Postfächer verwalten", "filter=" . $dom->fqdn) . "</p></div>");
         }
-        $everused = true;
     }
     if (have_module('mailman') && mailman_subdomains($dom->id)) {
         use_module('mailman');

@@ -29,6 +29,8 @@ foreach ($_POST as $key => $value) {
             $type = 'auto';
         } elseif ($value == 'off') {
             $type = 'none';
+        } elseif ($value == 'nomail') {
+            $type = 'nomail';
         }
         DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $value);
         change_domain($id, $type);

@@ -521,7 +521,7 @@ function change_domain($id, $type)
         system_failure("Sie müssen zuerst alle E-Mail-Konten mit dieser Domain löschen, bevor Sie die Webinterface-Verwaltung für diese Domain abschalten können.");
     }
 
-    if (!in_array($type, ['none','auto','virtual'])) {
+    if (!in_array($type, ['none','auto','virtual', 'nomail'])) {
         system_failure("Ungültige Aktion");
     }
 
@@ -535,6 +535,13 @@ function change_domain($id, $type)
         db_query("DELETE FROM mail.virtual_mail_domains WHERE domain=? AND hostname IS NULL", [$id]);
         db_query("DELETE FROM mail.custom_mappings WHERE domain=? AND subdomain IS NULL", [$id]);
         db_query("UPDATE kundendaten.domains SET mail='none', lastchange=NOW() WHERE id=?", [$id]);
+    } elseif ($type == 'nomail') {
+        if ($old['type'] != 'none') {
+            system_failure("Sie können die NOMAIL-Option nur für Domains setzen, deren Mail-Verarbeitung bereits ausgeschaltet ist!");
+        }
+        db_query("DELETE FROM mail.virtual_mail_domains WHERE domain=? AND hostname IS NULL", [$id]);
+        db_query("DELETE FROM mail.custom_mappings WHERE domain=? AND subdomain IS NULL", [$id]);
+        db_query("UPDATE kundendaten.domains SET mail='nomail', lastchange=NOW() WHERE id=?", [$id]);
     } elseif ($type == 'virtual') {
         $vmailserver = (int) $_SESSION['userinfo']['server'];
         db_query("DELETE FROM mail.custom_mappings WHERE domain=? AND subdomain IS NULL", [$id]);

@@ -49,9 +49,12 @@ function mail_setting($domain)
         system_failure("Domain not found");
     }
     $d = $result->fetch();
+    if ($d['mail'] == 'nomail') {
+        return 'nomail';
+    } // domain shall not be used for mail
     if ($d['mail'] == 'none') {
         return 'none';
-    } // manually disabled
+    } // manually disabled (possibly used with another operator)
     $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain=?", [$domain]);
     if ($result->rowCount() > 0) {
         return 'vmail';
@@ -71,7 +74,7 @@ function mail_in_use($domain)
         system_failure("Domain not found");
     }
     $d = $result->fetch();
-    if ($d['mail'] == 'none') {
+    if ($d['mail'] == 'none' || $d['mail'] == 'nomail') {
         return false;
     } // manually disabled
     $result = db_query("SELECT id FROM mail.virtual_mail_domains WHERE domain=?", [$domain]);

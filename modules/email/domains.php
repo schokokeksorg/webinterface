@@ -64,6 +64,7 @@ foreach ($domains as $id => $dom) {
         $trextra .= ' style="background-color: #faa;"';
         $notice .= ' <strong>Mailserver-Sperre aktiv!</strong>';
     }
+    $check_nomail = ($dom['type'] == 'nomail' ? ' checked="checked"' : '');
     $check_off = ($dom['type'] == 'none' ? ' checked="checked"' : '');
     $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
     $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
@@ -74,11 +75,15 @@ foreach ($domains as $id => $dom) {
          <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
          <label for="option-' . $id . '-manual">Manuell</label>
          <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . $check_off . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
-         <label for="option-' . $id . '-off">Ausgeschaltet</label>
-         <input type="submit" value="Speichern" />
+         <label for="option-' . $id . '-off">Ausgeschaltet</label>';
+    if ($dom['type'] == 'nomail' || $dom['type'] == 'none') {
+        $buttons .= '<input type="radio" class="nomail" name="option-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+                     <label class="nomail" for="option-' . $id . '-nomail">Mail-Nutzung verhindern</label>';
+    }
+    $buttons .= '<input type="submit" value="Speichern" />
       </span>';
 
-    if ($dom['type'] != 'none' && $dom['dns'] == 1) {
+    if ($dom['type'] != 'none' && $dom['type'] != 'nomail' && $dom['dns'] == 1) {
         $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
         $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
         $check_dkimoff = ($dom['dkim'] == 'none' ? ' checked="checked"' : '');
