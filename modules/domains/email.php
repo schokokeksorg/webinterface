@@ -46,8 +46,8 @@ if ($dom->provider != 'terions') {
             $found = true;
         }
     }
-    if (! $found) {
-        DEBUG('MX für '.$dom->fqdn.':');
+    if (!$found) {
+        DEBUG('MX für ' . $dom->fqdn . ':');
         DEBUG($mxresult);
         warning('Bei dieser Domain ist der Mail-Empfang aktiviert, jedoch verweist das DNS-System scheinbar nicht auf unsere Anlagen. Wenn Sie keine E-Mails empfangen möchten, schalten Sie die Mail-Verarbeitung für diese Domain aus.');
     }
@@ -63,14 +63,14 @@ output('<h4>Aktuelle Einstellung</h4>');
 $setting = mail_setting($dom->id);
 if ($setting == 'none') {
     output('<div class="error">E-Mail-Empfang abgeschaltet</div>
-    <p>Aktuell ist der Empfang von E-Mail für die Domain <strong>'.$dom->fqdn.'</strong> ausgeschaltet.</p>
+    <p>Aktuell ist der Empfang von E-Mail für die Domain <strong>' . $dom->fqdn . '</strong> ausgeschaltet.</p>
     <ul>
     <li>Die E-Mail-spezifischen DNS-Records wie z.B. MX, SPF, DKIM und Autoconfig werden nicht erstellt.</li>
     <li>Sie können keine Postfächer unter der Domain anlegen.</li>
     <li>Der Mail-Server wird E-Mails an diese Domain nicht annehmen.</li>
     </ul>');
-    addnew('email_save', 'Mail-Empfang einschalten (Webinterface-Verwaltung)', "dom=".$dom->id."&mail=vmail");
-    addnew('email_save', 'Mail-Empfang einschalten (Manuelle Verwaltung)', "dom=".$dom->id."&mail=manual", 'class="grey"');
+    addnew('email_save', 'Mail-Empfang einschalten (Webinterface-Verwaltung)', "dom=" . $dom->id . "&mail=vmail");
+    addnew('email_save', 'Mail-Empfang einschalten (Manuelle Verwaltung)', "dom=" . $dom->id . "&mail=manual", 'class="grey"');
 } elseif ($setting == 'vmail') {
     output('<div class="success">E-Mail-Empfang eingeschaltet (Webinterface-Verwaltung)</div>
     <p>Aktuell können Sie Ihre Postfächer ganz einfach über unser Webinterface verwalten. Dies ist die Standardeinstellung.</p>
@@ -82,7 +82,7 @@ if ($setting == 'none') {
     if (count_vmail($dom->id) > 0) {
         output('<p>So lange noch E-Mail-Adressen unter dieser Domain eingerichtet sind, können Sie diese Einstellung nicht ändern.</p>');
     } else {
-        output('<p class="delete">'.internal_link("email_save", "Mail-Empfang für diese Domain ausschalten", "dom=".$dom->id.'&mail=none').'</p>');
+        output('<p class="delete">' . internal_link("email_save", "Mail-Empfang für diese Domain ausschalten", "dom=" . $dom->id . '&mail=none') . '</p>');
     }
 } elseif ($setting == 'manual') {
     output('<div class="warning">E-Mail-Empfang aktiv (Manuelle Verwaltung)</div>
@@ -92,7 +92,7 @@ if ($setting == 'none') {
     <li>Die DNS-Records (z.B. MX, SPF, DKIM und Autoconfig) werden erstellt, sofern Sie keinen dazu widersprüchlichen DNS-Record selbst angelegt haben.</li>
     <li>Hilfestellung zu den damit verbundenen Möglichkeiten erhalten Sie <a href="https://wiki.schokokeks.org/E-Mail/Manuelle_Konfiguration">in unserem Wiki</a></li>
     </ul>');
-    output('<p class="delete">'.internal_link("email_save", "Mail-Empfang für diese Domain ausschalten", "dom=".$dom->id.'&mail=none').'</p>');
+    output('<p class="delete">' . internal_link("email_save", "Mail-Empfang für diese Domain ausschalten", "dom=" . $dom->id . '&mail=none') . '</p>');
 } else {
     system_failure('unbekannter Zustand der Domain');
 }
@@ -102,4 +102,4 @@ if ($setting == 'none') {
 
 
 
-output('<p>'.internal_link('domains', 'Ohne Änderungen zurück').'</p>');
+output('<p>' . internal_link('domains', 'Ohne Änderungen zurück') . '</p>');

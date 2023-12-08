@@ -22,7 +22,7 @@ $section = 'loginsecurity_overview';
 title("Zwei-Faktor-Anmeldung für Ihren Account");
 
 warning('Nach Einrichtung der Zwei-Faktor-Anmeldung benötigen Sie für jeden Login einen Einmal-Code, den Sie mit einem Code-Generator - meist ein Smartphone mit einer entsprechenden App - erzeugen. Dieser Code wird aus einem gemeinsamen Geheimnis und der aktuellen Zeit jeweils neu berechnet.');
-output('<p>Zur Einrichtung der Zwei-Faktor-Anmeldung für den Benutzer <strong>'.$username.'</strong>, scannen Sie mit Ihrer Code-Generator-App den unten stehenden QR-Code oder geben Sie das Geheimnis/Secret manuell in den Code-Generator ein.</p>');
+output('<p>Zur Einrichtung der Zwei-Faktor-Anmeldung für den Benutzer <strong>' . $username . '</strong>, scannen Sie mit Ihrer Code-Generator-App den unten stehenden QR-Code oder geben Sie das Geheimnis/Secret manuell in den Code-Generator ein.</p>');
 
 output('<h3>QR-Code für Code-Generator-App</h3>');
 output('<p>Der Zugang wird erst dann mit dem zweiten Faktor geschützt, wenn Sie unten einmalig einen korrekten Code eingegeben haben.</p>');
@@ -40,9 +40,9 @@ $passed = false;
 $totp_id = null;
 if (isset($_POST['password']) && isset($_POST['token'])) {
     // Prüfen, ob das Passwort und der Code stimmen
-    if (! check_systemuser_password($_POST['password'])) {
+    if (!check_systemuser_password($_POST['password'])) {
         input_error('Das Passwort scheint falsch zu sein.');
-        $passed=false;
+        $passed = false;
     }
     if (check_systemuser_totp($_SESSION['userinfo']['uid'], $_POST['token'])) {
         // Passwort stimmt, Token stimmt

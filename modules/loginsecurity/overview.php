@@ -44,4 +44,3 @@ if (count($passkeys) > 0) {
 
 output('<p><label for="passkey_handle">Bezeichnung für neuen Passkey:</label> <input id="passkey_handle" type="text" length="20"> <button onclick="passkey_register()">Passkey registrieren</button></p>
 <p><button onclick="passkey_validate(false)">Passkey prüfen</button></p>');
-

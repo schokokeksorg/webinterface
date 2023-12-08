@@ -21,13 +21,13 @@ $req = filter_input(INPUT_POST, 'req');
 // Relying Party == Hostname
 $rpId = $_SERVER['HTTP_HOST'];
 
-$WebAuthn = new lbuchs\WebAuthn\WebAuthn(config('company_name').' Webinterface', $rpId, ["none"]);
+$WebAuthn = new lbuchs\WebAuthn\WebAuthn(config('company_name') . ' Webinterface', $rpId, ["none"]);
 
 if ($req == 'getCreateArgs') {
     require_role(ROLE_SYSTEMUSER);
     $userId = dechex($_SESSION['userinfo']['uid']); // Hex-formatted internal ID not displayed to the user
     if (strlen($userId) % 2 == 1) {
-        $userId = "0".$userId;
+        $userId = "0" . $userId;
     }
     $userName = $_SESSION['userinfo']['username'];
     $_SESSION['passkey_handle'] = filter_input(INPUT_POST, "handle");
@@ -38,8 +38,8 @@ if ($req == 'getCreateArgs') {
 
     $requireResidentKey = 'required';
     $userVerification = 'preferred';
-    
-    $timeout = 3*60;
+
+    $timeout = 3 * 60;
 
     $createArgs = $WebAuthn->getCreateArgs(\hex2bin($userId), $userName, $userDisplayName, $timeout, $requireResidentKey, $userVerification);
 
@@ -54,13 +54,16 @@ if ($req == 'getCreateArgs') {
     $attest = $_POST['attest'];
 
     try {
-      $data = $WebAuthn->processCreate(
-        base64_decode($_POST["client"]),
-        base64_decode($_POST["attest"]),
-        $_SESSION["challenge"],
-        true, true, false, false
-      );
-    } catch (Exception $ex) { 
+        $data = $WebAuthn->processCreate(
+            base64_decode($_POST["client"]),
+            base64_decode($_POST["attest"]),
+            $_SESSION["challenge"],
+            true,
+            true,
+            false,
+            false
+        );
+    } catch (Exception $ex) {
         logger(LOG_ERR, "modules/loginsecurity/passkey_ajax", "loginsecurity", "processCreate failed with {$ex}");
         print("Error");
         die();
@@ -80,31 +83,31 @@ if ($req == 'getCreateArgs') {
 } elseif ($req == 'processGet') {
     $id = base64_decode($_POST["id"]);
     $savedData = get_passkey($id);
-    if (!$savedData) { 
-        print("Invalid credentials"); 
+    if (!$savedData) {
+        print("Invalid credentials");
         die();
     }
     try {
-      $WebAuthn->processGet(
-        base64_decode($_POST["client"]),
-        base64_decode($_POST["auth"]),
-        base64_decode($_POST["sig"]),
-        $savedData['credentialPublicKey'],
-        $_SESSION["challenge"]
-      );
-      // DO WHATEVER IS REQUIRED AFTER VALIDATION
-      echo "OK";
-      $login = ($_POST['login'] == "true");
-      if ($login) {
-          $uid = $savedData['uid'];
-          require_once("session/start.php");
-          $role = find_role($uid, '', true);
-          setup_session($role, $uid);
-          die();
-      } else {
-          success_msg("Die Identifikation mit dem Passkey »{$savedData['handle']}« hat funktioniert!");
-      }
-    } catch (Exception $ex) { 
+        $WebAuthn->processGet(
+            base64_decode($_POST["client"]),
+            base64_decode($_POST["auth"]),
+            base64_decode($_POST["sig"]),
+            $savedData['credentialPublicKey'],
+            $_SESSION["challenge"]
+        );
+        // DO WHATEVER IS REQUIRED AFTER VALIDATION
+        echo "OK";
+        $login = ($_POST['login'] == "true");
+        if ($login) {
+            $uid = $savedData['uid'];
+            require_once("session/start.php");
+            $role = find_role($uid, '', true);
+            setup_session($role, $uid);
+            die();
+        } else {
+            success_msg("Die Identifikation mit dem Passkey »{$savedData['handle']}« hat funktioniert!");
+        }
+    } catch (Exception $ex) {
         logger(LOG_ERR, "modules/loginsecurity/passkey_ajax", "loginsecurity", "processGet failed with {$ex}");
         print('Error');
         die();

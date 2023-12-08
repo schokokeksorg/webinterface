@@ -77,7 +77,7 @@ function check_systemuser_totp($uid, $code)
         while ($tmp = $result->fetch()) {
             $totp_id = $tmp['id'];
             $secret = $tmp['secret'];
-        
+
             if (check_systemuser_blacklist($uid, $totp_id, $code)) {
                 DEBUG('Replay-Attack');
                 return false;
@@ -123,8 +123,10 @@ function save_totp_config($description)
 
 function totp_restoretoken($totp_id)
 {
-    $result = db_query("SELECT restoretoken FROM system.systemuser_totp WHERE id=:id", 
-        [":id" => $totp_id]);
+    $result = db_query(
+        "SELECT restoretoken FROM system.systemuser_totp WHERE id=:id",
+        [":id" => $totp_id]
+    );
     $data = $result->fetch();
     DEBUG("Restoretoken für #{$totp_id} ist {$data['restoretoken']}");
     return $data['restoretoken'];
@@ -133,7 +135,7 @@ function totp_restoretoken($totp_id)
 function generate_systemuser_qrcode_image($secret)
 {
     $username = $_SESSION['userinfo']['username'];
-    $url = 'otpauth://totp/'.$username.'@schokokeks.org?secret=' . $secret;
+    $url = 'otpauth://totp/' . $username . '@schokokeks.org?secret=' . $secret;
 
     $descriptorspec = [
     0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
