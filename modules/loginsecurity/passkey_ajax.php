@@ -39,7 +39,7 @@ if ($req == 'getCreateArgs') {
     $requireResidentKey = 'required';
     $userVerification = 'preferred';
     
-    $timeout = 60;
+    $timeout = 3*60;
 
     $createArgs = $WebAuthn->getCreateArgs(\hex2bin($userId), $userName, $userDisplayName, $timeout, $requireResidentKey, $userVerification);
 
