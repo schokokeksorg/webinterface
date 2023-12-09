@@ -21,31 +21,45 @@ require_role(ROLE_SYSTEMUSER);
 
 check_form_token('vmail_domainchange');
 
+$newsetting = [];
+$newdkimsetting = [];
 foreach ($_POST as $key => $value) {
     if (strpos($key, "option-") === 0) {
         $id = substr($key, 7);
-        $type = 'virtual';
+        $newsetting[$id] = 'virtual';
         if ($value == 'manual') {
-            $type = 'auto';
+            $newsetting[$id] = 'auto';
         } elseif ($value == 'off') {
-            $type = 'none';
-        } elseif ($value == 'nomail') {
-            $type = 'nomail';
+            $newsetting[$id] = 'none';
         }
-        DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $value);
-        change_domain($id, $type);
+    }
+    if (strpos($key, "nomail-") === 0) {
+        $id = substr($key, 7);
+        if ($value == 'nomail' && (!isset($newsetting[$id]) || $newsetting[$id] == 'none')) {
+            $newsetting[$id] = 'nomail';
+        }
     }
     if (strpos($key, "dkim-") === 0) {
         $id = substr($key, 5);
-        $type = 'none';
+        $newdkimsetting[$id] = 'none';
         if ($value == 'dkim') {
-            $type = 'dkim';
+            $newdkimsetting[$id] = 'dkim';
         } elseif ($value == 'dmarc') {
-            $type = 'dmarc';
+            $newdkimsetting[$id] = 'dmarc';
         }
-        DEBUG('DKIM change request for id #' . $id . ' to ' . $value);
-        change_domain_dkim($id, $type);
     }
+}
+foreach ($newsetting as $id => $type) {
+        DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $type);
+        change_domain($id, $type);
+        if ($type == "nomail" || $type == "none") {
+            // DKIM muss abgeschaltet sein, wenn das DKIM-UI nicht mehr angezeigt wird
+            $newdkimsetting[$id] = 'none';
+        }
+}
+foreach ($newdkimsetting as $id => $type) {
+        DEBUG('DKIM change request for id #' . $id . ' to ' . $type);
+        change_domain_dkim($id, $type);
 }
 
 if (!$debugmode) {

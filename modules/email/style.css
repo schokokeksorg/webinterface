@@ -1,3 +1,6 @@
+table th {
+    text-align: left;
+}
 
 input#filter {
     padding-right: 25px;
