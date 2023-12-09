@@ -25,16 +25,6 @@ function gen_pw_hash($password)
     return $pwhash;
 }
 
-function check_pw_hash($password, $pwhash)
-{
-    $checkhash = crypt($password, $pwhash);
-    if (strlen($checkhash) < 13) {
-        /* returns a string shorter than 13 chars on failure */
-        system_failure("Invalid password hash!");
-    }
-    return hash_equals($checkhash, $pwhash);
-}
-
 function strong_password($password, $user = [])
 {
     $pwcheck = config('pwcheck');
