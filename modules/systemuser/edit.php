@@ -23,7 +23,7 @@ $section = "systemuser_account";
 
 $account = null;
 $role = $_SESSION['role'];
-$account = get_account_details(isset($_GET['uid']) ? $_GET['uid'] : $_SESSION['userinfo']['uid'], $_SESSION['userinfo']['customerno']);
+$account = get_account_details($_GET['uid'] ?? $_SESSION['userinfo']['uid'], $_SESSION['userinfo']['customerno']);
 
 
 headline("Bearbeiten von Benutzer »{$account['username']}«");

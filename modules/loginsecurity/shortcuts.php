@@ -18,6 +18,6 @@ if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
                         'file'    => 'overview',
                         'icon'    => 'lock.png',
                         'title'   => 'Passkey-Anmeldung',
-                        'alert'   => ((count(list_passkeys()) > 0) ? null : 'Nicht aktiv'), 
+                        'alert'   => ((count(list_passkeys()) > 0) ? null : 'Nicht aktiv'),
                         ];
 }
