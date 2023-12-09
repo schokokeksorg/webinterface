@@ -50,16 +50,16 @@ foreach ($_POST as $key => $value) {
     }
 }
 foreach ($newsetting as $id => $type) {
-        DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $type);
-        change_domain($id, $type);
-        if ($type == "nomail" || $type == "none") {
-            // DKIM muss abgeschaltet sein, wenn das DKIM-UI nicht mehr angezeigt wird
-            $newdkimsetting[$id] = 'none';
-        }
+    DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $type);
+    change_domain($id, $type);
+    if ($type == "nomail" || $type == "none") {
+        // DKIM muss abgeschaltet sein, wenn das DKIM-UI nicht mehr angezeigt wird
+        $newdkimsetting[$id] = 'none';
+    }
 }
 foreach ($newdkimsetting as $id => $type) {
-        DEBUG('DKIM change request for id #' . $id . ' to ' . $type);
-        change_domain_dkim($id, $type);
+    DEBUG('DKIM change request for id #' . $id . ' to ' . $type);
+    change_domain_dkim($id, $type);
 }
 
 if (!$debugmode) {
