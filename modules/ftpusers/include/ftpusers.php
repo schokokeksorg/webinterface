@@ -76,7 +76,7 @@ function save_ftpuser($data)
         if ($result !== true) {
             system_failure("Unsicheres Passwort: " . $result);
         }
-        $password_hash = crypt($data['password'], '$6$' . random_string(8) . '$');
+        $password_hash = gen_pw_hash($data['password']);
         $set_password = true;
     } elseif (!$data['id']) {
         system_failure('Wenn Sie einen neuen Zugang anlegen, müssen Sie ein Passwort setzen');
