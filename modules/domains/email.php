@@ -69,8 +69,6 @@ if ($setting == 'none') {
     <li>Sie können keine Postfächer unter der Domain anlegen.</li>
     <li>Der Mail-Server wird E-Mails an diese Domain nicht annehmen.</li>
     </ul>');
-    //addnew('email_save', 'Mail-Empfang einschalten (Webinterface-Verwaltung)', "dom=" . $dom->id . "&mail=vmail");
-    //addnew('email_save', 'Mail-Empfang einschalten (Manuelle Verwaltung)', "dom=" . $dom->id . "&mail=manual", 'class="grey"');
 } elseif ($setting == 'vmail') {
     output('<div class="success">E-Mail-Empfang eingeschaltet (Webinterface-Verwaltung)</div>
     <p>Aktuell können Sie Ihre Postfächer ganz einfach über unser Webinterface verwalten. Dies ist die Standardeinstellung.</p>
@@ -81,8 +79,6 @@ if ($setting == 'none') {
     </ul>');
     if (count_vmail($dom->id) > 0) {
         output('<p>So lange noch E-Mail-Adressen unter dieser Domain eingerichtet sind, können Sie diese Einstellung nicht ändern.</p>');
-    } else {
-        //output('<p class="delete">' . internal_link("email_save", "Mail-Empfang für diese Domain ausschalten", "dom=" . $dom->id . '&mail=none') . '</p>');
     }
 } elseif ($setting == 'manual') {
     output('<div class="warning">E-Mail-Empfang aktiv (Manuelle Verwaltung)</div>
@@ -92,18 +88,17 @@ if ($setting == 'none') {
     <li>Die DNS-Records (z.B. MX, SPF, DKIM und Autoconfig) werden erstellt, sofern Sie keinen dazu widersprüchlichen DNS-Record selbst angelegt haben.</li>
     <li>Hilfestellung zu den damit verbundenen Möglichkeiten erhalten Sie <a href="https://wiki.schokokeks.org/E-Mail/Manuelle_Konfiguration">in unserem Wiki</a></li>
     </ul>');
-    //output('<p class="delete">' . internal_link("email_save", "Mail-Empfang für diese Domain ausschalten", "dom=" . $dom->id . '&mail=none') . '</p>');
 } elseif ($setting == 'nomail') {
     output('<div class="error">E-Mail-Empfang abgeschaltet und <strong>unterbunden</strong></div>
-    <p>Aktuell ist der Empfang von E-Mail für die Domain <strong>' . $dom->fqdn . '</strong> ausgeschaltet und es wird mittels spezielle DNS-Records dafür gesorgt, dass E-Mails dieser Domain grundsätzlich als Spam eingestuft werden.</p>
+    <p>Aktuell ist der Empfang von E-Mail für die Domain <strong>' . $dom->fqdn . '</strong> ausgeschaltet und es wird mittels spezieller DNS-Records dafür gesorgt, dass E-Mails dieser Domain grundsätzlich als Spam eingestuft werden.</p>
     <ul>
     <li>Es wird ein leerer MX-Record erstellt.</li>
-    <li>Der SPF- und der DMARC-Record werden auf "immer abweisen" gesetzt.</li>
+    <li>Der SPF- und der DMARC-Record werden jeweils auf "immer abweisen" gesetzt.</li>
     <li>Die DNS-Records für DKIM und Autoconfig werden nicht erstellt.</li>
     <li>Sie können keine Postfächer unter der Domain anlegen.</li>
     <li>Der Mail-Server wird E-Mails an diese Domain nicht annehmen.</li>
     </ul>');
- } else {
+} else {
     system_failure('unbekannter Zustand der Domain');
 }
 

@@ -65,7 +65,7 @@ foreach ($domains as $id => $dom) {
         $notice .= ' <strong>Mailserver-Sperre aktiv!</strong>';
     }
     $check_nomail = ($dom['type'] == 'nomail' ? ' checked="checked"' : '');
-    $check_off = ($dom['type'] == 'none' ? ' checked="checked"' : '');
+    $check_off = (($dom['type'] == 'none' || $dom['type'] == 'nomail') ? ' checked="checked"' : '');
     $check_webinterface = ($dom['type'] == 'virtual' ? ' checked="checked"' : '');
     $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
 
@@ -76,12 +76,13 @@ foreach ($domains as $id => $dom) {
          <label for="option-' . $id . '-manual">Manuell</label>
          <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . $check_off . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
          <label for="option-' . $id . '-off">Ausgeschaltet</label>';
-    if ($dom['type'] == 'nomail' || $dom['type'] == 'none') {
-        $buttons .= '<input type="radio" class="nomail" name="option-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
-                     <label class="nomail" for="option-' . $id . '-nomail">Mail-Nutzung verhindern</label>';
-    }
     $buttons .= '<input type="submit" value="Speichern" />
       </span>';
+    if ($dom['type'] == 'nomail' || $dom['type'] == 'none') {
+        $buttons .= '<span class="nomail"><input type="checkbox" class="nomail autosubmit" name="option-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+                     <label class="nomail" for="option-' . $id . '-nomail">Mail-Nutzung verhindern</label>
+         <input class="hidden" type="submit" value="Speichern" /></span>';
+    }
 
     if ($dom['type'] != 'none' && $dom['type'] != 'nomail' && $dom['dns'] == 1) {
         $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
