@@ -163,7 +163,7 @@ function su($type, $id)
         unset($_SESSION['admin_user']);
         return false;
     }
-    setup_session($role, $id);
+    setup_session($role, $id, 'su');
     if ($type == 'c') {
         if (!(ROLE_CUSTOMER & $_SESSION['role'])) {
             session_destroy();

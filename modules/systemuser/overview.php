@@ -53,10 +53,17 @@ foreach ($usedquota as $q) {
 }
 $customer = get_customer_info($_SESSION['userinfo']['customerno']);
 $quotastring = implode('', $quota);
+
+$passwordlogin = '';
+if ($_SESSION['loginmethod'] == 'passkey' && $acc['passwordlogin'] == 1) {
+    $passwordlogin = '<p class=warning>Die Anmeldung per SSH ist noch mit Passwort möglich. Das können Sie ' . internal_link($prefix . 'go/systemuser/edit', 'hier ändern') . '!</p>';
+}
+
 output("<h5>Stammdaten</h5>
 <div style=\"margin-left: 2em;\">
 <p>Benutzername: <strong>{$acc['username']}</strong></p>
 <p>Servername" . ($multiserver ? " (primär)" : '') . ": <strong>" . get_server_by_id($acc['server']) . "</strong></p>
+{$passwordlogin}
 <p>Tipp: <a href=\"https://wiki.schokokeks.org/Dateizugriff\">Wiki-Anleitung zum Dateizugriff bzw. zum Ändern der Dateien Ihrer Website.</a></p>
 ");
 output("</div>\n");

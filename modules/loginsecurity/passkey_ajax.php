@@ -102,7 +102,8 @@ if ($req == 'getCreateArgs') {
             $uid = $savedData['uid'];
             require_once("session/start.php");
             $role = find_role($uid, '', true);
-            setup_session($role, $uid);
+            setup_session($role, $uid, 'passkey');
+            unset($_SESSION['challenge']);
             die();
         } else {
             success_msg("Die Identifikation mit dem Passkey »{$savedData['handle']}« hat funktioniert!");

@@ -21,12 +21,12 @@ if (!isset($_SESSION['admin_user'])) {
 $admin_user = $_SESSION['admin_user'];
 $role = find_role($admin_user, '', true);
 if ($role & ROLE_SYSADMIN) {
-    setup_session($role, $admin_user);
+    setup_session($role, $admin_user, 'su_return');
     unset($_SESSION['admin_user']);
     header('Location: ' . $prefix . 'go/su/su');
     die();
 } elseif ($role & ROLE_CUSTOMER) {
-    setup_session($role, $admin_user);
+    setup_session($role, $admin_user, 'su_return');
     unset($_SESSION['admin_user']);
     header('Location: ' . $prefix . 'go/su/su_customer');
     die();
