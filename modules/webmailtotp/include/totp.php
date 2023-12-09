@@ -36,7 +36,7 @@ function validate_password($username, $password)
         return false;
     }
     $account = $result->fetch();
-    return (crypt($password, $account['cryptpass']) == $account['cryptpass']);
+    return password_verify($password, $account['cryptpass']);
 }
 
 
