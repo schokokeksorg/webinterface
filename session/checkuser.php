@@ -285,9 +285,10 @@ function user_for_vmail_account($account)
 }
 
 
-function setup_session($role, $useridentity)
+function setup_session($role, $useridentity, $loginmethod = 'password')
 {
     session_regenerate_id();
+    $_SESSION['loginmethod'] = $loginmethod;
     $_SESSION['role'] = $role;
     if ($role & ROLE_SUBUSER) {
         DEBUG("We are a sub-user");

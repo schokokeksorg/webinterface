@@ -50,7 +50,7 @@ if (isset($_REQUEST['token'])) {
                 invalidate_systemuser_token($uid);
                 $_SESSION['role'] = find_role($uid, '', true);
                 ;
-                setup_session($_SESSION['role'], $uid);
+                setup_session($_SESSION['role'], $uid, 'initialize');
                 success_msg('Das Passwort wurde gesetzt!');
                 redirect('index');
             }
