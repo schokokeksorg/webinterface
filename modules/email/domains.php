@@ -79,6 +79,7 @@ foreach ($domains as $id => $dom) {
     $buttons .= '<input type="submit" value="Speichern" />
       </span>';
     if ($dom['type'] == 'nomail' || $dom['type'] == 'none') {
+        $notice .= '<a href="https://wiki.schokokeks.org/E-Mail/Keine-Mailnutzung">Hinweise zur Verhinderung der Mail-Nutzung</a>';
         $buttons .= '<span class="nomail"><input type="checkbox" class="nomail autosubmit" name="nomail-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
                      <label class="nomail" for="option-' . $id . '-nomail">Mail-Nutzung verhindern</label>
          <input class="hidden" type="submit" value="Speichern" /></span>';
