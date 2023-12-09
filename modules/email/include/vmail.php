@@ -16,8 +16,6 @@ require_once('inc/debug.php');
 
 require_once('hasdomain.php');
 
-require_once('common.php');
-
 
 function forward_type($target)
 {
@@ -172,7 +170,7 @@ function find_account_id($accname)
 function change_vmail_password($accname, $newpass)
 {
     $accid = find_account_id($accname);
-    $encpw = encrypt_mail_password($newpass);
+    $encpw = gen_pw_hash($newpass);
     db_query("UPDATE mail.vmail_accounts SET password=:encpw WHERE id=:accid", [":encpw" => $encpw, ":accid" => $accid]);
 }
 
@@ -288,7 +286,7 @@ function save_vmail_account($account)
                 system_failure('Ihr Passwort ist zu einfach. bitte wählen Sie ein sicheres Passwort!' . "\nDie Fehlermeldung lautet: »{$crack}«");
                 return false;
             }
-            $password = encrypt_mail_password($account['password']);
+            $password = gen_pw_hash($account['password']);
         }
         $set_password = ($id == null || $password != null);
         if ($account['password'] === null) {

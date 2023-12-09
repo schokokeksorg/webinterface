@@ -17,8 +17,6 @@ require_once('inc/security.php');
 
 require_once('class/domain.php');
 
-require_once('common.php');
-
 function mailaccounts($uid)
 {
     $uid = (int) $uid;
@@ -86,7 +84,7 @@ function change_mailaccount($id, $arr)
         if ($result !== true) {
             system_failure("Unsicheres Passwort: " . $result);
         }
-        $encpw = encrypt_mail_password($arr['password']);
+        $encpw = gen_pw_hash($arr['password']);
         array_push($conditions, "`password`=:password");
         $values[":password"] = $encpw;
     }
@@ -140,7 +138,7 @@ function create_mailaccount($arr)
         if ($result !== true) {
             system_failure("Unsicheres Passwort: " . $result);
         }
-        $values[':password'] = encrypt_mail_password($arr['password']);
+        $values[':password'] = gen_pw_hash($arr['password']);
     }
 
     if (isset($arr['enabled'])) {
