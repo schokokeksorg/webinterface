@@ -55,7 +55,7 @@ $customer = get_customer_info($_SESSION['userinfo']['customerno']);
 $quotastring = implode('', $quota);
 
 $passwordlogin = '';
-if ($_SESSION['loginmethod'] == 'passkey' && $acc['passwordlogin'] == 1) {
+if (isset($_SESSION['loginmethod']) && $_SESSION['loginmethod'] == 'passkey' && $acc['passwordlogin'] == 1) {
     $passwordlogin = '<p class=warning>Die Anmeldung per SSH ist noch mit Passwort möglich. Das können Sie ' . internal_link($prefix . 'go/systemuser/edit', 'hier ändern') . '!</p>';
 }
 
