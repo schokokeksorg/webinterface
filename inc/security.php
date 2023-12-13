@@ -17,7 +17,12 @@ require_once('vendor/autoload.php');
 
 function gen_pw_hash($password)
 {
-    $pwhash = crypt($password, '$6$' . random_string(6));
+    /* For yescrypt, a 128 bit salt in non-standard base64 is
+       needed. We just need random data with valid encoding. */
+    $salt = base64_encode(random_bytes(16));
+    $salt = rtrim($salt, "=");
+    $salt = strtr($salt, "AQgw+/01", "./01AQgw");
+    $pwhash = crypt($password, '$y$j9T$' . $salt);
     if (strlen($pwhash) < 13) {
         /* returns a string shorter than 13 chars on failure */
         system_failure("Failed to calculate password hash!");
