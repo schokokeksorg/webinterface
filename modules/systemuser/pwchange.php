@@ -35,8 +35,8 @@ output(html_form('systemuser_pwchange', 'save', 'action=pwchange&uid=' . $accoun
 <h5>Neues Passwort</h5>
 <div style="margin-left: 2em;"> 
   <p>Geben Sie bitte Ihr neues Passwort zweimal ein. Bitte verzichten Sie auf Anführungszeichen!</p>
-  <p><label for="newpass1">Neues Passwort für »<strong>' . $account['username'] . '</strong>«:</label> <input type="password" name="newpass1" id="newpass1" /></p>
-  <p><label for="newpass2">Wiederholung des Passworts:</label> <input type="password" name="newpass2" id="newpass2" /></p>
+  <p><label for="newpass1">Neues Passwort für »<strong>' . $account['username'] . '</strong>«:</label> <input type="password" name="newpass1" id="newpass1" autocomplete="new-password" /></p>
+  <p><label for="newpass2">Wiederholung des Passworts:</label> <input type="password" name="newpass2" id="newpass2" autocomplete="new-password" /></p>
 </div>
 
 <p>
