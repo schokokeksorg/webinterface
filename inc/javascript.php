@@ -17,7 +17,7 @@ if (!defined('__JAVASCRIPT_INCLUDED')) {
     define('__JAVASCRIPT_INCLUDED', '1');
     global $prefix;
     html_header('
-<script type="text/javascript" src="' . $prefix . 'js/common.js" ></script>
+<script src="' . $prefix . 'js/common.js"></script>
 ');
 }
 
@@ -33,7 +33,7 @@ function javascript($file = null, $module = null)
     }
     if (file_exists('modules/' . $module . '/' . $file)) {
         html_header('
-<script type="text/javascript" src="' . $prefix . 'modules/' . $module . '/' . $file . '"></script>
+<script src="' . $prefix . 'modules/' . $module . '/' . $file . '"></script>
 ');
     } else {
         DEBUG('Missing JS file: ' . 'modules/' . $module . '/' . $file);

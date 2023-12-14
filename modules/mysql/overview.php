@@ -27,7 +27,7 @@ title("MySQL-Datenbanken");
 output('<p>Hier können Sie den Zugriff auf Ihre MySQL-Datenbanken verwalten. Die Einstellungen werden mit einer leichten Verzögerung (maximal 5 Minuten) in das System übertragen. Bitte beachten Sie, dass neue Zugänge also nicht umgehend funktionieren.</p>');
 
 html_header('
-<script type="text/javascript">
+<script>
 
   function makePasswd() {
     var passwd = \'\';

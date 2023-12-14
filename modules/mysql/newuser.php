@@ -28,7 +28,7 @@ title('Neuer MySQL-Benutzer');
 
 
 html_header('
-<script type="text/javascript">
+<script>
 
   function makePasswd() {
     var passwd = \'\';

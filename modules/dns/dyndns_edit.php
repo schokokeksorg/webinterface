@@ -40,7 +40,7 @@ if (isset($dyndns['password'])) {
 }
 
 
-$html_header .= '<script type="text/javascript">
+$html_header .= '<script>
 var username = "' . $_SESSION['userinfo']['username'] . '";
 var handle;
 var http_username;
