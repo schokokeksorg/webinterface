@@ -31,16 +31,21 @@ html_header('
 <script>
 
   function makePasswd() {
-    var passwd = \'\';
-    var chars = \'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\';
-    for (i=0; i<15; i++) {
-      var c = Math.floor(Math.random()*chars.length + 1);
-      passwd += chars.charAt(c)
+    const pwchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const limit = 256 - (256 % pwchars.length);
+
+    let passwd = "";
+    let randval;
+    for (let i = 0; i < 15; i++) {
+      do {
+        randval = window.crypto.getRandomValues(new Uint8Array(1))[0];
+      } while (randval >= limit);
+      passwd += pwchars[randval % pwchars.length];
     }
     return passwd;
   }
 
-  function setRandomPassword() 
+  function setRandomPassword()
   {
     pass = makePasswd();
     document.getElementById(\'newpass\').value = pass;
