@@ -156,7 +156,7 @@ function unset_mailserver_lock($dom)
 function create_domain_secret($dom)
 {
     $id = $dom->id;
-    $secret = md5(random_string(20));
+    $secret = bin2hex(random_bytes(16));
     db_query("UPDATE kundendaten.domains SET secret=? WHERE id=?", [$secret, $id]);
     $dom->secret = $secret;
     return $secret;
