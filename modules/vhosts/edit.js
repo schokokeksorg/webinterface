@@ -82,9 +82,6 @@
         }
 
     }
-    if (document.querySelector('#hostname').value != '') {
-        show_block = false;
-    }
     if (show_block) {
         document.querySelector('#hsts_preload_options').style.display = '';
     } else {
