@@ -73,7 +73,7 @@ $form = '<p><label for="handle">Bezeichnung:</label>&#160;<input type="text" nam
 <h4>Update per HTTPs</h4>
 <p style="margin-left: 2em;">Geben Sie hier ein Passwort ein um das Update per HTTPs zu aktivieren.' . $http_update_info . '</p>
 <p style="margin-left: 2em;">Benutzername:&#160;<strong><span id="username_http">' . $username_http . '</span></strong></p>
-<p style="margin-left: 2em;"><label for="password_http">Passwort:</label>&#160;<input type="password" id="password_http" name="password_http" value="' . (isset($dyndns['password']) ? '************' : '') . '" /></p>
+<p style="margin-left: 2em;"><label for="password_http">Passwort:</label>&#160;<input type="password" id="password_http" name="password_http" value="' . (isset($dyndns['password']) ? '************' : '') . '" autocomplete="new-password"></p>
 
 <h4>Update per SSH</h4>
 <p style="margin-left: 2em;">Kopieren Sie Ihren SSH-public-Key im OpenSSH-Format in dieses Eingabefeld um das Update per SSH zu aktivieren.</p>
