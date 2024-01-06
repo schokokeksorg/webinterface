@@ -69,7 +69,10 @@ function create_dyndns_account($handle, $password_http, $sshkey)
 
     $pwhash = null;
     if ($password_http) {
-        $pwhash = "{SHA}" . base64_encode(sha1($password_http, true));
+        if (($check = strong_password($password_http)) !== true) {
+            system_failure($check);
+        }
+        $pwhash = gen_pw_hash($password_http);
     }
 
     db_query(
@@ -100,7 +103,10 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
     $args = [":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id];
     $pwhash = null;
     if ($password_http && $password_http != '************') {
-        $args[":pwhash"] = "{SHA}" . base64_encode(sha1($password_http, true));
+        if (($check = strong_password($password_http)) !== true) {
+            system_failure($check);
+        }
+        $args[":pwhash"] = gen_pw_hash($password_http);
         db_query("UPDATE dns.dyndns SET handle=:handle, password=:pwhash, sshkey=:sshkey WHERE id=:id", $args);
     } else {
         db_query("UPDATE dns.dyndns SET handle=:handle, sshkey=:sshkey WHERE id=:id", $args);
