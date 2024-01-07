@@ -24,8 +24,8 @@ if (!isset($_REQUEST['action'])) {
 }
 
 if ($_REQUEST['action'] == 'chguser') {
-    change_user((int)$_REQUEST['id'], $_REQUEST['domainuser']);
-    redirect('detail?id=' . (int)$_REQUEST['id']);
+    change_user((int) $_REQUEST['id'], $_REQUEST['domainuser']);
+    redirect('detail?id=' . (int) $_REQUEST['id']);
 }
 
 if ($_REQUEST['action'] == 'ownerchange') {

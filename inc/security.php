@@ -332,7 +332,7 @@ function check_input_types($input, $types)
             system_failure("Interner Fehler bei Eingabevariablen");
         }
         if ($type === 'int') {
-            if ($input[$key] !== (string)(int)$input[$key]) {
+            if ($input[$key] !== (string) (int) $input[$key]) {
                 system_failure("Interner Fehler bei Eingabevariablen");
             }
             continue;

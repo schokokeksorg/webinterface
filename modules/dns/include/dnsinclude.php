@@ -366,7 +366,7 @@ function save_dns_record($id, $record)
             }
             [$hostname, $port] = $data;
             verify_input_hostname($hostname);
-            if ($port !== (string)(int) $port || (int)$port < 1 || (int)$port > 65535) {
+            if ($port !== (string) (int) $port || (int) $port < 1 || (int) $port > 65535) {
                 system_failure('Ungültige Portnummer');
             }
             $record['ip'] = null;
