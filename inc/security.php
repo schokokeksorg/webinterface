@@ -30,6 +30,22 @@ function gen_pw_hash($password)
     return $pwhash;
 }
 
+
+function legacy_pw_verify($password, $hash)
+{
+    /* Supports legacy SHA1/SHA256 hashes without salt,
+       for new use cases use password_verify() instead */
+    if ($hash[0] == '$') {
+        return password_verify($password, $hash);
+    } elseif (strlen($hash) == 40) {
+        return hash_equals(sha1($password), $hash);
+    } elseif (strlen($hash) == 64) {
+        return hash_equals(hash("sha256", $password), $hash);
+    }
+    return false;
+}
+
+
 function strong_password($password, $user = [])
 {
     $pwcheck = config('pwcheck');

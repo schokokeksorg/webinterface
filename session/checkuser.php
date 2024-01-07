@@ -86,8 +86,7 @@ function find_role($login, $password, $i_am_admin = false)
     if (@$result->rowCount() > 0) {
         $entry = $result->fetch(PDO::FETCH_OBJ);
         $db_password = $entry->password;
-        // SHA1 für alte Subuser (kaylee), SHA256 für neue Subuser
-        if (hash("sha1", $password) == $db_password || hash("sha256", $password) == $db_password || $i_am_admin) {
+        if (legacy_pw_verify($password, $db_password) || $i_am_admin) {
             logger(LOG_INFO, "session/checkuser", "login", "logged in virtual subuser »{$login}«.");
             return ROLE_SUBUSER;
         }
@@ -249,7 +248,7 @@ function set_subuser_password($subuser, $newpass)
 {
     $args = [":subuser" => $subuser,
                 ":uid" => (int) $_SESSION['userinfo']['uid'],
-                ":newpass" => sha1($newpass), ];
+                ":newpass" => gen_pw_hash($newpass), ];
     db_query("UPDATE system.subusers SET password=:newpass WHERE username=:subuser AND uid=:uid", $args);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed subuser's password.");
 }

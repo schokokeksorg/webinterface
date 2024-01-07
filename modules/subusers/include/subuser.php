@@ -104,7 +104,7 @@ function new_subuser($username, $requested_modules, $password)
 
     $args = [":uid" => $_SESSION['userinfo']['uid'],
                 ":username" => $username,
-                ":password" => hash("sha256", $password),
+                ":password" => gen_pw_hash($password),
                 ":modules" => implode(',', $modules), ];
 
     db_query("INSERT INTO system.subusers (uid, username, password, modules) VALUES (:uid, :username, :password, :modules)", $args);
@@ -159,7 +159,7 @@ function edit_subuser($id, $username, $requested_modules, $password)
         if ($result !== true) {
             system_failure("Unsicheres Passwort: " . $result);
         }
-        $args[':password'] = hash("sha256", $password);
+        $args[':password'] = gen_pw_hash($password);
         $pwchange = ", password=:password";
     }
 
