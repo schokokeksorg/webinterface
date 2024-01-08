@@ -66,7 +66,7 @@ output(html_form('ftpusers_edit', 'save', 'id=' . $ftpuser['id'], '
   </tr>
   <tr>
     <td>Passwort:</td>
-    <td><input type="password" id="password" name="password" value="" /></td>
+    <td><input type="password" id="password" name="password" value="" autocomplete="new-password"></td>
   </tr>
   <tr>
     <td>Zugang aktivieren:</td>
