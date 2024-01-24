@@ -71,13 +71,14 @@ function find_role($login, $password, $i_am_admin = false)
 
     // Customer?
     $customerno = (int) $login;
-    $pass = sha1($password);
-    $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id=:customerno AND passwort=:pass", [":customerno" => $customerno, ":pass" => $pass]);
-    if ($i_am_admin) {
-        $result = db_query("SELECT passwort AS password FROM kundendaten.kunden WHERE status=0 AND id=?", [$customerno]);
-    }
-    if (@$result->rowCount() > 0) {
-        return ROLE_CUSTOMER;
+    $result = db_query("SELECT passwort FROM kundendaten.kunden WHERE status=0 AND id=:customerno", [":customerno" => $customerno]);
+    if ($result->rowCount() > 0) {
+        $pwhash = $result->fetch()['passwort'];
+        if ($i_am_admin || legacy_pw_verify($password, $pwhash)) {
+            logger(LOG_INFO, "session/checkuser", "login", "logged in customer »{$customerno}«.");
+            return ROLE_CUSTOMER;
+        }
+        logger(LOG_WARNING, "session/checkuser", "login", "wrong password for existing customer »{$customerno}«.");
     }
 
     // Sub-User
