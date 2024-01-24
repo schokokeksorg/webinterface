@@ -240,7 +240,7 @@ function set_customer_lastlogin($customerno)
 function set_customer_password($customerno, $newpass)
 {
     $customerno = (int) $customerno;
-    $newpass = sha1($newpass);
+    $newpass = gen_pw_hash($newpass);
     db_query("UPDATE kundendaten.kunden SET passwort=:newpass WHERE id=:customerno", [":newpass" => $newpass, ":customerno" => $customerno]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed customer's password.");
 }
