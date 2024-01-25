@@ -23,9 +23,9 @@ if ($title) {
     echo "<title>Administration</title>";
 }
 ?>
-<link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon">
 <?php echo $html_header; ?>
-<link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal" />
+<link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal">
 <script src="<?php echo $THEME_PATH; ?>script.js"></script>
 </head>
 
@@ -33,7 +33,7 @@ if ($title) {
 <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
 
 <a href="javascript:void(0);" class="menuicon" id="showmenu" onclick="showMenu()"><img src="<?php echo $THEME_PATH; ?>images/bars.svg" alt=""><span id="showmenutext">Menü</span></a>
-<a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
+<a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting"></a>
 <div class="sidebar" id="sidebar">
 
 <div class="menu">
