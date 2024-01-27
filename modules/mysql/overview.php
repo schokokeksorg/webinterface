@@ -58,7 +58,7 @@ if (count($dbs) > 0 || count($users) > 0) {
 
     output('
   <table>
-  <tr><th>&#160;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="' . (count($users) + 1) . '">Benutzerkonten</th></tr>
+  <tr><th>&#160;</th><th style="background-color: #729bb3; color: #fff;padding: 0.2em;" colspan="' . count($users) . '">Benutzerkonten</th></tr>
   <tr><th style="background-color: #729bb3; color: #fff;padding: 0.2em; text-align: left;">Datenbanken</th>');
 
     foreach ($users as $user) {
@@ -66,10 +66,10 @@ if (count($dbs) > 0 || count($users) > 0) {
         //$username = str_replace('_', '_ ', $user['username']);
         $desc = '';
         if ($user['description']) {
-            $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">' . filter_output_html($user['description']) . '</span>';
+            $desc = '<br><span style="font-weight: normal; font-size: 80%; font-style: italic;">' . filter_output_html($user['description']) . '</span>';
         }
         output("<th><span title=\"Erstellt: {$user['created']}\">{$username}</span>" . $desc);
-        output("<br />" . internal_link('description', other_icon("comment.png", 'Beschreibung ändern'), "username={$username}") . "&#160;");
+        output("<br>" . internal_link('description', other_icon("comment.png", 'Beschreibung ändern'), "username={$username}") . "&#160;");
         output(internal_link("save", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}") . "</th>");
     }
 
@@ -80,9 +80,9 @@ if (count($dbs) > 0 || count($users) > 0) {
         $phpmyadmin = "https://mysql-{$servers[$db['name']]}/";
         $desc = '';
         if ($db['description']) {
-            $desc = '<br /><span style="font-weight: normal; font-size: 80%; font-style: italic;">' . filter_output_html($db['description']) . '</span>';
+            $desc = '<br><span style="font-weight: normal; font-size: 80%; font-style: italic;">' . filter_output_html($db['description']) . '</span>';
         }
-        output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>" . $desc . "<br />");
+        output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>" . $desc . "<br>");
         output(internal_link('description', other_icon("comment.png", 'Datenbank-Beschreibung ändern'), "db={$db['name']}") . "&#160;");
         output(internal_link("save", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}") . "&#160;");
         output("<a href=\"" . $phpmyadmin . "\">" . other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin") . "</a>");
@@ -134,7 +134,7 @@ if (count($users) > 0) {
     $form = '<div>
   <p><label for="mysql_username">Benutzername:</label>&#160;' . html_select('mysql_username', $my_users) . '</p>
   <p><label for="newpass">Passwort:</label>&#160;<input onchange="document.getElementById(\'newpass_display\').parentNode.style.display=\'none\'" type="password" name="newpass" id="newpass" value="" autocomplete="new-password"> <button type="button" onclick="setRandomPassword()">Passwort erzeugen</button></p>
-<p style="display: none;">Automatisch erzeugtes Passwort: <input id="newpass_display" type="text" readonly="readonly" /></p>
+<p style="display: none;">Automatisch erzeugtes Passwort: <input id="newpass_display" type="text" readonly="readonly"></p>
   <p><input type="submit" value="Setzen"></p>
 </div>';
 
@@ -142,5 +142,5 @@ if (count($users) > 0) {
     output('<h4>Passwort ändern</h4>
   <p>Hier können Sie das Passwort eines MySQL-Benutzeraccounts ändern bzw. neu setzen</p>
 
-  ' . html_form('mysql_databases', 'save', 'action=change_pw', $form) . '<br />');
+  ' . html_form('mysql_databases', 'save', 'action=change_pw', $form) . '<br>');
 }

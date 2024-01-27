@@ -138,19 +138,19 @@ if (!defined("TOP_INCLUDED")) {
 
     $role = $_SESSION['role'];
     if ($role != ROLE_ANONYMOUS) {
-        $userinfo .= '<p class="userinfo">Angemeldet als:<br />';
+        $userinfo .= '<p class="userinfo">Angemeldet als:<br>';
         if ($role & ROLE_SYSTEMUSER && isset($_SESSION['subuser'])) {
             $userinfo .= '<strong>' . $_SESSION['subuser'] . '</strong>';
-            $userinfo .= '<br />Mitbenutzer von ' . $_SESSION['userinfo']['username'];
+            $userinfo .= '<br>Mitbenutzer von ' . $_SESSION['userinfo']['username'];
         } elseif ($role & ROLE_SYSTEMUSER) {
             $userinfo .= '<strong>' . $_SESSION['userinfo']['username'] . '</strong>';
-            $userinfo .= '<br />' . $_SESSION['userinfo']['name'];
-            $userinfo .= '<br />(UID ' . $_SESSION['userinfo']['uid'] . (($role & ROLE_CUSTOMER) ? ', Kunde ' . $_SESSION['customerinfo']['customerno'] : '') . ')';
+            $userinfo .= '<br>' . $_SESSION['userinfo']['name'];
+            $userinfo .= '<br>(UID ' . $_SESSION['userinfo']['uid'] . (($role & ROLE_CUSTOMER) ? ', Kunde ' . $_SESSION['customerinfo']['customerno'] : '') . ')';
         } elseif ($role & ROLE_CUSTOMER) {
             $userinfo .= '<strong>' . $_SESSION['customerinfo']['name'] . '</strong>';
-            $userinfo .= '<br />(Kunde ' . $_SESSION['customerinfo']['customerno'] . ')';
+            $userinfo .= '<br>(Kunde ' . $_SESSION['customerinfo']['customerno'] . ')';
         } elseif ($role & (ROLE_MAILACCOUNT | ROLE_VMAIL_ACCOUNT)) {
-            $userinfo .= '<strong>' . $_SESSION['mailaccount'] . '</strong><br />(Postfach von Benutzer <em>' . $_SESSION['userinfo']['username'] . '</em>)';
+            $userinfo .= '<strong>' . $_SESSION['mailaccount'] . '</strong><br>(Postfach von Benutzer <em>' . $_SESSION['userinfo']['username'] . '</em>)';
         }
         $userinfo .= '</p>';
     }

@@ -256,10 +256,10 @@ function are_you_sure($query_string, $question)
     <div class=\"confirmation\">
       <div class=\"question\">{$question}</div>
       <p class=\"buttons\">
-        <input type=\"hidden\" name=\"random_token\" value=\"{$token}\" />
-        <input type=\"submit\" name=\"really\" value=\"Ja\" />
+        <input type=\"hidden\" name=\"random_token\" value=\"{$token}\">
+        <input type=\"submit\" name=\"really\" value=\"Ja\">
         &#160; &#160;
-        <input type=\"submit\" name=\"not_really\" value=\"Nein\" />
+        <input type=\"submit\" name=\"not_really\" value=\"Nein\">
       </p>
     </div>");
     output("</form>\n");
@@ -344,7 +344,7 @@ function use_module($modname)
     ini_set('include_path', ini_get('include_path') . ':./modules/' . $modname . '/include:');
     $style = 'modules/' . $modname . '/style.css';
     if (file_exists($style)) {
-        html_header('<link rel="stylesheet" href="' . $prefix . $style . '" type="text/css" />' . "\n");
+        html_header('<link rel="stylesheet" href="' . $prefix . $style . '" type="text/css">' . "\n");
     }
 }
 
@@ -403,7 +403,7 @@ function html_form($form_id, $scriptname, $querystring, $content)
     $querystring = encode_querystring($querystring);
     $ret = '';
     $ret .= '<form id="' . $form_id . '" action="' . $scriptname . $querystring . '" method="post">' . "\n";
-    $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="' . generate_form_token($form_id) . '" /></p>' . "\n";
+    $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="' . generate_form_token($form_id) . '"></p>' . "\n";
     $ret .= $content;
     $ret .= '</form>';
     return $ret;
