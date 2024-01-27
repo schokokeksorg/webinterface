@@ -115,7 +115,7 @@ if (count($dbs) > 0) {
     }
 
     output("<h4>Verwaltung der Datenbanken (phpMyAdmin)</h4>
-  <p><img src=\"{$prefix}images/phpmyadmin.png\" style=\"width: 120px; height: 70px; float: right;\" />Zur Verwaltung der Datenbank-Inhalte stellen wir Ihnen eine stets aktualisierte Version von phpMyAdmin zur Verfügung.</p>");
+  <p><img src=\"{$prefix}images/phpmyadmin.png\" style=\"width: 120px; height: 70px; float: right;\" alt=\"phpMyAdmin Logo\">Zur Verwaltung der Datenbank-Inhalte stellen wir Ihnen eine stets aktualisierte Version von phpMyAdmin zur Verfügung.</p>");
     if (count($myservers) == 1) {
         output("<p><strong><a href=\"https://mysql-{$myservers[0]}/\">phpMyAdmin aufrufen</a></strong></p>");
     } else {
