@@ -12,7 +12,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 ?><!DOCTYPE html>
 <html lang="de">
-<head>
+<head><meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
