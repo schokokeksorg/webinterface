@@ -133,9 +133,9 @@ if (count($users) > 0) {
     }
     $form = '<div>
   <p><label for="mysql_username">Benutzername:</label>&#160;' . html_select('mysql_username', $my_users) . '</p>
-  <p><label for="newpass">Passwort:</label>&#160;<input onchange="document.getElementById(\'newpass_display\').parentNode.style.display=\'none\'" type="password" name="newpass" id="newpass" value="" /> <button type="button" onclick="setRandomPassword()">Passwort erzeugen</button></p>
+  <p><label for="newpass">Passwort:</label>&#160;<input onchange="document.getElementById(\'newpass_display\').parentNode.style.display=\'none\'" type="password" name="newpass" id="newpass" value="" autocomplete="new-password"> <button type="button" onclick="setRandomPassword()">Passwort erzeugen</button></p>
 <p style="display: none;">Automatisch erzeugtes Passwort: <input id="newpass_display" type="text" readonly="readonly" /></p>
-  <p><input type="submit" value="Setzen" /></p>
+  <p><input type="submit" value="Setzen"></p>
 </div>';
 
 
