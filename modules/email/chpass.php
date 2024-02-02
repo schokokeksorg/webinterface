@@ -57,15 +57,15 @@ if (isset($_POST['password1']) && $_POST['password1'] != '') {
 output('<p>Hier können Sie Ihr Passwort ändern.</p>
 ' . html_form('email_chpass', 'chpass', '', '<table>
   <tr>
-    <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value="" /></td>
+    <td>bisheriges Passwort:</td>  <td><input type="password" name="old_password" value=""></td>
   </tr>
   <tr>
-    <td>neues Passwort:</td>       <td><input type="password" name="password1" value="" autocomplete="new-password" /></td>
+    <td>neues Passwort:</td>       <td><input type="password" name="password1" value="" autocomplete="new-password"></td>
   </tr>
   <tr>
-    <td>Bestätigung:<br /><span style="font-size: 80%;">(nochmal neues Passwort)</span></td>
-                                   <td><input type="password" name="password2" value="" autocomplete="new-password" /></td>
+    <td>Bestätigung:<br><span style="font-size: 80%;">(nochmal neues Passwort)</span></td>
+                                   <td><input type="password" name="password2" value="" autocomplete="new-password"></td>
   </tr>
 </table>
-<p><input type="submit" value="Speichern" /></p>
+<p><input type="submit" value="Speichern"></p>
 '));

@@ -18,7 +18,10 @@ require_once('inc/base.php');
 $section = 'email_vmail';
 title("Einstellungen zum E-Mail-Abruf");
 
-$servername = filter_input_hostname($_REQUEST['server']);
+$servername = "zucker.schokokeks.org";
+if (isset($_REQUEST['server'])) {
+    $servername = filter_input_hostname($_REQUEST['server']);
+}
 $type = 'vmail';
 if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'manual') {
     $type = 'manual';
@@ -67,15 +70,17 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
-<br style="clear: left;" />
+<br style="clear: left;">
 <h3>SMTP</h3>
 <p>Zum Verschicken von E-Mails muss sich Ihr E-Mail-Programm auch per SMTP anmelden. Benutzen Sie dafür bitte die folgenden Daten:</p>
+<dl>
 <dt>Protokoll</dt><dd>SMTP</dd>
 <dt>Servername</dt><dd>' . $servername . '</dd>
 <dt>Port</dt><dd>465</dd>
 <dt>Verschlüsselung</dt><dd>SSL / TLS</dd>
 <dt>Benutzername</dt><dd><em>' . ($type == 'manual' ? 'Ihr Account-Name' : 'Ihre E-Mail-Adresse') . '</em></dd>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
-<br />
+</dl>
+<br>
 
 ');
