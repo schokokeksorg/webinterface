@@ -111,7 +111,7 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         $color = ($percent > 95 ? 'red' : ($percent > 75 ? "yellow" : "green"));
                         $width = 2 * min($percent, 100);
                         $quotachart = "<div style=\"margin: 2px 0; padding: 0; width: 200px; border: 1px solid black;\"><div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; padding: 0;\">&#160;</div></div> {$acc['quota_used']} MB von {$acc['quota']} MB belegt";
-                        array_push($actions, "Ablegen in Mailbox<br />" . $quotachart);
+                        array_push($actions, "Ablegen in Mailbox<br>" . $quotachart);
                     }
                     if ($acc['autoresponder']) {
                         $now = date('Y-m-d');
@@ -145,11 +145,11 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         $dest .= '</ul>';
                     }
                     if ($acc['smtpreply']) {
-                        output('<p><strike>' . filter_output_html($acc['local'] . '@' . $this_account['domainname']) . '</strike> ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=" . $acc['id']) . '</p>');
+                        output('<p><strike>' . filter_output_html($acc['local'] . '@' . $this_account['domainname']) . '</strike> ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen">', "action=delete&id=" . $acc['id']) . "</p>\n");
                         output("<ul><li>" . icon_disabled() . " Diese Adresse ist stillgelegt. <strong>" . internal_link('suspend', 'Stilllegung ändern/aufheben', 'account=' . $acc['id']) . '</strong></li></ul>');
                     } else {
-                        output('<p>' . internal_link('edit', filter_output_html($acc['local'] . '@' . $this_account['domainname']), 'id=' . $acc['id']) . ' ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen"/>', "action=delete&id=" . $acc['id']) . '</p>');
-                        output('<p>' . $dest . '</p>');
+                        output('<p>' . internal_link('edit', filter_output_html($acc['local'] . '@' . $this_account['domainname']), 'id=' . $acc['id']) . ' ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen">', "action=delete&id=" . $acc['id']) . "</p>\n");
+                        output($dest);
                     }
                 }
             } else {
@@ -164,5 +164,5 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
 
 
     /* FIXME: Das sollte nur kommen, wenn der IMAP/POP3-Menü-Eintrag nicht da ist */
-    output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: ' . filter_output_html(config('company_name')) . ' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br/>' . internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create") . '</p>');
+    output('<p style="font-size: 90%;padding-top: 0.5em; border-top: 1px solid black;">Hinweis: ' . filter_output_html(config('company_name')) . ' bietet für fortgeschrittene Nutzer die manuelle Einrichtung von POP3/IMAP-Accounts.<br>' . internal_link("imap", "Neuen POP3/IMAP-Account anlegen", "action=create") . '</p>');
 }
