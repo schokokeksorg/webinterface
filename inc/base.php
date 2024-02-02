@@ -398,7 +398,7 @@ function internal_link($file, $label, $querystring = '', $attribs = '')
 }
 
 
-function html_form($form_id, $scriptname, $querystring, $content, $extraid="")
+function html_form($form_id, $scriptname, $querystring, $content, $extraid = "")
 {
     $querystring = encode_querystring($querystring);
     $ret = '';

@@ -99,7 +99,7 @@ foreach ($domains as $id => $dom) {
     } else {
         //$buttons .= 'Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.';
     }
-    output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons, $extraid=$id) . "</td><td>{$notice}</td></tr>\n");
+    output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons, $extraid = $id) . "</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
         foreach ($subdomains[$id] as $subdom) {
             $odd = !$odd;
