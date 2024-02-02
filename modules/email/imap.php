@@ -176,7 +176,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'save') {
           <td><input type="text" id="mailbox" name="mailbox" value="' . $account['mailbox'] . '"></td>
           <td><input type="button" onclick="document.getElementById(\'mailbox\').value = document.getElementById(\'old_mailbox\').value" value="Zeile zurücksetzen"></td></tr>
   <tr><td>Passwort:</td><td><i>nicht angezeigt</i></td>
-          <td><input type="password" id="password" name="password" value=""></td>
+          <td><input type="password" id="password" name="password" value="" autocomplete="new-password"></td>
           <td><input type="button" onclick="document.getElementById(\'password\').value = \'\'" value="Zeile zurücksetzen"></td></tr>
   <tr><td>Konto aktiv:</td>
     <td>&#160;</td>
