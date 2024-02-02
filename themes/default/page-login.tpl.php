@@ -23,8 +23,8 @@ if ($title) {
     echo "<title>Administration</title>";
 }
 ?>
-<link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal">
-<link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" media="screen" title="Normal">
+<link rel="icon" href="<?php echo $THEME_PATH; ?>favicon.ico">
 <?php echo $html_header; ?>
 <script src="<?php echo $THEME_PATH; ?>script.js"></script>
 </head>

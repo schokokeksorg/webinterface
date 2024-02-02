@@ -20,7 +20,7 @@ function show_page($path = null)
         $styles[] = "modules/{$module}/style.css";
     }
     foreach ($styles as $style) {
-        html_header('<link rel="stylesheet" href="' . $prefix . $style . '" type="text/css" />' . "\n");
+        html_header('<link rel="stylesheet" href="' . $prefix . $style . '">' . "\n");
     }
     if ($path) {
         $module = $path;

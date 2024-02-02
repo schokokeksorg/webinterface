@@ -344,7 +344,7 @@ function use_module($modname)
     ini_set('include_path', ini_get('include_path') . ':./modules/' . $modname . '/include:');
     $style = 'modules/' . $modname . '/style.css';
     if (file_exists($style)) {
-        html_header('<link rel="stylesheet" href="' . $prefix . $style . '" type="text/css">' . "\n");
+        html_header('<link rel="stylesheet" href="' . $prefix . $style . '">' . "\n");
     }
 }
 

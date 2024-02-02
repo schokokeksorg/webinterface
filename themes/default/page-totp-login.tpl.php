@@ -23,8 +23,8 @@ if ($title) {
     echo "<title>Administration</title>";
 }
 ?>
-<link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" type="text/css" media="screen" title="Normal" />
-<link rel="shortcut icon" href="<?php echo $THEME_PATH; ?>favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="<?php echo $THEME_PATH; ?>style.css" media="screen" title="Normal">
+<link rel="icon" href="<?php echo $THEME_PATH; ?>favicon.ico">
 <?php echo $html_header; ?>
 </head>
 
@@ -32,7 +32,7 @@ if ($title) {
 <div><a href="#content" style="display: none;">Zum Inhalt</a></div>
 
 <a href="javascript:void(0);" class="menuicon" id="showmenu" onclick="showMenu()"><img src="<?php echo $THEME_PATH; ?>images/bars.svg" alt=""><span id="showmenutext">Menü</span></a>
-<a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting" /></a>
+<a href="<?php echo $BASE_PATH; ?>" class="logo"><img src="<?php echo $THEME_PATH; ?>images/schokokeks.png" width="190" height="141" alt="schokokeks.org Hosting"></a>
 <div class="sidebar" id="sidebar">
 
 <div class="menu">
@@ -55,8 +55,8 @@ if ($messages) {
 <h3 class="headline">Sicherheits-Code</h3>
 <p>Ihr Zugang ist mit Zwei-Faktor-Anmeldung geschützt. Sie müssen daher jetzt noch den aktuellsten Code Ihres TOTP-Geräts eingeben.</p>
 <form method="post">
-<p><label for="code" class="login_label">TOTP-Authenticator-Code:</label> <input type="text" id="code" name="webinterface_totpcode" size="20" /></p>
-<p><span class="login_label">&#160;</span> <input type="submit" value="Prüfen" /></p>
+<p><label for="code" class="login_label">TOTP-Authenticator-Code:</label> <input type="text" id="code" name="webinterface_totpcode" size="20"></p>
+<p><span class="login_label">&#160;</span> <input type="submit" value="Prüfen"></p>
 </form>
 
 </div>
