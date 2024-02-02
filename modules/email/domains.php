@@ -43,7 +43,7 @@ sollen bzw. ob zusätzlich eine DMARC-Policy veröffentlicht werden soll.</p>
 <h4>Ihre Domains sind momentan wie folgt konfiguriert:</h4>
 
 <table>
-  <tr><th>Domainname</th><th>Einstellung</th><th></th><th></th></tr>
+  <tr><th>Domainname</th><th>Einstellung</th><th></th></tr>
 ');
 
 $odd = true;
@@ -70,19 +70,19 @@ foreach ($domains as $id => $dom) {
     $check_manual = ($dom['type'] == 'auto' || $dom['type'] == 'manual' ? ' checked="checked"' : '');
 
     $buttons = '<span class="buttonset' . ($edit_disabled ? ' disabled' : '') . '" id="buttonset-' . $id . '">
-         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
          <label for="option-' . $id . '-webinterface">Webinterface</label>
-         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
          <label for="option-' . $id . '-manual">Manuell</label>
-         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . $check_off . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . $check_off . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
          <label for="option-' . $id . '-off">Ausgeschaltet</label>';
-    $buttons .= '<input type="submit" value="Speichern" />
+    $buttons .= '<input type="submit" value="Speichern">
       </span>';
     if ($dom['type'] == 'nomail' || $dom['type'] == 'none') {
         $notice .= '<a href="https://wiki.schokokeks.org/E-Mail/Keine-Mailnutzung">Hinweise zur Verhinderung der Mail-Nutzung</a>';
-        $buttons .= '<span class="nomail"><input type="checkbox" class="nomail autosubmit" name="nomail-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+        $buttons .= '<span class="nomail"><input type="checkbox" class="nomail autosubmit" name="nomail-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
                      <label class="nomail" for="option-' . $id . '-nomail">Mail-Nutzung verhindern</label>
-         <input class="hidden" type="submit" value="Speichern" /></span>';
+         <input class="hidden" type="submit" value="Speichern"></span>';
     }
 
     if ($dom['type'] != 'none' && $dom['type'] != 'nomail' && $dom['dns'] == 1) {
@@ -94,12 +94,12 @@ foreach ($domains as $id => $dom) {
             <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>Nur DKIM</option>
             <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
         </select>
-         <input class="hidden" type="submit" value="Speichern" />
+         <input class="hidden" type="submit" value="Speichern">
       ';
     } else {
         //$buttons .= 'Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.';
     }
-    output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons) . "</td><td>{$notice}</td></tr>\n");
+    output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons, $extraid=$id) . "</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
         foreach ($subdomains[$id] as $subdom) {
             $odd = !$odd;
@@ -109,11 +109,11 @@ foreach ($domains as $id => $dom) {
             $check_manual = ($subdom['type'] == 'auto' || $subdom['type'] == 'manual' ? ' checked="checked"' : '');
             $id = $id . '-' . $subdom['name'];
             $buttons = '<span class="buttonset' . ($edit_disabled ? ' disabled' : '') . '" id="buttonset-' . $id . '">
-         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
          <label for="option-' . $id . '-webinterface">Webinterface</label>
-         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
          <label for="option-' . $id . '-manual">Manuell</label>
-         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . ($edit_disabled ? ' disabled="disabled"' : '') . '/>
+         <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
          <label for="option-' . $id . '-off">Ausgeschaltet</label>
       </span>';
             output("<tr{$trextra}><td>{$subdom['name']}.{$dom['name']}</td><td>{$buttons}</td><td>Subdomains können nur von Admins geändert werden!</td></tr>\n");
@@ -121,7 +121,7 @@ foreach ($domains as $id => $dom) {
     }
 }
 output('</table>
-<br />');
+<br>');
 
 output('<p><strong>Sicherheitshinweis:</strong> Während der Umstellung der Empfangsart ist Ihre Domain eventuell für einige Minuten in einem undefinierten Zustand. In dieser Zeit kann es passieren, dass E-Mails nicht korrekt zugestellt oder sogar ganz zurückgewiesen werden. Sie sollten diese Einstellungen daher nicht mehr ändern, wenn die Domain aktiv für den E-Mail-Verkehr benutzt wird.</p>
 ');

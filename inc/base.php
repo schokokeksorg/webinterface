@@ -398,11 +398,11 @@ function internal_link($file, $label, $querystring = '', $attribs = '')
 }
 
 
-function html_form($form_id, $scriptname, $querystring, $content)
+function html_form($form_id, $scriptname, $querystring, $content, $extraid="")
 {
     $querystring = encode_querystring($querystring);
     $ret = '';
-    $ret .= '<form id="' . $form_id . '" action="' . $scriptname . $querystring . '" method="post">' . "\n";
+    $ret .= '<form id="' . $form_id . $extraid . '" action="' . $scriptname . $querystring . '" method="post">' . "\n";
     $ret .= '<p style="display: none;"><input type="hidden" name="formtoken" value="' . generate_form_token($form_id) . '"></p>' . "\n";
     $ret .= $content;
     $ret .= '</form>';
