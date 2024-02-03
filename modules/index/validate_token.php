@@ -54,17 +54,17 @@ if (isset($_REQUEST['customerno']) and isset($_REQUEST['token'])) {
 if ($show == 'password') {
     output('<p>Bitte legen Sie jetzt Ihr neues Kunden-Passwort fest.</p>
   <form method="post">
-  <p style="display: none"><input type="hidden" name="customerno" value="' . $customerno . '" />
-  <input type="hidden" name="token" value="' . $token . '" /></p>
-  <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" /></p>
-  <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" /></p>
-  <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort setzen" /></p>
+  <p style="display: none"><input type="hidden" name="customerno" value="' . $customerno . '">
+  <input type="hidden" name="token" value="' . $token . '"></p>
+  <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" autocomplete="new-password"></p>
+  <p><span class="login_label">Bestätigung:</span> <input type="password" name="password2" size="30" autocomplete="new-password"></p>
+  <p><span class="login_label">&#160;</span> <input type="submit" value="Passwort setzen"></p>
   </form>');
 } elseif ($show == 'token') {
     output('<p>Bitte geben Sie Ihre Kundennummer und den per E-Mail zugeschickten Code ein. Alternativ können sie den Link aus der E-Mail direkt aufrufen.</p>
   <form method="post">
-  <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30" /></p>
-  <p><span class="login_label">Code:</span> <input type="text" name="token" size="30" /></p>
-  <p><span class="login_label">&#160;</span> <input type="submit" value="Überprüfen" /></p>
+  <p><span class="login_label">Kundennummer:</span> <input type="text" name="customerno" size="30"></p>
+  <p><span class="login_label">Code:</span> <input type="text" name="token" size="30"></p>
+  <p><span class="login_label">&#160;</span> <input type="submit" value="Überprüfen"></p>
   </form>');
 }
