@@ -35,14 +35,14 @@ output('<p>Bitte geben Sie den folgenden Initialisierungs-Code in Ihre TOTP-Soft
 
 $qrcode_image = generate_qrcode_image($secret);
 
-output('<h4>Ihr Initialisierungs-Code</h4><p style="font-size: 120%;">' . $secret . '</p><p><img src="data:image/png;base64,' . base64_encode($qrcode_image) . '" /></p>');
+output('<h4>Ihr Initialisierungs-Code</h4><p style="font-size: 120%;">' . $secret . '</p><p><img src="data:image/png;base64,' . base64_encode($qrcode_image) . '" alt="QR-Code"></p>');
 
 output('<h3>Testen Sie es...</h3><p>Nachdem Sie den Startwert in Ihren TOTP-Generator eingegeben haben bzw. den QRCode eingescannt haben, erhalten Sie umgehend einen Zugangscode. Geben Sie diesen hier ein um die Funktion zu testen:</p>');
 
-$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="' . filter_output_html($username) . '" /></p>
-<p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass" /></p>
-<p>Der aktuellste Einmal-Code: <input type="text" name="totp_code" /></p>
-<p><input type="submit" value="Prüfen!" /></p>';
+$form = '<p>Ihr Webmail-Benutzername: <input type="text" name="username" value="' . filter_output_html($username) . '"></p>
+<p>Ihr neues Webmail-Passwort: <input type="password" name="webmailpass"></p>
+<p>Der aktuellste Einmal-Code: <input type="text" name="totp_code" autocomplete="one-time-code" inputmode="numeric"></p>
+<p><input type="submit" value="Prüfen!"></p>';
 
 
 output(html_form('webmailtotp_test', 'test', '', $form));
