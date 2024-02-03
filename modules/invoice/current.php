@@ -70,7 +70,7 @@ if (count($invoices_to_show) == 0) {
         }
         $odd = !$odd;
         $class .= ($odd ? " odd" : " even");
-        output("<tr class=\"{$class}\"><td class=\"number\">" . internal_link("html", $invoice['id'], "id={$invoice['id']}") . "</td><td>{$invoice['datum']}</td><td class=\"number\">{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>" . internal_link("pdf", "<img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\"/>", "id={$invoice['id']}") . "</td></tr>\n");
+        output("<tr class=\"{$class}\"><td class=\"number\">" . internal_link("html", $invoice['id'], "id={$invoice['id']}") . "</td><td>{$invoice['datum']}</td><td class=\"number\">{$invoice['betrag']} €</td><td>{$bezahlt}</td><td>" . internal_link("pdf", "<img src=\"{$prefix}images/pdf.png\" width=\"22\" height=\"22\" alt=\"PDF\">", "id={$invoice['id']}") . "</td></tr>\n");
     }
 
     output('</table>');
@@ -92,7 +92,7 @@ $mandate = get_sepamandate();
 if ($mandate) {
     output('<p>Folgende Mandate sind bisher erteilt worden (momentan gültiges Mandat ist Fett dargestellt):</p>
 <table>
-<tr><th>Mandatsreferenz</th><th>IBAN</th><th>Gültigkeit</th></tr
+<tr><th>Mandatsreferenz</th><th>IBAN</th><th>Gültigkeit</th></tr>
 ');
     foreach ($mandate as $m) {
         $gueltig = 'ab ' . $m['gueltig_ab'];

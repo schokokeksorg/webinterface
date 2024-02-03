@@ -41,12 +41,12 @@ output('<p>Ein zusätzlicher Admin-Zugang darf die hier bestimmten Module dieses
 
 
 $form = '<table>
-<tr><td><strong><label for="username">Benutzername:</label></td><td>' . $_SESSION['userinfo']['username'] . '_<input type="text" name="username" id="username" value="' . $subuser['username'] . '" /></td></tr>
-<tr><td><strong><label for="password">Passwort:</label></td><td><input type="password" name="password" id="password" value="" autocomplete="new-password">' . $pwnotice . '</td></tr>
+<tr><td><strong><label for="username">Benutzername:</label></strong></td><td>' . $_SESSION['userinfo']['username'] . '_<input type="text" name="username" id="username" value="' . $subuser['username'] . '" /></td></tr>
+<tr><td><strong><label for="password">Passwort:</label></strong></td><td><input type="password" name="password" id="password" value="" autocomplete="new-password">' . $pwnotice . '</td></tr>
 <tr><td style="vertical-align: top;">Berechtigungen:</td><td>';
 $modinfo = available_modules();
 foreach ($modinfo as $key => $desc) {
-    $checked = in_array($key, $subuser['modules']) ? 'checked="checked "' : '';
+    $checked = in_array($key, $subuser['modules']) ? 'checked="checked"' : '';
     $form .= '<input type="checkbox" name="modules[]" id="' . $key . '" value="' . $key . '" ' . $checked . '/> <label for="' . $key . '">' . $desc . '</label><br />';
 }
 $form .= '<br /><em>(Nicht alle Berechtigungen haben alleinstehend eine Wirkung. Eventuell müssen Sie mehrere Berechtigungen erlauben um einen Effekt zu erhalten.)</em></td></tr>

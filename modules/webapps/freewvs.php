@@ -48,7 +48,7 @@ foreach ($results as $app) {
     $url = get_url_for_dir($app['directory']);
     output("<div class='freewvs freewvs-{$app['state']}'>\n");
     if ($app['state'] == 'ok') {
-        output("<img src='{$prefix}images/ok.png' />\n");
+        output("<img src='{$prefix}images/ok.png' alt='ok'>\n");
         output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
         output("<p>Gefunden in " . filter_output_html($app['directory']) . " (<a href=\"{$url}\">{$url}</a>)</p>\n");
         output("<p>Diese Anwendung hat keine allgemein bekannten Sicherheitsprobleme.</p>\n");
@@ -58,7 +58,7 @@ foreach ($results as $app) {
         if (substr($vulnlink, 0, 3) == 'CVE') {
             $vulnlink = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=' . $vulnlink;
         }
-        output("<img src='{$prefix}images/error.png' />\n");
+        output("<img src='{$prefix}images/error.png' alt='error'>\n");
         output("<p><strong>{$app['appname']} {$app['version']}</strong></p>\n");
         output("<p>Gefunden in " . filter_output_html($app['directory']) . " (<a href=\"{$url}\">{$url}</a>)</p>\n");
         if ($app['safeversion'] != '') {

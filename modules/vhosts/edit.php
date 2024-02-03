@@ -321,6 +321,7 @@ if ($have_v6) {
 
 
 $form .= '
+</div>
   <p><input type="submit" value="Speichern" />&#160;&#160;&#160;&#160;' . internal_link('vhosts', 'Abbrechen') . '</p>
 ';
 output(html_form('vhosts_edit_vhost', 'save', 'action=edit&vhost=' . $vhost['id'], $form));
