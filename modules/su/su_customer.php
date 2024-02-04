@@ -61,7 +61,7 @@ $users = find_users_for_customer($cid);
 output('<p>Zu Ihrem Kundenkonto gehören die folgenden Benutzer. Klicken Sie einen Benutzernamen an um zu diesem zu wechseln.</p><ul>');
 
 foreach ($users as $u) {
-    if ($u['uid'] == $_SESSION['userinfo']['uid']) {
+    if (isset($_SESSION['userinfo']['uid']) && ($u['uid'] == $_SESSION['userinfo']['uid'])) {
         output("<li>{$u['username']} - (Eigener Benutzeraccount)</li>");
         continue;
     }
