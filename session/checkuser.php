@@ -300,12 +300,13 @@ function setup_session($role, $useridentity, $loginmethod = 'password')
         $data = db_query("SELECT kundenaccount FROM system.useraccounts WHERE username=?", [$info['username']]);
         if ($entry = $data->fetch()) {
             if ($entry['kundenaccount'] == 1) {
-                $customer = get_customer_info($_SESSION['userinfo']['username']);
+                $customer = get_customer_info($_SESSION['userinfo']['customerno']);
                 $_SESSION['customerinfo'] = $customer;
                 $_SESSION['role'] = ROLE_SYSTEMUSER | ROLE_CUSTOMER | ROLE_SUBUSER;
             }
         }
         logger(LOG_INFO, "session/start", "login", "logged in user »{$info['username']}«");
+        return;
     }
     if ($role & ROLE_SYSTEMUSER) {
         DEBUG("We are system user");
