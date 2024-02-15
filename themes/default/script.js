@@ -1,3 +1,4 @@
+
 function showMenu() {
     var x = document.getElementById("sidebar");
     if (x.className === "sidebar") {
