@@ -38,7 +38,7 @@ beachtet. Subdomains können grundsätzlich nur durch Administratoren eingericht
 <p><strong>DKIM:</strong> Für jede Domain können Sie zudem einstellen, ob die ausgehenden Mails eine DKIM-Signatur bekommen 
 sollen bzw. ob zusätzlich eine DMARC-Policy veröffentlicht werden soll.</p>
 
-<p class="warning"><strong>BITTE BEACHTEN:</strong> Vor der Aktivierung von DMARC beachten Sie bitte die <a href="https://wiki.schokokeks.org/E-Mail/DKIM">Informationen zu DKIM / DMARC</a>, insbesondere den Abschnitt "Mails von PHP-Applikationen und anderen serverseitigen Anwendungen".</p>
+<p class="warning"><strong>BITTE BEACHTEN:</strong> Lesen Sie bitte die <a href="https://wiki.schokokeks.org/E-Mail/DKIM">Informationen zu DKIM / DMARC</a>, insbesondere den Abschnitt "Mails von PHP-Applikationen und anderen serverseitigen Anwendungen".</p>
 
 <h4>Ihre Domains sind momentan wie folgt konfiguriert:</h4>
 
@@ -90,7 +90,7 @@ foreach ($domains as $id => $dom) {
         $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
         $check_dkimoff = ($dom['dkim'] == 'none' ? ' checked="checked"' : '');
         $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
-            <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM + DMARC</option>
+            <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM+DMARC (ohne Policy)</option>
             <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>Nur DKIM</option>
             <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
         </select>
