@@ -66,8 +66,8 @@ if ($messages) {
 <p class="login_field"><label for="username" class="login_label">Benutzername:</label> <input type="text" id="username" name="webinterface_username" size="30" autocomplete="username"></p>
 <p class="login_field"><label for="password" class="login_label">Passwort:</label> <input type="password" id="password" name="webinterface_password" size="30" autocomplete="current-password"> &nbsp; (<a href="<?php echo $BASE_PATH; ?>go/index/lost_password">Passwort vergessen?</a>)</p>
 <p><span class="login_label">&#160;</span> <input type="submit" value="Anmelden"></p>
-</form>
 </div>
+</form>
 <p>Sie können sich hier mit Ihrem System-Benutzernamen, Ihrer E-Mail-Adresse oder Ihrer Kundennummer (jeweils mit zugehörigem Passwort) anmelden. Je nach gewählten Daten erhalten Sie unterschiedliche Zugriffsrechte.</p>
 <?php /* <p>Sollten Sie Ihr Benutzer-Passwort nicht mehr kennen, wenden Sie sich bitte an den Support. Passwörter für E-Mail-Konten kann der Eigentümer des Benutzeraccounts neu setzen.</p> */ ?>
 
