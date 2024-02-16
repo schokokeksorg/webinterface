@@ -240,6 +240,10 @@ function set_customer_lastlogin($customerno)
 function set_customer_password($customerno, $newpass)
 {
     $customerno = (int) $customerno;
+    $res = strong_password($newpass);
+    if ($res !== true) {
+        system_failure("Unsicheres Passwort: " . $res);
+    }
     $newpass = gen_pw_hash($newpass);
     db_query("UPDATE kundendaten.kunden SET passwort=:newpass WHERE id=:customerno", [":newpass" => $newpass, ":customerno" => $customerno]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed customer's password.");
@@ -247,6 +251,10 @@ function set_customer_password($customerno, $newpass)
 
 function set_subuser_password($subuser, $newpass)
 {
+    $res = strong_password($newpass);
+    if ($res !== true) {
+        system_failure("Unsicheres Passwort: " . $res);
+    }
     $args = [":subuser" => $subuser,
                 ":uid" => (int) $_SESSION['userinfo']['uid'],
                 ":newpass" => gen_pw_hash($newpass), ];
@@ -257,7 +265,10 @@ function set_subuser_password($subuser, $newpass)
 function set_systemuser_password($uid, $newpass)
 {
     $uid = (int) $uid;
-    require_once('inc/base.php');
+    $res = strong_password($newpass);
+    if ($res !== true) {
+        system_failure("Unsicheres Passwort: " . $res);
+    }
     $newpass = gen_pw_hash($newpass);
     db_query("UPDATE system.passwoerter SET passwort=:newpass WHERE uid=:uid", [":newpass" => $newpass, ":uid" => $uid]);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed user's password.");
