@@ -70,7 +70,7 @@ output(html_form('ftpusers_edit', 'save', 'id=' . $ftpuser['id'], '
   </tr>
   <tr>
     <td>Zugang aktivieren:</td>
-    <td><input type="checkbox" id="active" name="active" value="1" ' . $active . '/> auf Server ' . $whichserver . '<br/><input type="checkbox" id="forcessl" name="forcessl" value="1" ' . $forcessl . '/>&#160;<label for="forcessl">SSL-Verschlüsselung erforderlich<sup>*</sup></label></td>
+    <td><input type="checkbox" id="active" name="active" value="1" ' . $active . '/> auf Server ' . $whichserver . '<br/><input type="checkbox" id="forcessl" name="forcessl" value="1" ' . $forcessl . '/>&#160;<label for="forcessl">SSL/TLS-Verschlüsselung erforderlich<sup>*</sup></label></td>
   </tr>
   </table>
   <p><input type="submit" name="save" value="Speichern" /></p>
