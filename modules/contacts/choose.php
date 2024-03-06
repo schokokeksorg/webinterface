@@ -44,7 +44,7 @@ if (isset($_SESSION['contacts_choose_header'])) {
 
 output('<div class="contact-list">');
 $contacts = get_contacts();
-$hvae_invalid = false;
+$have_invalid = false;
 foreach ($contacts as $c) {
     if (possible_domainholder($c)) {
         output(internal_link('', display_contact($c), "id={$c['id']}", 'class="contacts-choose"'));
