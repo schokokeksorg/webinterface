@@ -446,12 +446,17 @@ function get_modules_info()
 }
 
 
-function send_mail($address, $subject, $body)
+function send_mail($address, $subject, $body, $msgtype = "adminmail")
 {
     if (strstr($subject, "\n") !== false) {
         die("Zeilenumbruch im subject!");
     }
-    $header = "From: " . config('company_name') . " Web Administration <" . config('adminmail') . ">\r\nCc: " . config('adminmail') . "\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\nX-schokokeks-org-message: webinterface";
+    $header = "From: " . config('company_name') . " Web Administration <" . config('adminmail') . ">\r\n";
+    if ($address !== config('adminmail')) {
+        $header .= "Cc: " . config('adminmail') . "\r\n";
+    }
+    $header .= "X-schokokeks-org-message: " . $msgtype . "\r\n";
+    $header .= "Content-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n";
     $subject = mb_encode_mimeheader($subject, "utf-8", "Q");
     $body = quoted_printable_encode($body);
     mail($address, $subject, $body, $header);
