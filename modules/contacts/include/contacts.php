@@ -287,8 +287,8 @@ Köchersberg 32, 71540 Murrhardt
 
 https://schokokeks.org
 ';
-    # send welcome message
-    mail($email, '=?UTF-8?Q?Best=C3=A4tigung_Ihrer_E-Mail-Adresse?=', $message, "X-schokokeks-org-message: verify\nFrom: " . config('company_name') . ' <' . config('adminmail') . ">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
+    // send welcome message
+    send_mail($email, 'Bestätigung Ihrer E-Mail-Adresse', $message, "verify");
 }
 
 function update_pending($contactid)

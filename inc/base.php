@@ -472,6 +472,6 @@ function handle_exception($e)
         print_r(serialize($_SERVER));
     } else {
         $msg = "Exception caught:\n" . $e->getMessage() . "\n" . serialize($_POST) . "\n" . serialize($_SERVER);
-        mail(config("adminmail"), "Exception on configinterface", $msg);
+        send_mail(config("adminmail"), "Exception on configinterface", $msg);
     }
 }

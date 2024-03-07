@@ -419,10 +419,10 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
   (Achten Sie bitte darauf, dass die Verschlüsselung mit SSL oder TLS 
   aktiviert ist.)
 ';
-        # send welcome message
-        mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "X-schokokeks-org-message: welcome\nFrom: " . config('company_name') . ' <' . config('adminmail') . ">\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n");
-        # notify the vmail subsystem of this new account
-        #mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
+        // send welcome message
+        send_mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "welcome");
+        // notify the vmail subsystem of this new account
+        //mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
     }
 
     // Clean up obsolete quota

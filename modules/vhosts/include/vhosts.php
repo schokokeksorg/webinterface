@@ -358,7 +358,7 @@ function make_webapp_vhost($id, $webapp)
     $webapp_name = $result->fetch(PDO::FETCH_OBJ)->displayname;
     logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Setting up webapp ' . $webapp_name . ' on vhost #' . $id);
     db_query("REPLACE INTO vhosts.webapps (vhost, webapp) VALUES (?, ?)", [$id, $webapp]);
-    mail('webapps-setup@schokokeks.org', 'setup', 'setup');
+    send_mail('webapps-setup@schokokeks.org', 'setup', 'setup');
 }
 
 
