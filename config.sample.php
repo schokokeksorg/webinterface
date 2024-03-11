@@ -33,7 +33,6 @@ $config['logging'] = LOG_ERR;
 
 $config['mime_type'] = 'text/html';
 
-$config['session_name'] = 'CONFIG_SCHOKOKEKS_ORG';
 $config['theme'] = 'default';
 
 ini_set('display_errors', 'On');

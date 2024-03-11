@@ -11,7 +11,10 @@ require_once('inc/debug.php');
 
 require_once('inc/base.php');
 
-session_name(config('session_name'));
+// __Host- prefix guarantees secure cookie that cannot be
+// overwritten by other hosts:
+// https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis
+session_name('__Host-CONFIG_INTERFACE');
 
 session_set_cookie_params(['path' => '/', 'secure' => true,
                                 'httponly' => true, 'samesite' => 'Lax', ]);
