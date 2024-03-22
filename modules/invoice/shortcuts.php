@@ -29,9 +29,9 @@ if ($_SESSION['role'] & ROLE_CUSTOMER) {
     }
 
     $shortcuts[] = [ 'section' => 'administration',
-                        'weight'  => 50,
-                        'file'    => 'current',
-                        'icon'    => 'invoice.png',
-                        'title'   => 'Ihre Rechnungen',
-                        'alert'   => $alert, ];
+        'weight'  => 50,
+        'file'    => 'current',
+        'icon'    => 'invoice.png',
+        'title'   => 'Ihre Rechnungen',
+        'alert'   => $alert, ];
 }

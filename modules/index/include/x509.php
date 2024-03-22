@@ -89,14 +89,14 @@ function add_clientcert($certdata, $dn, $issuer, $serial, $vstart, $vend, $start
     }
 
     $args = [":dn" => $dn,
-                ":issuer" => $issuer,
-                ":serial" => $serial,
-                ":vstart" => $vstart,
-                ":vend" => $vend,
-                ":certdata" => $certdata,
-                ":type" => $type,
-                ":username" => $username,
-                ":startpage" => $startpage, ];
+        ":issuer" => $issuer,
+        ":serial" => $serial,
+        ":vstart" => $vstart,
+        ":vend" => $vend,
+        ":certdata" => $certdata,
+        ":type" => $type,
+        ":username" => $username,
+        ":startpage" => $startpage, ];
     DEBUG($args);
 
     db_query("INSERT INTO system.clientcert (`dn`, `issuer`, `serial`, `valid_from`, `valid_until`, `cert`, `type`, `username`, `startpage`) 

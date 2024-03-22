@@ -16,7 +16,7 @@ require_once('session/checkuser.php');
 function user_customer_match($cust, $user)
 {
     $args = [":cid" => $cust,
-                ":user" => $user, ];
+        ":user" => $user, ];
     $result = db_query("SELECT uid FROM system.useraccounts WHERE kunde=:cid AND username=:user AND kundenaccount=1", $args);
     if ($result->rowCount() > 0) {
         return true;
@@ -39,7 +39,7 @@ function find_username($input)
 function customer_has_email($customerno, $email)
 {
     $args = [":cid" => $customerno,
-                ":email" => $email, ];
+        ":email" => $email, ];
     $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=:cid AND (email=:email OR email_extern=:email OR email_rechnung=:email)", $args);
     return ($result->rowCount() > 0);
 }
@@ -49,7 +49,7 @@ function validate_token($customerno, $token)
 {
     expire_tokens();
     $args = [":cid" => $customerno,
-                ":token" => $token, ];
+        ":token" => $token, ];
     $result = db_query("SELECT NULL FROM kundendaten.kunden WHERE id=:cid AND token=:token", $args);
     return ($result->rowCount() > 0);
 }
@@ -80,7 +80,7 @@ function validate_uid_token($uid, $token)
 {
     expire_tokens();
     $args = [":uid" => $uid,
-                ":token" => $token, ];
+        ":token" => $token, ];
     $result = db_query("SELECT NULL FROM system.usertoken WHERE uid=:uid AND token=:token", $args);
     return ($result->rowCount() > 0);
 }
@@ -115,7 +115,7 @@ function create_token($username)
     }
 
     $args = [":uid" => $uid,
-                ":token" => random_string(16), ];
+        ":token" => random_string(16), ];
     db_query("INSERT INTO system.usertoken VALUES (:uid, NOW(), NOW() + INTERVAL 1 DAY, :token)", $args);
     return true;
 }

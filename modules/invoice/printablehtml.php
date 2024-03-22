@@ -310,8 +310,8 @@ foreach ($items as $item) {
         $einzelsummen[$item['mwst']]['gross'] += $gesamt;
     } else {
         $einzelsummen[$item['mwst']] = ['net' => $gesamt / (1 + ($item['mwst'] / 100)),
-                                             'vat' => $gesamt / (1 + ($item['mwst'] / 100)) * ($item['mwst'] / 100),
-                                             'gross' => $gesamt, ];
+            'vat' => $gesamt / (1 + ($item['mwst'] / 100)) * ($item['mwst'] / 100),
+            'gross' => $gesamt, ];
     }
     $summe += $gesamt;
 

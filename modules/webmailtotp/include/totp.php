@@ -62,8 +62,8 @@ function store_webmail_password($username, $oldpw, $newpw)
     }
     DEBUG([$oldpw, $newpw]);
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":username" => $username,
-                ":code" => base64_encode($code), ];
+        ":username" => $username,
+        ":code" => base64_encode($code), ];
 
     db_query("REPLACE INTO mail.webmail_totp (useraccount, email, webmailpass) VALUES (:uid, :username, :code)", $args);
 }
@@ -160,10 +160,10 @@ function generate_qrcode_image($secret)
     $url = 'otpauth://totp/Webmail?secret=' . $secret;
 
     $descriptorspec = [
-    0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
-    1 => ["pipe", "w"],  // STDOUT ist eine Pipe, in die das Child schreibt
-    2 => ["pipe", "w"],
-  ];
+        0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
+        1 => ["pipe", "w"],  // STDOUT ist eine Pipe, in die das Child schreibt
+        2 => ["pipe", "w"],
+    ];
 
     $process = proc_open('qrencode -t PNG -s 5 -o -', $descriptorspec, $pipes);
 
@@ -191,7 +191,7 @@ function generate_qrcode_image($secret)
 function accountname($id)
 {
     $args = [":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid'], ];
+        ":uid" => $_SESSION['userinfo']['uid'], ];
     $result = db_query("SELECT email FROM mail.webmail_totp WHERE id=:id AND useraccount=:uid", $args);
     if ($tmp = $result->fetch()) {
         return $tmp['email'];
@@ -202,7 +202,7 @@ function accountname($id)
 function delete_totp($id)
 {
     $args = [":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid'], ];
+        ":uid" => $_SESSION['userinfo']['uid'], ];
 
     db_query("DELETE FROM mail.webmail_totp WHERE id=:id AND useraccount=:uid", $args);
 }

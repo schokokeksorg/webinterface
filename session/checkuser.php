@@ -215,13 +215,13 @@ function get_user_info($username)
     }
     $val = @$result->fetch(PDO::FETCH_OBJ);
     return [
-          'username'      => $val->username,
-          'customerno'    => $val->customerno,
-          'uid'           => $val->uid,
-          'homedir'       => $val->homedir,
-          'server'        => $val->server,
-          'name'          => $val->name,
-          ];
+        'username'      => $val->username,
+        'customerno'    => $val->customerno,
+        'uid'           => $val->uid,
+        'homedir'       => $val->homedir,
+        'server'        => $val->server,
+        'name'          => $val->name,
+    ];
 }
 
 function set_customer_verified($customerno)
@@ -256,8 +256,8 @@ function set_subuser_password($subuser, $newpass)
         system_failure("Unsicheres Passwort: " . $res);
     }
     $args = [":subuser" => $subuser,
-                ":uid" => (int) $_SESSION['userinfo']['uid'],
-                ":newpass" => gen_pw_hash($newpass), ];
+        ":uid" => (int) $_SESSION['userinfo']['uid'],
+        ":newpass" => gen_pw_hash($newpass), ];
     db_query("UPDATE system.subusers SET password=:newpass WHERE username=:subuser AND uid=:uid", $args);
     logger(LOG_INFO, "session/checkuser", "pwchange", "changed subuser's password.");
 }

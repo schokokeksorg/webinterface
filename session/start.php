@@ -17,7 +17,7 @@ require_once('inc/base.php');
 session_name('__Host-CONFIG_INTERFACE');
 
 session_set_cookie_params(['path' => '/', 'secure' => true,
-                                'httponly' => true, 'samesite' => 'Lax', ]);
+    'httponly' => true, 'samesite' => 'Lax', ]);
 
 if (!session_start()) {
     logger(LOG_ERR, "session/start", "session", "Die session konnte nicht gestartet werden!");

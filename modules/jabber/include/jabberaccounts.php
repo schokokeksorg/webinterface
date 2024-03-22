@@ -36,7 +36,7 @@ function get_jabberaccount_details($id)
 {
     require_role(ROLE_CUSTOMER);
     $args = [":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":id" => $id, ];
+        ":id" => $id, ];
 
     $result = db_query("SELECT id, local, domain FROM jabber.accounts WHERE customerno=:customerno AND id=:id", $args);
     if ($result->rowCount() != 1) {
@@ -69,8 +69,8 @@ function create_jabber_account($local, $domain, $password)
 {
     require_role(ROLE_CUSTOMER);
     $data = [":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":local" => filter_input_username(strtolower($local)),
-                ":domain" => $domain, ];
+        ":local" => filter_input_username(strtolower($local)),
+        ":domain" => $domain, ];
     if (!valid_jabber_password($password)) {
         system_failure('Das Passwort enthält Zeichen, die aufgrund technischer Beschränkungen momentan nicht benutzt werden können.');
     }
@@ -119,8 +119,8 @@ function change_jabber_password($id, $password)
         system_failure('Das Passwort ist nicht sicher genug.');
     }
     $args = [":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":id" => $id,
-                ":password" => $password, ];
+        ":id" => $id,
+        ":password" => $password, ];
 
     db_query("UPDATE jabber.accounts SET password=:password WHERE customerno=:customerno AND id=:id", $args);
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "changed password for account  »{$id}«");
@@ -133,7 +133,7 @@ function delete_jabber_account($id)
     require_role(ROLE_CUSTOMER);
 
     $args = [":customerno" => $_SESSION['customerinfo']['customerno'],
-                ":id" => $id, ];
+        ":id" => $id, ];
 
     db_query("UPDATE jabber.accounts SET `delete`=1 WHERE customerno=:customerno AND id=:id", $args);
     logger(LOG_INFO, "modules/jabber/include/jabberaccounts", "jabber", "deleted account »{$id}«");

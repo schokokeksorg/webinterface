@@ -36,7 +36,7 @@ function get_dyndns_accounts()
 function get_dyndns_account($id, $ignore = true)
 {
     $args = [":id" => (int) $id,
-                ":uid" => (int) $_SESSION['userinfo']['uid'], ];
+        ":uid" => (int) $_SESSION['userinfo']['uid'], ];
     $result = db_query("SELECT * FROM dns.dyndns WHERE id=:id AND uid=:uid", $args);
     if ($result->rowCount() != 1) {
         if ($ignore) {
@@ -154,13 +154,13 @@ function blank_dns_record($type)
         system_failure('invalid type: ' . $type);
     }
     $rec = ['hostname' => null,
-               'domain' => 0,
-               'type' => strtolower($type),
-               'ttl' => 3600,
-               'ip' => null,
-               'dyndns' => null,
-               'data' => null,
-               'spec' => null, ];
+        'domain' => 0,
+        'type' => strtolower($type),
+        'ttl' => 3600,
+        'ip' => null,
+        'dyndns' => null,
+        'data' => null,
+        'spec' => null, ];
     if (strtolower($type) == 'mx') {
         $rec['data'] = config('default_mx');
         $rec['spec'] = '5';
@@ -376,13 +376,13 @@ function save_dns_record($id, $record)
     }
     $id = (int) $id;
     $args = [":domain" => $dom->id,
-                ":hostname" => $record['hostname'],
-                ":type" => $record['type'],
-                ":ttl" => ($record['ttl'] == 0 ? null : (int) $record['ttl']),
-                ":ip" => $record['ip'],
-                ":dyndns" => $record['dyndns'],
-                ":data" => $record['data'],
-                ":spec" => $record['spec'], ];
+        ":hostname" => $record['hostname'],
+        ":type" => $record['type'],
+        ":ttl" => ($record['ttl'] == 0 ? null : (int) $record['ttl']),
+        ":ip" => $record['ip'],
+        ":dyndns" => $record['dyndns'],
+        ":data" => $record['data'],
+        ":spec" => $record['spec'], ];
     if ($id) {
         $args[":id"] = $id;
         db_query("UPDATE dns.custom_records SET hostname=:hostname, domain=:domain, type=:type, ttl=:ttl, ip=:ip, dyndns=:dyndns, data=:data, spec=:spec WHERE id=:id", $args);

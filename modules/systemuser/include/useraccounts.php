@@ -108,11 +108,11 @@ function set_account_details($account)
         $account['name'] = null;
     }
     $args = [":fullname" => filter_input_oneline($account['name']),
-                ":shell" => filter_input_oneline($account['shell']),
-                ":quota" => $account['quota'],
-                ":uid" => $account['uid'],
-                ":customerno" => $customerno,
-                ":passwordlogin" => $account['passwordlogin'], ];
+        ":shell" => filter_input_oneline($account['shell']),
+        ":quota" => $account['quota'],
+        ":uid" => $account['uid'],
+        ":customerno" => $customerno,
+        ":passwordlogin" => $account['passwordlogin'], ];
 
     db_query("UPDATE system.useraccounts SET name=:fullname, quota=:quota, shell=:shell, passwordlogin=:passwordlogin WHERE kunde=:customerno AND uid=:uid", $args);
     logger(LOG_INFO, "modules/systemuser/include/useraccounts", "systemuser", "updated details for uid {$args[":uid"]}");

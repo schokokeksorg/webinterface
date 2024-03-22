@@ -39,7 +39,7 @@ function update_mailaddress($daten)
     }
 
     $args = [':contact' => $contact,
-                  ':email' => $email, ];
+        ':email' => $email, ];
     db_query("UPDATE kundendaten.contacts SET email=:email WHERE id=:contact", $args);
     sync_legacy_contactdata();
 }
@@ -74,7 +74,7 @@ function upload_changed_contact($id)
         $ac['hidden'] = true;
     }
     $data = ["contact" => $ac,
-            "actingAs" => "designatedAgent", ];
+        "actingAs" => "designatedAgent", ];
     $result = api_request('contactUpdate', $data);
     if ($result['status'] != 'success') {
         warning("Es gab ein Problem beim Hochladen der geänderten Adresse zum Domainregistrar. Das sollte nicht sein!");

@@ -123,10 +123,10 @@ DE91602911200041512006
 RE ' . $id . ' KD ' . $customerno . ' vom ' . $datum;
 
     $descriptorspec = [
-    0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
-    1 => ["pipe", "w"],  // STDOUT ist eine Pipe, in die das Child schreibt
-    2 => ["pipe", "w"],
-  ];
+        0 => ["pipe", "r"],  // STDIN ist eine Pipe, von der das Child liest
+        1 => ["pipe", "w"],  // STDOUT ist eine Pipe, in die das Child schreibt
+        2 => ["pipe", "w"],
+    ];
 
     $process = proc_open('qrencode -t PNG -o - -l M', $descriptorspec, $pipes);
 
@@ -202,8 +202,8 @@ function yesterday($date)
 function invalidate_sepamandat($id, $date)
 {
     $args = [":cid" => (int) $_SESSION['customerinfo']['customerno'],
-                ":id" => (int) $id,
-                ":date" => $date, ];
+        ":id" => (int) $id,
+        ":date" => $date, ];
     db_query("UPDATE kundendaten.sepamandat SET gueltig_bis=:date WHERE id=:id AND kunde=:cid", $args);
 }
 
@@ -246,8 +246,8 @@ function sepamandat($name, $adresse, $iban, $bankname, $bic, $gueltig_ab)
     db_query(
         "INSERT INTO kundendaten.sepamandat (mandatsreferenz, glaeubiger_id, kunde, erteilt, medium, gueltig_ab, kontoinhaber, adresse, iban, bic, bankname) VALUES (:referenz, :glaeubiger_id, :cid, :today, 'online', :gueltig_ab, :name, :adresse, :iban, :bic, :bankname)",
         [":referenz" => $referenz, ":glaeubiger_id" => $glaeubiger_id, ":cid" => $cid,
-                ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
-                ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname, ]
+            ":today" => $today, ":gueltig_ab" => $gueltig_ab, ":name" => $name, ":adresse" => $adresse,
+            ":iban" => $iban, ":bic" => $bic, ":bankname" => $bankname, ]
     );
     db_query(
         "UPDATE kundendaten.ausgestellte_rechnungen SET abbuchung=1 WHERE kunde = :cid AND datum >= :gueltig_ab and bezahlt=0",
@@ -345,7 +345,7 @@ function save_more_storage($items, $storage)
         }
 
         $queries[] = ["INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES " .
-                       "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param, ];
+                   "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param, ];
     }
 
     if (count($queries) < 2) {

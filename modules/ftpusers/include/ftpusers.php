@@ -83,11 +83,11 @@ function save_ftpuser($data)
     }
 
     $args = [":username" => $_SESSION['userinfo']['username'] . '-' . $data['username'],
-                ":homedir" => $homedir,
-                ":active" => ($data['active'] == 1 ? 1 : 0),
-                ":forcessl" => ($data['forcessl'] == 0 ? 0 : 1),
-                ":server" => $server,
-                ":uid" => $_SESSION['userinfo']['uid'], ];
+        ":homedir" => $homedir,
+        ":active" => ($data['active'] == 1 ? 1 : 0),
+        ":forcessl" => ($data['forcessl'] == 0 ? 0 : 1),
+        ":server" => $server,
+        ":uid" => $_SESSION['userinfo']['uid'], ];
 
     if ($data['id']) {
         $args[":id"] = $data['id'];

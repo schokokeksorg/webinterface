@@ -40,27 +40,27 @@ function empty_account()
         'domain' => null,
         'password' => null,
         'enableextensions' => false,
-    'smtpreply' => null,
-    'quota' => config('vmail_basequota'),
-    'quota_threshold' => 20,
+        'smtpreply' => null,
+        'quota' => config('vmail_basequota'),
+        'quota_threshold' => 20,
         'forwards' => [],
         'autoresponder' => null,
-        ];
+    ];
     return $account;
 }
 
 function empty_autoresponder_config()
 {
     $ar = [
-    'valid_from' => date('Y-m-d'),
-    'valid_until' => null,
-    'fromname' => null,
-    'fromaddr' => null,
-    'subject' => null,
-    'message' => 'Danke für Ihre E-Mail.
+        'valid_from' => date('Y-m-d'),
+        'valid_until' => null,
+        'fromname' => null,
+        'fromaddr' => null,
+        'subject' => null,
+        'message' => 'Danke für Ihre E-Mail.
 Ich bin aktuell nicht im Büro und werde Ihre Nachricht erst nach meiner Rückkehr beantworten.
 Ihre E-Mail wird nicht weitergeleitet.',
-    'quote' => null,
+        'quote' => null,
     ];
     return $ar;
 }
@@ -327,14 +327,14 @@ function save_vmail_account($account)
     $account['smtpreply'] = ($account['smtpreply'] ? $account['smtpreply'] : null);
 
     $args = [":local" => $account['local'],
-                ":domain" => $account['domain'],
-                ":password" => $password,
-                ":enableextensions" => $account['enableextensions'],
-                ":smtpreply" => $account['smtpreply'],
-                ":quota" => $account['quota'],
-                ":quota_threshold" => $account['quota_threshold'],
-                ":id" => $id,
-                ];
+        ":domain" => $account['domain'],
+        ":password" => $password,
+        ":enableextensions" => $account['enableextensions'],
+        ":smtpreply" => $account['smtpreply'],
+        ":quota" => $account['quota'],
+        ":quota_threshold" => $account['quota_threshold'],
+        ":id" => $id,
+    ];
     $query = '';
     if ($newaccount) {
         unset($args[":id"]);
@@ -370,13 +370,13 @@ function save_vmail_account($account)
         $query = "REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) " .
              "VALUES (:id, :valid_from, :valid_until, :fromname, :fromaddr, :subject, :message, :quote)";
         $args = [":id" => $id,
-                  ":valid_from" => $ar['valid_from'],
-                  ":valid_until" => $ar['valid_until'],
-                  ":fromname" => $ar['fromname'],
-                  ":fromaddr" => $ar['fromaddr'],
-                  ":subject" => $ar['subject'],
-                  ":message" => $ar['message'],
-                  ":quote" => $quote, ];
+            ":valid_from" => $ar['valid_from'],
+            ":valid_until" => $ar['valid_until'],
+            ":fromname" => $ar['fromname'],
+            ":fromaddr" => $ar['fromaddr'],
+            ":subject" => $ar['subject'],
+            ":message" => $ar['message'],
+            ":quote" => $quote, ];
         db_query($query, $args);
     }
 
@@ -472,12 +472,12 @@ function domainsettings($only_domain = null)
                 $mydom['mail'] = 'virtual';
             }
             $domains[$mydom['id']] = [
-        "name" => $mydom['name'],
-        "type" => $mydom['mail'],
-        "dkim" => $mydom['dkim'],
-        "dns" => $mydom['dns'],
-        "mailserver_lock" => $mydom['mailserver_lock'],
-        ];
+                "name" => $mydom['name'],
+                "type" => $mydom['mail'],
+                "dkim" => $mydom['dkim'],
+                "dns" => $mydom['dns'],
+                "mailserver_lock" => $mydom['mailserver_lock'],
+            ];
             if ($only_domain && $only_domain == $mydom['id']) {
                 return $domains[$only_domain];
             }
@@ -496,9 +496,9 @@ function domainsettings($only_domain = null)
             $type = 'virtual';
         }
         $subdomains[$mydom['id']][] = [
-      "name" => $mydom['hostname'],
-      "type" => $type,
-      ];
+            "name" => $mydom['hostname'],
+            "type" => $type,
+        ];
     }
     return ["domains" => $domains, "subdomains" => $subdomains];
 }

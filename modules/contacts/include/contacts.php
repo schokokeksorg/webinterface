@@ -134,7 +134,7 @@ function set_kundenkontakt($typ, $id)
     $args = [
         "kunde" => (int) $_SESSION['customerinfo']['customerno'],
         "contact" => $id,
-        ];
+    ];
     $field = null;
     if ($typ == 'kunde') {
         $field = 'contact_kunde';
@@ -164,20 +164,20 @@ function sync_legacy_contactdata()
         $nachname = explode(' ', $kunde['name'], 2)[1];
     }
     $args = ["firma" => $kunde['company'],
-            "anrede" => $kunde['salutation'],
-            "vorname" => $vorname,
-            "nachname" => $nachname,
-            "adresse" => $kunde['address'],
-            "plz" => $kunde['zip'],
-            "ort" => $kunde['city'],
-            "land" => $kunde['country'],
-            "telefon" => $kunde['phone'],
-            "mobile" => $kunde['mobile'],
-            "telefax" => $kunde['fax'],
-            "email" => $kunde['email'],
-            "pgp_id" => $kunde['pgp_id'],
-            "pgp_key" => $kunde['pgp_key'],
-            "cid" => $cid, ];
+        "anrede" => $kunde['salutation'],
+        "vorname" => $vorname,
+        "nachname" => $nachname,
+        "adresse" => $kunde['address'],
+        "plz" => $kunde['zip'],
+        "ort" => $kunde['city'],
+        "land" => $kunde['country'],
+        "telefon" => $kunde['phone'],
+        "mobile" => $kunde['mobile'],
+        "telefax" => $kunde['fax'],
+        "email" => $kunde['email'],
+        "pgp_id" => $kunde['pgp_id'],
+        "pgp_key" => $kunde['pgp_key'],
+        "cid" => $cid, ];
     db_query("UPDATE kundendaten.kunden SET anrede=:anrede, firma=:firma, vorname=:vorname, nachname=:nachname, adresse=:adresse,
             plz=:plz, ort=:ort, land=:land, telefon=:telefon, mobile=:mobile, telefax=:telefax, email=:email, 
             pgp_id=:pgp_id, pgp_key=:pgp_key WHERE id=:cid", $args);
@@ -190,12 +190,12 @@ function sync_legacy_contactdata()
     if ($kundenkontakte['rechnung']) {
         $kunde = get_contact($kundenkontakte['rechnung']);
         $args = ["firma" => $kunde['company'],
-                "name" => $kunde['name'],
-                "adresse" => $kunde['address'],
-                "plz" => $kunde['zip'],
-                "ort" => $kunde['city'],
-                "email" => $kunde['email'],
-                "cid" => $cid, ];
+            "name" => $kunde['name'],
+            "adresse" => $kunde['address'],
+            "plz" => $kunde['zip'],
+            "ort" => $kunde['city'],
+            "email" => $kunde['email'],
+            "cid" => $cid, ];
         db_query("UPDATE kundendaten.kunden SET re_firma=:firma, re_name=:name, re_adresse=:adresse,
                 re_plz=:plz, re_ort=:ort, email_rechnung=:email WHERE id=:cid", $args);
     }
@@ -211,9 +211,9 @@ function get_kundenkontakte($customer = null)
     $result = db_query("SELECT contact_kunde, contact_extern, contact_rechnung, contact_dataprotection FROM kundendaten.kunden WHERE id=?", [$cid]);
     $res = $result->fetch();
     $ret = ["kunde" => $res['contact_kunde'],
-                 "extern" => $res['contact_extern'],
-                 "rechnung" => $res['contact_rechnung'],
-                 "dataprotection" => $res['contact_dataprotection'], ];
+        "extern" => $res['contact_extern'],
+        "rechnung" => $res['contact_rechnung'],
+        "dataprotection" => $res['contact_dataprotection'], ];
     return $ret;
 }
 

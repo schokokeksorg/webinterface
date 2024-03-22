@@ -50,7 +50,7 @@ function set_database_description($dbname, $description)
         system_failure('Ungültige Datenbank');
     }
     $args = [":id" => $thisdb['id'],
-                ":desc" => filter_input_oneline($description), ];
+        ":desc" => filter_input_oneline($description), ];
     db_query("UPDATE misc.mysql_database SET description=:desc WHERE id=:id", $args);
 }
 
@@ -67,7 +67,7 @@ function set_dbuser_description($username, $description)
         system_failure('Ungültiger Benutzer');
     }
     $args = [":id" => $thisuser['id'],
-                ":desc" => filter_input_oneline($description), ];
+        ":desc" => filter_input_oneline($description), ];
     db_query("UPDATE misc.mysql_accounts SET description=:desc WHERE id=:id", $args);
 }
 
@@ -145,8 +145,8 @@ function create_mysql_account($username, $description = '')
         return null;
     }
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":username" => $username,
-                ":desc" => $description, ];
+        ":username" => $username,
+        ":desc" => $description, ];
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating user »{$username}«");
     db_query("INSERT INTO misc.mysql_accounts (username, password, useraccount, description) VALUES (:username, '!', :uid, :desc)", $args);
 }
@@ -155,7 +155,7 @@ function create_mysql_account($username, $description = '')
 function delete_mysql_account($username)
 {
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":username" => $username, ];
+        ":username" => $username, ];
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "deleting user »{$username}«");
     db_query("DELETE FROM misc.mysql_accounts WHERE username=:username AND useraccount=:uid", $args);
 }
@@ -172,9 +172,9 @@ function create_mysql_database($dbname, $description = null, $server = null)
         $server = null;
     }
     $args = [":dbname" => $dbname,
-                ":uid" => $_SESSION['userinfo']['uid'],
-                ":desc" => $description,
-                ":server" => $server, ];
+        ":uid" => $_SESSION['userinfo']['uid'],
+        ":desc" => $description,
+        ":server" => $server, ];
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "creating database »{$dbname}«");
     db_query("INSERT INTO misc.mysql_database (name, useraccount, server, description) VALUES (:dbname, :uid, :server, :desc)", $args);
 }
@@ -183,7 +183,7 @@ function create_mysql_database($dbname, $description = null, $server = null)
 function delete_mysql_database($dbname)
 {
     $args = [":dbname" => $dbname,
-                ":uid" => $_SESSION['userinfo']['uid'], ];
+        ":uid" => $_SESSION['userinfo']['uid'], ];
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "removing database »{$dbname}«");
     db_query("DELETE FROM misc.mysql_database WHERE name=:dbname AND useraccount=:uid", $args);
 }
@@ -206,8 +206,8 @@ function validate_mysql_username($username)
 function set_mysql_password($username, $password)
 {
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":username" => $username,
-                ":password" => $password, ];
+        ":username" => $username,
+        ":password" => $password, ];
     logger(LOG_INFO, "modules/mysql/include/mysql", "mysql", "updating password for »{$username}«");
     db_query("UPDATE misc.mysql_accounts SET password=PASSWORD(:password) WHERE username=:username AND useraccount=:uid", $args);
 }
@@ -216,7 +216,7 @@ function set_mysql_password($username, $password)
 function has_mysql_database($dbname)
 {
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":dbname" => $dbname, ];
+        ":dbname" => $dbname, ];
     $result = db_query("SELECT NULL FROM misc.mysql_database WHERE name=:dbname AND useraccount=:uid", $args);
     return ($result->rowCount() == 1);
 }
@@ -225,7 +225,7 @@ function has_mysql_database($dbname)
 function has_mysql_user($username)
 {
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":username" => $username, ];
+        ":username" => $username, ];
     $result = db_query("SELECT NULL FROM misc.mysql_accounts WHERE username=:username AND useraccount=:uid", $args);
     return ($result->rowCount() == 1);
 }

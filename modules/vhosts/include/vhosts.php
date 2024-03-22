@@ -480,21 +480,21 @@ function save_vhost($vhost)
     }
 
     $args = [":hostname" => ($hostname ? $hostname : null),
-                ":domain" => $domain,
-                ":docroot" => ($vhost['docroot'] ? $vhost['docroot'] : null),
-                ":php" => $vhost['php'],
-                ":cgi" => ($vhost['cgi'] == 1 ? 1 : 0),
-                ":ssl" => $vhost['ssl'],
-                ":hsts" => $hsts,
-                ":suexec_user" => $suexec_user,
-                ":server" => $server,
-                ":logtype" => ($vhost['logtype'] ? $vhost['logtype'] : null),
-                ":errorlog" => (int) $vhost['errorlog'],
-                ":cert" => $cert,
-                ":ipv4" => $ipv4,
-                ":autoipv6" => $autoipv6,
-                ":options" => $vhost['options'],
-                ":id" => $id, ];
+        ":domain" => $domain,
+        ":docroot" => ($vhost['docroot'] ? $vhost['docroot'] : null),
+        ":php" => $vhost['php'],
+        ":cgi" => ($vhost['cgi'] == 1 ? 1 : 0),
+        ":ssl" => $vhost['ssl'],
+        ":hsts" => $hsts,
+        ":suexec_user" => $suexec_user,
+        ":server" => $server,
+        ":logtype" => ($vhost['logtype'] ? $vhost['logtype'] : null),
+        ":errorlog" => (int) $vhost['errorlog'],
+        ":cert" => $cert,
+        ":ipv4" => $ipv4,
+        ":autoipv6" => $autoipv6,
+        ":options" => $vhost['options'],
+        ":id" => $id, ];
     if ($id != 0) {
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Updating vhost #' . $id . ' (' . $vhost['hostname'] . '.' . $vhost['domain'] . ')');
         db_query("UPDATE vhosts.vhost SET hostname=:hostname, domain=:domain, docroot=:docroot, php=:php, cgi=:cgi, `ssl`=:ssl, hsts=:hsts, `suexec_user`=:suexec_user, `server`=:server, logtype=:logtype, errorlog=:errorlog, certid=:cert, ipv4=:ipv4, autoipv6=:autoipv6, options=:options WHERE id=:id", $args);
@@ -573,10 +573,10 @@ function save_alias($alias)
         $alias['hostname'] = null;
     }
     $args = [":hostname" => $alias['hostname'],
-                ":domain" => $domain,
-                ":vhost" => $vhost['id'],
-                ":options" => $alias['options'],
-                ":id" => $id, ];
+        ":domain" => $domain,
+        ":vhost" => $vhost['id'],
+        ":options" => $alias['options'],
+        ":id" => $id, ];
     if ($id == 0) {
         unset($args[":id"]);
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'aliases', 'Creating alias ' . $alias['hostname'] . '.' . $alias['domain'] . ' for VHost ' . $vhost['id']);

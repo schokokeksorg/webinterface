@@ -14,10 +14,10 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 if ($_SESSION['role'] & ROLE_SYSTEMUSER) {
     include_once('modules/loginsecurity/include/passkey.php');
     $shortcuts[] = [ 'section' => 'loginsecurity',
-                        'weight'  => 99,
-                        'file'    => 'overview',
-                        'icon'    => 'lock.png',
-                        'title'   => 'Passkey-Anmeldung',
-                        'alert'   => ((count(list_passkeys()) > 0) ? null : 'Nicht aktiv'),
-                        ];
+        'weight'  => 99,
+        'file'    => 'overview',
+        'icon'    => 'lock.png',
+        'title'   => 'Passkey-Anmeldung',
+        'alert'   => ((count(list_passkeys()) > 0) ? null : 'Nicht aktiv'),
+    ];
 }

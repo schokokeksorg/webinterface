@@ -159,7 +159,7 @@ function get_mailaccount_id($accountname)
     [$local, $domain] = explode('@', $accountname, 2);
 
     $args = [":local" => $local,
-                ":domain" => $domain, ];
+        ":domain" => $domain, ];
 
     $result = db_query("SELECT acc.id FROM mail.mailaccounts AS acc LEFT JOIN mail.v_domains AS dom ON (dom.id=acc.domain) WHERE local=:local AND dom.domainname=:domain", $args);
     if (($result->rowCount() == 0) && ($domain == config('masterdomain'))) {

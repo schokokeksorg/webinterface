@@ -85,7 +85,7 @@ function upload_contact($c)
     if ($ac['id'] || $ac['handle']) {
         // Update
         $data = ["contact" => $ac,
-                "actingAs" => "designatedAgent", ];
+            "actingAs" => "designatedAgent", ];
         $result = api_request('contactUpdate', $data);
         if ($result['status'] != 'success') {
             system_failure("Es gab ein Problem beim Hochladen der Adresse zum Domainregistrar. Das sollte nicht sein!");

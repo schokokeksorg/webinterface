@@ -121,10 +121,10 @@ if ($type == 'spf' || $type == 'txt') {
 
 if ($type == 'sshfp') {
     $algs = [
-    1 => "RSA",
-    2 => "DSA",
-    3 => "ECDSA",
-    4 => "ED25519", ];
+        1 => "RSA",
+        2 => "DSA",
+        3 => "ECDSA",
+        4 => "ED25519", ];
 
     $option = "";
     foreach ($algs as $key => $alg) {

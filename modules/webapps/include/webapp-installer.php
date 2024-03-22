@@ -19,10 +19,10 @@ function create_new_webapp($appname, $directory, $url, $data)
         system_failure('Sie haben erst kürzlich eine Anwendung in diesem Verzeichnis installieren lassen. Aus Sicherheitsgründen können Sie in diesem Verzeichnis am selben Tag nicht schon wieder eine Anwendung installieren.');
     }
     $args = [":username" => $_SESSION['userinfo']['username'],
-                ":appname" => $appname,
-                ":dir" => $directory,
-                ":url" => $url,
-                ":data" => $data, ];
+        ":appname" => $appname,
+        ":dir" => $directory,
+        ":url" => $url,
+        ":data" => $data, ];
     db_query("INSERT INTO vhosts.webapp_installer (appname, directory, url, state, username, data) VALUES (:appname, :dir, :url, 'new', :username, :data)", $args);
 }
 
@@ -33,9 +33,9 @@ function request_update($appname, $directory, $url)
         system_failure('Sie haben erst kürzlich eine Anwendung in diesem Verzeichnis installieren lassen oder ein Update in diesem Verzeichnis angefordert. Bitte warten Sie bis diese Aktion durchgeführt wurde.');
     }
     $args = [":username" => $_SESSION['userinfo']['username'],
-                ":appname" => $appname,
-                ":dir" => $directory,
-                ":url" => $url, ];
+        ":appname" => $appname,
+        ":dir" => $directory,
+        ":url" => $url, ];
     db_query("INSERT INTO vhosts.webapp_installer (appname, directory, url, state, username) VALUES (:appname, :dir, :url, 'old', :username)", $args);
 }
 

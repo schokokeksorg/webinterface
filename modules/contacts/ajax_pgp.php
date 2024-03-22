@@ -19,7 +19,7 @@ require_once('contacts.php');
 
 if (isset($_GET['q']) || isset($_GET['id'])) {
     $result = ["status" => "notfound",
-                    "id" => null, ];
+        "id" => null, ];
     $id = null;
     if (isset($_GET['q'])) {
         $id = search_pgp_key($_GET['q']);

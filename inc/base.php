@@ -178,10 +178,10 @@ function logger($severity, $scriptname, $scope, $message)
     }
 
     $args = [":user" => $user,
-                ":remote" => $_SERVER['REMOTE_ADDR'],
-                ":scriptname" => $scriptname,
-                ":scope" => $scope,
-                ":message" => $message, ];
+        ":remote" => $_SERVER['REMOTE_ADDR'],
+        ":scriptname" => $scriptname,
+        ":scope" => $scope,
+        ":message" => $message, ];
 
     db_query("INSERT INTO misc.scriptlog (remote, user,scriptname,scope,message) VALUES (:remote, :user, :scriptname, :scope, :message)", $args);
 }

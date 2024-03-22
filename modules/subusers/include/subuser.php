@@ -68,8 +68,8 @@ function delete_subuser($id)
 function empty_subuser()
 {
     $subuser = ["id" => null,
-                   "username" => $_SESSION['userinfo']['username'] . '_',
-                   "modules" => ['index'], ];
+        "username" => $_SESSION['userinfo']['username'] . '_',
+        "modules" => ['index'], ];
     return $subuser;
 }
 
@@ -103,9 +103,9 @@ function new_subuser($username, $requested_modules, $password)
     }
 
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":username" => $username,
-                ":password" => gen_pw_hash($password),
-                ":modules" => implode(',', $modules), ];
+        ":username" => $username,
+        ":password" => gen_pw_hash($password),
+        ":modules" => implode(',', $modules), ];
 
     db_query("INSERT INTO system.subusers (uid, username, password, modules) VALUES (:uid, :username, :password, :modules)", $args);
 }
@@ -149,9 +149,9 @@ function edit_subuser($id, $username, $requested_modules, $password)
     }
 
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":id" => $id,
-                ":username" => $username,
-                ":modules" => implode(',', $modules), ];
+        ":id" => $id,
+        ":username" => $username,
+        ":modules" => implode(',', $modules), ];
 
     $pwchange = '';
     if ($password) {

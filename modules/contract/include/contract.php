@@ -60,7 +60,7 @@ function contract_html()
 function save_op_contract($pdfdata)
 {
     $args = ["cid" => $_SESSION['customerinfo']['customerno'],
-            "pdfdata" => $pdfdata, ];
+        "pdfdata" => $pdfdata, ];
     db_query(
         "INSERT INTO kundendaten.contract (customer, signed, type, startdate, pdfdata) VALUES (:cid, NOW(), 'orderprocessing', CURDATE(), :pdfdata)",
         $args

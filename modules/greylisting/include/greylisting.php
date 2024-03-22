@@ -26,7 +26,7 @@ function whitelist_entries()
 function get_whitelist_details($id)
 {
     $args = [":id" => $id,
-                ":uid" => $_SESSION['userinfo']['uid'], ];
+        ":uid" => $_SESSION['userinfo']['uid'], ];
     $res = db_query("SELECT id,local,domain,date,expire FROM mail.greylisting_manual_whitelist WHERE uid=:uid AND id=:id", $args);
     if ($res->rowCount() != 1) {
         system_failure('Kann diesen Eintrag nicht finden');
@@ -55,7 +55,7 @@ function valid_entry($local, $domain)
         return true;
     }
     $args = [":domain" => $domain,
-                ":uid" => $_SESSION['userinfo']['uid'], ];
+        ":uid" => $_SESSION['userinfo']['uid'], ];
     $res = db_query("SELECT id FROM mail.v_domains WHERE domainname=:domain AND user=:uid", $args);
     if ($res->rowCount() != 1) {
         system_failure('Diese domain gehört Ihnen nicht!');
@@ -68,8 +68,8 @@ function new_whitelist_entry($local, $domain, $minutes)
 {
     valid_entry($local, $domain);
     $args = [":uid" => $_SESSION['userinfo']['uid'],
-                ":local" => $local,
-                ":domain" => $domain, ];
+        ":local" => $local,
+        ":domain" => $domain, ];
 
     $expire = 'NULL';
     if ($minutes == 'none') {

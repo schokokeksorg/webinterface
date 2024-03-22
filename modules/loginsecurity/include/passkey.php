@@ -20,7 +20,7 @@ function save_passkey($data, $handle = null)
         ":rpId" => $data->rpId,
         ":handle" => $handle,
         ":uid" => $_SESSION['userinfo']['uid'],
-        ];
+    ];
     db_query("INSERT INTO system.systemuser_passkey (uid, handle, rpId, credentialId, credentialPublicKey) VALUES " .
             "(:uid, :handle, :rpId, :credentialId, :credentialPublicKey)", $args);
 }
@@ -50,6 +50,6 @@ function delete_systemuser_passkey($id)
     $args = [
         ":id" => $id,
         ":uid" => $_SESSION['userinfo']['uid'],
-        ];
+    ];
     db_query("DELETE FROM system.systemuser_passkey WHERE uid=:uid AND id=:id", $args);
 }
