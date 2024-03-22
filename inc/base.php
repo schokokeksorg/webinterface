@@ -14,6 +14,11 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 require_once('class/database.php');
 require_once('inc/debug.php');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once('vendor/autoload.php');
+
 function config($key, $localonly = false)
 {
     global $config;
@@ -451,15 +456,49 @@ function send_mail($address, $subject, $body, $msgtype = "adminmail")
     if (strstr($subject, "\n") !== false) {
         die("Zeilenumbruch im subject!");
     }
-    $header = "From: " . config('company_name') . " Web Administration <" . config('adminmail') . ">\r\n";
-    if ($address !== config('adminmail')) {
-        $header .= "Cc: " . config('adminmail') . "\r\n";
+    if (config("smtp_server")) {
+        // If we have smtp credentials we use phpmailer
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = config("smtp_server");
+            $mail->SMTPAuth = true;
+            $mail->Username = config("smtp_user");
+            $mail->Password = config("smtp_pass");
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = 465;
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'quoted-printable';
+            $mail->setFrom(config("adminmail"), config('company_name') . " Web Administration");
+            $mail->addAddress($address);
+            if ($address !== config('adminmail')) {
+                $mail->addCC(config('adminmail'));
+            }
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->addCustomHeader("X-schokokeks-org-message", $msgtype);
+            $mail->XMailer = ' ';
+            $mail->send();
+        } catch (Exception $e) {
+            $adminmsg = "PHPMailer error:\n" . $mail->ErrorInfo . "\n\n";
+            $adminmsg .= "SERVER info:\n" . print_r($_SERVER, 1);
+            mail(config('adminmail'), $_SERVER['SERVER_NAME'] . ": error sending mail", $adminmsg);
+            system_failure("Mail konnte nicht verschickt werden, die Administratoren werden informiert.");
+        }
+    } else {
+        $header = [];
+        $header["From"] = config('company_name') . " Web Administration <" . config('adminmail') . ">";
+        if ($address !== config('adminmail')) {
+            $header["Cc"] = config('adminmail');
+        }
+        $header["X-schokokeks-org-message"] = $msgtype;
+        $header["Content-Type"] = "text/plain; charset=\"utf-8\"";
+        $header["Content-Transfer-Encoding"] = "quoted-printable";
+        $header["MIME-Version"] = "1.0";
+        $subject = mb_encode_mimeheader($subject, "utf-8", "Q");
+        $body = quoted_printable_encode($body);
+        mail($address, $subject, $body, $header);
     }
-    $header .= "X-schokokeks-org-message: " . $msgtype . "\r\n";
-    $header .= "Content-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n";
-    $subject = mb_encode_mimeheader($subject, "utf-8", "Q");
-    $body = quoted_printable_encode($body);
-    mail($address, $subject, $body, $header);
 }
 
 function handle_exception($e)

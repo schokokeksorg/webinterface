@@ -8,6 +8,7 @@
         "giggsey/libphonenumber-for-php": "^8.8",
         "globalcitizen/php-iban": "^2.7.1",
         "mpdf/mpdf": "^8.0",
-        "phpgangsta/googleauthenticator": "dev-master"
+        "phpgangsta/googleauthenticator": "dev-master",
+        "phpmailer/phpmailer": "^6.9"
     }
 }
