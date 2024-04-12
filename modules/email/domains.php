@@ -60,7 +60,7 @@ foreach ($domains as $id => $dom) {
     }
     if (domain_has_vmail_accounts($id)) {
         $edit_disabled = true;
-        $notice = 'Es gibt ' . internal_link("vmail", "E-Mail-Konten für diese Domain") . '.';
+        $notice = 'Es gibt ' . internal_link("vmail", "E-Mail-Konten für diese Domain", "filter={$dom['name']}") . '.';
         $tooltip = 'Keine Änderung möglich, solange noch E-Mail-Konten für diese Domain eingerichtet sind.';
     }
     if ($dom['mailserver_lock']) {
