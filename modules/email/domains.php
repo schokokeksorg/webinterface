@@ -86,11 +86,8 @@ foreach ($domains as $id => $dom) {
     }
 
     if ($dom['type'] != 'none' && $dom['type'] != 'nomail' && $dom['dns'] == 1) {
-        $check_dmarc = ($dom['dkim'] == 'dmarc' ? ' checked="checked"' : '');
-        $check_dkim = ($dom['dkim'] == 'dkim' ? ' checked="checked"' : '');
-        $check_dkimoff = ($dom['dkim'] == 'none' ? ' checked="checked"' : '');
         $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
-            <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM+DMARC (ohne Policy)</option>
+            <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM+DMARC (Standard)</option>
             <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>Nur DKIM</option>
             <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
         </select>

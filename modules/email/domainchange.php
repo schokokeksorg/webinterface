@@ -50,8 +50,13 @@ foreach ($_POST as $key => $value) {
     }
 }
 foreach ($newsetting as $id => $type) {
-    DEBUG('MAILCONFIG change request for id #' . $id . ' to ' . $type);
+    $old = domainsettings($id);
+    DEBUG('MAILCONFIG change request for id #' . $id . ' from ' . $old['type'] . ' to ' . $type);
     change_domain($id, $type);
+    if (($old['type'] == 'none' || $old['type'] == 'nomail') && ($type == 'auto' || $type == 'virtual')) {
+        // Default wenn man Mail-Verwendung einschaltet
+        $newdkimsetting[$id] = 'dmarc';
+    }
     if ($type == "nomail" || $type == "none") {
         // DKIM muss abgeschaltet sein, wenn das DKIM-UI nicht mehr angezeigt wird
         $newdkimsetting[$id] = 'none';

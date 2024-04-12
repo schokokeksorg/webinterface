@@ -236,7 +236,7 @@ function get_txt_record($hostname, $domainname, $tld)
     }
     DEBUG('dig @' . $NS . ' +short -t txt ' . $hostname . '.' . $domain . '.');
     $resp = shell_exec('dig @' . $NS . ' +short -t txt ' . $hostname . '.' . $domain . '.');
-    $TXT = trim($resp, "\n \"");
+    $TXT = trim((string) $resp, "\n \"");
     DEBUG($TXT);
     return $TXT;
 }
@@ -334,8 +334,8 @@ function insert_domain_external($domain, $dns = false, $mail = true)
     $domainname = str_replace(".$tld", "", $info['domainNameUnicode']);
     logger(LOG_WARNING, 'modules/domains/include/domains', 'domains', 'Inserting external domain ' . $info['domainNameUnicode'] . " DNS:{$dns} / Mail:{$mail}");
 
-    db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, mailserver_lock) VALUES 
-        ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, 1)", [$cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none')]);
+    db_query("INSERT INTO kundendaten.domains (status, kunde, useraccount, domainname, tld, billing, provider, dns, mail, dkim, mailserver_lock) VALUES 
+        ('external', ?, ?, ?, ?, 'external', 'other', 0, ?, ?, 1)", [$cid, $uid, $domainname, $tld, ($mail ? 'auto' : 'none'), ($mail ? 'dmarc' : 'none')]);
     $id = db_insert_id();
     if ($dns) {
         db_query("UPDATE kundendaten.domains SET dns=1 WHERE id=?", [$id]);
