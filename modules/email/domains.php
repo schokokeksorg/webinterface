@@ -52,13 +52,16 @@ foreach ($domains as $id => $dom) {
     $trextra = ($odd ? ' class="odd"' : ' class="even"');
     $edit_disabled = false;
     $notice = '';
+    $tooltip = '';
     if ($dom['type'] == 'manual') {
         $edit_disabled = true;
         $notice = 'Kann nur von Admins geändert werden';
+        $tooltip = 'Kann nur von Admins geändert werden';
     }
     if (domain_has_vmail_accounts($id)) {
         $edit_disabled = true;
-        $notice = 'Keine Änderung möglich, solange noch ' . internal_link("vmail", "E-Mail-Konten") . ' für diese Domain eingerichtet sind.';
+        $notice = 'Es gibt ' . internal_link("vmail", "E-Mail-Konten für diese Domain") . '.';
+        $tooltip = 'Keine Änderung möglich, solange noch E-Mail-Konten für diese Domain eingerichtet sind.';
     }
     if ($dom['mailserver_lock']) {
         $trextra .= ' style="background-color: #faa;"';
@@ -71,11 +74,11 @@ foreach ($domains as $id => $dom) {
 
     $buttons = '<span class="buttonset' . ($edit_disabled ? ' disabled' : '') . '" id="buttonset-' . $id . '">
          <input type="radio" name="option-' . $id . '" id="option-' . $id . '-webinterface" value="webinterface"' . $check_webinterface . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
-         <label for="option-' . $id . '-webinterface">Webinterface</label>
+         <label title="' . $tooltip . '" for="option-' . $id . '-webinterface">Webinterface</label>
          <input type="radio" name="option-' . $id . '" id="option-' . $id . '-manual" value="manual"' . $check_manual . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
-         <label for="option-' . $id . '-manual">Manuell</label>
+         <label title="' . $tooltip . '" for="option-' . $id . '-manual">Manuell</label>
          <input type="radio" name="option-' . $id . '" id="option-' . $id . '-off" value="off"' . $check_off . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
-         <label for="option-' . $id . '-off">Ausgeschaltet</label>';
+         <label title="' . $tooltip . '" for="option-' . $id . '-off">Ausgeschaltet</label>';
     $buttons .= '<input type="submit" value="Speichern">
       </span>';
     if ($dom['type'] == 'nomail' || $dom['type'] == 'none') {
