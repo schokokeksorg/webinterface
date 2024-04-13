@@ -12,6 +12,7 @@
 Redirect /.well-known/change-password /go/index/chpass
 
 header always set X-Content-Type-Options nosniff
+header always set X-Frame-Options DENY
 
 RewriteEngine On
 RewriteBase /

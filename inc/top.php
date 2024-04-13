@@ -29,13 +29,8 @@ if (!defined("TOP_INCLUDED")) {
             include("modules/{$module}/menu.php");
         }
         if (empty($menu)) {
-            #DEBUG("Modul {$module} hat keine Menüeinträge");
             continue;
         }
-        // Menüeinträge spammen den debug-output zu
-        //DEBUG("<h4>$module</h4>");
-        //DEBUG($menu);
-        // $menu["foo"]["file"] enthält den Link
         foreach (array_keys($menu) as $key) {
             $menu[$key]["file"] = $prefix . "go/" . $module . "/" . $menu[$key]["file"];
             $weight = $menu[$key]["weight"];
@@ -73,17 +68,11 @@ if (!defined("TOP_INCLUDED")) {
     }
 
     ksort($weighted_menuitem);
-    #DEBUG($weighted_menuitem);
 
     foreach ($submenu as $weight => $data) {
         ksort($submenu[$weight]);
     }
 
-    #DEBUG($submenu);
-
-    // Verbiete das Laden in jeglichem Frameset
-    header("X-FRAME-OPTIONS: DENY");
-    header("Content-Type: " . config('mime_type'));
 
     if (!isset($html_header)) {
         $html_header = '';
