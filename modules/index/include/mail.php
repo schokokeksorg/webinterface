@@ -31,7 +31,7 @@ Ihre Admins von ' . config('company_name');
 
     $msg .= "\n\nDiese Anforderung haben wir am " . date("r") . " von der IP-Adresse\n{$_SERVER['REMOTE_ADDR']} erhalten.\nSofern Sie dies nicht ausgelöst haben, benachrichtigen Sie bitte den Support\ndurch eine Antwort auf diese E-Mail.";
 
-    send_mail($email, "Passwortanforderung fuer schokokeks.org", $msg);
+    send_mail($email, "Passwortanforderung für schokokeks.org", $msg);
 }
 
 function send_customer_token($customerno)
@@ -69,5 +69,5 @@ Diese Prozedur müssen Sie bis spätestens 24 Stunden nach Erhalt
 dieser Nachricht durchführen, sonst verliert das Token seine
 Gültigkeit.
 ";
-    send_mail($customer['email'], "Passwortanforderung fuer Webinterface", $msg);
+    send_mail($customer['email'], "Passwortanforderung für Webinterface", $msg);
 }
