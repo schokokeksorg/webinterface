@@ -67,7 +67,7 @@ function config($key, $localonly = false)
     if (array_key_exists($key, $config)) {
         return $config[$key];
     } else {
-        logger(LOG_ERR, "inc/base", "config", "Request to read nonexistant config option »{$key}«.");
+        logger(LOG_ERR, "inc/base", "config", "Request to read nonexistent config option »{$key}«.");
     }
     return null;
 }
@@ -227,19 +227,19 @@ function output($arg)
     $output .= $arg;
 }
 
-function footnote($explaination)
+function footnote($explanation)
 {
     global $footnotes;
     if (!isset($footnotes) || !is_array($footnotes)) {
         $footnotes = [];
     }
-    $fnid = array_search($explaination, $footnotes);
+    $fnid = array_search($explanation, $footnotes);
     DEBUG($footnotes);
     if ($fnid === false) {
-        DEBUG("Footnote »{$explaination}« is not in footnotes!");
-        $footnotes[] = $explaination;
+        DEBUG("Footnote »{$explanation}« is not in footnotes!");
+        $footnotes[] = $explanation;
     }
-    $fnid = array_search($explaination, $footnotes);
+    $fnid = array_search($explanation, $footnotes);
     return str_repeat('*', ($fnid + 1));
 }
 

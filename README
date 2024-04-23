@@ -22,7 +22,7 @@ software.
 
 We release the source code of this software to the public in 
 hope it will be useful for someone. Possibly it will be not 
-because the underlaying database is not well documented and 
+because the underlying database is not well documented and
 to have an effect, there is a need for a bunch of shell-/
 python-Scripts. For the moment, those scripts are not released
 because they may contain confidential information and we have 
