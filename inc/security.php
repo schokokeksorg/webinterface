@@ -232,7 +232,7 @@ function verify_input_ipv6($input)
 
 function verify_input_recorddata($input)
 {
-    if (strstr($input, "\\") || strstr($input, '"')) {
+    if (is_string($input) && (strstr($input, "\\") || strstr($input, '"'))) {
         system_failure("Ungültige Zeichen");
     }
 }

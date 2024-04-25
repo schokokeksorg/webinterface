@@ -217,7 +217,7 @@ function warn_autorecord_collission($hostname, $domain, $type, $data)
 {
     $autorecords = get_domain_auto_records($domain);
     foreach ($autorecords as $ar) {
-        if (!str_starts_with($data, "v=spf1") && $hostname == null) {
+        if (is_string($data) && !str_starts_with($data, "v=spf1") && $hostname == null) {
             // Spezialfall SPF-Record
             continue;
         }
