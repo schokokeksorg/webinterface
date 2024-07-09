@@ -144,7 +144,7 @@ function get_dyndns_records($id)
     return $data;
 }
 
-$valid_record_types = ['a', 'aaaa', 'mx', 'ns', 'spf', 'txt', 'cname', 'ptr', 'srv', 'raw', 'sshfp', 'caa', 'srv'];
+$valid_record_types = ['a', 'aaaa', 'mx', 'ns', 'txt', 'cname', 'ptr', 'srv', 'sshfp', 'caa', 'raw'];
 
 
 function blank_dns_record($type)
@@ -229,7 +229,7 @@ function warn_autorecord_collission($hostname, $domain, $type, $data)
 }
 
 
-$implemented_record_types = ['a', 'aaaa', 'mx', 'spf', 'txt', 'cname', 'ptr', 'srv', 'ns', 'sshfp', 'caa'];
+$implemented_record_types = ['a', 'aaaa', 'mx', 'ns', 'txt', 'cname', 'ptr', 'srv', 'sshfp', 'caa'];
 
 function save_dns_record($id, $record)
 {

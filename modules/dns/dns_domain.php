@@ -80,7 +80,7 @@ foreach ($records as $rec) {
     }
     $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
     $link = $rec['fqdn'];
-    if (!in_array($rec['type'], ['a', 'aaaa', 'mx', 'cname', 'ns', 'txt', 'spf', 'ptr', 'sshfp', 'srv', 'caa'])) {
+    if (!in_array($rec['type'], $implemented_record_types)) {
         $editable = false;
     }
     $delete = internal_link('dns_record_save', icon_delete('Record löschen'), "id={$rec['id']}&action=delete");
