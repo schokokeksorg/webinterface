@@ -144,7 +144,7 @@ function get_dyndns_records($id)
     return $data;
 }
 
-$valid_record_types = ['a', 'aaaa', 'mx', 'ns', 'txt', 'cname', 'ptr', 'srv', 'sshfp', 'caa', 'raw'];
+$valid_record_types = ['a', 'aaaa', 'mx', 'ns', 'txt', 'cname', 'ptr', 'srv', 'sshfp', 'caa', 'https', 'raw'];
 
 
 function blank_dns_record($type)
@@ -229,7 +229,7 @@ function warn_autorecord_collission($hostname, $domain, $type, $data)
 }
 
 
-$implemented_record_types = ['a', 'aaaa', 'mx', 'ns', 'txt', 'cname', 'ptr', 'srv', 'sshfp', 'caa'];
+$implemented_record_types = ['a', 'aaaa', 'mx', 'ns', 'txt', 'cname', 'ptr', 'srv', 'sshfp', 'caa', 'https'];
 
 function save_dns_record($id, $record)
 {
@@ -251,7 +251,10 @@ function save_dns_record($id, $record)
         $record['hostname'] = null;
     }
     verify_input_hostname($record['hostname'], true);
-    verify_input_recorddata($record['data']);
+    /* HTTPS record type allows quotes, we check format below */
+    if ($record['type'] != 'https') {
+        verify_input_recorddata($record['data']);
+    }
     if ($record['ttl'] && (int) $record['ttl'] < 1) {
         system_failure('Fehler bei TTL');
     }
@@ -371,6 +374,32 @@ function save_dns_record($id, $record)
             }
             $record['ip'] = null;
             break;
+
+        case 'https':
+            $record['dyndns'] = null;
+            $record['ip'] = null;
+            $record['spec'] = (int) $record['spec'];
+            if ($record['spec'] < 0) {
+                system_failure("invalid priority");
+            }
+            if ((!$record['data']) || (strlen($record['data']) == 0)) {
+                system_failure('data is missing');
+            }
+            if (strlen($record['data']) > 255) {
+                system_failure('data field is too long');
+            }
+            $data = explode(' ', $record['data']);
+            $host = array_shift($data);
+            if ($host != "." && !filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
+                system_failure("Ungültiger Hostname!");
+            }
+            foreach($data as $d) {
+                if (!(preg_match('/[a-z0-9]+=([a-z0-9,:.]+|"[a-z0-9,:.]+")/', $d))) {
+                    system_failure("Ungültiger HTTPS record!");
+                }
+            }
+            break;
+
         default:
             system_failure('Not implemented');
     }

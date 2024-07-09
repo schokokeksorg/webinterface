@@ -132,6 +132,7 @@ output('<h4>Neuen DNS-Record anlegen</h4>
 <li>' . internal_link('dns_record_edit', 'SSHFP', 'id=new&type=sshfp&domain=' . $domain->id) . '</li>
 <li>' . internal_link('dns_record_edit', 'CAA', 'id=new&type=caa&domain=' . $domain->id) . '</li>
 <li>' . internal_link('dns_record_edit', 'SRV', 'id=new&type=srv&domain=' . $domain->id) . '</li>
+<li>' . internal_link('dns_record_edit', 'HTTPS', 'id=new&type=https&domain=' . $domain->id) . '</li>
 </ul>
 
 <h4>Automatische DNS-Records</h4>

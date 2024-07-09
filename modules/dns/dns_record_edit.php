@@ -177,6 +177,13 @@ if ($type == 'srv') {
 ';
 }
 
+if ($type == 'https') {
+    $form .= '
+<tr><td><label for="spec">Priorität (normalerweise <em>1</em>):</label></td><td><input type="text" name="spec" id="spec" value="' . $data['spec'] . '" /></td></tr>
+<tr><td><label for="data">Inhalt (z.B. <em>. alpn=h2</em>):</label></td><td><input type="text" name="data" id="data" value="' . filter_output_html($data['data']) . '" /></td></tr>
+';
+}
+
 
 output(html_form('dns_record_edit', 'dns_record_save', "type={$type}&domain={$domain->id}&id={$_REQUEST['id']}", '<table>
 <tr><td><label for="hostname">Hostname:</label></td><td><input type="text" name="hostname" id="hostname" value="' . $data['hostname'] . '" />&#160;<strong>.' . $domain->fqdn . '</strong></td></tr>
