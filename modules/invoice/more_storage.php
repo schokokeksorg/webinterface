@@ -149,7 +149,7 @@ if (have_module('systemuser')) {
     } else {
         $choices = ['' => 'Nicht zuweisen'];
         foreach ($useraccounts as $u) {
-            $choices[$u['uid']] = "Benutzer ${u['username']} vergrößern";
+            $choices[$u['uid']] = "Benutzer {$u['username']} vergrößern";
         }
         $form .= '<p>Wie soll der zusätzliche Speicherplatz verwendet werden?</p><p>' . html_select('more_storage_user', $choices, $_SESSION['userinfo']['uid']) . '</p>';
     }
