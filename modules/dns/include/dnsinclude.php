@@ -95,9 +95,10 @@ function edit_dyndns_account($id, $handle, $password_http, $sshkey)
     $id = (int) $id;
     $oldaccount = get_dyndns_account($id);
     $handle = verify_input_identifier($handle);
-    $sshkey = filter_ssh_key($sshkey);
     if (trim($sshkey) == '') {
         $sshkey = null;
+    } else {
+        $sshkey = filter_ssh_key($sshkey);
     }
 
     $args = [":handle" => $handle, ":sshkey" => $sshkey, ":id" => $id];
