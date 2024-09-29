@@ -394,7 +394,7 @@ function save_dns_record($id, $record)
             if ($host != "." && !filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
                 system_failure("Ungültiger Hostname!");
             }
-            foreach($data as $d) {
+            foreach ($data as $d) {
                 if (!(preg_match('/[a-z0-9]+=([a-z0-9,:.]+|"[a-z0-9,:.]+")/', $d))) {
                     system_failure("Ungültiger HTTPS record!");
                 }
