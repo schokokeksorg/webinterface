@@ -66,6 +66,9 @@ if ($_GET['action'] == 'new') {
         $maxquota = $customerquota['max'] - $customerquota['assigned'] + $account['quota'];
 
         $quota = (int) $_POST['quota'];
+        if ($quota < 1) {
+            system_failure("Sie müssen dem Account mindestens 1 MB Speicherplatz zuweisen.");
+        }
         if ($quota > $maxquota) {
             system_failure("Sie können diesem Account maximal {$maxquota} MB Speicherplatz zuweisen.");
         }

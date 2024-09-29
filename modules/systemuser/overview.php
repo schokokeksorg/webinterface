@@ -28,7 +28,7 @@ $need_more_storage = false;
 foreach ($usedquota as $q) {
     $mailbar = '';
     $mailstring = '';
-    $mailpercent = round(($q['mailquota'] / $q["systemquota"]) * 100);
+    $mailpercent = round(($q['mailquota'] / max($q["systemquota"],1)) * 100);
     $mailwidth = 2 * min($mailpercent, 100);
 
     if ($q["mailquota"] > 0) {
@@ -36,7 +36,7 @@ foreach ($usedquota as $q) {
         $mailbar = "<div style=\"font-size: 1px; background-color: blue; height: 10px; width: {$mailwidth}px; margin: 0; padding: 0; float: left;\">&#160;</div>";
     }
 
-    $percent = round((($q["systemquota_used"] + $q["mailquota"]) / $q["systemquota"]) * 100);
+    $percent = round((($q["systemquota_used"] + $q["mailquota"]) / max($q["systemquota"],1)) * 100);
     if ($percent > 90) {
         $need_more_storage = true;
     }

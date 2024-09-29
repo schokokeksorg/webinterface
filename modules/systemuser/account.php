@@ -36,7 +36,7 @@ if (!customer_may_have_useraccounts()) {
         foreach ($usedquota as $q) {
             $mailbar = '';
             $mailstring = '';
-            $mailpercent = round(($q['mailquota'] / $q["systemquota"]) * 100);
+            $mailpercent = round(($q['mailquota'] / max($q["systemquota"],1)) * 100);
             $mailwidth = 2 * min($mailpercent, 100);
 
             if ($q["mailquota"] > 0) {
@@ -44,7 +44,7 @@ if (!customer_may_have_useraccounts()) {
                 $mailbar = "<div style=\"font-size: 1px; background-color: blue; height: 10px; width: {$mailwidth}px; margin: 0; padding: 0; float: left;\">&#160;</div>";
             }
 
-            $percent = round((($q["systemquota_used"] + $q["mailquota"]) / $q["systemquota"]) * 100);
+            $percent = round((($q["systemquota_used"] + $q["mailquota"]) / max($q["systemquota"],1)) * 100);
             $color = ($percent > 99 ? 'red' : ($percent > 80 ? "yellow" : "green"));
             $width = 2 * min($percent, 100) - $mailwidth;
 
