@@ -311,8 +311,8 @@ function save_more_storage($items, $storage)
         input_error('Speicherplatz nicht im erwarteten Bereich');
     }
     $oldcustomerquota = get_customerquota();
-    if ($oldcustomerquota > 102400) {
-        # Über 100 GB soll die Automatik nichts machen
+    if ($oldcustomerquota > 204800) {
+        # Über 200 GB soll die Automatik nichts machen
         system_failure("Ihr Speicherplatz kann über diese Funktion nicht weiter erhöht werden. Bitte wenden Sie sich an die Administratoren.");
     }
     $result = db_query("SELECT quota FROM system.customerquota WHERE cid=:cid AND lastchange > CURDATE()", [":cid" => $cid]);
