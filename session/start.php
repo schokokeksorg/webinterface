@@ -1,4 +1,5 @@
 <?php
+
 /*
 
   Session-Start-Script wird vom dispatcher eingebunden

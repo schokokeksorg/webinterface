@@ -1,4 +1,5 @@
 <?php
+
 /*
 This file belongs to the Webinterface of schokokeks.org Hosting.
 Please see https://source.schokokeks.org for the newest source files.

@@ -1,4 +1,5 @@
 <?php
+
 /*
 This file belongs to the Webinterface of schokokeks.org Hosting
 
