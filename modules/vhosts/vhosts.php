@@ -161,7 +161,7 @@ if (count($vhosts) > 0) {
             } elseif (array_key_exists($php, $phpinfo)) {
                 $phpinfo = $phpinfo[$php];
                 /* To create new PHP icon:
-                   convert ok.png -font "DejaVu-Sans-Book" -pointsize 10  -gravity center -draw "text 0,0 '7.2'" ok-php72.png
+                   magick ok.png -font "DejaVu-Sans-Book" -pointsize 10  -gravity center -draw "text 0,0 '8.4'" ok-php84.png
                 */
                 $php = icon_enabled_phpxx('PHP in Version ' . $phpinfo['major'] . '.' . $phpinfo['minor'] . ' eingeschaltet', $phpinfo['major'], $phpinfo['minor']);
                 if ($phpinfo['status'] == 'deprecated') {
