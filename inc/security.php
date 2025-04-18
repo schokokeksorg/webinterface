@@ -278,6 +278,10 @@ function filter_ssh_key($key)
         system_failure("Ungültige Zeichen im Kommentar des SSH-Keys!");
     }
 
+    if ($keyparts[0] == "ssh-dss") {
+        system_failure("DSA-Keys werden nicht unterstützt!");
+    }
+
     if (count($keyparts) === 2) {
         return $keyparts[0] . " " . $keyparts[1];
     } else {
