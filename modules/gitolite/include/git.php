@@ -14,6 +14,8 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 require_role(ROLE_SYSTEMUSER);
 
+require_once("inc/security.php");
+
 $data_dir = realpath(dirname(__FILE__) . '/../../../../gitolite-data/');
 $config_file = $data_dir . '/gitolite-admin/conf/webinterface.conf';
 $config_dir = $data_dir . '/gitolite-admin/conf/webinterface';
@@ -288,21 +290,11 @@ function newkey($pubkey, $handle)
         system_failure("Der eingegebene Name enthält ungültige Zeichen. Bitte nur Buchstaben, Zahlen, Unterstrich und Bindestrich benutzen.");
     }
 
-    $pubkey = trim(str_replace(["\r", "\n"], ' ', $pubkey));
+    DEBUG("checking public key $keyfile");
+    $pubkey = filter_ssh_key($pubkey);
 
     $keyfile = $key_dir . '/' . $handle . '.pub';
     file_put_contents($keyfile, $pubkey);
-
-    DEBUG("checking public key $keyfile");
-    $proc = popen("/usr/bin/ssh-keygen -l -f '{$keyfile}' 2>&1", 'r');
-    $output = fread($proc, 512);
-    DEBUG($output);
-    pclose($proc);
-    if (preg_match('/.* is not a public key file.*/', $output)) {
-        unlink($keyfile);
-        system_failure('Der angegebene SSH-Key scheint ungültig zu sein.');
-    }
-
 
     git_wrapper('add ' . $keyfile);
 

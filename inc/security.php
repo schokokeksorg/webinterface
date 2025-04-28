@@ -260,7 +260,8 @@ function verify_shell($input)
 
 function filter_ssh_key($key)
 {
-    $keyparts = explode(" ", trim($key));
+    $filtered = trim(str_replace(["\r", "\n"], ' ', $key));
+    $keyparts = explode(" ", $filtered);
 
     if ((count($keyparts) > 3) || (count($keyparts) < 2)) {
         system_failure("Ungültiger SSH-Key!");
@@ -283,10 +284,18 @@ function filter_ssh_key($key)
     }
 
     if (count($keyparts) === 2) {
-        return $keyparts[0] . " " . $keyparts[1];
+        $fkey = $keyparts[0] . " " . $keyparts[1];
     } else {
-        return $keyparts[0] . " " . $keyparts[1] . " " . $keyparts[2];
+        $fkey = $keyparts[0] . " " . $keyparts[1] . " " . $keyparts[2];
     }
+
+    $sshcmd = proc_open("ssh-keygen -l -f -", [0 => ["pipe", "r"]], $pipes, null, null);
+    fwrite($pipes[0], $fkey);
+    if (proc_close($sshcmd) !== 0) {
+        system_failure("Ungültiger SSH-Key laut ssh-keygen!");
+    }
+
+    return $fkey;
 }
 
 
