@@ -258,7 +258,7 @@ function verify_shell($input)
 }
 
 
-function filter_ssh_key($key)
+function filter_ssh_key($key, &$fphash = "")
 {
     $filtered = trim(str_replace(["\r", "\n"], ' ', $key));
     $keyparts = explode(" ", $filtered);
@@ -296,9 +296,17 @@ function filter_ssh_key($key)
     ];
     $sshcmd = proc_open("ssh-keygen -l -f -", $descr, $pipes, null, null);
     fwrite($pipes[0], $fkey);
+    fclose($pipes[0]);
+    $fphash = fread($pipes[1], 1024);
     if (proc_close($sshcmd) !== 0) {
         system_failure("Ungültiger SSH-Key laut ssh-keygen!");
     }
+
+    $fphash = explode(" ", $fphash)[1];
+    if ((strlen($fphash) != 50) || (substr($fphash, 0, 7) != "SHA256:")) {
+        system_failure("Interner Fehler: Fingerprint im falschen Format");
+    }
+    $fphash = substr($fphash, 7);
 
     return $fkey;
 }
