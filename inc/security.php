@@ -289,7 +289,12 @@ function filter_ssh_key($key)
         $fkey = $keyparts[0] . " " . $keyparts[1] . " " . $keyparts[2];
     }
 
-    $sshcmd = proc_open("ssh-keygen -l -f -", [0 => ["pipe", "r"]], $pipes, null, null);
+    $descr = [
+        0 => ["pipe", "r"],
+        1 => ["pipe", "w"],
+        2 => ["pipe", "w"],
+    ];
+    $sshcmd = proc_open("ssh-keygen -l -f -", $descr, $pipes, null, null);
     fwrite($pipes[0], $fkey);
     if (proc_close($sshcmd) !== 0) {
         system_failure("Ungültiger SSH-Key laut ssh-keygen!");
