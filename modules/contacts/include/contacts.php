@@ -17,7 +17,7 @@ require_once('inc/icons.php');
 require_once('inc/security.php');
 require_role([ROLE_CUSTOMER]);
 require_once('class/domain.php');
-
+require_once('session/checkuser.php');
 require_once('contactapi.php');
 
 
@@ -116,6 +116,28 @@ function have_mailaddress($email)
     return false;
 }
 
+
+function allow_new_address()
+{
+    // Wenn Admin per Su-Login
+    $admin_user = $_SESSION['admin_user'];
+    $role = find_role($admin_user, '', true);
+    if ($role & ROLE_SYSADMIN) {
+        warning('Die E-Mail-Adresse wird nicht überprüft, da Sie Admin sind!');
+        return true;
+    }
+    // Wenn der User vertrauenswürdig ist (feld trust_new_contacts)
+    if (isset($_SESSION['customerinfo'])) {
+        // User ist auch Kundenaccount
+        $result = db_query("SELECT trust_new_contacts FROM kundendaten.kunden WHERE id=?", [(int) $_SESSION['customerinfo']['customerno']]);
+        $data = $result->fetch();
+        if ($data['trust_new_contacts'] == 1) {
+            warning('Die E-Mail-Adresse war bisher nicht in Verwendung. Da Sie für die Verwendung unbekannter Adressen freigeschaltet sind, wird die Adresse von uns nicht überprüft.');
+            return true;
+        }
+    }
+    return false;
+}
 
 function possible_kundenkontakt($c)
 {
@@ -307,6 +329,7 @@ function update_pending($contactid)
 
 function delete_contact($id)
 {
+    $keep = false;
     $c = get_contact($id);
     $kundenkontakte = get_kundenkontakte();
     if ($id == $kundenkontakte['kunde']) {
@@ -322,8 +345,13 @@ function delete_contact($id)
         // Lösche bei der Registry
         $c['state'] = 'deleted';
         upload_contact($c);
+        $keep = true;
     }
-    db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", [$c['id']]);
+    if ($keep) {
+        db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", [$c['id']]); 
+    } else {
+        db_query("DELETE FROM kundendaten.contacts WHERE id=?", [$c['id']]);
+    }
 }
 
 

@@ -191,7 +191,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $c['id'] = $id;
 
     if (isset($_REQUEST['email']) && check_emailaddr($_REQUEST['email']) && ($new || $c['email'] != $_REQUEST['email'])) {
-        if (have_mailaddress($_REQUEST['email'])) {
+        if (have_mailaddress($_REQUEST['email']) || allow_new_address()) {
             save_emailaddress($c['id'], $_REQUEST['email']);
         } else {
             send_emailchange_token($c['id'], $_REQUEST['email']);
