@@ -110,10 +110,7 @@ if ($_SESSION['domains_domainreg_owner'] === null) {
     if (possible_domainholder($customer)) {
         $_SESSION['domains_domainreg_owner'] = $kundenkontakte['kunde'];
     } else {
-        $list = array_keys(possible_domainholders());
-        if (count($list) > 0) {
-            $_SESSION['domains_domainreg_owner'] = $list[0];
-        }
+        warning('Der Stammkontakt dieses Kundenkontos enthält nicht alle Daten, die als Domaininhaber ausgefüllt sein müssen. Wählen Sie daher bitte einen anderen Kontakt aus.');
     }
 }
 
