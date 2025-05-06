@@ -209,9 +209,9 @@ function domainselect($selected = null, $selectattribute = '')
     if ($selected == -2) {
         $s = ($selected == -2 ? ' selected="selected"' : '');
         $ret .= ' <option value="-2"' . $s . '>' . $_SESSION['userinfo']['username'] . '.' . config('masterdomain') . ' (Bitte nicht mehr benutzen!)</option>';
-        if ($selected > 0 and !$found) {
-            system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
-        }
+    }
+    if ($selected > 0 and !$found) {
+        system_failure("Hier wird eine Domain benutzt, die nicht zu diesem Benutzeraccount gehört. Bearbeiten würde Daten zerstören!");
     }
     $ret .= '</select>';
     return $ret;
