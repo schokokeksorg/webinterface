@@ -348,7 +348,7 @@ function delete_contact($id)
         $keep = true;
     }
     if ($keep) {
-        db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", [$c['id']]); 
+        db_query("UPDATE kundendaten.contacts SET state='deleted' WHERE id=?", [$c['id']]);
     } else {
         db_query("DELETE FROM kundendaten.contacts WHERE id=?", [$c['id']]);
     }
