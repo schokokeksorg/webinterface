@@ -55,8 +55,8 @@ if ($messages) {
 }
 ?>
 
-<h3 class="headline">schokokeks.org Hosting Webinterface</h3>
-<p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf schokokeks.org Hosting festlegen. Sofern Sie noch kein Kunde von schokokeks.org Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="https://schokokeks.org">öffentliche Seite</a>.</p>
+<h3 class="headline"><span translate="no">schokokeks.org</span> Hosting Webinterface</h3>
+<p>Auf dieser Seite können Sie diverse Einstellungen Ihres Accounts auf <span translate="no">schokokeks.org</span> Hosting festlegen. Sofern Sie noch kein Kunde von <span translate="no">schokokeks.org</span> Hosting sind, können Sie diese Seite nicht benutzen. Besuchen Sie in diesem Fall bitte unsere <a href="https://schokokeks.org">öffentliche Seite</a>.</p>
 <form method="post">
 <div class="login_chooser">
 <p>Anmelden als:</p>
@@ -84,7 +84,7 @@ if ($messages) {
 </div>
 
 <div class="foot">
-<p>Sollten Sie auf dieser Administrations-Oberfläche ein Problem entdecken oder Hilfe benötigen, schreiben Sie bitte eine einfache eMail an <a href="mailto:root@schokokeks.org">root@schokokeks.org</a>. Unser <a href="https://schokokeks.org/kontakt">Impressum</a> finden Sie auf der <a href="https://schokokeks.org/">öffentlichen Seite</a>. Lizenzinformationen zu diesem Webinterface und verwendeten Rechten finden Sie, <a href="<?php echo $BASE_PATH; ?>go/about/about">indem Sie hier klicken</a>.</p>
+<p>Sollten Sie auf dieser Administrations-Oberfläche ein Problem entdecken oder Hilfe benötigen, schreiben Sie bitte eine einfache eMail an <a translate="no" href="mailto:root@schokokeks.org">root@schokokeks.org</a>. Unser <a href="https://schokokeks.org/kontakt">Impressum</a> finden Sie auf der <a href="https://schokokeks.org/">öffentlichen Seite</a>. Lizenzinformationen zu diesem Webinterface und verwendeten Rechten finden Sie, <a href="<?php echo $BASE_PATH; ?>go/about/about">indem Sie hier klicken</a>.</p>
 
 </div>
 

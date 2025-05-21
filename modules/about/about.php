@@ -14,7 +14,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 
 title('Lizenzinformationen');
 
-output('<p>Dieses Webinterface ist eine Eigenentwicklung von schokokeks.org Webhosting. Der Source-Code ist unter <a href="https://source.schokokeks.org/">source.schokokeks.org</a> erhältlich und wurde unter der 0BSD-Lizenz freigegeben.</p>
+output('<p>Dieses Webinterface ist eine Eigenentwicklung von <span translate="no">schokokeks.org</span> Webhosting. Der Source-Code ist unter <a translate="no" href="https://source.schokokeks.org/">source.schokokeks.org</a> erhältlich und wurde unter der 0BSD-Lizenz freigegeben.</p>
 <p>Folgende Bestandteile wurden von anderen Autoren übernommen und unterliegen einer abweichenden Lizenz:</p>
 <ul>
   <li>Eine <a href="https://github.com/PHPGangsta/GoogleAuthenticator">Bibliothek zur Abwicklung der Google-Authenticator-Anmeldung</a> wurde von <a href="https://www.phpgangsta.de/2-faktor-authentifizierung-mit-dem-google-authenticator">Michael Kliewe (PHPGangsta)</a> übernommen und ist unter der BSD-Lizenz freigegeben</li>

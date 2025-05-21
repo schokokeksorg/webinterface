@@ -37,9 +37,9 @@ if (count($passkeys) > 0) {
         $hostname = '';
         $rpId = $_SERVER['HTTP_HOST'];
         if ($pk['rpId'] != $rpId) {
-            $hostname = 'Nur gültig für die URL <strong>' . $pk['rpId'] . '</strong>!<br>';
+            $hostname = 'Nur gültig für die URL <strong translate="no">' . $pk['rpId'] . '</strong>!<br>';
         }
-        output("<p class=\"passkey\">Gerätebezeichnung: <strong>{$pk['handle']}</strong><br>hinzugefügt am {$pk['setuptime']}<br>" . $hostname . internal_link("delete_passkey", icon_delete() . "Diesen Passkey löschen", "id={$pk['id']}") . "</p>");
+        output("<p class=\"passkey\">Gerätebezeichnung: <strong translate=\"no\">{$pk['handle']}</strong><br>hinzugefügt am {$pk['setuptime']}<br>" . $hostname . internal_link("delete_passkey", icon_delete() . "Diesen Passkey löschen", "id={$pk['id']}") . "</p>");
     }
 }
 

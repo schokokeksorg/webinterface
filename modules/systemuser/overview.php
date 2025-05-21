@@ -47,7 +47,7 @@ foreach ($usedquota as $q) {
     $used_space = $q['systemquota_used'] + $q['mailquota'];
     $msg = "";
     if ($multiserver) {
-        $msg = "<p>Server <strong>{$q['server']}</strong><br />";
+        $msg = "<p>Server <strong translate=\"no\">{$q['server']}</strong><br />";
     }
     $quota[] = $msg . "{$percent}%: {$used_space} MB von {$q['systemquota']} MB belegt{$mailstring}.</p> 
         <div style=\"margin: 0; padding: 0; width: 200px; border: 1px solid black;\">{$mailbar}<div style=\"font-size: 1px; background-color: {$color}; height: 10px; width: {$width}px; margin: 0; margin-left: {$mailwidth}px; padding: 0;\">&#160;</div></div>";
@@ -63,7 +63,7 @@ if (isset($_SESSION['loginmethod']) && $_SESSION['loginmethod'] == 'passkey' && 
 output("<h5>Stammdaten</h5>
 <div style=\"margin-left: 2em;\">
 <p>Benutzername: <strong>{$acc['username']}</strong></p>
-<p>Servername" . ($multiserver ? " (primär)" : '') . ": <strong>" . get_server_by_id($acc['server']) . "</strong></p>
+<p>Servername" . ($multiserver ? " (primär)" : '') . ": <strong translate=\"no\">" . get_server_by_id($acc['server']) . "</strong></p>
 {$passwordlogin}
 <p>Tipp: <a href=\"https://wiki.schokokeks.org/Dateizugriff\">Wiki-Anleitung zum Dateizugriff bzw. zum Ändern der Dateien Ihrer Website.</a></p>
 ");

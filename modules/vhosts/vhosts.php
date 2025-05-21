@@ -82,12 +82,12 @@ if (count($vhosts) > 0) {
         if (strstr($vhost['options'], 'aliaswww')) {
             $linkuri = "www." . $vhost['fqdn'];
         }
-        output("<tr class=\"{$class}\"><td>" . internal_link('edit', $fqdn, "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"') . "</td><td><a href=\"{$proto}://{$linkuri}\">" . other_icon('world_link.png', 'Website aufrufen') . "</a> " . internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost=' . $vhost['id']) . "</td><td>");
+        output("<tr class=\"{$class}\"><td>" . internal_link('edit', '<span translate="no">'.$fqdn.'</span>', "vhost={$vhost['id']}", 'title="Einstellungen bearbeiten"') . "</td><td><a href=\"{$proto}://{$linkuri}\">" . other_icon('world_link.png', 'Website aufrufen') . "</a> " . internal_link('save', icon_delete("»{$vhost['fqdn']}« löschen"), 'action=delete&vhost=' . $vhost['id']) . "</td><td>");
         $aliases = get_all_aliases($vhost);
         $tmp = '';
         if (count($aliases) > 0) {
             foreach ($aliases as $alias) {
-                $tmp .= $alias['fqdn'] . '<br />';
+                $tmp .= '<span translate="no">'.$alias['fqdn'] . '</span><br />';
             }
         } else {
             $tmp = '<em>- keine -</em>';

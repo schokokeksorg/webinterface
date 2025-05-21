@@ -26,29 +26,29 @@ switch ($_SESSION['role']) {
         login_screen('');
         break;
     case ROLE_VMAIL_ACCOUNT:
-        $role = "{$_SESSION['mailaccount']}, angemeldet als E-Mail-Account";
+        $role = "<span translate=\"no\">{$_SESSION['mailaccount']}</span>, angemeldet als E-Mail-Account";
         break;
     case ROLE_MAILACCOUNT:
-        $role = "{$_SESSION['mailaccount']}, angemeldet als IMAP/POP3-Account";
+        $role = "<span translate=\"no\">{$_SESSION['mailaccount']}</span>, angemeldet als IMAP/POP3-Account";
         break;
     case ROLE_SYSTEMUSER:
-        $role = "{$_SESSION['userinfo']['name']}, angemeldet als Benutzer";
+        $role = "<span translate=\"no\">{$_SESSION['userinfo']['name']}</span>, angemeldet als Benutzer";
         break;
     case ROLE_SYSTEMUSER | ROLE_SUBUSER:
     case ROLE_SYSTEMUSER | ROLE_CUSTOMER | ROLE_SUBUSER:
-        $role = "{$_SESSION['subuser']}, Unternutzer von {$_SESSION['userinfo']['username']}";
+        $role = "<span translate=\"no\">{$_SESSION['subuser']}</span>, Unternutzer von <span translate=\"no\">{$_SESSION['userinfo']['username']}</span>";
         break;
     case ROLE_CUSTOMER:
-        $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde";
+        $role = "<span translate=\"no\">{$_SESSION['customerinfo']['name']}</span>, angemeldet als Kunde";
         break;
     case ROLE_CUSTOMER | ROLE_SYSTEMUSER:
-        $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde und Benutzer";
+        $role = "<span translate=\"no\">{$_SESSION['customerinfo']['name']}</span>, angemeldet als Kunde und Benutzer";
         break;
     case ROLE_SYSTEMUSER | ROLE_SYSADMIN:
-        $role = "{$_SESSION['userinfo']['name']}, angemeldet als Benutzer und Administrator";
+        $role = "<span translate=\"no\">{$_SESSION['userinfo']['name']}</span>, angemeldet als Benutzer und Administrator";
         break;
     case ROLE_CUSTOMER | ROLE_SYSTEMUSER | ROLE_SYSADMIN:
-        $role = "{$_SESSION['customerinfo']['name']}, angemeldet als Kunde, Benutzer und Administrator";
+        $role = "<span translate=\"no\">{$_SESSION['customerinfo']['name']}</span>, angemeldet als Kunde, Benutzer und Administrator";
         break;
     default:
         system_failure('Interner Fehler (»Unbekannte Rolle: ' . $_SESSION['role'] . '«)');
@@ -57,7 +57,7 @@ switch ($_SESSION['role']) {
 
 title('Übersicht');
 headline('Administration');
-output('<p>Herzlich willkommen, ' . $role . ".</p>\n");
+output('<p>Herzlich willkommen ' . $role . ".</p>\n");
 
 output("<p>Auf der linken Seite sehen Sie ein Auswahlmenü mit den Funktionen, die Ihnen in diesem Webinterface zur Verfügung stehen.</p>");
 if (is_locked()) {

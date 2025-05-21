@@ -69,7 +69,7 @@ if (count($dbs) > 0 || count($users) > 0) {
         if ($user['description']) {
             $desc = '<br><span style="font-weight: normal; font-size: 80%; font-style: italic;">' . filter_output_html($user['description']) . '</span>';
         }
-        output("<th><span title=\"Erstellt: {$user['created']}\">{$username}</span>" . $desc);
+        output("<th><span title=\"Erstellt: {$user['created']}\"><span translate=\"no\">{$username}</span></span>" . $desc);
         output("<br>" . internal_link('description', other_icon("comment.png", 'Beschreibung ändern'), "username={$username}") . "&#160;");
         output(internal_link("save", icon_delete("Benutzer »{$user['username']}« löschen"), "action=delete_user&user={$user['username']}") . "</th>");
     }
@@ -83,7 +83,7 @@ if (count($dbs) > 0 || count($users) > 0) {
         if ($db['description']) {
             $desc = '<br><span style="font-weight: normal; font-size: 80%; font-style: italic;">' . filter_output_html($db['description']) . '</span>';
         }
-        output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\">{$db['name']}</span>" . $desc . "<br>");
+        output("<tr><td style=\"border: 0px; font-weight: bold; text-align: right;\"><span title=\"Erstellt: {$db['created']}\"><span translate=\"no\">{$db['name']}</span></span>" . $desc . "<br>");
         output(internal_link('description', other_icon("comment.png", 'Datenbank-Beschreibung ändern'), "db={$db['name']}") . "&#160;");
         output(internal_link("save", icon_delete("Datenbank »{$db['name']}« löschen"), "action=delete_db&db={$db['name']}") . "&#160;");
         output("<a href=\"" . $phpmyadmin . "\">" . other_icon("database_go.png", "Datenbank-Verwaltung über phpMyAdmin") . "</a>");
