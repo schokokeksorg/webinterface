@@ -131,10 +131,10 @@ if (!defined("TOP_INCLUDED")) {
         $userinfo .= '<p class="userinfo">Angemeldet als:<br>';
         if ($role & ROLE_SYSTEMUSER && isset($_SESSION['subuser'])) {
             $userinfo .= '<strong translate="no">' . $_SESSION['subuser'] . '</strong>';
-            $userinfo .= '<br>Mitbenutzer von <span translate="no">' . $_SESSION['userinfo']['username'].'</span>';
+            $userinfo .= '<br>Mitbenutzer von <span translate="no">' . $_SESSION['userinfo']['username'] . '</span>';
         } elseif ($role & ROLE_SYSTEMUSER) {
             $userinfo .= '<strong translate="no">' . $_SESSION['userinfo']['username'] . '</strong>';
-            $userinfo .= '<br><span translate="no">' . $_SESSION['userinfo']['name'].'</span>';
+            $userinfo .= '<br><span translate="no">' . $_SESSION['userinfo']['name'] . '</span>';
             $userinfo .= '<br>(UID ' . $_SESSION['userinfo']['uid'] . (($role & ROLE_CUSTOMER) ? ', Kunde ' . $_SESSION['customerinfo']['customerno'] : '') . ')';
         } elseif ($role & ROLE_CUSTOMER) {
             $userinfo .= '<strong translate="no">' . $_SESSION['customerinfo']['name'] . '</strong>';

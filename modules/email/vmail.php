@@ -149,7 +149,7 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                         output('<p><strike translate="no">' . filter_output_html($acc['local'] . '@' . $this_account['domainname']) . '</strike> ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen">', "action=delete&id=" . $acc['id']) . "</p>\n");
                         output("<ul><li>" . icon_disabled() . " Diese Adresse ist stillgelegt. <strong>" . internal_link('suspend', 'Stilllegung ändern/aufheben', 'account=' . $acc['id']) . '</strong></li></ul>');
                     } else {
-                        output('<p>' . internal_link('edit', '<span translate="no">'.filter_output_html($acc['local'] . '@' . $this_account['domainname']).'</span>', 'id=' . $acc['id']) . ' ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen">', "action=delete&id=" . $acc['id']) . "</p>\n");
+                        output('<p>' . internal_link('edit', '<span translate="no">' . filter_output_html($acc['local'] . '@' . $this_account['domainname']) . '</span>', 'id=' . $acc['id']) . ' ' . internal_link("save", '<img src="' . $prefix . 'images/delete.png" alt="löschen" title="Dieses Konto löschen">', "action=delete&id=" . $acc['id']) . "</p>\n");
                         output($dest);
                     }
                 }
