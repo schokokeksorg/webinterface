@@ -185,9 +185,9 @@ if ($is_current_customer && config('http.net-apikey') && $dom->provider == 'teri
     if (!update_possible($dom->id)) {
         warning("Diese Domain verwendet eine unübliche Endung. Daher kann der Inhaber nicht auf diesem Weg verändert werden. Bitte kontaktieren Sie den Support.");
     } else {
-        if ($_SESSION['domains_detail_admin_c'] == $dom->admin_c &&
-                $_SESSION['domains_detail_owner'] != $dom->owner &&
-                (!isset($_SESSION['domains_detail_detach']) || $_SESSION['domains_detail_detach'] == 0)) {
+        if ($_SESSION['domains_detail_admin_c'] == $dom->admin_c
+                && $_SESSION['domains_detail_owner'] != $dom->owner
+                && (!isset($_SESSION['domains_detail_detach']) || $_SESSION['domains_detail_detach'] == 0)) {
             // Wenn der Owner geändert wurde, der Admin aber nicht und das detach-Flag
             // nicht gesetzt ist, dann wird der Admin gleich dem Owner gesetzt
             $_SESSION['domains_detail_admin_c'] = $_SESSION['domains_detail_owner'];

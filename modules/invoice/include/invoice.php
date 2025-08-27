@@ -329,12 +329,12 @@ function save_more_storage($items, $storage)
         }
         $data['kunde'] = $cid;
         $data['notizen'] = 'Bestellt via Webinterface';
-        if (!isset($data['anzahl']) ||
-        !isset($data['beschreibung']) ||
-        !isset($data['datum']) ||
-        !array_key_exists('kuendigungsdatum', $data) ||
-        !isset($data['betrag']) ||
-        !isset($data['monate'])) {
+        if (!isset($data['anzahl'])
+        || !isset($data['beschreibung'])
+        || !isset($data['datum'])
+        || !array_key_exists('kuendigungsdatum', $data)
+        || !isset($data['betrag'])
+        || !isset($data['monate'])) {
             DEBUG($data);
             input_error("Ungültige Daten");
             return;
@@ -345,8 +345,8 @@ function save_more_storage($items, $storage)
             $param[':' . $k] = $v;
         }
 
-        $queries[] = ["INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES " .
-                   "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param, ];
+        $queries[] = ["INSERT INTO kundendaten.leistungen (kunde,periodisch,beschreibung,datum,kuendigungsdatum,betrag,brutto,monate,anzahl,notizen) VALUES "
+                   . "(:kunde,1,:beschreibung,:datum,:kuendigungsdatum,:betrag,:brutto,:monate,:anzahl,:notizen)", $param, ];
     }
 
     if (count($queries) < 2) {

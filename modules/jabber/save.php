@@ -26,9 +26,9 @@ global $debugmode;
 
 if ($_GET['action'] == 'new') {
     check_form_token('jabber_new_account');
-    if (filter_input_username($_POST['local']) == '' ||
-      $_POST['domain'] == '' ||
-      $_POST['password'] == '') {
+    if (filter_input_username($_POST['local']) == ''
+      || $_POST['domain'] == ''
+      || $_POST['password'] == '') {
         input_error('Sie müssen alle Felder ausfüllen!');
     } else {
         create_jabber_account($_POST['local'], $_POST['domain'], stripslashes($_POST['password']));
@@ -39,10 +39,10 @@ if ($_GET['action'] == 'new') {
 } elseif ($_GET['action'] == 'chpass') {
     check_form_token('jabber_chpass');
     get_jabberaccount_details($_POST['accountid']);
-    if ($_POST['newpass'] == '' ||
-      $_POST['newpass2'] == '' ||
-      $_POST['newpass'] != $_POST['newpass2'] ||
-      $_POST['accountid'] == '') {
+    if ($_POST['newpass'] == ''
+      || $_POST['newpass2'] == ''
+      || $_POST['newpass'] != $_POST['newpass2']
+      || $_POST['accountid'] == '') {
         input_error('Bitte zweimal ein neues Passwort eingeben!');
     } else {
         change_jabber_password($_POST['accountid'], stripslashes($_POST['newpass']));

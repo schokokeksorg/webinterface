@@ -99,9 +99,9 @@ Subdomains können grundsätzlich nur durch Administratoren eingerichtet und ver
                 $accounts_on_domain = $sorted_by_domains[$dom['id']];
 
                 foreach ($accounts_on_domain as $this_account) {
-                    if ($filter &&
-                    (strpos($dom['domainname'], $filter) === false &&
-                     strpos($this_account['local'], $filter) === false)) {
+                    if ($filter
+                    && (strpos($dom['domainname'], $filter) === false
+                     && strpos($this_account['local'], $filter) === false)) {
                         continue;
                     }
                     $acc = get_account_details($this_account['id']);

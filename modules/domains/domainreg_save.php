@@ -19,14 +19,14 @@ require_once("domainapi.php");
 require_role(ROLE_CUSTOMER);
 check_form_token('domains_domainreg');
 
-if (!(isset($_SESSION['domains_domainreg_owner']) && $_SESSION['domains_domainreg_owner']) ||
-    !(isset($_SESSION['domains_domainreg_admin_c']) && $_SESSION['domains_domainreg_admin_c']) ||
-    !(isset($_SESSION['domains_domainreg_domainname']) && $_SESSION['domains_domainreg_domainname'])) {
+if (!(isset($_SESSION['domains_domainreg_owner']) && $_SESSION['domains_domainreg_owner'])
+    || !(isset($_SESSION['domains_domainreg_admin_c']) && $_SESSION['domains_domainreg_admin_c'])
+    || !(isset($_SESSION['domains_domainreg_domainname']) && $_SESSION['domains_domainreg_domainname'])) {
     system_failure("Fehler im Programmablauf!");
 }
 
-if (!(isset($_REQUEST['domain']) && $_REQUEST['domain']) ||
-    $_REQUEST['domain'] != $_SESSION['domains_domainreg_domainname']) {
+if (!(isset($_REQUEST['domain']) && $_REQUEST['domain'])
+    || $_REQUEST['domain'] != $_SESSION['domains_domainreg_domainname']) {
     system_failure("Fehler im Programmablauf!");
 }
 // Validierung der Domain entfällt hier, weil wir nur bestehende Domain aus der Datenbank laden. Bei ungültiger Eingabe wird kein Treffer gefunden.

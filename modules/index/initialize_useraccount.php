@@ -64,8 +64,8 @@ if (isset($_REQUEST['token'])) {
 if ($show == 'password') {
     $username = get_username_for_uid($uid);
     title("Neues Passwort setzen");
-    output('<p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>' .
-  html_form('initialize_useraccount', '', '', '<p style="display: none"><input type="hidden" name="uid" value="' . $uid . '">
+    output('<p>Bitte legen Sie jetzt Ihr neues Passwort fest.</p>'
+  . html_form('initialize_useraccount', '', '', '<p style="display: none"><input type="hidden" name="uid" value="' . $uid . '">
   <input type="hidden" name="token" value="' . $token . '"><input type="hidden" name="agb" value="1"></p>
   <p><span class="login_label">Ihr Benutzername:</span> <strong>' . $username . '</strong></p>
   <p><span class="login_label">Neues Passwort:</span> <input type="password" name="password" size="30" autocomplete="new-password"></p>
@@ -74,8 +74,8 @@ if ($show == 'password') {
   '));
 } elseif ($show == 'agb') {
     title("Bestätigung unserer AGB");
-    output('<p>Die Nutzung unseres Angebots ist an unsere <a href="https://schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>' .
-  html_form('initialize_useraccount_agb', '', '', '<p style="display: none"><input type="hidden" name="uid" value="' . $uid . '">
+    output('<p>Die Nutzung unseres Angebots ist an unsere <a href="https://schokokeks.org/agb">Allgemeinen Geschäftsbedingungen</a> gebunden. Bitte lesen Sie diese Bedingungen und bestätigen Sie Ihr Einverständnis. Sollten Sie diese Bedingungen nicht akzeptieren, setzen Sie sich bitte mit uns in Verbindung.</p>'
+  . html_form('initialize_useraccount_agb', '', '', '<p style="display: none"><input type="hidden" name="uid" value="' . $uid . '">
   <input type="hidden" name="token" value="' . $token . '"></p>
   <p><span class="login_label">&#160;</span><input type="checkbox" name="agb" value="1"> Ja, ich akzeptiere die AGB.<p>
   <p><span class="login_label">&#160;</span> <input type="submit" value="Weiter"></p>

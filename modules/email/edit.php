@@ -127,9 +127,9 @@ $startdate = $ar['valid_from'];
 if (!$startdate || $startdate <= date('Y-m-d')) {
     $startdate = date('Y-m-d', time() + 1 * 24 * 60 * 60);
 }
-$form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked}> <label for=\"ar_valid_from_now\">Ab sofort</label><br>" .
-  "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked}> <label for=\"ar_valid_from_date\">Erst ab dem </label>" .
-  "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"" . date('Y-m-d') . "\" max=\"" . date('Y-m-d', time() + 60 * 24 * 60 * 60) . "\"></p>";
+$form .= "<p><input type=\"radio\" name=\"ar_valid_from\" value=\"now\" id=\"ar_valid_from_now\"{$valid_from_now_checked}> <label for=\"ar_valid_from_now\">Ab sofort</label><br>"
+  . "<input type=\"radio\" name=\"ar_valid_from\" value=\"date\" id=\"ar_valid_from_date\"{$valid_from_future_checked}> <label for=\"ar_valid_from_date\">Erst ab dem </label>"
+  . "<input type=\"date\" value=\"$startdate\" id=\"ar_startdate\" name=\"ar_startdate\" min=\"" . date('Y-m-d') . "\" max=\"" . date('Y-m-d', time() + 60 * 24 * 60 * 60) . "\"></p>";
 
 $enddate = $ar['valid_until'];
 if (!$enddate) {
@@ -142,8 +142,8 @@ if ($ar['valid_from'] > date('Y-m-d')) {
     $max_end = $max_end->format('Y-m-d');
 }
 $form .= "<h4>Deaktivierung</h4>";
-$form .= "<p><label for=\"ar_enddate\">Keine Antworten mehr versenden ab dem </label>" .
-  "<input type=\"date\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" min=\"" . date('Y-m-d') . "\" max=\"" . $max_end . "\"><br>";
+$form .= "<p><label for=\"ar_enddate\">Keine Antworten mehr versenden ab dem </label>"
+  . "<input type=\"date\" value=\"$enddate\" id=\"ar_enddate\" name=\"ar_enddate\" min=\"" . date('Y-m-d') . "\" max=\"" . $max_end . "\"><br>";
 if (!$accountlogin && ($id != 0)) {
     $form .= "<small>(Automatische Antworten sind nur befristet erlaubt. Wenn Sie diese Adresse dauerhaft stilllegen möchten, können Sie dies am Ende dieser Seite tun.)</small></p>";
 }
@@ -151,21 +151,21 @@ if (!$accountlogin && ($id != 0)) {
 $subject = filter_output_html($ar['subject']);
 $ar_subject_default_checked = ($subject == null) ? ' checked="checked"' : '';
 $ar_subject_custom_checked = ($subject) ? ' checked="checked"' : '';
-$form .= "<h4>Betreffzeile der automatischen Antwort</h4>" .
-  "<p><input type=\"radio\" name=\"ar_subject\" value=\"default\" id=\"ar_subject_default\"{$ar_subject_default_checked}> " .
-  "<label for=\"ar_subject_default\">Automatisch (Re: <em>&lt;Betreff der Originalnachricht&gt;</em>)</label><br>" .
-  "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked}> " .
-  "<label for=\"ar_subject_custom\">Anderer Betreff:</label> <input type=\"text\" name=\"ar_subject_value\" id=\"ar_subject_value\" value=\"{$subject}\"></p>";
+$form .= "<h4>Betreffzeile der automatischen Antwort</h4>"
+  . "<p><input type=\"radio\" name=\"ar_subject\" value=\"default\" id=\"ar_subject_default\"{$ar_subject_default_checked}> "
+  . "<label for=\"ar_subject_default\">Automatisch (Re: <em>&lt;Betreff der Originalnachricht&gt;</em>)</label><br>"
+  . "<input type=\"radio\" name=\"ar_subject\" value=\"custom\" id=\"ar_subject_custom\"{$ar_subject_custom_checked}> "
+  . "<label for=\"ar_subject_custom\">Anderer Betreff:</label> <input type=\"text\" name=\"ar_subject_value\" id=\"ar_subject_value\" value=\"{$subject}\"></p>";
 
 $message = filter_output_html($ar['message']);
-$form .= "<h4>Inhalt der automatischen Antwort</h4>" .
-  "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">{$message}</textarea></p>";
+$form .= "<h4>Inhalt der automatischen Antwort</h4>"
+  . "<p><textarea cols=\"80\" rows=\"10\" name=\"ar_message\" id=\"ar_message\">{$message}</textarea></p>";
 $quote = $ar['quote'];
 if (!$quote) {
     $quote = 'none';
 }
-$form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>" .
-  html_select('ar_quote', ["none" => 'nicht in Antwort einschließen',
+$form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>"
+  . html_select('ar_quote', ["none" => 'nicht in Antwort einschließen',
       "teaser" => 'anreißen (erste 10 Zeilen)',
       "inline" => 'zitieren (max. 50 Zeilen)', ], $quote) . "</p>";
 //"attach" => 'vollständig als Anhang beifügen'), $quote)."</p>";
@@ -174,10 +174,10 @@ $form .= "<p><label for=\"ar_quote\">Originalnachricht des Absenders </label>" .
 $ar_from_default_checked = ($ar['fromname'] == null) ? ' checked="checked"' : '';
 $ar_from_custom_checked = ($ar['fromname'] != null) ? ' checked="checked"' : '';
 $fromname = filter_output_html($ar['fromname']);
-$form .= "<h4>Absender der automatischen Antwort</h4>" .
-  "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked}> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br>" .
-  "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked}> <label for=\"ar_from_custom\">Mit Name: </label> " .
-  "<input type=\"text\" name=\"ar_fromname\" id=\"ar_fromname\" value=\"{$fromname}\"></p>";
+$form .= "<h4>Absender der automatischen Antwort</h4>"
+  . "<p><input type=\"radio\" name=\"ar_from\" value=\"default\" id=\"ar_from_default\"{$ar_from_default_checked}> <label for=\"ar_from_default\">Nur E-Mail-Adresse</label><br>"
+  . "<input type=\"radio\" name=\"ar_from\" value=\"custom\" id=\"ar_from_custom\"{$ar_from_custom_checked}> <label for=\"ar_from_custom\">Mit Name: </label> "
+  . "<input type=\"text\" name=\"ar_fromname\" id=\"ar_fromname\" value=\"{$fromname}\"></p>";
 
 
 

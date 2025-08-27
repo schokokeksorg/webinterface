@@ -77,8 +77,8 @@ function create_dyndns_account($handle, $password_http, $sshkey)
     }
 
     db_query(
-        "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES " .
-           "(:uid, :handle, :pwhash, :sshkey)",
+        "INSERT INTO dns.dyndns (uid, handle, password, sshkey) VALUES "
+           . "(:uid, :handle, :pwhash, :sshkey)",
         [":uid" => $uid, ":handle" => $handle, ":pwhash" => $pwhash, ":sshkey" => $sshkey]
     );
     $dyndns_id = db_insert_id();

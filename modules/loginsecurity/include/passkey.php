@@ -22,8 +22,8 @@ function save_passkey($data, $handle = null)
         ":handle" => $handle,
         ":uid" => $_SESSION['userinfo']['uid'],
     ];
-    db_query("INSERT INTO system.systemuser_passkey (uid, handle, rpId, credentialId, credentialPublicKey) VALUES " .
-            "(:uid, :handle, :rpId, :credentialId, :credentialPublicKey)", $args);
+    db_query("INSERT INTO system.systemuser_passkey (uid, handle, rpId, credentialId, credentialPublicKey) VALUES "
+            . "(:uid, :handle, :rpId, :credentialId, :credentialPublicKey)", $args);
 }
 
 function get_passkey($id)

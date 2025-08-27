@@ -368,8 +368,8 @@ function save_vmail_account($account)
             input_error("Die Absenderadresse sieht ungültig aus. Es wird Ihre E-Mail-Adresse benutzt!");
             $ar['fromaddr'] = null;
         }
-        $query = "REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) " .
-             "VALUES (:id, :valid_from, :valid_until, :fromname, :fromaddr, :subject, :message, :quote)";
+        $query = "REPLACE INTO mail.vmail_autoresponder (account, valid_from, valid_until, fromname, fromaddr, subject, message, quote) "
+             . "VALUES (:id, :valid_from, :valid_until, :fromname, :fromaddr, :subject, :message, :quote)";
         $args = [":id" => $id,
             ":valid_from" => $ar['valid_from'],
             ":valid_until" => $ar['valid_until'],

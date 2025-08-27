@@ -475,8 +475,8 @@ function save_vhost($vhost)
         $autoipv6 = $vhost['autoipv6'];
     }
 
-    if (!($vhost['ssl'] == 'forward' || $vhost['ssl'] == 'http' ||
-        $vhost['ssl'] == 'https')) {
+    if (!($vhost['ssl'] == 'forward' || $vhost['ssl'] == 'http'
+        || $vhost['ssl'] == 'https')) {
         $vhost['ssl'] = null;
     }
 
@@ -503,8 +503,8 @@ function save_vhost($vhost)
         $args[":user"] = $_SESSION['userinfo']['uid'];
         unset($args[":id"]);
         logger(LOG_INFO, 'modules/vhosts/include/vhosts', 'vhosts', 'Creating vhost ' . $vhost['hostname'] . '.' . $vhost['domain'] . '');
-        $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options) VALUES " .
-                       "(:user, :hostname, :domain, :docroot, :php, :cgi, :ssl, :hsts, :suexec_user, :server, :logtype, :errorlog, :cert, :ipv4, :autoipv6, :options)", $args, true);
+        $result = db_query("INSERT INTO vhosts.vhost (user, hostname, domain, docroot, php, cgi, `ssl`, hsts, `suexec_user`, `server`, logtype, errorlog, certid, ipv4, autoipv6, options) VALUES "
+                       . "(:user, :hostname, :domain, :docroot, :php, :cgi, :ssl, :hsts, :suexec_user, :server, :logtype, :errorlog, :cert, :ipv4, :autoipv6, :options)", $args, true);
         $id = db_insert_id();
     }
     $oldvhost = get_vhost_details($id);

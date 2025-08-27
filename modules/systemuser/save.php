@@ -41,8 +41,8 @@ if ($_GET['action'] == 'new') {
     //if (! strong_password($_POST['newpass']))
     //  input_error('Das Passwort ist zu einfach');
     //else
-    if ($_POST['newpass1'] == '' ||
-      $_POST['newpass1'] != $_POST['newpass2']) {
+    if ($_POST['newpass1'] == ''
+      || $_POST['newpass1'] != $_POST['newpass2']) {
         input_error('Bitte zweimal ein neues Passwort eingeben!');
         $error = true;
     } else {

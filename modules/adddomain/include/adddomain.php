@@ -91,8 +91,8 @@ function register_domain($domainname, $uid)
         ":useraccount" => $useraccount,
         ":basename" => $data['basename'],
         ":tld" => $data['tld'], ];
-    db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail) VALUES " .
-           "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto') ", $args);
+    db_query("INSERT INTO kundendaten.domains (kunde, useraccount, domainname, tld, billing, registrierungsdatum, dns,webserver, mail) VALUES "
+           . "(:cid, :useraccount, :basename, :tld, 'regular', NULL, 1, 1, 'auto') ", $args);
     $domid = db_insert_id();
     /*if ($data['setup']) {
       $args = array(":cid" => $cid, ":setup" => $data['setup'], ":text" => 'Einmalige Setup-Gebühren für Domain "'.$data['domainname'].'"');

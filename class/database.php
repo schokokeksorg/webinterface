@@ -52,9 +52,9 @@ class DB extends PDO
             $response->execute($params);
             return $response;
         } else {
-            if (strtoupper(substr($stmt, 0, 6)) == "INSERT" ||
-          strtoupper(substr($stmt, 0, 7)) == "REPLACE" ||
-          strpos(strtoupper($stmt), "WHERE") > 0) { // Das steht nie am Anfang
+            if (strtoupper(substr($stmt, 0, 6)) == "INSERT"
+          || strtoupper(substr($stmt, 0, 7)) == "REPLACE"
+          || strpos(strtoupper($stmt), "WHERE") > 0) { // Das steht nie am Anfang
                 $backtrace = debug_backtrace();
                 $wherepart = substr(strtoupper($stmt), strpos(strtoupper($stmt), "WHERE"));
                 if ((strpos($wherepart, '"') > 0 || strpos($wherepart, "'") > 0) && config("enable_debug")) {

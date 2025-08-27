@@ -26,8 +26,8 @@ title('Zusätzlichen Speicherplatz buchen');
 check_form_token('more_storage');
 
 $valid = false;
-if (isset($_POST['more_storage_handle']) && isset($_SESSION['more_storage_handle']) &&
-  $_POST['more_storage_handle'] == $_SESSION['more_storage_handle']) {
+if (isset($_POST['more_storage_handle']) && isset($_SESSION['more_storage_handle'])
+  && $_POST['more_storage_handle'] == $_SESSION['more_storage_handle']) {
     $valid = true;
 }
 if (!$valid) {
