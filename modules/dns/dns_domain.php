@@ -28,6 +28,8 @@ $domain->ensure_userdomain();
 
 DEBUG($domain);
 
+$domainttl = $domain->defaultttl ? (int) $domain->defaultttl : 3600;
+
 title('DNS-Records für ' . filter_output_html($domain->fqdn));
 headline('DNS-Records für <em>' . filter_output_html($domain->fqdn) . '</em>');
 
@@ -79,7 +81,7 @@ foreach ($records as $rec) {
     if ($rec['type'] == 'caa') {
         $data = $caa_properties[(int) $rec['spec']] . ' 0 "' . $data . '"';
     }
-    $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
+    $ttl = ($rec['ttl'] ? $rec['ttl'] : $domainttl);
     $link = $rec['fqdn'];
     if (!in_array($rec['type'], $implemented_record_types)) {
         $editable = false;
@@ -102,7 +104,7 @@ foreach ($auto_records as $rec) {
     if (($rec['type'] == 'txt') && (strlen($data) > 100)) {
         $data = substr($data, 0, 100) . "<em>[...]</em>";
     }
-    $ttl = ($rec['ttl'] ? $rec['ttl'] : 3600);
+    $ttl = ($rec['ttl'] ? $rec['ttl'] : $domainttl);
     output("<tr><td><em>{$rec['fqdn']}</em></td><td>" . strtoupper($rec['type']) . "</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
 }
 
