@@ -98,7 +98,7 @@ foreach ($records as $rec) {
     if ($editable) {
         $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
     }
-    output("<tr><td>{$link}</td><td>" . strtoupper($rec['type']) . "</td><td>" . $data . "</td>" . $ttl . "<td>" . $delete . "</td></tr>\n");
+    output("<tr><td>{$link}</td><td>" . strtoupper($rec['type']) . "</td><td class='wrapany'>" . $data . "</td>" . $ttl . "<td>" . $delete . "</td></tr>\n");
 }
 foreach ($auto_records as $rec) {
     $data = filter_output_html($rec['ip'] ? $rec['ip'] : $rec['data']);
@@ -113,7 +113,7 @@ foreach ($auto_records as $rec) {
     } else {
         $ttl = "<td class='gray'>$domainttl Sek.</td>";
     }
-    output("<tr><td><em>{$rec['fqdn']}</em></td><td>" . strtoupper($rec['type']) . "</td><td>$data</td>" . $ttl . "<td>&#160;</td></tr>\n");
+    output("<tr><td><em>{$rec['fqdn']}</em></td><td>" . strtoupper($rec['type']) . "</td><td class='wrapany'>$data</td>" . $ttl . "<td>&#160;</td></tr>\n");
 }
 
 
