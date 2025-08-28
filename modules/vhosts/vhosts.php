@@ -174,7 +174,7 @@ if (count($vhosts) > 0) {
             }
             output("<td>{$php}</td>");
             if ($vhost['docroot_is_default'] == 1) {
-                output("<td><span style=\"color:#777;\">{$vhost['docroot']}</span></td>");
+                output("<td class='gray'>{$vhost['docroot']}</td>");
             } else {
                 output("<td><strong>{$vhost['docroot']}</strong></td>");
             }

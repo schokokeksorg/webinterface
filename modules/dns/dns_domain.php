@@ -81,7 +81,11 @@ foreach ($records as $rec) {
     if ($rec['type'] == 'caa') {
         $data = $caa_properties[(int) $rec['spec']] . ' 0 "' . $data . '"';
     }
-    $ttl = ($rec['ttl'] ? $rec['ttl'] : $domainttl);
+    if ($rec['ttl']) {
+        $ttl = "<td>" . $rec['ttl'] . " Sek.</td>";
+    } else {
+        $ttl = "<td class='gray'>$domainttl Sek.</td>";
+    }
     $link = $rec['fqdn'];
     if (!in_array($rec['type'], $implemented_record_types)) {
         $editable = false;
@@ -94,7 +98,7 @@ foreach ($records as $rec) {
     if ($editable) {
         $link = internal_link('dns_record_edit', $rec['fqdn'], "id={$rec['id']}");
     }
-    output("<tr><td>{$link}</td><td>" . strtoupper($rec['type']) . "</td><td>" . $data . "</td><td>{$ttl} Sek.</td><td>" . $delete . "</td></tr>\n");
+    output("<tr><td>{$link}</td><td>" . strtoupper($rec['type']) . "</td><td>" . $data . "</td>" . $ttl . "<td>" . $delete . "</td></tr>\n");
 }
 foreach ($auto_records as $rec) {
     $data = filter_output_html($rec['ip'] ? $rec['ip'] : $rec['data']);
@@ -104,8 +108,12 @@ foreach ($auto_records as $rec) {
     if (($rec['type'] == 'txt') && (strlen($data) > 100)) {
         $data = substr($data, 0, 100) . "<em>[...]</em>";
     }
-    $ttl = ($rec['ttl'] ? $rec['ttl'] : $domainttl);
-    output("<tr><td><em>{$rec['fqdn']}</em></td><td>" . strtoupper($rec['type']) . "</td><td>$data</td><td>{$ttl} Sek.</td><td>&#160;</td></tr>\n");
+    if ($rec['ttl']) {
+        $ttl = "<td>" . $rec['ttl'] . " Sek.</td>";
+    } else {
+        $ttl = "<td class='gray'>$domainttl Sek.</td>";
+    }
+    output("<tr><td><em>{$rec['fqdn']}</em></td><td>" . strtoupper($rec['type']) . "</td><td>$data</td>" . $ttl . "<td>&#160;</td></tr>\n");
 }
 
 
