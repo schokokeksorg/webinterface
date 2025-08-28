@@ -13,6 +13,7 @@ Nevertheless, in case you use a significant part of this code, we ask (but not r
 */
 
 require_once('inc/base.php');
+require_once('inc/icons.php');
 require_once('inc/security.php');
 require_role(ROLE_SYSTEMUSER);
 require_once('inc/javascript.php');
@@ -87,18 +88,24 @@ foreach ($domains as $id => $dom) {
         $buttons .= '<span class="nomail"><input type="checkbox" class="nomail autosubmit" name="nomail-' . $id . '" id="option-' . $id . '-nomail" value="nomail"' . $check_nomail . ' ' . ($edit_disabled ? ' disabled="disabled"' : '') . '>
                      <label class="nomail" for="option-' . $id . '-nomail">Mail-Nutzung verhindern</label>
          <input class="hidden" type="submit" value="Speichern"></span>';
-    }
-
-    if ($dom['type'] != 'none' && $dom['type'] != 'nomail' && $dom['dns'] == 1) {
-        $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
-            <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM+DMARC (Standard)</option>
-            <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>Nur DKIM</option>
-            <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
-        </select>
-         <input class="hidden" type="submit" value="Speichern">
-      ';
     } else {
-        //$buttons .= 'Sie können keine DKIM-Einstellung vornehmen, wenn der Mail-Empfang ausgeschaltet ist.';
+        if ($dom['dns'] == 1) {
+            $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
+                <option value="dmarc" ' . ($dom['dkim'] == 'dmarc' ? 'selected' : '') . '>DKIM+DMARC (Standard)</option>
+                <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>Nur DKIM</option>
+                <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
+            </select>
+             <input class="hidden" type="submit" value="Speichern">
+          ';
+      } else {
+            $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
+                <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>DKIM aktiv</option>
+                <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
+            </select>
+             <input class="hidden" type="submit" value="Speichern">
+          ';
+           $buttons .= icon_warning("EXTERNER DNS: Bitte stellen Sie sicher, dass Sie den Domain-Key gemäß dem Wiki-Artikel im DNS hinterlegt haben!");
+      }
     }
     output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons, $extraid = $id) . "</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
