@@ -97,15 +97,15 @@ foreach ($domains as $id => $dom) {
             </select>
              <input class="hidden" type="submit" value="Speichern">
           ';
-      } else {
+        } else {
             $buttons .= '&nbsp;<select name="dkim-' . $id . '" id="dkim-select-' . $id . '" class="autosubmit">
                 <option value="dkim" ' . ($dom['dkim'] == 'dkim' ? 'selected' : '') . '>DKIM aktiv</option>
                 <option value="none" ' . ($dom['dkim'] == 'none' ? 'selected' : '') . '>DKIM ausgeschaltet</option>
             </select>
              <input class="hidden" type="submit" value="Speichern">
           ';
-           $buttons .= icon_warning("EXTERNER DNS: Bitte stellen Sie sicher, dass Sie den Domain-Key gemäß dem Wiki-Artikel im DNS hinterlegt haben!");
-      }
+            $buttons .= icon_warning("EXTERNER DNS: Bitte stellen Sie sicher, dass Sie den Domain-Key gemäß dem Wiki-Artikel im DNS hinterlegt haben!");
+        }
     }
     output("<tr{$trextra}><td>{$dom['name']}</td><td class=\"nowrap\">" . html_form('vmail_domainchange', 'domainchange', '', $buttons, $extraid = $id) . "</td><td>{$notice}</td></tr>\n");
     if (array_key_exists($id, $subdomains)) {
