@@ -9,8 +9,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
 $script_dir = __DIR__;
-$module_dir = dirname($script_dir, 1); 
-$base_dir = dirname($script_dir, 3); 
+$module_dir = dirname($script_dir, 1);
+$base_dir = dirname($script_dir, 3);
 
 chdir($base_dir);
 set_include_path($module_dir . '/include' . PATH_SEPARATOR . get_include_path());
@@ -31,7 +31,7 @@ if (count($users) < 50) {
 }
 
 
-function git($command) 
+function git($command)
 {
     $command = './modules/gitolite/scripts/git-wrapper.sh ' . $command;
     $output = [];
@@ -43,14 +43,14 @@ function git($command)
 git('pull');
 
 
-function remove_from_config($u) 
+function remove_from_config($u)
 {
     $config = "../gitolite-data/gitolite-admin/conf/webinterface.conf";
     $content = file_get_contents($config);
-    file_put_contents($config, str_replace('include  "webinterface/'.$u.'.conf"'."\n", "", $content));
+    file_put_contents($config, str_replace('include  "webinterface/' . $u . '.conf"' . "\n", "", $content));
 }
 
-function list_ssh_keys($conf) 
+function list_ssh_keys($conf)
 {
     $open_file = fopen($conf, "r");
     $users = [];
@@ -62,10 +62,11 @@ function list_ssh_keys($conf)
     return $users;
 }
 
-function remove_foreign_key($keyname) {
+function remove_foreign_key($keyname)
+{
     foreach (glob("../gitolite-data/gitolite-admin/conf/webinterface/*.conf") as $f) {
         $content = file_get_contents($f);
-        file_put_contents($f, str_replace('# foreign user '.$keyname."\n", "", $content));
+        file_put_contents($f, str_replace('# foreign user ' . $keyname . "\n", "", $content));
     }
 }
 
