@@ -420,10 +420,8 @@ Wussten Sie schon, dass Sie auf mehrere Arten Ihre E-Mails abrufen können?
   (Achten Sie bitte darauf, dass die Verschlüsselung mit SSL oder TLS 
   aktiviert ist.)
 ';
-        // send welcome message
+        // send welcome message (also creates the mailbox)
         send_mail($emailaddr, 'Ihr neues Postfach ist bereit', $message, "welcome");
-        // notify the vmail subsystem of this new account
-        //mail('vmail@'.config('vmail_server'), 'command', "user={$account['local']}\nhost={$domainname}", "X-schokokeks-org-message: command");
     }
 
     // Clean up obsolete quota
