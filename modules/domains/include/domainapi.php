@@ -123,6 +123,10 @@ function api_register_domain($domainname, $authinfo = null)
         upload_contact($admin_c);
         $admin_c = get_contact($dom['admin_c']);
     }
+    if (!possible_domainholder($owner, $domainname)) {
+        system_failure("Der Domain-Inhaber-Kontakt scheint nicht qualifiziert zu sein für diese Domainendung. Bitte wenden Sie sich an den Support.");
+    }
+
     $owner = $owner['nic_id'];
     $admin_c = $admin_c['nic_id'];
 

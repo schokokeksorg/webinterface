@@ -79,7 +79,12 @@ $recipient = $customer['email'];
 if ($debugmode) {
     $recipient = config('adminmail');
 }
-send_mail($customer['email'], 'Domainregistrierung ' . $dom->fqdn, $msg);
+if (!$debugmode) {
+    // Keine Mail im Debug-Mode versenden
+    send_mail($customer['email'], 'Domainregistrierung ' . $dom->fqdn, $msg);
+} else {
+    warning("Im Debug-Modus wurde KEINE Bestätigungsmail versendet!");
+}
 
 api_register_domain($dom->fqdn, $authinfo);
 

@@ -60,6 +60,20 @@ function apicontact_to_contact($ac)
 }
 
 
+function missing_properties_for_tld($nic_id, $extension)
+{
+    $data = ["contactId" => $nic_id,
+            "allocation" => "owner",
+            "domainSuffixes" => [$extension]];
+    $result = api_request('contactUsableFor', $data);
+    if ($result['status'] == 'success') {
+        if (count($result['response']['missingProperties']) > 0) {
+            return $result['response']['missingProperties'];
+        }
+        return [];
+    }
+    return null;
+}
 
 function download_contact($nic_id)
 {

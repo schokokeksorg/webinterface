@@ -98,8 +98,21 @@ function possible_domainholders()
     return $ret;
 }
 
-function possible_domainholder($c)
+function possible_domainholder($c, $domainname=null)
 {
+    if ($domainname && $c['nic_id']) {
+        // Wenn NIC-ID nicht gesetzt ist, dann ignorieren wir das hier. Doof, eigentlich.
+        $tld = preg_replace('/^.*\./', '', $domainname);
+        $missing = missing_properties_for_tld($c['nic_id'], $tld);
+        if ($missing === null) {
+            logger(LOG_WARNING, "Es konnte nicht sicher geprüft werden, ob der Kontakt #{$c['id']} ({$c['name']}) für die Endung {$tld} nutzbar ist.");
+        } elseif ($missing === []) {
+            return true;
+        } else {
+            warning("Dem Kontakt #{$c['id']} ({$c['name']}) fehlen für die Endung {$tld} folgende Datenfelder: " . implode(',', $missing) . "\n Diese Datenfelder können nur über den Support gesetzt werden!");
+            return false;
+        }
+    }
     if ($c['name'] && $c['address'] && $c['zip'] && $c['city'] && $c['country'] && $c['phone'] && $c['email']) {
         return true;
     }

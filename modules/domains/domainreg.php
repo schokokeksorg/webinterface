@@ -107,7 +107,7 @@ output('<p>Legen Sie hier einen neuen Inhaber für diese Domain fest.</p>');
 if ($_SESSION['domains_domainreg_owner'] === null) {
     $kundenkontakte = get_kundenkontakte();
     $customer = get_contact($kundenkontakte['kunde']);
-    if (possible_domainholder($customer)) {
+    if (possible_domainholder($customer, $dom->fqdn)) {
         $_SESSION['domains_domainreg_owner'] = $kundenkontakte['kunde'];
     } else {
         warning('Der Stammkontakt dieses Kundenkontos enthält nicht alle Daten, die als Domaininhaber ausgefüllt sein müssen. Wählen Sie daher bitte einen anderen Kontakt aus.');

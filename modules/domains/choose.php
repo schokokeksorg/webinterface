@@ -31,12 +31,14 @@ if (isset($_GET['type'])) {
         $t = 'Verwalter';
     }
     $_SESSION['contacts_choose_header'] = 'Wählen Sie einen neuen ' . $t . ' für die Domain ' . $_SESSION['domains_' . $caller . '_domainname'];
+    $_SESSION['contacts_choose_domainname'] = $_SESSION['domains_' . $caller . '_domainname'];
     $_SESSION['contacts_choose_key'] = 'domains_' . $caller . '_' . $function;
     $_SESSION['contacts_choose_redirect'] = '../domains/choose';
     redirect('../contacts/choose');
 } else {
     unset($_SESSION['contacts_choose_key']);
     unset($_SESSION['contacts_choose_header']);
+    unset($_SESSION['contacts_choose_domainname']);
     unset($_SESSION['contacts_choose_redirect']);
     $backto = $_SESSION['domains_choose_redirect'];
     unset($_SESSION['domains_choose_redirect']);
