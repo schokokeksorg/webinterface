@@ -505,13 +505,13 @@ function send_mail($address, $subject, $body, $msgtype = "adminmail")
 function handle_exception($e)
 {
     if (config('enable_debug')) {
-        print_r($e->getMessage() . "<br>");
-        debug_print_backtrace();
-        echo("<br>");
+        print_r($e->getMessage() . "<br>Backtrace:<pre>");
+        print_r($e->getTrace());
+        echo("</pre><br>");
         print_r(serialize($_POST) . "<br>");
         print_r(serialize($_SERVER));
     } else {
-        $msg = "Exception caught:\n" . $e->getMessage() . "\n" . serialize($_POST) . "\n" . serialize($_SERVER);
+        $msg = "Exception caught:\n" . $e->getMessage() . "\n" . serialize($e->getTrace()) . "\n" . serialize($_POST) . "\n" . serialize($_SERVER);
         send_mail(config("adminmail"), "Exception on configinterface", $msg);
     }
 }
