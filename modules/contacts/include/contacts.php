@@ -98,7 +98,7 @@ function possible_domainholders()
     return $ret;
 }
 
-function possible_domainholder($c, $domainname=null)
+function possible_domainholder($c, $domainname = null)
 {
     if ($domainname && $c['nic_id']) {
         // Wenn NIC-ID nicht gesetzt ist, dann ignorieren wir das hier. Doof, eigentlich.
