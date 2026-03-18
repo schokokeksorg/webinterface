@@ -55,6 +55,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
         }
     }
 } else {
+    check_form_token('dns_record_edit');
     // Sicherheitsprüfungen passieren im Backend
 
     $record['hostname'] = $_REQUEST['hostname'];
