@@ -387,6 +387,17 @@ dt {
   font-weight: bold;
 }
 
+.two-column-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Erlaubt das Umbrechen auf Mobile */
+  gap: 30px;       /* Abstand zwischen den Spalten */
+}
+
+.column {
+  flex: 1;         /* Spalten teilen sich den Platz gleichmäßig auf */
+  min-width: 200px; /* Ab wann soll umgebrochen werden? */
+  max-width: 400px;
+}
 
 a {
   text-decoration: none;

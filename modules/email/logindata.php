@@ -45,7 +45,8 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <p style="margin-left: 2em; font-size: 130%; font-weight: bold;" translate="no">' . $servername . '</p>
 <p>Wenn Sie ein E-Mail-Programm auf Ihrem Computer (wie z.B. Mozilla Thunderbird) zum Abruf benutzen möchten, haben Sie die Wahl zwischen POP3 und IMAP. Ihre Zugangsdaten lassen sich mit beiden Technologien benutzen.</p>
 
-<div style="width: 20%; margin-right: 2em; float: left;">
+<section class="two-column-wrapper">
+<div class="column">
 <h3 style="text-align: center;">IMAP</h3>
 <p style="text-align: justify;">Bei IMAP werden die E-Mails dauerhaft <strong>auf dem Server gespeichert</strong>. Das E-Mail-Programm läd (je nach Einstellung) nur die Kopfzeilen und die jeweils angeschaute E-Mail herunter. Bei IMAP können Sie <strong>Unterordner</strong> in Ihrem Postfach haben. Da die Mails auf dem Server gespeichert sind, können Sie jederzeit mit einem <strong>Web-Mail-System</strong> auch auf gelesene E-Mails zugreifen. Die gespeicherten E-Mails können allerdings dazu führen, dass Ihr Speicherplatz schneller verbraucht ist.</p>
 <p>Die Einstellungen für IMAP:</p>
@@ -58,7 +59,7 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
-<div style="width: 20%; margin-right: 2em; float: left;">
+<div class="column">
 <h3 style="text-align: center;">POP3</h3>
 <p style="text-align: justify;">Bei POP3 werden die E-Mails auf Ihren Computer herunter geladen und anschließend (je nach Einstellung) <strong>auf dem Server gelöscht</strong>. Sie können mit einem Web-Mail-System von unterwegs nur die E-Mails lesen, die noch nicht von Ihrem E-Mail-Programm abgerufen worden sind.</p>
 <p>Die Einstellungen für POP3:</p>
@@ -71,7 +72,7 @@ output('<h3>Abruf mit einem E-Mail-Programm</h3>
 <dt>Passwort</dt><dd><em>Ihr E-Mail-Passwort</em></dd>
 </dl>
 </div>
-<br style="clear: left;">
+</section>
 <h3>SMTP</h3>
 <p>Zum Verschicken von E-Mails muss sich Ihr E-Mail-Programm auch per SMTP anmelden. Benutzen Sie dafür bitte die folgenden Daten:</p>
 <dl>
