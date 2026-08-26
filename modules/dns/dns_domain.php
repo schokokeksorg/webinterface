@@ -102,6 +102,10 @@ foreach ($records as $rec) {
 }
 foreach ($auto_records as $rec) {
     $data = filter_output_html($rec['ip'] ? $rec['ip'] : $rec['data']);
+    if ($rec['type'] == 'mx' && $data == "") {
+        // Null MX
+        $data = ".";
+    }
     if ($rec['type'] == 'mx' || $rec['type'] == 'srv') {
         $data .= ' (' . (int) $rec['spec'] . ')';
     }
