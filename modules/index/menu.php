@@ -17,9 +17,6 @@ $role = $_SESSION['role'];
 if ($role == ROLE_ANONYMOUS) {
     $menu["index_login"] = ["label" => "Login", "file" => "index", "weight" => 0];
 } else {
-    if ($role & (ROLE_SYSTEMUSER | ROLE_SUBUSER | ROLE_VMAIL_ACCOUNT)) {
-        $menu["index_cert"] = ["label" => "Client-Zertifikat", "file" => "cert", "weight" => 10, "submenu" => "index_index"];
-    }
     if ($role & (ROLE_SYSTEMUSER | ROLE_CUSTOMER)) {
         $menu["index_chpass"] = ["label" => "Passwort ändern", "file" => "chpass", "weight" => 98];
     }

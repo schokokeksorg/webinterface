@@ -8,10 +8,8 @@ async function check_passkey() {
         PublicKeyCredential.isConditionalMediationAvailable) {
         const newButton = document.createElement('button');
         newButton.textContent = 'Mit Passkey/FIDO2-Gerät anmelden!';
-        const newPara = document.createElement('p');
+        newPara = document.getElementById("passkeybutton");
         newPara.appendChild(newButton)
-        certlogin = document.getElementById("certlogin")
-        certlogin.parentNode.insertBefore(newPara, certlogin)
         newButton.addEventListener('click', passkey_login);
     }
 }

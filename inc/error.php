@@ -142,11 +142,6 @@ function login_screen($why = null)
         $title = '';
         system_failure("Zu viele fehlgeschlagenen Login-Versuche! Bitte warten Sie einige Minuten bis zum nächsten Versuch!");
     }
-    if (!$why) {
-        if (isset($_COOKIE['CLIENTCERT_AUTOLOGIN']) && $_COOKIE['CLIENTCERT_AUTOLOGIN'] == '1') {
-            redirect("/certlogin/index.php?destination=" . urlencode($_SERVER['REQUEST_URI']));
-        }
-    }
     require_once('inc/theme.php');
     if ($why) {
         warning($why);
